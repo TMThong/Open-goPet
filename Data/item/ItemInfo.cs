@@ -1,7 +1,4 @@
-package data.item;
-
-import manager.GopetManager;
-
+ 
 public class ItemInfo {
 
     public int id, value;
@@ -43,8 +40,8 @@ public class ItemInfo {
      * @return
      */
     public static String[] getName(ItemInfo[] itemInfos) {
-        String[] strings = new String[itemInfos.length];
-        for (int i = 0; i < strings.length; i++) {
+        String[] strings = new String[itemInfos.Length];
+        for (int i = 0; i < strings.Length; i++) {
             strings[i] = itemInfos[i].getName();
         }
         return strings;
@@ -68,7 +65,7 @@ public class ItemInfo {
      * @return
      */
     public static int getValueById(ItemInfo[] itemInfos, int ID) {
-        for (ItemInfo itemInfo : itemInfos) {
+        foreach (ItemInfo itemInfo in itemInfos) {
             if (itemInfo.id == ID) {
                 return itemInfo.value;
             }

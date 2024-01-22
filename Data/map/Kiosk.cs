@@ -1,37 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package data.map;
 
-import data.item.Item;
-import data.item.SellItem;
-import data.pet.Pet;
-import data.user.History;
-import java.sql.Connection;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
-import manager.GopetManager;
-import manager.HistoryManager;
-import manager.JsonManager;
-import manager.MYSQLManager;
-import manager.PlayerManager;
-import server.MenuController;
-import server.Player;
-import util.Utilities;
+using Gopet.Data.Collections;
 
-/**
- *
- * @author MINH THONG
- */
 public class Kiosk {
 
-    private byte kioskType;
+    private sbyte kioskType;
 
-    public CopyOnWriteArrayList<SellItem> kioskItems = new CopyOnWriteArrayList<>();
+    public CopyOnWriteArrayList<SellItem> kioskItems = new  ();
 
-    public Kiosk(byte kioskType_) {
+    public Kiosk(sbyte kioskType_) {
         this.kioskType = kioskType_;
     }
 
@@ -62,7 +38,7 @@ public class Kiosk {
         item.user_id = player.user.user_id;
         kioskItems.add(item);
         while (true) {
-            item.itemId = Utilities.nextInt(1, Integer.MAX_VALUE - 2);
+            item.itemId = Utilities.nextInt(1, int.MAX_VALUE - 2);
             bool flag = true;
             for (SellItem item1 : kioskItems) {
                 if (item1 != item) {
@@ -103,7 +79,7 @@ public class Kiosk {
     }
 
     public void buy(int itemId, Player player)   {
-        final SellItem sellItem = searchItem(itemId);
+          SellItem sellItem = searchItem(itemId);
         if (sellItem != null) {
             if (sellItem.user_id == player.user.user_id) {
                 player.redDialog("Bạn không thể mua chính vật phẩm mà bạn bán");
@@ -185,7 +161,7 @@ public class Kiosk {
         return null;
     }
 
-    public byte getKioskType() {
+    public sbyte getKioskType() {
         return kioskType;
     }
 

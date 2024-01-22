@@ -1,21 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package data.item;
-
-import base.DataVersion;
-import lombok.Getter;
-import lombok.Setter;
-import manager.GopetManager;
-
-/**
- *
- * @author MINH THONG
- */
-@Getter
-@Setter
-public class ItemGem extends DataVersion  {
+ 
+public class ItemGem : DataVersion  {
 
     private int element;
     private String name;
@@ -25,7 +9,7 @@ public class ItemGem extends DataVersion  {
     private int itemTemplateId;
     private long timeUnequip = -1;
 
-    public final String getElementIcon() {
+    public String getElementIcon() {
         switch (element) {
             case GopetManager.FIRE_ELEMENT:
                 return "(fire)";

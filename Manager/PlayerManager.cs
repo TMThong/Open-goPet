@@ -37,7 +37,7 @@ public class PlayerManager {
 
     }
 
-    public static long getTimeWaitLogin(Integer ID)   {
+    public static long getTimeWaitLogin(int ID)   {
         Long time = waitLogin.get(ID);
         if (time == null) {
             return 0;
@@ -56,9 +56,9 @@ public class PlayerManager {
     }
 
     public static void crossChat(String who, String text)   {
-        Message ms = new Message((byte) 108);
-        ms.putByte(9);
-        ms.putByte(30);
+        Message ms = new Message((sbyte) 108);
+        ms.putsbyte(9);
+        ms.putsbyte(30);
         ms.putInt(1); // số lượng người chat
         ms.putUTF(who);
         ms.putUTF(text);
@@ -72,7 +72,7 @@ public class PlayerManager {
 
     public static void showBanner(String text)   {
         Message m = new Message(45);
-        m.putByte(1);
+        m.putsbyte(1);
         m.putUTF(text);
         m.writer().flush();
         sendMessage(m);
@@ -80,7 +80,7 @@ public class PlayerManager {
 
     public static void Popup(String text)   {
         Message m = new Message(45);
-        m.putByte(5);
+        m.putsbyte(5);
         m.putUTF(text);
         m.writer().flush();
         sendMessage(m);

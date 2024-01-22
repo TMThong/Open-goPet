@@ -5,11 +5,11 @@ public class ShopArena : ShopTemplate {
     public int numResetFree = GopetManager.DEFAULT_FREE_RESET_ARENA_SHOP;
     private int numReset = 0;
 
-    public ShopArena(byte type) {
-        super(type);
+    public ShopArena(sbyte type) {
+        base(type);
     }
 
-    public final void nextWhenNewDay() {
+    public   void nextWhenNewDay() {
         Date timeServerDate = new Date(System.currentTimeMillis());
         Date timeGenDate = new Date(timeGem);
         if ((timeGenDate.getDay() != timeServerDate.getDay()) || (timeGenDate.getMonth() != timeServerDate.getMonth()) || (timeGenDate.getYear() != timeServerDate.getYear())) {
@@ -30,7 +30,7 @@ public class ShopArena : ShopTemplate {
         resetShopArenaItem.setNameSpeceial("Reset vật phẩm shop");
         resetShopArenaItem.setDescriptionSpeceial(String.format("Dùng %s (vang) để đổi các vật phẩm khác", Utilities.formatNumber(priceReset)));
         resetShopArenaItem.setPrice(new int[]{priceReset});
-        resetShopArenaItem.setMoneyType(new byte[]{GopetManager.MONEY_TYPE_GOLD});
+        resetShopArenaItem.setMoneyType(new sbyte[]{GopetManager.MONEY_TYPE_GOLD});
         this.shopTemplateItems.add(resetShopArenaItem);
         long timeGen = System.currentTimeMillis() + 10000;
         while (timeGen > System.currentTimeMillis()) {

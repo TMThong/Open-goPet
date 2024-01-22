@@ -1,13 +1,13 @@
  
 public class TurnEffect {
 
-    public byte type { get; }
+    public sbyte type { get; }
     public int petId;
     public int skillId;
     public int hp;
     public int mp;
 
-    public TurnEffect(byte type, int petId, int skillId, int hp, int mp) {
+    public TurnEffect(sbyte type, int petId, int skillId, int hp, int mp) {
         this.type = type;
         this.petId = petId;
         this.skillId = skillId;
@@ -15,12 +15,12 @@ public class TurnEffect {
         this.mp = mp;
     }
 
-    public const byte TYPE_EFFECT_NORMAL = 1;
-    public const byte TYPE_EFFECT_WAIT = 4;
-    public const byte SKILL_NORMAL = 0;
-    public const byte SKILL_MISS = 1;
-    public const byte SKILL_CRIT = 2;
-    public const byte NONE = 0;
+    public const sbyte TYPE_EFFECT_NORMAL = 1;
+    public const sbyte TYPE_EFFECT_WAIT = 4;
+    public const sbyte SKILL_NORMAL = 0;
+    public const sbyte SKILL_MISS = 1;
+    public const sbyte SKILL_CRIT = 2;
+    public const sbyte NONE = 0;
 
     public static TurnEffect createNormalAttack(int mp, int hp, int petId) {
         return new TurnEffect(TYPE_EFFECT_NORMAL, petId, 0, hp, mp);

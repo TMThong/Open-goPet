@@ -1,19 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package data.user;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.util.Date;
-import manager.MYSQLManager;
-import server.Player;
-
-/**
- *
- * @author MINH THONG
- */
+ 
 public class History {
 
     public const int KILL_MOB = 1;

@@ -1,44 +1,24 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package data.shop;
+ 
+public class ShopTemplateItem : DataVersion {
 
-import base.DataVersion;
-import data.item.ItemTemplate;
-import data.pet.PetTemplate;
-import lombok.Getter;
-import lombok.Setter;
-import manager.GopetManager;
-import server.MenuController;
-import server.Player;
-
-/**
- *
- * @author MINH THONG
- */
-@Getter
-@Setter
-public class ShopTemplateItem extends DataVersion {
-
-    private int shopId;
-    private int itemTempalteId;
-    private int count;
-    private byte[] moneyType;
-    private int[] price;
-    private byte inventoryType;
-    private bool isSpceial = false;
-    private String nameSpeceial, descriptionSpeceial;
-    private bool needRemove = false;
-    private int spceialType = -1;
-    private bool closeScreenAfterClick = false;
-    private int clanLvl;
-    private int perCount = 0;
-    public static transient final int TYPE_RESET_SHOP_ARENA = 0;
-    private bool hasId;
-    private int menuId;
-    private int petId;
-    private bool isSellItem = true;
+    public int shopId;
+    public int itemTempalteId;
+    public int count;
+    public sbyte[] moneyType;
+    public int[] price;
+    public sbyte inventoryType;
+    public bool isSpceial = false;
+    public String nameSpeceial, descriptionSpeceial;
+    public bool needRemove = false;
+    public int spceialType = -1;
+    public bool closeScreenAfterClick = false;
+    public int clanLvl;
+    public int perCount = 0;
+    public const int TYPE_RESET_SHOP_ARENA = 0;
+    public bool hasId;
+    public int menuId;
+    public int petId;
+    public bool isSellItem = true;
 
     public ItemTemplate getItemTemplate() {
         return GopetManager.itemTemplate.get(itemTempalteId);
@@ -121,22 +101,5 @@ public class ShopTemplateItem extends DataVersion {
         }
     }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        ShopTemplateItem shopTemplateItem = new ShopTemplateItem();
-        shopTemplateItem.setShopId(shopId);
-        shopTemplateItem.setItemTempalteId(itemTempalteId);
-        shopTemplateItem.setClanLvl(clanLvl);
-        shopTemplateItem.setCount(count);
-        shopTemplateItem.setCloseScreenAfterClick(closeScreenAfterClick);
-        shopTemplateItem.setNameSpeceial(nameSpeceial);
-        shopTemplateItem.setDescriptionSpeceial(descriptionSpeceial);
-        shopTemplateItem.setNeedRemove(needRemove);
-        shopTemplateItem.setPrice(price);
-        shopTemplateItem.setMoneyType(moneyType);
-        shopTemplateItem.setSpceial(isSpceial);
-        shopTemplateItem.setInventoryType(inventoryType);
-        shopTemplateItem.setPerCount(perCount);
-        return shopTemplateItem;
-    }
+   
 }

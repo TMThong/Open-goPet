@@ -1,6 +1,6 @@
  
 public class ClanMemberDonateInfo : DataVersion {
-    private byte priceType;
+    private sbyte priceType;
     private long price;
     private long growthPoint;
     private long fund;
@@ -11,7 +11,7 @@ public class ClanMemberDonateInfo : DataVersion {
     }
     
      
-    public ClanMemberDonateInfo(byte priceType, long price, long growthPoint, long fund, int maxDonate) {
+    public ClanMemberDonateInfo(sbyte priceType, long price, long growthPoint, long fund, int maxDonate) {
         this.priceType = priceType;
         this.price = price;
         this.growthPoint = growthPoint;

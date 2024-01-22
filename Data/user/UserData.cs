@@ -1,43 +1,36 @@
-package data.user;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Date;
-import manager.MYSQLManager;
-import util.Utilities;
+ 
 
 public class UserData {
 
     public int user_id;
     public String username, password, phone, email, banReason, ipv4Create;
-    public byte isBanned = BAN_NONE;
+    public sbyte isBanned = BAN_NONE;
     public long banTime = 0;
-    public byte role;
-    public const byte BAN_NONE = 0;
-    public const byte BAN_TIME = 1;
-    public const byte BAN_INFINITE = 2;
-    public const byte ROLE_NON_ACTIVE = 0;
+    public sbyte role;
+    public const sbyte BAN_NONE = 0;
+    public const sbyte BAN_TIME = 1;
+    public const sbyte BAN_INFINITE = 2;
+    public const sbyte ROLE_NON_ACTIVE = 0;
 
-    public void ban(byte typeBan, String reason, long timeBan)   {
+    public void ban(sbyte typeBan, String reason, long timeBan)   {
         Connection connection = MYSQLManager.createWebConnection();
         try {
             MYSQLManager.updateSql(String.format("UPDATE `user` SET `user`.`isBaned` = %s , `user`.`banReason` = '%s', `user`.`banTime` = %s WHERE user_id = %s;", typeBan, reason, timeBan, user_id), connection);
-        } finally {
+        }  ly {
             connection.close();
         }
     }
 
-    public static void banBySQL(byte typeBan, String reason, long timeBan, int user_id)   {
+    public static void banBySQL(sbyte typeBan, String reason, long timeBan, int user_id)   {
         Connection connection = MYSQLManager.createWebConnection();
         try {
             MYSQLManager.updateSql(String.format("UPDATE `user` SET `user`.`isBaned` = %s , `user`.`banReason` = '%s', `user`.`banTime` = %s WHERE user_id = %s;", typeBan, reason, timeBan, user_id), connection);
-        } finally {
+        }  ly {
             connection.close();
         }
     }
 
-    public int getCoin() throws SQLException {
+    public int getCoin()   {
         Connection webConnection = null;
         try {
             webConnection = MYSQLManager.createWebConnection();
@@ -50,7 +43,7 @@ public class UserData {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
+        }  ly {
             webConnection.close();
         }
         return 0;
@@ -64,7 +57,7 @@ public class UserData {
             MYSQLManager.updateSql(String.format("UPDATE `user` set coin = coin - %s where user_id = %s", coin, this.user_id), webConnection);
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
+        }  ly {
             webConnection.close();
         }
     }

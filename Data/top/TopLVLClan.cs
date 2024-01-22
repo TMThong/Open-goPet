@@ -16,9 +16,9 @@ public class TopLVLClan extends Top {
     public const TopLVLClan instance = new TopLVLClan();
 
     public TopLVLClan() {
-        super("top_clan");
-        super.name = "TOP LVL Bang hội";
-        super.desc = "Chỉ những bang hội có cấp độ cao";
+        base("top_clan");
+        base.name = "TOP LVL Bang hội";
+        base.desc = "Chỉ những bang hội có cấp độ cao";
     }
 
     @Override

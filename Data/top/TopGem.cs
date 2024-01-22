@@ -1,25 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package data.top;
+ 
+public class TopGem : Top {
 
-import java.sql.ResultSet;
-import manager.MYSQLManager;
-import util.Utilities;
+    public static readonly TopGem instance = new TopGem();
 
-/**
- *
- * @author MINH THONG
- */
-public class TopGem extends Top {
-
-    public const TopGem instance = new TopGem();
-
-    public TopGem() {
-        super("top_gem");
-        super.name = "TOP Phú Hộ";
-        super.desc = "";
+    public TopGem() : base("top_gem")
+    {
+        
+        base.name = "TOP Phú Hộ";
+        base.desc = "";
     }
 
     @Override

@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TopFightMob {
 
-    private final ConcurrentHashMap<Player, Integer> damageHashMap = new ConcurrentHashMap<>();
+    private   ConcurrentHashMap<Player, int> damageHashMap = new ConcurrentHashMap<>();
     private int maxTop = 10;
 
     public int getMaxTop() {
@@ -47,11 +47,11 @@ public class TopFightMob {
      *
      * @return
      */
-    public ArrayList<HashMap.Entry<Player, Integer>> getTop() {
-        ArrayList<HashMap.Entry<Player, Integer>> sortList = new ArrayList<>(damageHashMap.entrySet());
-        sortList.sort(new Comparator<Map.Entry<Player, Integer>>() {
+    public ArrayList<HashMap.Entry<Player, int>> getTop() {
+        ArrayList<HashMap.Entry<Player, int>> sortList = new(damageHashMap.entrySet());
+        sortList.sort(new Comparator<Map.Entry<Player, int>>() {
             @Override
-            public int compare(Map.Entry<Player, Integer> object1, Map.Entry<Player, Integer> object2) {
+            public int compare(Map.Entry<Player, int> object1, Map.Entry<Player, int> object2) {
                 return object2.getValue() - object1.getValue();
             }
         });

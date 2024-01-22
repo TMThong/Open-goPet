@@ -5,15 +5,15 @@ public class ShopClan : ShopTemplate {
     private long timeRefresh;
 
     public ShopClan(Clan clan_) throws CloneNotSupportedException {
-        super(MenuController.SHOP_CLAN);
+        base(MenuController.SHOP_CLAN);
         this.clan = clan_;
         this.refresh();
     }
 
-    public final void refresh() throws CloneNotSupportedException {
+    public   void refresh() throws CloneNotSupportedException {
         timeRefresh = System.currentTimeMillis();
         this.shopTemplateItems.clear();
-        ArrayList<ShopClanTemplate> list = GopetManager.shopClanByLvl.get(clan.getSuperMarketLvl());
+        ArrayList<ShopClanTemplate> list = GopetManager.shopClanByLvl.get(clan.getbaseMarketLvl());
         if (list != null) {
             for (ShopClanTemplate shopClanTemplate : list) {
                 this.shopTemplateItems.addAll(shopClanTemplate.next());
@@ -27,7 +27,7 @@ public class ShopClan : ShopTemplate {
         }
     }
 
-    public final ShopTemplateItem getShopTemplateItem(int mneuId)   {
+    public   ShopTemplateItem getShopTemplateItem(int mneuId)   {
         int left = 0;
         int right = shopTemplateItems.size() - 1;
         while (left <= right) {

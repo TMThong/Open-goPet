@@ -1,6 +1,4 @@
-package server;
-
-import server.io.Message;
+ 
 
 public interface IHandleMessage {
 

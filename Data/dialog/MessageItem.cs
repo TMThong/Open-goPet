@@ -6,6 +6,6 @@ public class MessageItem
     public String fromName;
     public String message;
     public long sentTime;
-    public byte type = 0;
+    public sbyte type = 0;
     public bool isRead;
 }

@@ -39,15 +39,15 @@ import util.Utilities;
 @SuppressWarnings("unchecked")
 public class GopetPlace extends Place {
 
-    public final CopyOnWriteArrayList<Mob> mobs = new CopyOnWriteArrayList<>();
-    public final CopyOnWriteArrayList<PetBattle> petBattles = new CopyOnWriteArrayList<>();
-    public final ConcurrentHashMap<MobLocation, Long> newMob = new ConcurrentHashMap<>();
+    public   CopyOnWriteArrayList<Mob> mobs = new CopyOnWriteArrayList<>();
+    public   CopyOnWriteArrayList<PetBattle> petBattles = new CopyOnWriteArrayList<>();
+    public   ConcurrentHashMap<MobLocation, Long> newMob = new ConcurrentHashMap<>();
     public const long TIME_NEW_MOB = 25000;
     public int numMobDie = 0;
     public int numMobDieNeed = Utilities.nextInt(150, 200);
 
     public GopetPlace(GopetMap m, int ID)   {
-        super(m, ID);
+        base(m, ID);
         if (GopetManager.mobLocation.containsKey(m.mapID) && GopetManager.MOBLVL_MAP.containsKey(m.mapID)) {
             createNewMob(GopetManager.mobLocation.get(map.mapID));
         }
@@ -85,13 +85,13 @@ public class GopetPlace extends Place {
         if (petBattle != null) {
             petBattle.close(player);
         }
-        super.remove(player); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        base.remove(player); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 
     public void addNewMob(Mob gopetMob) {
 
         while (true) {
-            int mobId = -Utilities.nextInt(2, Integer.MAX_VALUE - 12);
+            int mobId = -Utilities.nextInt(2, int.MAX_VALUE - 12);
             bool hasId = false;
             for (Mob mob : mobs) {
                 if (mob.getMobId() == mobId && mob != gopetMob) {
@@ -109,7 +109,7 @@ public class GopetPlace extends Place {
 
     public void mobDie(Mob gopetMob) {
         mobs.remove(gopetMob);
-        final long timeGen = System.currentTimeMillis() + TIME_NEW_MOB;
+          long timeGen = System.currentTimeMillis() + TIME_NEW_MOB;
         newMob.put(gopetMob.getMobLocation(), timeGen);
     }
 
@@ -134,7 +134,7 @@ public class GopetPlace extends Place {
     private void sendMob(Player player)   {
         CopyOnWriteArrayList<Mob> gopetMobs = (CopyOnWriteArrayList<Mob>) mobs.clone();
         Message message = new Message(GopetCMD.PET_SERVICE);
-        message.putByte(GopetCMD.SEND_LIST_MOB_ZONE);
+        message.putsbyte(GopetCMD.SEND_LIST_MOB_ZONE);
         message.putInt(gopetMobs.size());
         for (Mob mob : gopetMobs) {
             message.putInt(mob.getMobId());
@@ -143,7 +143,7 @@ public class GopetPlace extends Place {
             message.putInt(mob.getMobLvInfo().getLvl());
             message.putInt(mob.getMobLocation().getX());
             message.putInt(mob.getMobLocation().getY());
-            message.putByte(0);
+            message.putsbyte(0);
         }
         message.cleanup();
         player.session.sendMessage(message);
@@ -152,7 +152,7 @@ public class GopetPlace extends Place {
     public void sendMob()   {
         CopyOnWriteArrayList<Mob> gopetMobs = (CopyOnWriteArrayList<Mob>) mobs.clone();
         Message message = new Message(GopetCMD.PET_SERVICE);
-        message.putByte(GopetCMD.SEND_LIST_MOB_ZONE);
+        message.putsbyte(GopetCMD.SEND_LIST_MOB_ZONE);
         message.putInt(gopetMobs.size());
         for (Mob mob : gopetMobs) {
             message.putInt(mob.getMobId());
@@ -161,7 +161,7 @@ public class GopetPlace extends Place {
             message.putInt(mob.getMobLvInfo().getLvl());
             message.putInt(mob.getMobLocation().getX());
             message.putInt(mob.getMobLocation().getY());
-            message.putByte(0);
+            message.putsbyte(0);
         }
         message.cleanup();
         sendMessage(message);
@@ -169,7 +169,7 @@ public class GopetPlace extends Place {
 
     private void sendMob(ArrayList<Mob> newMobs)   {
         Message message = new Message(GopetCMD.PET_SERVICE);
-        message.putByte(GopetCMD.SEND_LIST_MOB_ZONE);
+        message.putsbyte(GopetCMD.SEND_LIST_MOB_ZONE);
         message.putInt(newMobs.size());
         for (Mob mob : newMobs) {
             message.putInt(mob.getMobId());
@@ -178,14 +178,14 @@ public class GopetPlace extends Place {
             message.putInt(mob.getMobLvInfo().getLvl());
             message.putInt(mob.getMobLocation().getX());
             message.putInt(mob.getMobLocation().getY());
-            message.putByte(0);
+            message.putsbyte(0);
         }
         message.cleanup();
         sendMessage(message);
     }
 
     public void sendListPet(Player player)   {
-        HashMap<Player, Pet> hashMap = new HashMap<>();
+        HashMap<Player, Pet> hashMap = new();
         for (Player player1 : players) {
             if (player1.playerData.petSelected != null) {
                 hashMap.put(player1, player1.playerData.petSelected);
@@ -193,8 +193,8 @@ public class GopetPlace extends Place {
         }
         if (!hashMap.isEmpty()) {
             Message message = new Message(GopetCMD.PET_SERVICE);
-            message.putByte(GopetCMD.SEND_LIST_PET_ZONE);
-            message.putByte(hashMap.size());
+            message.putsbyte(GopetCMD.SEND_LIST_PET_ZONE);
+            message.putsbyte(hashMap.size());
             for (Map.Entry<Player, Pet> entry : hashMap.entrySet()) {
                 Player player1 = entry.getKey();
                 Pet petSelected = entry.getValue();
@@ -218,7 +218,7 @@ public class GopetPlace extends Place {
         for (int npcId : map.mapTemplate.getNpc()) {
             NpcTemplate npcTemplate = GopetManager.npcTemplate.get(npcId);
             if (npcTemplate != null) {
-                ms.putByte(0);
+                ms.putsbyte(0);
                 ms.putInt(npcTemplate.getBounds()[0]);
                 ms.putInt(npcTemplate.getBounds()[1]);
                 ms.putInt(npcTemplate.getBounds()[2]);
@@ -230,12 +230,12 @@ public class GopetPlace extends Place {
                 ms.putInt(npcTemplate.getY());
                 ms.putInt(6);
                 String[] chat = npcTemplate.getChat();
-                ms.putInt(chat.length);
+                ms.putInt(chat.Length);
                 for (String CHAT_String : chat) {
                     ms.putUTF(CHAT_String);
                 }
                 ms.putUTF(npcTemplate.getName());
-                ms.putByte(npcTemplate.getType());
+                ms.putsbyte(npcTemplate.getType());
             }
         }
         ms.writer().flush();
@@ -248,7 +248,7 @@ public class GopetPlace extends Place {
         ms.putInt(player.user.user_id);
         ms.putString(player.playerData.name);
         ms.putInt(player.playerData.gender);
-        ms.putByte(0);
+        ms.putsbyte(0);
         ms.putInt(0);
         ms.writer().flush();
         ms.cleanup();
@@ -261,12 +261,12 @@ public class GopetPlace extends Place {
         Message message = new Message(24);
         message.putInt(player.playerData.user_id);
         message.putUTF(player.playerData.name);
-        message.putByte(player.playerData.gender);
+        message.putsbyte(player.playerData.gender);
         // relation
-        message.putByte(0);
-        message.putByte(player.playerData.speed);
-        message.putByte(player.playerData.faceDir);
-        message.putByte(player.playerData.waypointIndex);
+        message.putsbyte(0);
+        message.putsbyte(player.playerData.speed);
+        message.putsbyte(player.playerData.faceDir);
+        message.putsbyte(player.playerData.waypointIndex);
         message.putInt(player.playerData.x);
         message.putInt(player.playerData.y);
         message.cleanup();
@@ -274,7 +274,7 @@ public class GopetPlace extends Place {
     }
 
     @Override
-    public void sendMove(int channelID, int userID, byte lastDir, short[][] points)   {
+    public void sendMove(int channelID, int userID, sbyte lastDir, short[][] points)   {
 
     }
 
@@ -291,13 +291,13 @@ public class GopetPlace extends Place {
 //        }
     }
 
-    public void sendMove(int userID, byte lastDir, int[] points)   {
+    public void sendMove(int userID, sbyte lastDir, int[] points)   {
         Message message = new Message(GopetCMD.ON_OTHER_USER_MOVE);
         message.putInt(userID);
-        message.putByte(lastDir);
+        message.putsbyte(lastDir);
         message.putInt(map.mapID);
-        message.putInt(points.length);
-        for (int i = 0; i < points.length; i++) {
+        message.putInt(points.Length);
+        for (int i = 0; i < points.Length; i++) {
             message.putInt(points[i]);
         }
         message.cleanup();
@@ -308,17 +308,17 @@ public class GopetPlace extends Place {
     public void sendRemove(Player player)   {
         Message message = new Message(GopetCMD.ON_PLAYER_EXIT_PLACE);
         message.putInt(player.playerData.user_id);
-        message.putByte(player.playerData.faceDir);
+        message.putsbyte(player.playerData.faceDir);
         message.putInt(0);
         message.cleanup();
         sendMessage(message);
     }
 
     @Override
-    public void chat(int user_id, final String name, final String text)   {
+    public void chat(int user_id,   String name,   String text)   {
         Message message = new Message(GopetCMD.PET_SERVICE);
-        message.putByte(GopetCMD.CHAT_PUBLIC);
-        message.putByte(1);
+        message.putsbyte(GopetCMD.CHAT_PUBLIC);
+        message.putsbyte(1);
         message.putUTF(name);
         message.putUTF(text);
         message.cleanup();
@@ -333,7 +333,7 @@ public class GopetPlace extends Place {
 
         message.putInt(zoneID);
         //waypoint Index
-        message.putByte(player.playerData.waypointIndex);
+        message.putsbyte(player.playerData.waypointIndex);
         message.putInt(player.playerData.x);
         message.putInt(player.playerData.y);
 
@@ -341,11 +341,11 @@ public class GopetPlace extends Place {
             if (player1 != player) {
                 message.putInt(player1.user.user_id);
                 message.putUTF(player1.playerData.name);
-                message.putByte(player1.playerData.gender);
+                message.putsbyte(player1.playerData.gender);
                 // relation
-                message.putByte(0);
-                message.putByte(player1.playerData.speed);
-                message.putByte(player1.playerData.faceDir);
+                message.putsbyte(0);
+                message.putsbyte(player1.playerData.speed);
+                message.putsbyte(player1.playerData.faceDir);
                 message.putInt(player1.playerData.x);
                 message.putInt(player1.playerData.y);
             }
@@ -423,7 +423,7 @@ public class GopetPlace extends Place {
 
     @Override
     public void update()   {
-        super.update(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        base.update(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
 
         for (Mob mob : mobs) {
             if (mob instanceof Boss) {
@@ -448,7 +448,7 @@ public class GopetPlace extends Place {
             }
         }
 
-        ArrayList<MobLocation> mobLocations_newMob = new ArrayList<>();
+        ArrayList<MobLocation> mobLocations_newMob = new();
 
         for (Map.Entry<MobLocation, Long> entry : newMob.entrySet()) {
             MobLocation location = entry.getKey();
@@ -465,19 +465,19 @@ public class GopetPlace extends Place {
         createNewMob(mobLocations_newMob.toArray(new MobLocation[0]));
     }
 
-    public final void addPetBattle(PetBattle petBattle) {
+    public   void addPetBattle(PetBattle petBattle) {
         petBattles.add(petBattle);
     }
 
     private void createNewMob(MobLocation[] locations)   {
         MobLocation[] mobLocations = locations;
         MobLvlMap[] mobLvlMaps = GopetManager.MOBLVL_MAP.get(map.mapID);
-        if (mobLocations.length > 0 && mobLvlMaps.length > 0) {
-            ArrayList<Mob> nGopetMobs = new ArrayList<>();
+        if (mobLocations.Length > 0 && mobLvlMaps.Length > 0) {
+            ArrayList<Mob> nGopetMobs = new();
             int index = -1;
             for (MobLocation mobLocation : mobLocations) {
                 index++;
-                if (this.map.mapTemplate.getBoss().length > 0) {
+                if (this.map.mapTemplate.getBoss().Length > 0) {
                     if (numMobDie >= numMobDieNeed) {
                         Boss boss = new Boss(Utilities.randomArray(this.map.mapTemplate.getBoss()), mobLocation);
                         boss.setTimeOut(true);
@@ -524,7 +524,7 @@ public class GopetPlace extends Place {
 
     private void sendWing(Player player)   {
         CopyOnWriteArrayList<Player> currentPlayers = (CopyOnWriteArrayList<Player>) players.clone();
-        HashMap<Integer, Item> wingPlayer = new HashMap<>();
+        HashMap<int, Item> wingPlayer = new();
         for (Player currentPlayer : currentPlayers) {
             Item wingItem = currentPlayer.playerData.wingItem;
             if (wingItem != null) {
@@ -532,14 +532,14 @@ public class GopetPlace extends Place {
             }
         }
         Message m = messagePetSerive(GopetCMD.WING);
-        m.putByte(3);
+        m.putsbyte(3);
         m.putInt(wingPlayer.size());
-        for (Map.Entry<Integer, Item> entry : wingPlayer.entrySet()) {
+        for (Map.Entry<int, Item> entry : wingPlayer.entrySet()) {
             int key = entry.getKey();
             Item val = entry.getValue();
             m.putInt(key);
             m.putUTF(val.getTemp().getFrameImgPath());
-            m.putByte(val.getTemp().getOptionValue()[0]);
+            m.putsbyte(val.getTemp().getOptionValue()[0]);
         }
         m.cleanup();
         player.session.sendMessage(m);
@@ -549,11 +549,11 @@ public class GopetPlace extends Place {
         Item wingItem = player.playerData.wingItem;
         if (wingItem != null) {
             Message m = messagePetSerive(GopetCMD.WING);
-            m.putByte(3);
+            m.putsbyte(3);
             m.putInt(1);
             m.putInt(player.user.user_id);
             m.putUTF(wingItem.getTemp().getFrameImgPath());
-            m.putByte(wingItem.getTemp().getOptionValue()[0]);
+            m.putsbyte(wingItem.getTemp().getOptionValue()[0]);
             m.cleanup();
             sendMessage(m);
         }
@@ -561,18 +561,18 @@ public class GopetPlace extends Place {
 
     public void sendUnEquipWing(Player player)   {
         Message m = messagePetSerive(GopetCMD.WING);
-        m.putByte(3);
+        m.putsbyte(3);
         m.putInt(1);
         m.putInt(player.user.user_id);
         m.putUTF("");
-        m.putByte(0);
+        m.putsbyte(0);
         m.cleanup();
         sendMessage(m);
     }
 
     private void sendSkin(Player player)   {
         CopyOnWriteArrayList<Player> currentPlayers = (CopyOnWriteArrayList<Player>) players.clone();
-        HashMap<Integer, Item> skinPlayer = new HashMap<>();
+        HashMap<int, Item> skinPlayer = new();
         for (Player currentPlayer : currentPlayers) {
             Item itemSkin = currentPlayer.playerData.skinItem;
             if (itemSkin != null) {
@@ -581,8 +581,8 @@ public class GopetPlace extends Place {
         }
         Message m = messagePetSerive(GopetCMD.SEND_SKIN);
         m.putInt(skinPlayer.size());
-        for (Map.Entry<Integer, Item> entry : skinPlayer.entrySet()) {
-            Integer key = entry.getKey();
+        for (Map.Entry<int, Item> entry : skinPlayer.entrySet()) {
+            int key = entry.getKey();
             Item val = entry.getValue();
             m.putInt(key);
             m.putUTF(val.getTemp().getFrameImgPath());
@@ -627,7 +627,7 @@ public class GopetPlace extends Place {
         }
 
         if (isAddToplace) {
-            ArrayList<ClanMember> clanMembers = new ArrayList<>();
+            ArrayList<ClanMember> clanMembers = new();
             for (Player player1 : players) {
                 ClanMember clanMember1 = player1.controller.getClan();
                 if (clanMember1 != null) {

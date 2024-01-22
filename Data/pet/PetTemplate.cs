@@ -2,7 +2,7 @@
 public class PetTemplate {
 
     private int petId, hp, mp, str, _int, agi;
-    private byte type, nclass, element;
+    private sbyte type, nclass, element;
     private String name, icon, frameImg;
     private bool enable;
 

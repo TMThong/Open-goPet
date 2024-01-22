@@ -4,10 +4,10 @@ using Gopet.Data.Collections;
 public class ShopTemplate : DataVersion {
 
     private String name;
-    protected ArrayList<ShopTemplateItem> shopTemplateItems = new ArrayList<>();
-    private byte type;
+    protected ArrayList<ShopTemplateItem> shopTemplateItems = new();
+    private sbyte type;
 
-    public ShopTemplate(byte type) {
+    public ShopTemplate(sbyte type) {
         this.type = type;
         switch (type) {
             case MenuController.SHOP_ARMOUR:

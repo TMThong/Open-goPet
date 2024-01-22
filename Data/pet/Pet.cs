@@ -1,89 +1,66 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package data.pet;
 
-import base.GameObject;
-import com.google.gson.annotations.SerializedName;
-import data.item.Item;
-import data.item.ItemAttributeTemplate;
-import data.item.ItemTemplate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.concurrent.CopyOnWriteArrayList;
-import manager.GopetManager;
-import server.Player;
-import util.Utilities;
+using Gopet.Data.Collections;
 
-/**
- *
- * @author MINH THONG
- */
-public class Pet extends GameObject {
+public class Pet : GameObject {
 
-    @SerializedName("petIdTemplate")
+    
     public int petIdTemplate;
-    @SerializedName("petDieByPK")
+    
     public bool petDieByPK = false;
-    @SerializedName("petId")
+     
     public int petId;
     public int star = 0;
-    @SerializedName("lvl")
+     
     public int lvl = 1;
-    @SerializedName("exp")
+     
     public long exp = 0;
 
-    @SerializedName("name")
+     
     public String name = null;
     public int str, agi, _int;
 
     /**
      * Điểm tiềm năng
      */
-    @SerializedName("tiemnang_point")
+     
     public int tiemnang_point = 0;
 
     /**
      * Điểm kỹ năng , dùng để học kỹ năng
      */
-    @SerializedName("skillPoint")
+    
     public int skillPoint = 0;
 
     /**
      * Dữ liệu về skill skill[*][0] là skillId skill[*][1] là cấp của kỹ năng
      */
-    @SerializedName("skill")
+     
     public int[][] skill = new int[0][0];
 
     /**
      * Này là điểm tiềm năng Dùng trong luyện chỉ số Giúp tăng chỉ số
      * str,agi,int tiemnang[0] là str tiemnang[1] là agi tiemnang[2] là int
      */
-    @SerializedName("tiemnang")
+     
     public int[] tiemnang = new int[]{0, 0, 0};
 
     /**
      * Hình xăm của pet chỉ thêm trong giao diện xăm hình
      */
-    @SerializedName("tatto")
+ 
     public CopyOnWriteArrayList<PetTatto> tatto = new CopyOnWriteArrayList<>();
     /**
      * Các vật phẩm mà pet đã trang bị
      */
-    @SerializedName("equip")
-    public ArrayList<Integer> equip = new ArrayList<>();
-    @SerializedName("isUpTier")
+     
+    public ArrayList<int> equip = new();
+     
     public bool isUpTier = false;
-    @SerializedName("pointTiemNangLvl")
+     
     public int pointTiemNangLvl = 3;
 
-    @SerializedName("wasSell")
+    
     public bool wasSell = false;
-
-    private transient int attrId = -1;
 
     public Pet(int petIdTemplate) {
         this.petIdTemplate = petIdTemplate;
@@ -146,17 +123,17 @@ public class Pet extends GameObject {
 
     public void addSkill(int skill, int skillLv) {
         int[][] oldSkillList = this.skill;
-        this.skill = new int[oldSkillList.length + 1][2];
-        for (int i = 0; i < oldSkillList.length; i++) {
+        this.skill = new int[oldSkillList.Length + 1][2];
+        for (int i = 0; i < oldSkillList.Length; i++) {
             int[] is = oldSkillList[i];
             this.skill[i] = is;
         }
-        this.skill[oldSkillList.length] = new int[]{skill, skillLv};
+        this.skill[oldSkillList.Length] = new int[]{skill, skillLv};
     }
 
     public PetSkill[] getSkills() {
-        PetSkill[] petSkills = new PetSkill[skill.length];
-        for (int i = 0; i < skill.length; i++) {
+        PetSkill[] petSkills = new PetSkill[skill.Length];
+        for (int i = 0; i < skill.Length; i++) {
             int[] skillInfo = skill[i];
             petSkills[i] = GopetManager.PETSKILL_HASH_MAP.get(skillInfo[0]);
         }
@@ -173,7 +150,7 @@ public class Pet extends GameObject {
         }
     }
 
-    public byte getNClassIcon() {
+    public sbyte getNClassIcon() {
         switch (getPetTemplate().getNclass()) {
             case GopetManager.Fighter:
             case GopetManager.Archer:
@@ -250,8 +227,8 @@ public class Pet extends GameObject {
 //        this.maxMp = 0;
         this.maxHp = getPetTemplate().getHp() + (tiemnang[2] * 10);
         this.maxMp = getPetTemplate().getMp() + (tiemnang[2] * 10);
-        for (Iterator<Integer> iterator = equip.iterator(); iterator.hasNext();) {
-            Integer next = iterator.next();
+        for (Iterator<int> iterator = equip.iterator(); iterator.hasNext();) {
+            int next = iterator.next();
             Item it = player.controller.selectItemEquipByItemId(next);
             if (it == null) {
                 iterator.remove();
@@ -284,7 +261,7 @@ public class Pet extends GameObject {
             this.maxMp += petTatto.getMp();
         }
 
-        ArrayList<Item> otherItems = new ArrayList<>();
+        ArrayList<Item> otherItems = new();
         Item skinItem = player.playerData.skinItem;
         if (skinItem != null) {
             otherItems.add(skinItem);
@@ -301,22 +278,15 @@ public class Pet extends GameObject {
         }
         player.controller.checkExpire();
         player.controller.sendMyPetInfo();
-        ItemAttributeTemplate attributeTemplate = getAttributeTemplate();
-        if (attributeTemplate != null) {
-            this.hp += attributeTemplate.findValueById(4);
-            this.mp += attributeTemplate.findValueById(5);
-            this.atk += attributeTemplate.findValueById(34);
-        }
+         
     }
 
-    public ItemAttributeTemplate getAttributeTemplate() {
-        return GopetManager.ITEM_ATTRIBUTE_TEMPLATE_HASH_MAP.get(attrId);
-    }
+     
 
     public int getSkillIndex(int skillId) {
-        for (int i = 0; i < skill.length; i++) {
-            int[] is = skill[i];
-            if (is[0] == skillId) {
+        for (int i = 0; i < skill.Length; i++) {
+            int[] is2 = skill[i];
+            if (is2[0] == skillId) {
                 return i;
             }
         }
@@ -333,7 +303,7 @@ public class Pet extends GameObject {
 
     public PetTatto selectTattoById(int tattooId)   {
         int left = 0;
-        int right = tatto.size() - 1;
+        int right = tatto.Count - 1;
         while (left <= right) {
             int mid = left + (right - left) / 2;
             PetTatto midTattoo = tatto.get(mid);
@@ -352,7 +322,7 @@ public class Pet extends GameObject {
     public void addTatto(PetTatto petTatto) {
         tatto.add(petTatto);
         while (true) {
-            petTatto.tattoId = Utilities.nextInt(1, Integer.MAX_VALUE - 2);
+            petTatto.tattoId = Utilities.nextInt(1, int.MAX_VALUE - 2);
             bool flag = true;
             for (PetTatto item1 : tatto) {
                 if (item1 != petTatto) {
@@ -374,7 +344,7 @@ public class Pet extends GameObject {
     }
 
     public String getDesc() {
-        ArrayList<String> infoStrings = new ArrayList<>();
+        ArrayList<String> infoStrings = new();
         infoStrings.add(Utilities.formatNumber(exp) + " exp ");
 
         if (getAtk() > 0) {
@@ -390,7 +360,7 @@ public class Pet extends GameObject {
             infoStrings.add(getMp() + " (mp) ");
         }
 
-        ArrayList<String> tattooStrings = new ArrayList<>();
+        ArrayList<String> tattooStrings = new();
 
         bool flag = false;
         for (PetTatto petTatto : tatto) {
@@ -406,32 +376,5 @@ public class Pet extends GameObject {
         return desc + String.format("  lvl: %s , ", lvl) + String.join(" , ", infoStrings) + String.join(" , ", tattooStrings);
     }
 
-    private void updateAttr(Player player)   {
-        for (int i = 0; i < GopetManager.ITEM_ATTRIBUTE_TEMPLATES.size(); i++) {
-            ItemAttributeTemplate itemAttributeTemplate = GopetManager.ITEM_ATTRIBUTE_TEMPLATES.get(i);
-            bool[] flag = new bool[itemAttributeTemplate.getListItemId().length];
-            Arrays.fill(flag, false);
-            for (int j : itemAttributeTemplate.getListItemId()) {
-                if (equip.contains(j)) {
-                    flag[i] = true;
-                }
-            }
-            
-            bool fl = true;
-            
-            for (bool b : flag) {
-                if (b == false) {
-                    fl = false;
-                    break;
-                }
-            }
-            
-            if (!fl) {
-                break;
-            }
-
-            this.attrId = itemAttributeTemplate.getAttrId();
-            return;
-        }
-    }
+     
 }

@@ -53,7 +53,7 @@ public class Boss extends Mob {
 
     @Override
     public void initMob() {
-        super.initMob(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        base.initMob(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
         this.mp = 500 + (this.mobLvInfo.getLvl() * 100);
         this.maxMp = 500 + (this.mobLvInfo.getLvl() * 100);
     }

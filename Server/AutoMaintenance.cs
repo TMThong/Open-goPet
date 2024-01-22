@@ -1,20 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package server;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Timer;
-import java.util.TimerTask;
-import runtime.Maintenance;
-
-/**
- *
- * @author MINH THONG
- */
+ 
 public class AutoMaintenance {
 
     private Timer timer = new Timer();

@@ -5,7 +5,7 @@ using System.Diagnostics;
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public class NpcTemplate {
     public int npcId;
-    public byte type;
+    public sbyte type;
     public String name;
     public String[] optionName;
     public String[] chat;

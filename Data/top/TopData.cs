@@ -1,18 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package data.top;
-
-/**
- *
- * @author MINH THONG
- */
-
+[Serializable]
 public class TopData {
-    public int id;
-    public String name;
-    public String desc;
-    public String imgPath = "";
-    public String title;
+    public int id {  get; set; }
+    public String name { get; set; }
+    public String desc { get; set; }
+    public String imgPath { get; set; } = string.Empty;
+    public String title { get; set; }
 }

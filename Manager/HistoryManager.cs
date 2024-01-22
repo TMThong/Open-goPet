@@ -1,18 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package manager;
-
-import data.user.History;
-import java.sql.Connection;
-import java.util.concurrent.CopyOnWriteArrayList;
-import util.Utilities;
-
-/**
- *
- * @author MINH THONG
- */
+ 
 public class HistoryManager extends Thread {
 
     public static HistoryManager instance = new HistoryManager();

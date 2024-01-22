@@ -20,13 +20,13 @@ public class ItemTemplate {
     private bool isStackable;
     private String frameImgPath;
     private String iconPath;
-    public byte gender;
+    public sbyte gender;
     public long expire;
     private bool isOnSky;
     private bool canTrade;
-    private byte NClass;
+    private sbyte NClass;
     private int iconId;
-    private byte element;
+    private sbyte element;
     private int typeTier;
 
     public String getNameViaType() {
@@ -45,7 +45,7 @@ public class ItemTemplate {
     public String getDescriptionViaType() {
         switch (type) {
             case GopetManager.ITEM_PART_PET: {
-                if (this.optionValue.length >= 2) {
+                if (this.optionValue.Length >= 2) {
                     int petId = this.optionValue[0];
                     int count = this.optionValue[1];
                     PetTemplate petTemplate = GopetManager.PETTEMPLATE_HASH_MAP.get(petId);
@@ -56,7 +56,7 @@ public class ItemTemplate {
                 return description;
             }
             case GopetManager.ITEM_PART_ITEM: {
-                if (this.optionValue.length >= 2) {
+                if (this.optionValue.Length >= 2) {
                     int itemidTemp = this.optionValue[0];
                     int count = this.optionValue[1];
                     ItemTemplate itemTemplate = GopetManager.itemTemplate.get(itemidTemp);

@@ -16,7 +16,7 @@ import server.Player;
 public class ClanMap extends GopetMap {
 
     public ClanMap(int mapId_, bool canUpdate, MapTemplate mapTemplate) {
-        super(mapId_, canUpdate, mapTemplate);
+        base(mapId_, canUpdate, mapTemplate);
     }
 
     @Override

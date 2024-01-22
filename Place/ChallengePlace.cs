@@ -45,27 +45,27 @@ public class ChallengePlace extends GopetPlace {
     };
 
     public ChallengePlace(GopetMap m, int ID)   {
-        super(m, ID);
+        base(m, ID);
         placeTime = System.currentTimeMillis() + TIME_WAIT;
         maxPlayer = MAX_PLAYER_JOIN;
-        this.numMobDieNeed = Integer.MAX_VALUE;
+        this.numMobDieNeed = int.MAX_VALUE;
     }
 
     @Override
     public void add(Player player)   {
-        super.add(player); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        base.add(player); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
         player.controller.sendPlaceTime(Math.round(placeTime - System.currentTimeMillis()) / 1000);
         player.controller.showBigTextEff("PHÒNG CHỜ");
     }
 
     @Override
     public bool canAdd(Player player)   {
-        return super.canAdd(player) && isWait; // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        return base.canAdd(player) && isWait; // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 
     @Override
     public void update()   {
-        super.update(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        base.update(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
         if (isWait) {
             if (placeTime < System.currentTimeMillis()) {
                 isWait = false;

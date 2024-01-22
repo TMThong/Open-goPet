@@ -2,6 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+using Gopet.Data.Collections;
+
 package data.battle;
 
 import data.clan.ClanBuff;
@@ -21,21 +23,7 @@ import data.user.Popup;
 import data.user.UserData;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import manager.GopetManager;
-import manager.HistoryManager;
-import place.GopetPlace;
-import server.GameController;
-import server.GopetCMD;
-import server.MenuController;
-import server.Player;
-import server.io.Message;
-import util.Utilities;
-
-/**
- *
- * @author MINH THONG
- */
+ 
 public class PetBattle {
 
     private bool petAttackMob = true;
@@ -189,8 +177,8 @@ public class PetBattle {
         this.activePlayer = activePlayer;
     }
 
-    public void onMessage(final Message message, final Player player)   {
-        final byte subId = message.readByte();
+    public void onMessage(  Message message,   Player player)   {
+          sbyte subId = message.readsbyte();
         switch (subId) {
             case GopetCMD.PetBattle_ATTACK:
                 petAttack(player);
@@ -212,7 +200,7 @@ public class PetBattle {
         }
         if (checkWhoseTurn(player)) {
             bool isMiss = randMiss(getNonUserPetBattleInfo());
-            ArrayList<TurnEffect> turnEffects = new ArrayList<>();
+            ArrayList<TurnEffect> turnEffects = new();
             if (!isMiss) {
                 PetDamgeInfo damge = makeDamage(getUserPetBattleInfo(), getNonUserPetBattleInfo(), null);
                 if (isCrit()) {
@@ -244,12 +232,12 @@ public class PetBattle {
 
     private void sendPetAttack(ArrayList<TurnEffect> turnDatas, TurnEffect mainTurnData)   {
         Message message = new Message(GopetCMD.PET_SERVICE);
-        message.putByte(GopetCMD.PET_BATTLE);
+        message.putsbyte(GopetCMD.PET_BATTLE);
         message.putInt(activePlayer.user.user_id);
         message.putInt(mainTurnData.petId);
         message.putInt(Math.round(delaTimeTurn - System.currentTimeMillis()));
         message.putInt((int) GopetManager.TimeNextTurn);
-        message.putByte(mainTurnData.type);
+        message.putsbyte(mainTurnData.type);
         if (mainTurnData.type == TurnEffect.TYPE_EFFECT_WAIT) {
             // old version            
             message.putInt(0);
@@ -282,12 +270,12 @@ public class PetBattle {
         place.sendMessage(message);
         if (!petAttackMob) {
             message = new Message(GopetCMD.PET_SERVICE);
-            message.putByte(GopetCMD.PET_BATTLE);
+            message.putsbyte(GopetCMD.PET_BATTLE);
             message.putInt(passivePlayer.user.user_id);
             message.putInt(mainTurnData.petId);
             message.putInt(Math.round(delaTimeTurn - System.currentTimeMillis()));
             message.putInt((int) GopetManager.TimeNextTurn);
-            message.putByte(mainTurnData.type);
+            message.putsbyte(mainTurnData.type);
             if (mainTurnData.type == TurnEffect.TYPE_EFFECT_WAIT) {
                 // old version            
                 message.putInt(0);
@@ -352,7 +340,7 @@ public class PetBattle {
      * @param elementPassive hệ của pet bị động
      * @return có hay không khắc chế
      */
-    public static bool isKhacChe(byte elementActive, byte elementPassive) {
+    public static bool isKhacChe(sbyte elementActive, sbyte elementPassive) {
         switch (elementActive) {
             case GopetManager.THUNDER_ELEMENT:
                 return elementPassive == GopetManager.TREE_ELEMENT;
@@ -380,7 +368,7 @@ public class PetBattle {
         if (petAttackMob) {
             Player player = activePlayer;
             Message message = new Message(GopetCMD.PET_SERVICE);
-            message.putByte(GopetCMD.ATTACK_MOB);
+            message.putsbyte(GopetCMD.ATTACK_MOB);
             //Turn time
             message.putInt(Math.round(delaTimeTurn - System.currentTimeMillis()));
             //max turn Time
@@ -396,7 +384,7 @@ public class PetBattle {
             message.putInt(Math.round(delaTimeTurn - System.currentTimeMillis()));
             message.putInt((int) GopetManager.TimeNextTurn);
             message.putInt(activePlayer.user.user_id);
-            message.putByte(0);
+            message.putsbyte(0);
             writeMyPetInfo(activePlayer.getPet(), message);
             message.putInt(passivePlayer.user.user_id);
             writePetPassiveInfo(passivePlayer.getPet(), message);
@@ -405,12 +393,12 @@ public class PetBattle {
         }
     }
 
-    public void sendStartFightPlayer()  , Exception {
+    public void sendStartFightPlayer()    {
         Message message = GameController.messagePetSerive(GopetCMD.PLAYER_BATTLE);
         message.putInt(Math.round(delaTimeTurn - System.currentTimeMillis()));
         message.putInt((int) GopetManager.TimeNextTurn);
         message.putInt(activePlayer.user.user_id);
-        message.putByte(1);
+        message.putsbyte(1);
         writeMyPetInfo(activePlayer.getPet(), message);
         message.putInt(passivePlayer.user.user_id);
         writePetPassiveInfo(passivePlayer.getPet(), message);
@@ -422,22 +410,22 @@ public class PetBattle {
         message.putInt(Math.round(delaTimeTurn - System.currentTimeMillis()));
         message.putInt((int) GopetManager.TimeNextTurn);
         message.putInt(passivePlayer.user.user_id);
-        message.putByte(0);
+        message.putsbyte(0);
         writeMyPetInfo(passivePlayer.getPet(), message);
         message.putInt(activePlayer.user.user_id);
         writePetPassiveInfo(activePlayer.getPet(), message);
         message.putbool(false);
         message.cleanup();
         passivePlayer.session.sendMessage(message);
-        ArrayList<Player> listNoneSend = new ArrayList<>();
+        ArrayList<Player> listNoneSend = new();
         listNoneSend.add(activePlayer);
         listNoneSend.add(passivePlayer);
         place.sendMessage(message, listNoneSend);
     }
 
-    public void sendStartFightMob(Mob mob, Player player)  , Exception {
+    public void sendStartFightMob(Mob mob, Player player)    {
         Message message = new Message(GopetCMD.PET_SERVICE);
-        message.putByte(GopetCMD.ATTACK_MOB);
+        message.putsbyte(GopetCMD.ATTACK_MOB);
         //Turn time
         message.putInt(Math.round(delaTimeTurn - System.currentTimeMillis()));
         //max turn Time
@@ -466,8 +454,8 @@ public class PetBattle {
         message.putInt(pet.mp);
         message.putInt(pet.maxHp);
         message.putInt(pet.maxMp);
-        message.putByte(pet.skill.length);
-        for (int i = 0; i < pet.skill.length; i++) {
+        message.putsbyte(pet.skill.Length);
+        for (int i = 0; i < pet.skill.Length; i++) {
             int skillId = pet.skill[i][0];
             int skilllvl = pet.skill[i][1];
             PetSkill petSkill = GopetManager.PETSKILL_HASH_MAP.get(skillId);
@@ -490,7 +478,7 @@ public class PetBattle {
         message.putInt(mob.mp);
         message.putInt(mob.maxHp);
         message.putInt(mob.maxMp);
-        message.putByte(0);
+        message.putsbyte(0);
     }
 
     public static void writePetPassiveInfo(Pet petPassive, Message message)   {
@@ -504,8 +492,8 @@ public class PetBattle {
         message.putInt(petPassive.mp);
         message.putInt(petPassive.maxHp);
         message.putInt(petPassive.maxMp);
-        message.putByte(petPassive.skill.length);
-        for (int i = 0; i < petPassive.skill.length; i++) {
+        message.putsbyte(petPassive.skill.Length);
+        for (int i = 0; i < petPassive.skill.Length; i++) {
             int skillId = petPassive.skill[i][0];
             int skilllvl = petPassive.skill[i][1];
             PetSkill petSkill = GopetManager.PETSKILL_HASH_MAP.get(skillId);
@@ -594,7 +582,7 @@ public class PetBattle {
         } else {
             hadFinished = true;
         }
-        ArrayList<Popup> petBattleTexts = new ArrayList<>();
+        ArrayList<Popup> petBattleTexts = new();
         if (petAttackMob) {
             int exp = 0;
             int coin = 0;
@@ -644,7 +632,7 @@ public class PetBattle {
                     Boss boss = (Boss) mob;
                     petBattleTexts.addAll(activePlayer.controller.onReiceiveGift(boss.getBossTemplate().getGift()));
                     place.mobDie(mob);
-                    ArrayList<String> txtInfo = new ArrayList<>();
+                    ArrayList<String> txtInfo = new();
                     for (Popup petBattleText : petBattleTexts) {
                         txtInfo.add(petBattleText.getText());
                     }
@@ -731,14 +719,14 @@ public class PetBattle {
 
     private Message win(Popup[] petBattleTexts, int coin, int exp, int battleId)   {
         Message m = new Message(GopetCMD.PET_SERVICE);
-        m.putByte(GopetCMD.PET_BATTLE_STATE);
+        m.putsbyte(GopetCMD.PET_BATTLE_STATE);
         m.putInt(battleId);
         m.putInt(getWinId());
-        m.putByte(0);
+        m.putsbyte(0);
         m.putInt(coin);
         m.putInt(exp);
-        m.putByte(petBattleTexts.length);
-        for (int i = 0; i < petBattleTexts.length; i++) {
+        m.putsbyte(petBattleTexts.Length);
+        for (int i = 0; i < petBattleTexts.Length; i++) {
             Popup petBattleText = petBattleTexts[i];
             m.putUTF(petBattleText.getText());
             m.putUTF("2");
@@ -791,7 +779,7 @@ public class PetBattle {
                 Pet nonPet = getNonPet();
                 bool flag = false;
                 int skillindex = -1;
-                for (int i = 0; i < pet.skill.length; i++) {
+                for (int i = 0; i < pet.skill.Length; i++) {
                     int[] skillInfo = pet.skill[i];
                     if (skillInfo[0] == skillId) {
                         flag = true;
@@ -807,7 +795,7 @@ public class PetBattle {
                         int mpdelta = 0;
                         pet.mp -= petSkillLv.mpLost;
                         petBattleInfo.addSkillCoolDown(skillId, GopetManager.MAX_SKILL_COOLDOWN);
-                        ArrayList<TurnEffect> turnEffects = new ArrayList<>();
+                        ArrayList<TurnEffect> turnEffects = new();
                         bool isMiss = randMiss(nonPetBattleInfo);
                         applySkill(petSkillLv, petBattleInfo, nonPetBattleInfo);
                         PetDamgeInfo damageInfo = makeDamage(petBattleInfo, nonPetBattleInfo, petSkillLv);
@@ -960,7 +948,7 @@ public class PetBattle {
     private void mobUseNormalAttack()   {
         bool isStun = ItemInfo.getValueById(getUserPetBattleInfo().getBuff(), ItemInfo.Type.STUN) > 0;
         if (!isStun) {
-            ArrayList<TurnEffect> turnEffects = new ArrayList<>();
+            ArrayList<TurnEffect> turnEffects = new();
             bool isMiss = randMiss(getNonUserPetBattleInfo());
             int sum = mob.getMobLvInfo().getStrength();
 
@@ -1023,7 +1011,7 @@ public class PetBattle {
                 int mpdelta = 0;
                 mob.mp -= petSkillLv.mpLost;
                 petBattleInfo.addSkillCoolDown(skill.skillID, GopetManager.MAX_SKILL_COOLDOWN);
-                ArrayList<TurnEffect> turnEffects = new ArrayList<>();
+                ArrayList<TurnEffect> turnEffects = new();
                 bool isMiss = randMiss(nonPetBattleInfo);
                 applySkill(petSkillLv, petBattleInfo, nonPetBattleInfo);
                 PetDamgeInfo damageInfo = makeDamage(petBattleInfo, nonPetBattleInfo, petSkillLv);
@@ -1105,7 +1093,7 @@ public class PetBattle {
     }
 
     private void applySkill(PetSkillLv petSkillLv, PetBattleInfo petBattleInfo, PetBattleInfo nonBattleInfo) {
-        for (final ItemInfo i : petSkillLv.skillInfo) {
+        for (  ItemInfo i : petSkillLv.skillInfo) {
             switch (i.id) {
                 case ItemInfo.Type.MISS_IN_2_TURN:
                     petBattleInfo.addBuff(new Buff(new ItemInfo[]{i}, 2));
@@ -1152,7 +1140,7 @@ public class PetBattle {
     private void updateDamagePhanDoan()   {
         Pet pet = getPet();
         Pet nonPet = getNonPet();
-        ArrayList<TurnEffect> turnEffects = new ArrayList<>();
+        ArrayList<TurnEffect> turnEffects = new();
         int damagePhandoan = ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.DAMAGE_PHANDOAN);
         if (damagePhandoan > 0) {
             if (petAttackMob) {
@@ -1176,7 +1164,7 @@ public class PetBattle {
     private void updateDamageToxic()   {
         Pet pet = getPet();
         Pet nonPet = getNonPet();
-        ArrayList<TurnEffect> turnEffects = new ArrayList<>();
+        ArrayList<TurnEffect> turnEffects = new();
         float damagePer = ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.DAMGE_TOXIC_IN_5_TURN_PER) / 100f;
 
         if (damagePer > 0) {
@@ -1207,7 +1195,7 @@ public class PetBattle {
                 Pet p = getPet();
                 int oldHp = p.hp;
                 int oldMp = p.mp;
-                for (int i = 0; i < itemSelect.getTemp().getOption().length; i++) {
+                for (int i = 0; i < itemSelect.getTemp().getOption().Length; i++) {
                     int j = itemSelect.getTemp().getOption()[i];
                     int opValue = itemSelect.getTemp().getOptionValue()[i];
                     switch (j) {
@@ -1219,7 +1207,7 @@ public class PetBattle {
                             break;
                     }
                 }
-                sendPetAttack(new ArrayList<>(), TurnEffect.createWait(p.hp - oldHp, p.mp - oldMp, getUserTurnId()));
+                sendPetAttack(new(), TurnEffect.createWait(p.hp - oldHp, p.mp - oldMp, getUserTurnId()));
                 player.controller.subCountItem(itemSelect, 1, GopetManager.NORMAL_INVENTORY);
                 if (!petAttackMob) {
                     String str = String.format("Người chơi %s đã sử dụng %s", player.playerData.name, itemSelect.getTemp().getName());

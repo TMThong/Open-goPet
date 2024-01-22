@@ -1,29 +1,17 @@
-package manager;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import java.lang.reflect.Type;
 
-public class JsonManager {
+using Newtonsoft.Json;
 
-    public static  Gson GSON = new GsonBuilder().
-//                registerTypeAdapter(ClanMember.class, new ClanMemberAdapter()).
-//                registerTypeAdapter(ClanBuff.class, new ClanBuffAdapter()).
-                create();
+public static class JsonManager
+{
 
-    public JsonManager() {
-         
+    public static Object LoadFromJson(String data, Type c)
+    {
+        return JsonConvert.DeserializeObject(data, c);
     }
 
-    public static Object LoadFromJson(String data, Class c) {
-        return GSON.fromJson(data, c);
-    }
-
-    public static Object LoadFromJson(String data, Type c) {
-        return GSON.fromJson(data, c);
-    }
-
-    public static String ToJson(Object o) {
-        return GSON.toJson(o);
+    public static String ToJson(Object o)
+    {
+        return JsonConvert.SerializeObject(o);
     }
 }

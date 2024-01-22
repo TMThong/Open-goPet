@@ -46,7 +46,7 @@ public class TaskCalculator {
     public const int REQUEST_UP_TIER_PET = 13;
     private Player player;
 
-    private HashMap<Integer, ArrayList<TaskTemplate>> cacheTask = new HashMap<>();
+    private HashMap<int, ArrayList<TaskTemplate>> cacheTask = new();
 
     public TaskCalculator(Player player) {
         this.player = player;
@@ -59,8 +59,8 @@ public class TaskCalculator {
             return;
         }
 
-        for (Map.Entry<Integer, NpcTemplate> entry : GopetManager.npcTemplate.entrySet()) {
-            Integer key = entry.getKey();
+        for (Map.Entry<int, NpcTemplate> entry : GopetManager.npcTemplate.entrySet()) {
+            int key = entry.getKey();
             NpcTemplate val = entry.getValue();
             ArrayList<TaskTemplate> taskFromNPC = GopetManager.taskTemplateByNpcId.get(key);
             if (taskFromNPC != null) {
@@ -76,7 +76,7 @@ public class TaskCalculator {
 
                         if (flag) {
                             if (!this.cacheTask.containsKey(key)) {
-                                this.cacheTask.put(key, new ArrayList<>());
+                                this.cacheTask.put(key, new());
                             }
                             this.cacheTask.get(key).add(taskTemplate);
                         }
@@ -89,18 +89,18 @@ public class TaskCalculator {
     public ArrayList<TaskTemplate> getTaskTemplate(int npcId) {
         ArrayList<TaskTemplate> taskTemplates = this.cacheTask.get(npcId);
         if (taskTemplates == null) {
-            return new ArrayList<>();
+            return new();
         }
         return taskTemplates;
     }
 
     public static String getTaskText(int[] task, int[][] taskInfo, long timeTask) {
         if (task == null) {
-            task = new int[taskInfo.length];
+            task = new int[taskInfo.Length];
             Arrays.fill(task, 0);
         }
-        ArrayList<String> taskText = new ArrayList<>();
-        for (int i = 0; i < taskInfo.length; i++) {
+        ArrayList<String> taskText = new();
+        for (int i = 0; i < taskInfo.Length; i++) {
             int[] taskI = taskInfo[i];
             switch (taskI[0]) {
                 case REQUEST_KILL_MOB:
@@ -151,7 +151,7 @@ public class TaskCalculator {
     }
 
     public void onTaskUpdate(TaskData taskData, int taskRequestType, Object... dObjects) {
-        for (int i = 0; i < taskData.taskInfo.length; i++) {
+        for (int i = 0; i < taskData.taskInfo.Length; i++) {
             if (taskData.task[i] < taskData.taskInfo[i][1] && taskData.taskInfo[i][0] == taskRequestType) {
                 switch (taskRequestType) {
                     case REQUEST_KILL_MOB: {
@@ -338,7 +338,7 @@ public class TaskCalculator {
         getTaskDatas().remove(taskData);
         player.playerData.tasking.remove((Object) taskData.taskTemplateId);
         ArrayList<Popup> list = player.controller.onReiceiveGift(taskData.gift);
-        ArrayList<String> txtInfo = new ArrayList<>();
+        ArrayList<String> txtInfo = new();
         for (Popup petBattleText : list) {
             txtInfo.add(petBattleText.getText());
         }
@@ -357,7 +357,7 @@ public class TaskCalculator {
         for (Pet pet : player.playerData.pets) {
             if (!pet.wasSell) {
                 this.onTaskUpdate(taskData, REQUEST_PET_LVL, pet);
-                if (pet.skill.length > 0) {
+                if (pet.skill.Length > 0) {
                     this.onTaskUpdate(taskData, REQUEST_LEARN_SKILL_PET);
                 }
             }
@@ -367,19 +367,19 @@ public class TaskCalculator {
         if (currentPet != null) {
             if (!currentPet.wasSell) {
                 this.onTaskUpdate(taskData, REQUEST_PET_LVL, currentPet);
-               if (currentPet.skill.length > 0) {
+               if (currentPet.skill.Length > 0) {
                     this.onTaskUpdate(taskData, REQUEST_LEARN_SKILL_PET);
                 }
             }
         }
 
-        for (Integer integer : player.playerData.wasTask) {
-            this.onTaskUpdate(taskData, REQUEST_NEED_TASK, integer);
+        for (int int : player.playerData.wasTask) {
+            this.onTaskUpdate(taskData, REQUEST_NEED_TASK, int);
         }
     }
 
     public bool taskSuccess(TaskData taskData) {
-        for (int i = 0; i < taskData.taskInfo.length; i++) {
+        for (int i = 0; i < taskData.taskInfo.Length; i++) {
             int[] taskI = taskData.taskInfo[i];
             if (taskI[1] > taskData.task[i]) {
                 return false;

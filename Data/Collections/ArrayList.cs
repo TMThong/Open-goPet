@@ -29,5 +29,12 @@ namespace Gopet.Data.Collections
         {
             return base.Contains(item);
         }
+
+        public bool isEmpty()
+        {
+            return base.Count <= 0;
+        }
+
+        public T get(int index) => base[index];
     }
 }

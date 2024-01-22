@@ -1,14 +1,10 @@
-package place;
 
-import data.battle.PetBattle;
-import data.map.GopetMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import server.Player;
-import server.io.Message;
+
+using Gopet.Data.Collections;
 
 public abstract class Place {
 
-    public CopyOnWriteArrayList<Player> players = new CopyOnWriteArrayList();
+    public CopyOnWriteArrayList<Player> players = new();
     public int numPlayer = 0;
     public int maxPlayer = 20;
     public GopetMap map;
@@ -53,14 +49,14 @@ public abstract class Place {
 
     }
 
-    public void sendMove(int channelID, int userID, byte lastDir, short[][] points)   {
-        Message ms = new Message((byte) 108);
-        ms.putByte(9);
-        ms.putByte(5);
+    public void sendMove(int channelID, int userID, sbyte lastDir, short[][] points)   {
+        Message ms = new Message((sbyte) 108);
+        ms.putsbyte(9);
+        ms.putsbyte(5);
         ms.putInt(channelID);
         ms.putInt(userID);
-        ms.putByte(lastDir);
-        ms.putInt(points.length);
+        ms.putsbyte(lastDir);
+        ms.putInt(points.Length);
         for (short[] point : points) {
             ms.putShort(point[0]);
             ms.putShort(point[1]);
@@ -74,9 +70,9 @@ public abstract class Place {
     }
 
     public void sendRemove(Player player)   {
-        Message ms = new Message((byte) 108);
-        ms.putByte(9);
-        ms.putByte(4);
+        Message ms = new Message((sbyte) 108);
+        ms.putsbyte(9);
+        ms.putsbyte(4);
         ms.putInt(zoneID);
         ms.putInt(player.user.user_id);
         ms.cleanup();
@@ -84,9 +80,9 @@ public abstract class Place {
     }
 
     public void chat(Player player, String text)   {
-        Message ms = new Message((byte) 108);
-        ms.putByte(9);
-        ms.putByte(6);
+        Message ms = new Message((sbyte) 108);
+        ms.putsbyte(9);
+        ms.putsbyte(6);
         ms.putInt(zoneID);
         ms.putInt(player.user.user_id);
         ms.putUTF(player.playerData.name);
@@ -96,9 +92,9 @@ public abstract class Place {
     }
 
     public void chat(int user_id, String name, String text)   {
-        Message ms = new Message((byte) 108);
-        ms.putByte(9);
-        ms.putByte(6);
+        Message ms = new Message((sbyte) 108);
+        ms.putsbyte(9);
+        ms.putsbyte(6);
         ms.putInt(zoneID);
         ms.putInt(user_id);
         ms.putUTF(name);

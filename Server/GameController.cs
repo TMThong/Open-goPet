@@ -1,93 +1,24 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package server;
 
-import app.Main;
-import data.battle.PetBattle;
-import data.clan.Clan;
-import data.clan.ClanBuff;
-import data.clan.ClanChat;
-import data.clan.ClanMember;
-import data.clan.ClanMemberDonateInfo;
-import data.clan.ClanRequestJoin;
-import data.dialog.InputReader;
-import data.dialog.MenuItemInfo;
-import data.dialog.Option;
-import data.item.Item;
-import data.item.ItemGem;
-import data.item.ItemTemplate;
-import data.item.SellItem;
-import data.item.TierItem;
-import data.map.GopetMap;
-import data.map.Kiosk;
-import data.pet.Pet;
-import data.pet.PetSkill;
-import data.pet.PetSkillLv;
-import data.pet.PetTatto;
-import data.pet.PetTattoTemplate;
-import data.pet.PetTier;
-import data.pet.PetUpgradeInfo;
-import data.user.GopetCaptcha;
-import data.user.History;
-import data.user.PlayerData;
-import data.user.Popup;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
-import lombok.Getter;
-import lombok.Setter;
-import manager.ClanManager;
-import manager.GopetManager;
-import manager.HistoryManager;
-import manager.MYSQLManager;
-import manager.MapManager;
-import manager.PlayerManager;
-import place.ClanPlace;
-import place.GopetPlace;
-import place.MarketPlace;
-import place.Place;
-import static server.GopetCMD.UP_TIER_ITEM;
-import static server.MenuController.OBJKEY_ITEM_UP_SKILL;
-import static server.MenuController.OBJKEY_SKILL_UP_ID;
-import static server.Player.CheckString;
-import server.io.Message;
-import server.io.Session;
-import util.PlatformHelper;
-import util.Utilities;
+using Gopet.Data.Collections;
 
-/**
- *
- * @author MINH THONG
- */
 public class GameController {
 
     private Player player;
     private PetBattle petBattle;
     private PetUpgradeInfo petUpgradeInfo;
-    public HashMap<Integer, Object> objectPerformed = new HashMap<>();
+    public HashMap<int, Object> objectPerformed = new();
     private long changePlaceDelay = System.currentTimeMillis();
     private ClanMember _clanMember;
 
-    @Getter
-    @Setter
-    private TaskCalculator taskCalculator;
+    
+    public TaskCalculator taskCalculator {  get; set; }
 
-    @Getter
-    @Setter
-    private long lastTimeKillMob = 0L;
+    
+    public long lastTimeKillMob {  get; set; } = 0;
 
     private long lastTimeTypeGiftCode = 0L;
-    @Setter
-    private bool isBuffEnchent = false;
+     
+    public bool isBuffEnchent { get; private set; } = false;
 
     public bool isHasBattleAndShowDialog()   {
         if (petBattle != null) {
@@ -197,29 +128,29 @@ public class GameController {
         switch (message.id) {
             case GopetCMD.ON_OTHER_USER_MOVE: {
                 int i1 = message.reader().readInt();
-                byte b1 = message.reader().readByte();
+                sbyte b1 = message.reader().readsbyte();
                 int b2 = message.reader().readInt();
                 int[] points = new int[message.reader().readInt()];
-                for (int i = 0; i < points.length; i++) {
+                for (int i = 0; i < points.Length; i++) {
                     points[i] = message.reader().readInt();
                 }
                 // System.out.println("server.GameController.onMessage() point  " + JsonManager.ToJson(points));
                 GopetPlace place = (GopetPlace) player.getPlace();
                 if (place != null) {
-                    player.playerData.x = points[points.length - 2];
-                    player.playerData.y = points[points.length - 1];
+                    player.playerData.x = points[points.Length - 2];
+                    player.playerData.y = points[points.Length - 1];
 //                    System.err.println(player.playerData.x + "|" + player.playerData.y + "|" + place.map.mapID);
                     place.sendMove(player.user.user_id, b1, points);
                 }
 
-//                if (Math.abs(points[0] - points[points.length - 2]) > 300) {
+//                if (Math.abs(points[0] - points[points.Length - 2]) > 300) {
 //                    hackMoveCounter++;
 //                }
 //
-//                if (Math.abs(points[1] - points[points.length - 1]) > 300) {
+//                if (Math.abs(points[1] - points[points.Length - 1]) > 300) {
 //                    hackMoveCounter++;
 //                }
-                if (points.length > 30 && !player.playerData.isAdmin) {
+                if (points.Length > 30 && !player.playerData.isAdmin) {
                     hackMoveCounter++;
                 }
 
@@ -248,7 +179,7 @@ public class GameController {
                     int mapId = message.reader().readInt();
                     int index = message.reader().readInt();
                     int mapVersion = message.reader().readInt();
-                    player.playerData.waypointIndex = (byte) index;
+                    player.playerData.waypointIndex = (sbyte) index;
                     player.playerData.x = player.playerData.y = 360;
                     MapManager.maps.get(mapId).addRandom(player);
                 } else {
@@ -267,7 +198,7 @@ public class GameController {
                 changeChannel(changeInfo);
                 break;
             case GopetCMD.MGO_COMMAND:
-                final byte sub = message.reader().readByte();
+                  sbyte sub = message.reader().readsbyte();
                 switch (sub) {
                     case GopetCMD.TELE_MENU:
                         mapTeleMenu();
@@ -275,11 +206,11 @@ public class GameController {
                 }
                 break;
             case GopetCMD.PET_SERVICE:
-                processPet(message.reader().readByte(), message);
+                processPet(message.reader().readsbyte(), message);
                 break;
             case GopetCMD.CHANGE_NEW_PASSWORD:
-                byte subCmd = message.reader().readByte();
-                byte subCmd2 = message.reader().readByte();
+                sbyte subCmd = message.reader().readsbyte();
+                sbyte subCmd2 = message.reader().readsbyte();
                 if (subCmd != 2 && subCmd2 != 7) {
                     throw new UnsupportedOperationException();
                 } else {
@@ -287,16 +218,16 @@ public class GameController {
                 }
                 break;
             case GopetCMD.COMMAND_IMAGE:
-                requestImg(message.reader().readByte(), message.reader().readByte(), message.reader().readUTF());
+                requestImg(message.reader().readsbyte(), message.reader().readsbyte(), message.reader().readUTF());
                 break;
             case GopetCMD.COMMAND_GUIDER:
-                guider(message.reader().readByte(), message);
+                guider(message.reader().readsbyte(), message);
                 break;
             case GopetCMD.CREATE_CHAR:
-                onClienSendCharInfo(message.reader().readUTF(), message.reader().readByte());
+                onClienSendCharInfo(message.reader().readUTF(), message.reader().readsbyte());
                 break;
             case GopetCMD.SERVER_MESSAGE: {
-                final byte subCmdServerMsg = message.reader().readByte();
+                  sbyte subCmdServerMsg = message.reader().readsbyte();
                 serverMessage(subCmdServerMsg, message);
                 break;
             }
@@ -328,13 +259,13 @@ public class GameController {
         }
         if (pet != null) {
             Message message = new Message(GopetCMD.PET_SERVICE);
-            message.putByte(GopetCMD.MAGIC);
+            message.putsbyte(GopetCMD.MAGIC);
             message.putInt(user_id);
             message.putInt(pet.getPetIdTemplate());
-            message.putByte(pet.getPetTemplate().getElement());
+            message.putsbyte(pet.getPetTemplate().getElement());
             message.putUTF(pet.getPetTemplate().getFrameImg());
             message.putUTF(pet.getNameWithStar());
-            message.putByte(pet.getPetTemplate().getNclass());
+            message.putsbyte(pet.getPetTemplate().getNclass());
             message.putInt(pet.lvl);
             message.putLong(pet.exp);
             if (GopetManager.PetExp.containsKey(pet.lvl)) {
@@ -352,8 +283,8 @@ public class GameController {
             message.putInt(pet.mp);
             message.putInt(pet.maxHp);
             message.putInt(pet.maxMp);
-            message.putByte(pet.skill.length);
-            for (int i = 0; i < pet.skill.length; i++) {
+            message.putsbyte(pet.skill.Length);
+            for (int i = 0; i < pet.skill.Length; i++) {
                 int skillId = pet.skill[i][0];
                 int skilllvl = pet.skill[i][1];
                 PetSkill petSkill = GopetManager.PETSKILL_HASH_MAP.get(skillId);
@@ -370,7 +301,7 @@ public class GameController {
             for (PetTatto petTatto : petTattos) {
                 message.putInt(1);
                 message.putUTF(petTatto.getName());
-                message.putByte(1);
+                message.putsbyte(1);
                 message.putUTF("");
             }
 
@@ -382,7 +313,7 @@ public class GameController {
         }
     }
 
-    private void serverMessage(byte subtype, Message message)   {
+    private void serverMessage(sbyte subtype, Message message)   {
         switch (subtype) {
             case GopetCMD.SEND_YES_NO:
                 MenuController.answerYesNo(message.reader().readInt(), message.reader().readbool(), player);
@@ -390,10 +321,10 @@ public class GameController {
         }
     }
 
-    private void onClienSendCharInfo(String name, byte gender)   {
+    private void onClienSendCharInfo(String name, sbyte gender)   {
         if (player.playerData == null) {
             if (!Player.CheckString(name, "^[a-z0-9]+$")
-                    || (name.length() > 20 || name.length() < 5)) {
+                    || (name.Length() > 20 || name.Length() < 5)) {
                 player.redDialog(
                         "Tên nhân vật phải có số lượng kí tự lớn hơn 5 và bé hơn 20 cũng như không chứa các kí tự đặc biệt");
                 player.loginOK();
@@ -423,7 +354,7 @@ public class GameController {
         }
     }
 
-    private void guider(byte subCMD, Message message)   {
+    private void guider(sbyte subCMD, Message message)   {
         //System.out.println("server.GameController.guider( ) " + subCMD);
         switch (subCMD) {
             case GopetCMD.GUIDER_IMGDIALOG:
@@ -445,13 +376,13 @@ public class GameController {
             break;
 
             case GopetCMD.SELECT_MENU_ELEMENT: {
-                final int listId = message.reader().readInt();
+                  int listId = message.reader().readInt();
                 MenuController.selectMenu(listId, message.reader().readInt(), 0, player);
                 break;
             }
             case GopetCMD.GUIDER_TYPE_PAY:
                 int menuId = message.readInt();
-                switch (message.readByte()) {
+                switch (message.readsbyte()) {
                     case 2:
                         int menuElementIndex = message.readInt();
                         int paymentIndex = message.readInt();
@@ -462,7 +393,7 @@ public class GameController {
             case GopetCMD.TYPE_DIALOG_INPUT:
                 int dialogInputId = message.readInt();
                 String[] texts = new String[message.readInt()];
-                for (int i = 0; i < texts.length; i++) {
+                for (int i = 0; i < texts.Length; i++) {
                     texts[i] = message.readUTF();
                 }
                 try {
@@ -488,11 +419,11 @@ public class GameController {
         }
     }
 
-    public void showMenuItem(int listID, byte type, String title, ArrayList<MenuItemInfo> menuItemInfos)   {
+    public void showMenuItem(int listID, sbyte type, String title, ArrayList<MenuItemInfo> menuItemInfos)   {
         Message message = new Message(GopetCMD.COMMAND_GUIDER);
-        message.putByte(GopetCMD.SHOW_MENU_ITEM);
+        message.putsbyte(GopetCMD.SHOW_MENU_ITEM);
         message.putInt(listID);
-        message.putByte(type);
+        message.putsbyte(type);
         message.putUTF(title);
         message.putInt(menuItemInfos.size());
         for (int i = 0; i < menuItemInfos.size(); i++) {
@@ -505,29 +436,29 @@ public class GameController {
             message.putUTF(menuItemInfo.getImgPath());
             message.putUTF(menuItemInfo.getTitleMenu());
             message.putUTF(menuItemInfo.getDesc());
-            message.putByte(menuItemInfo.isCanSelect() ? 1 : 0);
+            message.putsbyte(menuItemInfo.isCanSelect() ? 1 : 0);
             message.putbool(menuItemInfo.isShowDialog());
             if (menuItemInfo.isShowDialog()) {
                 message.putUTF(menuItemInfo.getDialogText());
                 message.putUTF(menuItemInfo.getLeftCmdText());
                 message.putUTF(menuItemInfo.getRightCmdText());
             }
-            message.putByte(menuItemInfo.getSaleStatus());
+            message.putsbyte(menuItemInfo.getSaleStatus());
             message.putbool(menuItemInfo.isCloseScreenAfterClick());
             MenuItemInfo.PaymentOption[] paymentOptions = menuItemInfo.getPaymentOptions();
-            message.putInt(paymentOptions.length);
-            for (int j = 0; j < paymentOptions.length; j++) {
+            message.putInt(paymentOptions.Length);
+            for (int j = 0; j < paymentOptions.Length; j++) {
                 MenuItemInfo.PaymentOption paymentOption = paymentOptions[j];
                 message.putInt(paymentOption.getPaymentOptionsId());
                 message.putUTF(paymentOption.getMoneyText());
-                message.putByte(paymentOption.getIsPaymentEnable());
+                message.putsbyte(paymentOption.getIsPaymentEnable());
             }
         }
         message.cleanup();
         player.session.sendMessage(message);
     }
 
-    private void requestImg(byte gameType, byte type, String path)   {
+    private void requestImg(sbyte gameType, sbyte type, String path)   {
         //System.out.println("requestImg|" + gameType + "|" + type + "|" + path);
         String originPath = path;
         if (path.equals(GopetManager.EMPTY_IMG_PATH)) {
@@ -536,7 +467,7 @@ public class GameController {
 
         if (!PlatformHelper.hasAssets(path)) {
             try {
-                int idAsset = Integer.parseInt(path);
+                int idAsset = int.parseInt(path);
                 path = GopetManager.itemAssetsIcon.get(idAsset);
             } catch (Exception e) {
             }
@@ -550,7 +481,7 @@ public class GameController {
                     }
                     try {
                         if (PlatformHelper.hasAssets(path) || path.equals(captchaPath)) {
-                            byte[] buffer = null;
+                            sbyte[] buffer = null;
                             if (path.equals(captchaPath)) {
                                 if (player.playerData.captcha != null) {
                                     buffer = player.playerData.captcha.getBufferImg();
@@ -562,10 +493,10 @@ public class GameController {
                             }
 
                             Message ms = new Message(GopetCMD.COMMAND_IMAGE);
-                            ms.putByte(gameType);
-                            ms.putByte(type);
+                            ms.putsbyte(gameType);
+                            ms.putsbyte(type);
                             ms.putUTF(originPath);
-                            ms.putInt(buffer.length);
+                            ms.putInt(buffer.Length);
                             ms.writer().write(buffer);
                             ms.cleanup();
                             player.session.sendMessage(ms);
@@ -582,7 +513,7 @@ public class GameController {
     public void requestChangePass(int id, String oldPass, String newPass)   {
         if (oldPass.equals(player.user.password)) {
             if (!CheckString(newPass, "^[a-z0-9]+$")
-                    || newPass.length() < 5) {
+                    || newPass.Length() < 5) {
                 player.redDialog("Mật khẩu phải có số lượng kí tự lớn hơn 5 và không chứa các kí tự đặc biệt");
                 return;
             }
@@ -601,7 +532,7 @@ public class GameController {
         }
     }
 
-    private void processPet(final byte subCmd, Message message)   {
+    private void processPet(  sbyte subCmd, Message message)   {
         //System.err.println("processPet " + subCmd);
         switch (subCmd) {
             case GopetCMD.CHAT_PUBLIC: {
@@ -619,7 +550,7 @@ public class GameController {
                 requestPetInventory();
                 break;
             case GopetCMD.REQUEST_PET_IMG: {
-                requestPetImg(message.reader().readByte(), message.reader().readUTF());
+                requestPetImg(message.reader().readsbyte(), message.reader().readUTF());
                 break;
             }
             case GopetCMD.ATTACK_MOB: {
@@ -638,41 +569,41 @@ public class GameController {
                 break;
             }
             case GopetCMD.PET_RECOVERY_HP:
-                setRecovery(message.readByte() == 1);
+                setRecovery(message.readsbyte() == 1);
                 break;
             case GopetCMD.MAGIC:
                 magic(player.user.user_id, true);
                 break;
             case GopetCMD.MAGIC_LEARN_SKILL:
-                final int skillId = message.readInt();
+                  int skillId = message.readInt();
                 learnSkill(skillId);
                 break;
             case GopetCMD.GYM:
                 gym();
                 break;
             case GopetCMD.UP_TIEM_NANG:
-                upTiemNang(message.readInt(), message.readByte());
+                upTiemNang(message.readInt(), message.readsbyte());
                 break;
             case GopetCMD.EQUIP_INFO:
                 equipInfo(player.user.user_id);
                 break;
             case GopetCMD.GET_PLAYER_INFO:
-                getInfo(message.readByte(), message.readInt());
+                getInfo(message.readsbyte(), message.readInt());
                 break;
             case GopetCMD.TATTOO:
-                tatto(message.readByte(), message);
+                tatto(message.readsbyte(), message);
                 break;
             case GopetCMD.USE_EQUIP_ITEM:
                 useEquipItem(message.readInt());
                 break;
             case GopetCMD.REQUEST_SHOP:
-                requestShop(message.readByte());
+                requestShop(message.readsbyte());
                 break;
             case GopetCMD.UNEQUIP_ITEM:
                 unEquipItem(message.readInt());
                 break;
             case GopetCMD.CLAN:
-                clan(message.readByte(), message);
+                clan(message.readsbyte(), message);
                 break;
             case GopetCMD.SKIN_INVENTORY:
                 MenuController.sendMenu(MenuController.MENU_SKIN_INVENTORY, player);
@@ -685,7 +616,7 @@ public class GameController {
                 break;
             case GopetCMD.SELECT_PET_UPGRADE:
                 if (petUpgradeInfo != null) {
-                    selectPet(message.readByte());
+                    selectPet(message.readsbyte());
                 }
                 break;
             case GopetCMD.REQUEST_SHOP_SKIN:
@@ -704,13 +635,13 @@ public class GameController {
                 upTierItem(message.readInt(), message.readInt(), false);
                 break;
             case GopetCMD.PRICE_UP_TIER_PET:
-                setPricePetUpgrade(Integer.MAX_VALUE, GopetManager.PRICE_UP_TIER_PET);
+                setPricePetUpgrade(int.MAX_VALUE, GopetManager.PRICE_UP_TIER_PET);
                 break;
             case GopetCMD.PET_UP_TIER:
-                petUpTier(message.readInt(), message.readInt(), message.readUTF(), message.readByte());
+                petUpTier(message.readInt(), message.readInt(), message.readUTF(), message.readsbyte());
                 break;
             case GopetCMD.SELECT_KIOSK_ITEM:
-                selectKioskItem(message.readByte());
+                selectKioskItem(message.readsbyte());
                 break;
             case GopetCMD.REMOVE_SELL_ITEM:
                 removeSellItem(message.readInt());
@@ -773,7 +704,7 @@ public class GameController {
 
         if (player.playerData.petSelected != null) {
             Message message = new Message(GopetCMD.PET_SERVICE);
-            message.putByte(GopetCMD.MY_PET_INFO);
+            message.putsbyte(GopetCMD.MY_PET_INFO);
             //hp
             message.putInt(player.playerData.petSelected.hp);
             //mp
@@ -788,7 +719,7 @@ public class GameController {
         }
     }
 
-    private void requestPetImg(byte type, String path)   {
+    private void requestPetImg(sbyte type, String path)   {
 //        System.err.println("requestPetImg: " + path + "|" + type);
         String originPath = path;
         if (path.equals(GopetManager.EMPTY_IMG_PATH)) {
@@ -796,7 +727,7 @@ public class GameController {
         }
         if (!PlatformHelper.hasAssets(path)) {
             try {
-                int idAsset = Integer.parseInt(path);
+                int idAsset = int.parseInt(path);
                 path = GopetManager.itemAssetsIcon.get(idAsset);
             } catch (Exception e) {
             }
@@ -805,7 +736,7 @@ public class GameController {
         switch (type) {
             case 1: {
                 if (PlatformHelper.hasAssets(path) || path.equals(captchaPath)) {
-                    byte[] buffer = null;
+                    sbyte[] buffer = null;
                     if (path.equals(captchaPath)) {
                         if (player.playerData.captcha != null) {
                             buffer = player.playerData.captcha.getBufferImg();
@@ -816,10 +747,10 @@ public class GameController {
                         buffer = PlatformHelper.loadAssets(path);
                     }
                     Message message = new Message(GopetCMD.PET_SERVICE);
-                    message.putByte(GopetCMD.REQUEST_PET_IMG);
-                    message.putByte(type);
+                    message.putsbyte(GopetCMD.REQUEST_PET_IMG);
+                    message.putsbyte(type);
                     message.putUTF(originPath);
-                    message.putInt(buffer.length);
+                    message.putInt(buffer.Length);
                     message.writer().write(buffer);
                     message.cleanup();
                     player.session.sendMessage(message);
@@ -828,7 +759,7 @@ public class GameController {
             }
             case 2:
                 if (PlatformHelper.hasAssets(path) || path.equals(captchaPath)) {
-                    byte[] buffer = null;
+                    sbyte[] buffer = null;
                     if (path.equals(captchaPath)) {
                         if (player.playerData.captcha != null) {
                             buffer = player.playerData.captcha.getBufferImg();
@@ -839,10 +770,10 @@ public class GameController {
                         buffer = PlatformHelper.loadAssets(path);
                     }
                     Message message = new Message(GopetCMD.PET_SERVICE);
-                    message.putByte(GopetCMD.REQUEST_PET_IMG);
-                    message.putByte(type);
+                    message.putsbyte(GopetCMD.REQUEST_PET_IMG);
+                    message.putsbyte(type);
                     message.putUTF(originPath);
-                    message.putInt(buffer.length);
+                    message.putInt(buffer.Length);
                     message.writer().write(buffer);
                     message.cleanup();
                     player.session.sendMessage(message);
@@ -856,7 +787,7 @@ public class GameController {
             return;
         }
         Message ms = new Message(GopetCMD.CREATE_CHAR);
-        ms.putByte(0);
+        ms.putsbyte(0);
         ms.putInt(0);
         ms.putInt(0);
         ms.writer().flush();
@@ -871,15 +802,15 @@ public class GameController {
 
     private void mapTeleMenu()   {
         Message ms = new Message(GopetCMD.MGO_COMMAND);
-        ms.putByte(GopetCMD.TELE_MENU);
-        ms.putByte((byte) GopetManager.TeleMapId.length);
-        for (int i = 0; i < GopetManager.TeleMapId.length; i++) {
+        ms.putsbyte(GopetCMD.TELE_MENU);
+        ms.putsbyte((sbyte) GopetManager.TeleMapId.Length);
+        for (int i = 0; i < GopetManager.TeleMapId.Length; i++) {
             int j = GopetManager.TeleMapId[i];
             GopetMap mapData = MapManager.maps.get(j);
-            ms.putByte((byte) j);
+            ms.putsbyte((sbyte) j);
             ms.putUTF(mapData.mapTemplate.getMapName());
             ms.putUTF(mapData.mapTemplate.getMapName());
-            ms.putByte(0);
+            ms.putsbyte(0);
         }
         ms.writer().flush();
         ms.cleanup();
@@ -1009,7 +940,7 @@ public class GameController {
                 myPet.exp -= expUp;
                 myPet.lvlUP();
                 Message message = new Message(GopetCMD.PET_SERVICE);
-                message.putByte(GopetCMD.UPDATE_PET_LVL);
+                message.putsbyte(GopetCMD.UPDATE_PET_LVL);
                 //old version
                 message.putInt(0);
                 message.putInt(0);
@@ -1034,7 +965,7 @@ public class GameController {
             message.putInt(pet.getPetIdTemplate());
             message.putUTF(pet.getPetTemplate().getFrameImg());
             message.putUTF(pet.getNameWithStar());
-            message.putByte(pet.getNClassIcon());
+            message.putsbyte(pet.getNClassIcon());
             message.putInt(02);
             message.putLong(pet.exp);
             if (GopetManager.PetExp.containsKey(pet.lvl)) {
@@ -1046,13 +977,13 @@ public class GameController {
             message.putInt(pet.getStr());
             message.putInt(pet.getAgi());
             message.putInt(pet.getInt());
-            message.putByte(pet.tiemnang_point);
+            message.putsbyte(pet.tiemnang_point);
             for (int i = 0; i < 3; i++) {
                 message.putInt(0);
                 message.putInt(0);
-                message.putByte(0);
+                message.putsbyte(0);
                 message.putUTF("");
-                message.putByte(1);
+                message.putsbyte(1);
             }
             message.cleanup();
             player.session.sendMessage(message);
@@ -1062,11 +993,11 @@ public class GameController {
         }
     }
 
-    private void upTiemNang(int num, byte index)   {
+    private void upTiemNang(int num, sbyte index)   {
         if (isHasBattleAndShowDialog()) {
             return;
         }
-        if (index >= 0 && index < MenuController.gym_options.length) {
+        if (index >= 0 && index < MenuController.gym_options.Length) {
             Pet pet = player.getPet();
             if (pet == null) {
                 player.petNotFollow();
@@ -1095,9 +1026,9 @@ public class GameController {
             for (int i = 0; i < 3; i++) {
                 message.putInt(0);
                 message.putInt(0);
-                message.putByte(0);
+                message.putsbyte(0);
                 message.putUTF("");
-                message.putByte(1);
+                message.putsbyte(1);
             }
             message.cleanup();
             player.session.sendMessage(message);
@@ -1142,7 +1073,7 @@ public class GameController {
         }
     }
 
-    private void writeListItemEquip(CopyOnWriteArrayList<Item> petEquipItem, Message message, bool isReSend)  , Exception {
+    private void writeListItemEquip(CopyOnWriteArrayList<Item> petEquipItem, Message message, bool isReSend)    {
         message.putInt(petEquipItem.size());
         for (int i = 0; i < petEquipItem.size(); i++) {
             Item item = petEquipItem.get(i);
@@ -1150,7 +1081,7 @@ public class GameController {
         }
     }
 
-    private void writeItemEquip(Item item, Message message, bool isReSend)  , Exception {
+    private void writeItemEquip(Item item, Message message, bool isReSend)    {
         ItemTemplate template = item.getTemp();
         message.putInt(item.itemId);
         message.putUTF(template.getFrameImgPath());
@@ -1161,8 +1092,8 @@ public class GameController {
         for (int j = 0; j < 11; j++) {
             message.putInt(j + 1);
         }
-        message.putByte(0);
-        message.putByte(item.lvl);
+        message.putsbyte(0);
+        message.putsbyte(item.lvl);
         if (!isReSend) {
             bool hasGem = item.gemInfo != null;
             message.putbool(hasGem);
@@ -1190,7 +1121,7 @@ public class GameController {
         player.session.sendMessage(m);
     }
 
-    private void getInfo(final byte type, int user_id)   {
+    private void getInfo(  sbyte type, int user_id)   {
         switch (type) {
             case GopetCMD.GET_PET_PLAYER_INFO:
                 magic(user_id, false);
@@ -1234,7 +1165,7 @@ public class GameController {
     }
 
     public bool checkCount(int tempId, int count)   {
-        Item itemSelect = selectItemByTemp(tempId, GopetManager.NORMAL_INVENTORY);
+        Item itemSelect = selectItemsbytemp(tempId, GopetManager.NORMAL_INVENTORY);
         if (itemSelect != null) {
             return itemSelect.count >= count;
         } else {
@@ -1261,18 +1192,18 @@ public class GameController {
     }
 
     public void mineGoldBar(int gold)   {
-        subCountItem(selectItemByTemp(GopetManager.GOLD_BAR_ID, GopetManager.NORMAL_INVENTORY), gold, GopetManager.NORMAL_INVENTORY);
+        subCountItem(selectItemsbytemp(GopetManager.GOLD_BAR_ID, GopetManager.NORMAL_INVENTORY), gold, GopetManager.NORMAL_INVENTORY);
     }
 
     public void mineSilverBar(int silver)   {
-        subCountItem(selectItemByTemp(GopetManager.SILVER_BAR_ID, GopetManager.NORMAL_INVENTORY), silver, GopetManager.NORMAL_INVENTORY);
+        subCountItem(selectItemsbytemp(GopetManager.SILVER_BAR_ID, GopetManager.NORMAL_INVENTORY), silver, GopetManager.NORMAL_INVENTORY);
     }
 
     public void mineBloodGem(int blood)   {
-        subCountItem(selectItemByTemp(GopetManager.BLOOD_GEM_ID, GopetManager.NORMAL_INVENTORY), blood, GopetManager.NORMAL_INVENTORY);
+        subCountItem(selectItemsbytemp(GopetManager.BLOOD_GEM_ID, GopetManager.NORMAL_INVENTORY), blood, GopetManager.NORMAL_INVENTORY);
     }
 
-    private void tatto(final byte type, Message message)   {
+    private void tatto(  sbyte type, Message message)   {
         // System.out.println("server.GameController.tatto() " + type);
         Pet pet = player.getPet();
         if (pet != null) {
@@ -1312,8 +1243,8 @@ public class GameController {
                         }
                     }
                     if (item.petEuipId <= 0) {
-                        for (Iterator<Integer> iterator = pet.equip.iterator(); iterator.hasNext();) {
-                            Integer next = iterator.next();
+                        for (Iterator<int> iterator = pet.equip.iterator(); iterator.hasNext();) {
+                            int next = iterator.next();
                             Item it = selectItemEquipByItemId(next);
                             if (it == null) {
                                 iterator.remove();
@@ -1329,7 +1260,7 @@ public class GameController {
                         item.petEuipId = pet.petId;
                         pet.applyInfo(player);
                         Message message = messagePetSerive(GopetCMD.USE_EQUIP_ITEM);
-                        message.putByte(1);
+                        message.putsbyte(1);
                         message.putInt(itemId);
                         message.cleanup();
                         player.session.sendMessage(message);
@@ -1351,13 +1282,13 @@ public class GameController {
         }
     }
 
-    public static Message messagePetSerive(byte subCmd)   {
+    public static Message messagePetSerive(sbyte subCmd)   {
         Message message = new Message(GopetCMD.PET_SERVICE);
-        message.putByte(subCmd);
+        message.putsbyte(subCmd);
         return message;
     }
 
-    private void requestShop(final byte shopId)   {
+    private void requestShop(  sbyte shopId)   {
         HistoryManager.addHistory(new History(player).setLog("Bấm hiển thĩ cửa hàng id là " + shopId));
         switch (shopId) {
             case MenuController.SHOP_ARMOUR:
@@ -1396,7 +1327,7 @@ public class GameController {
                     pet.equip.remove((Object) item.itemId);
                     pet.applyInfo(player);
                     Message message = messagePetSerive(GopetCMD.UNEQUIP_ITEM);
-                    message.putByte(1);
+                    message.putsbyte(1);
                     message.putInt(itemId);
                     message.cleanup();
                     player.session.sendMessage(message);
@@ -1425,13 +1356,13 @@ public class GameController {
         player.session.sendMessage(message);
     }
 
-    public static Message clanMessage(byte subCmd)   {
+    public static Message clanMessage(sbyte subCmd)   {
         Message m = messagePetSerive(GopetCMD.CLAN);
-        m.putByte(subCmd);
+        m.putsbyte(subCmd);
         return m;
     }
 
-    public void clan(byte subCMD, Message message)   {
+    public void clan(sbyte subCMD, Message message)   {
         // System.out.println("server.GameController.clan() " + subCMD);
         switch (subCMD) {
             case GopetCMD.CLAN_INFO:
@@ -1441,7 +1372,7 @@ public class GameController {
                 donateClan();
                 break;
             case GopetCMD.CLAN_INFO_MEMBER:
-                clanInfoMember(message.readByte(), message.reader().readbool());
+                clanInfoMember(message.readsbyte(), message.reader().readbool());
                 break;
             case GopetCMD.SEARCH_GUILD:
                 searchClan(message.readUTF());
@@ -1485,7 +1416,7 @@ public class GameController {
         ClanMember clanMember = getClan();
         if (clanMember != null) {
             Clan clan = clanMember.getClan();
-            ArrayList<String> listInfoClan = new ArrayList<>();
+            ArrayList<String> listInfoClan = new();
             listInfoClan.add("Tên bang hội: " + clan.getName());
             listInfoClan.add("Bang chủ: " + clan.getMemberByUserId(clan.getLeaderId()).name);
             listInfoClan.add(String.format("Thành viên: %s/%s", clan.getCurMember(), clan.getMaxMember()));
@@ -1494,7 +1425,7 @@ public class GameController {
             listInfoClan.add(String.format("Điểm cống hiến: %s", Utilities.formatNumber(clan.getGrowthPoint())));
             Message message = clanMessage(GopetCMD.CLAN_INFO);
             message.putInt(clan.getClanId());
-            message.putByte(listInfoClan.size());
+            message.putsbyte(listInfoClan.size());
             for (int i = 0; i < listInfoClan.size(); i++) {
                 message.putUTF(listInfoClan.get(i));
             }
@@ -1550,7 +1481,7 @@ public class GameController {
         }
     }
 
-    private void clanInfoMember(byte page, bool is)   {
+    private void clanInfoMember(sbyte page, bool is)   {
         ClanMember clanMember = getClan();
         if (clanMember != null) {
             Clan clan = clanMember.getClan();
@@ -1561,9 +1492,9 @@ public class GameController {
             m.putUTF("Thông tin bang chúng");
             m.putInt(0);
             m.putInt(0);
-            m.putByte(0);
-            m.putByte(0);
-            m.putByte(clan.getMembers().size());
+            m.putsbyte(0);
+            m.putsbyte(0);
+            m.putsbyte(clan.getMembers().size());
             for (ClanMember member : clan.getMembers()) {
                 m.putInt(member.user_id);
                 m.putUTF(member.getAvatar());
@@ -1625,7 +1556,7 @@ public class GameController {
         return selectItemByItemId(itemId, GopetManager.EQUIP_PET_INVENTORY);
     }
 
-    public Item selectItem(int itemindex, byte inventoryItem)   {
+    public Item selectItem(int itemindex, sbyte inventoryItem)   {
         CopyOnWriteArrayList<Item> inventory = player.playerData.getInventoryOrCreate(inventoryItem);
         if (itemindex >= 0 && itemindex < inventory.size()) {
             Item item = inventory.get(itemindex);
@@ -1635,7 +1566,7 @@ public class GameController {
         }
     }
 
-    public Item selectItemByItemId(int itemId, byte inventoryItem)   {
+    public Item selectItemByItemId(int itemId, sbyte inventoryItem)   {
         CopyOnWriteArrayList<Item> inventory = (CopyOnWriteArrayList<Item>) player.playerData.getInventoryOrCreate(inventoryItem);
         int left = 0;
         int right = inventory.size() - 1;
@@ -1654,7 +1585,7 @@ public class GameController {
         return null;
     }
 
-    public Item selectItemByTemp(int templateId, byte inventoryItem)   {
+    public Item selectItemsbytemp(int templateId, sbyte inventoryItem)   {
         CopyOnWriteArrayList<Item> inventory = player.playerData.getInventoryOrCreate(inventoryItem);
         for (Item item : inventory) {
             if (item.getTemp().getItemId() == templateId) {
@@ -1683,7 +1614,7 @@ public class GameController {
         return null;
     }
 
-    private void selectPet(byte typeSelect)   {
+    private void selectPet(sbyte typeSelect)   {
         switch (typeSelect) {
             case GopetCMD.PET_UPGRADE_ACTIVE:
                 MenuController.sendMenu(MenuController.MENU_SELECT_PET_UPGRADE_ACTIVE, player);
@@ -1694,12 +1625,12 @@ public class GameController {
         }
     }
 
-    public void addPetUpgrade(Pet pet, byte typePetUpgrade, int petindex)   {
+    public void addPetUpgrade(Pet pet, sbyte typePetUpgrade, int petindex)   {
         Message m = messagePetSerive(GopetCMD.PET_UPGRADE_PET_INFO);
-        m.putByte(typePetUpgrade);
+        m.putsbyte(typePetUpgrade);
         m.putInt(petindex);
         m.putUTF(pet.getPetTemplate().getFrameImg());
-        m.putByte(0);
+        m.putsbyte(0);
         m.cleanup();
         player.session.sendMessage(m);
     }
@@ -1712,13 +1643,13 @@ public class GameController {
         player.session.sendMessage(m);
     }
 
-    public void showKiosk(byte typeKiosk)   {
+    public void showKiosk(sbyte typeKiosk)   {
         objectPerformed.put(MenuController.OBJKEY_TYPE_SHOW_KIOSK, typeKiosk);
         MarketPlace marketPlace = (MarketPlace) player.getPlace();
         Kiosk kiosk = marketPlace.getKiosk(typeKiosk);
         SellItem sellItem = kiosk.getItemByUserId(player.user.user_id);
         Message m = messagePetSerive(GopetCMD.KIOSK);
-        m.putByte(typeKiosk);
+        m.putsbyte(typeKiosk);
         m.putInt(sellItem == null ? 0 : 1);
         if (sellItem != null) {
             m.putInt(sellItem.itemId);
@@ -1732,12 +1663,12 @@ public class GameController {
     }
 
     public void removeSellItem(int itemId)   {
-        byte typeKiosk = (byte) objectPerformed.get(MenuController.OBJKEY_TYPE_SHOW_KIOSK);
+        sbyte typeKiosk = (sbyte) objectPerformed.get(MenuController.OBJKEY_TYPE_SHOW_KIOSK);
         MarketPlace marketPlace = (MarketPlace) player.getPlace();
         Kiosk kiosk = marketPlace.getKiosk(typeKiosk);
         SellItem sellItem = kiosk.searchItem(itemId);
         if (sellItem != null) {
-            synchronized (sellItem) {
+            lock (sellItem) {
                 if (sellItem.hasSell) {
                     player.redDialog("Người khác mua vật phẩm này rồi");
                 } else if (sellItem.hasRemoved) {
@@ -1766,7 +1697,7 @@ public class GameController {
                 player.playerData.skinItem = null;
             }
         }
-        for (Map.Entry<Byte, CopyOnWriteArrayList<Item>> entry : player.playerData.items.entrySet()) {
+        for (Map.Entry<sbyte, CopyOnWriteArrayList<Item>> entry : player.playerData.items.entrySet()) {
             CopyOnWriteArrayList<Item> val = entry.getValue();
             for (Item item : val) {
                 skinItem = item;
@@ -1798,7 +1729,7 @@ public class GameController {
         }
     }
 
-    private void selectMaterialEnchantItem(int itemEnchantId, final int itemSelectType)   {
+    private void selectMaterialEnchantItem(int itemEnchantId,   int itemSelectType)   {
         Item echanItem = selectItemEquipByItemId(itemEnchantId);
         //System.out.println("server.GameController.selectMaterialEnchantItem() " + itemEnchantId + " " + itemSelectType);
         switch (itemSelectType) {
@@ -1826,7 +1757,7 @@ public class GameController {
         writeSelectItemEnchant(index, iconPath, name, indexElemnt - 6, GopetCMD.SELECT_GEM_ENCHANT);
     }
 
-    private void writeSelectItemEnchant(int index, String iconPath, String name, int indexElemnt, byte cmd)   {
+    private void writeSelectItemEnchant(int index, String iconPath, String name, int indexElemnt, sbyte cmd)   {
         Message m = messagePetSerive(cmd);
         m.putInt(index);
         m.putUTF(iconPath);
@@ -1853,7 +1784,7 @@ public class GameController {
         Item materialCrystal = (Item) objectPerformed.get(MenuController.OBJKEY_EQUIP_ITEM_MATERIAL_CRYSTAL_ENCHANT);
         bool isGem = (bool) objectPerformed.get(MenuController.OBJKEY_IS_ENCHANT_GEM);
         if (itemEuip != null && materialItem != null && materialCrystal != null) {
-            if (GopetManager.PRICE_ENCHANT.length <= itemEuip.lvl) {
+            if (GopetManager.PRICE_ENCHANT.Length <= itemEuip.lvl) {
                 player.redDialog("Trang bị đạt cấp tối đa rồi");
                 return;
             }
@@ -1948,8 +1879,8 @@ public class GameController {
 
     private void confirmEnchantItem(int equipItemId, int materialTemp, int materialTempCrystal, bool isGem)   {
         Item itemEuip = isGem ? selectItemByItemId(equipItemId, GopetManager.GEM_INVENTORY) : selectItemEquipByItemId(equipItemId);
-        Item materialItem = selectItemByTemp(materialTemp, GopetManager.NORMAL_INVENTORY);
-        Item materialCrystal = selectItemByTemp(materialTempCrystal, GopetManager.NORMAL_INVENTORY);
+        Item materialItem = selectItemsbytemp(materialTemp, GopetManager.NORMAL_INVENTORY);
+        Item materialCrystal = selectItemsbytemp(materialTempCrystal, GopetManager.NORMAL_INVENTORY);
         if (itemEuip == null || materialItem == null || materialCrystal == null) {
             player.redDialog("Thao tác quá nhanh");
             return;
@@ -1997,7 +1928,7 @@ public class GameController {
         }
     }
 
-    public void subCountItem(Item item, int count, byte typeInventory)   {
+    public void subCountItem(Item item, int count, sbyte typeInventory)   {
         if (item.getTemp().isStackable()) {
             item.count -= count;
             if (item.count <= 0) {
@@ -2067,8 +1998,8 @@ public class GameController {
                             if (isSucces) {
                                 itemEuipActive.updateGemOption();
                                 itemEuipPassive.updateGemOption();
-                                int[] optionValue = new int[itemEuipActive.optionValue.length];
-                                for (int i = 0; i < itemEuipActive.gemOptionValue.length; i++) {
+                                int[] optionValue = new int[itemEuipActive.optionValue.Length];
+                                for (int i = 0; i < itemEuipActive.gemOptionValue.Length; i++) {
                                     float f = itemEuipActive.gemOptionValue[i] + itemEuipPassive.gemOptionValue[i];
                                     optionValue[i] = Math.round(Utilities.getValueFromPercent(f * 100, GopetManager.PERCENT_ITEM_TIER_INFO));
                                 }
@@ -2120,14 +2051,14 @@ public class GameController {
         }
     }
 
-    private void petUpTier(int petId1, int petId2, String name, byte moneyType)   {
+    private void petUpTier(int petId1, int petId2, String name, sbyte moneyType)   {
         Pet petActive = selectPetByItemId(petId1);
         Pet petPassive = selectPetByItemId(petId2);
         PetTier petTier = GopetManager.petTier.get(petActive.petIdTemplate);
         if (Utilities.CheckString(name, "^[()!@#%a-z0-9A-Z_\\x{00C0}-\\x{00FF}\\x{1EA0}-\\x{1EFF}]+$")) {
             if (petActive.equip.isEmpty() && petPassive.equip.isEmpty()) {
                 if (petActive.lvl >= GopetManager.LVL_PET_REQUIER_UP_TIER && petPassive.lvl >= GopetManager.LVL_PET_PASSIVE_REQUIER_UP_TIER) {
-                    if (!(name.length() > 20 || name.length() < 6)) {
+                    if (!(name.Length() > 20 || name.Length() < 6)) {
                         if (petTier != null) {
                             if (petPassive.petIdTemplate == petTier.getPetTemplateIdNeed()) {
                                 switch (moneyType) {
@@ -2218,7 +2149,7 @@ public class GameController {
         }
     }
 
-    private void selectKioskItem(byte type)   {
+    private void selectKioskItem(sbyte type)   {
         switch (type) {
             case GopetManager.KIOSK_HAT:
                 MenuController.sendMenu(MenuController.MENU_KIOSK_HAT_SELECT, player);
@@ -2246,18 +2177,18 @@ public class GameController {
         this.showInputDialog(dialogId, dialogTitle, optionText, null);
     }
 
-    public void showInputDialog(int dialogId, String dialogTitle, String[] optionText, byte[] optionTextType)   {
+    public void showInputDialog(int dialogId, String dialogTitle, String[] optionText, sbyte[] optionTextType)   {
         Message m = new Message(GopetCMD.COMMAND_GUIDER);
-        m.putByte(GopetCMD.TYPE_DIALOG_INPUT);
+        m.putsbyte(GopetCMD.TYPE_DIALOG_INPUT);
         m.putInt(dialogId);
         m.putUTF(dialogTitle);
-        m.putInt(optionText.length);
-        for (int i = 0; i < optionText.length; i++) {
+        m.putInt(optionText.Length);
+        for (int i = 0; i < optionText.Length; i++) {
             m.putUTF(optionText[i]);
             if (optionTextType == null) {
-                m.putByte(0);
+                m.putsbyte(0);
             } else {
-                m.putByte(optionTextType[i]);
+                m.putsbyte(optionTextType[i]);
             }
         }
         m.cleanup();
@@ -2435,7 +2366,7 @@ public class GameController {
     private int getIndexOfPetCanTatto() {
         int index = 0;
         Pet pet = player.getPet();
-        for (int i = 0; i < GopetManager.LVL_REQUIRE_PET_TATTO.length; i++) {
+        for (int i = 0; i < GopetManager.LVL_REQUIRE_PET_TATTO.Length; i++) {
             int j = GopetManager.LVL_REQUIRE_PET_TATTO[i];
             if (pet.lvl >= j) {
                 index++;
@@ -2450,7 +2381,7 @@ public class GameController {
     private int getIndexOfPetCanUnlockTatto() {
         int index = 0;
         Pet pet = player.getPet();
-        for (int i = 0; i < GopetManager.LVL_REQUIRE_PET_TATTO.length; i++) {
+        for (int i = 0; i < GopetManager.LVL_REQUIRE_PET_TATTO.Length; i++) {
             int j = GopetManager.LVL_REQUIRE_PET_TATTO[i];
             if (pet.lvl >= j) {
                 index++;
@@ -2465,19 +2396,19 @@ public class GameController {
             int indexTatto = getIndexOfPetCanTatto();
             int indexUnlock = getIndexOfPetCanUnlockTatto();
             Message m = messagePetSerive(GopetCMD.TATTOO);
-            m.putByte(GopetCMD.TATTOO_INIT_SCREEN);
-            m.putInt(GopetManager.LVL_REQUIRE_PET_TATTO.length);
-            for (int i = 0; i < GopetManager.LVL_REQUIRE_PET_TATTO.length; i++) {
+            m.putsbyte(GopetCMD.TATTOO_INIT_SCREEN);
+            m.putInt(GopetManager.LVL_REQUIRE_PET_TATTO.Length);
+            for (int i = 0; i < GopetManager.LVL_REQUIRE_PET_TATTO.Length; i++) {
                 if (i >= pet.tatto.size()) {
                     if (indexUnlock > i) {
                         m.putInt(0);
                         m.putUTF("Chưa xăm");
-                        m.putByte(i + 1);
+                        m.putsbyte(i + 1);
                         m.putUTF("tatoos/0.png");
                     } else {
                         m.putInt(0);
                         m.putUTF(String.format("Mốc cấp %s", GopetManager.LVL_REQUIRE_PET_TATTO[i]));
-                        m.putByte(i + 1);
+                        m.putsbyte(i + 1);
                         m.putUTF("tatoos/-1.png");
                     }
                 } else {
@@ -2485,7 +2416,7 @@ public class GameController {
                     PetTattoTemplate petTattoTemplate = petTatto.getTemp();
                     m.putInt(petTatto.tattoId);
                     m.putUTF(petTatto.getName());
-                    m.putByte(i + 1);
+                    m.putsbyte(i + 1);
                     m.putUTF(petTattoTemplate.getIconPath());
                 }
             }
@@ -2542,9 +2473,9 @@ public class GameController {
     }
 
     public ArrayList<Popup> onReiceiveGift(int[][] gift)   {
-        ArrayList<Popup> popups = new ArrayList<>();
+        ArrayList<Popup> popups = new();
         bool flagDrop = false;
-        for (int i = 0; i < gift.length; i++) {
+        for (int i = 0; i < gift.Length; i++) {
             int[] giftInfo = gift[i];
             switch (giftInfo[0]) {
                 case GopetManager.GIFT_GOLD:
@@ -2654,7 +2585,7 @@ public class GameController {
             int frameNum,
             int frameDelay)   {
         Message m = new Message(GopetCMD.COMMAND_GUIDER);
-        m.putByte(11);
+        m.putsbyte(11);
         m.putInt(id);
         m.putInt(w);
         m.putInt(h);
@@ -2689,11 +2620,11 @@ public class GameController {
 
     public void sendMail()   {
         Message m = new Message(GopetCMD.GL_MAIL);
-        m.putByte(1);
+        m.putsbyte(1);
         m.putInt(Utilities.nextInt(200000000));
         m.putUTF("Lời chào của Game");
         m.putUTF("Game gopet là một game nuôi thú ảo rất phổ biến trên điện thoại di động vào khoảng năm 2010-2015. Game này cho phép người chơi chọn một con thú ảo, chăm sóc, huấn luyện và thi đấu với các con thú khác. Game gopet có nhiều loại thú đa dạng, từ những con vật quen thuộc như mèo, chó, gấu, khỉ... cho đến những con thú kỳ lạ như rồng, phượng hoàng, kỳ lân... Người chơi có thể tùy biến ngoại hình, kỹ năng và trang bị cho con thú của mình. Game gopet cũng có nhiều hoạt động hấp dẫn như săn bắt, khám phá, trồng trọt, kết bạn, kết hôn... Game gopet đã thu hút hàng triệu người chơi trên khắp Việt Nam và trở thành một phần của tuổi thơ của nhiều người.");
-        m.putByte(0);
+        m.putsbyte(0);
         m.cleanup();
         player.session.sendMessage(m);
     }
@@ -2733,7 +2664,7 @@ public class GameController {
         m.putInt(item.itemId);
         m.putUTF(item.getTemp().getIconPath());
         m.putUTF(item.getEquipName());
-        m.putByte(item.lvl);
+        m.putsbyte(item.lvl);
         m.cleanup();
         player.session.sendMessage(m);
     }
@@ -2848,8 +2779,8 @@ public class GameController {
     private void showListClan()   {
         Message m = clanMessage(GopetCMD.GUILD_LIST);
         m.putUTF("");
-        m.putByte(0);
-        m.putByte(0);
+        m.putsbyte(0);
+        m.putsbyte(0);
         m.putInt(ClanManager.clans.size());
         for (Clan clan : ClanManager.clans) {
             m.putInt(clan.getClanId());
@@ -2864,7 +2795,7 @@ public class GameController {
     public void searchClan(String clanName)   {
         ClanMember clanMember = getClan();
         if (clanMember == null) {
-            if (clanName.length() > 5 && clanName.length() < 21 && Utilities.CheckString(clanName, "^[a-z0-9]+$")) {
+            if (clanName.Length() > 5 && clanName.Length() < 21 && Utilities.CheckString(clanName, "^[a-z0-9]+$")) {
                 if (ClanManager.clanHashMapName.containsKey(clanName)) {
                     objectPerformed.put(MenuController.OBJKEY_CLAN_NAME_REQUEST, clanName);
                     MenuController.showYNDialog(MenuController.DIALOG_ASK_REQUEST_JOIN_CLAN, String.format("Bạn có muốn xin vào bang hội %s không?", clanName), player);
@@ -2891,9 +2822,9 @@ public class GameController {
                 }
             });
             Message m = clanMessage(GopetCMD.GUILD_TOP_FUND);
-            m.putByte(0);
-            m.putByte(0);
-            m.putByte(listMember.size());
+            m.putsbyte(0);
+            m.putsbyte(0);
+            m.putsbyte(listMember.size());
             for (ClanMember clanMember1 : listMember) {
                 m.putInt(clanMember1.user_id);
                 m.putUTF(clanMember1.getAvatar());
@@ -2919,9 +2850,9 @@ public class GameController {
                 }
             });
             Message m = clanMessage(GopetCMD.GUILD_TOP_GROWTH_POINT);
-            m.putByte(0);
-            m.putByte(0);
-            m.putByte(listMember.size());
+            m.putsbyte(0);
+            m.putsbyte(0);
+            m.putsbyte(listMember.size());
             for (ClanMember clanMember1 : listMember) {
                 m.putInt(clanMember1.user_id);
                 m.putUTF(clanMember1.getAvatar());
@@ -2960,7 +2891,7 @@ public class GameController {
 
     public void sendListOption(int listId, String title, String message, ArrayList<Option> options)   {
         Message m = new Message(GopetCMD.COMMAND_GUIDER);
-        m.putByte(GopetCMD.GUIDER_LIST_OPTION);
+        m.putsbyte(GopetCMD.GUIDER_LIST_OPTION);
         m.putInt(listId);
         m.putInt(listId);
         m.putUTF(title);
@@ -2969,7 +2900,7 @@ public class GameController {
         for (Option option : options) {
             m.putInt(option.getOptionId());
             m.putUTF(option.getOptionText());
-            m.putByte(option.getOptionStatus());
+            m.putsbyte(option.getOptionStatus());
         }
         m.cleanup();
         player.session.sendMessage(m);
@@ -2989,7 +2920,7 @@ public class GameController {
             Message m = clanMessage(GopetCMD.GUILD_CHAT);
             m.putInt(clanMember.getClan().getClanId());
             m.putUTF("");
-            m.putByte(clanChats.size());
+            m.putsbyte(clanChats.size());
             for (ClanChat clanChat : clanChats) {
                 m.putUTF(clanChat.getWho());
                 m.putUTF(clanChat.getText());
@@ -3024,7 +2955,7 @@ public class GameController {
             if (clanMember != null) {
                 Clan clan = clanMember.getClan();
                 Message m = clanMessage(GopetCMD.GUILD_CLAN_SKILL);
-                m.putByte(canEdit ? 0 : 1);
+                m.putsbyte(canEdit ? 0 : 1);
                 m.putInt(clanMember.getClan().getPotentialPoint());
                 for (int i = 0; i < 3; i++) {
                     bool hasSlot = clan.getLvl() >= GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[i];
@@ -3088,12 +3019,12 @@ public class GameController {
         bool canEdit = clanMember.duty == Clan.TYPE_LEADER || clanMember.duty == Clan.TYPE_LEADER;
         if (clanMember != null) {
             Clan clan = clanMember.getClan();
-            if (clan.getLvl() >= GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL.length - 1]) {
+            if (clan.getLvl() >= GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL.Length - 1]) {
                 player.redDialog("Bang hội của bạng đã mở hết ô rồi");
             } else {
                 int clanLvlNeed = 0;
-                for (int i = 0; i < GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL.length; i++) {
-                    byte b = GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[i];
+                for (int i = 0; i < GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL.Length; i++) {
+                    sbyte b = GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[i];
                     if (b > clan.getLvl()) {
                         clanLvlNeed = b;
                         break;
@@ -3113,7 +3044,7 @@ public class GameController {
             if (clanMember != null) {
                 Clan clan = clanMember.getClan();
                 bool canRent = false;
-                if (clan.getLvl() >= GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL.length - 1]) {
+                if (clan.getLvl() >= GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL.Length - 1]) {
                     canRent = true;
                 } else {
                     if (clan.getLvl() >= GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[index]) {

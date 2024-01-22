@@ -21,7 +21,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ClanManager {
 
     public static CopyOnWriteArrayList<Clan> clans = new CopyOnWriteArrayList<>();
-    public static ConcurrentHashMap<Integer, Clan> clanHashMap = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<int, Clan> clanHashMap = new ConcurrentHashMap<>();
     public static ConcurrentHashMap<String, Clan> clanHashMapName = new ConcurrentHashMap<>();
 
     public static void addClan(Clan clan) {
@@ -53,7 +53,7 @@ public class ClanManager {
             clan.setFund(resultSet.getBigDecimal("fund").longValue());
             clan.setGrowthPoint(resultSet.getBigDecimal("growthPoint").longValue());
             clan.setSkillHouseLvl(resultSet.getInt("skillHouseLvl"));
-            clan.setSuperMarketLvl(resultSet.getInt("superMarketLvl"));
+            clan.setbaseMarketLvl(resultSet.getInt("baseMarketLvl"));
             clan.setSlogan(resultSet.getString("slogan"));
             String joinRequestStr = resultSet.getString("joinRequest");
             if (!resultSet.wasNull()) {

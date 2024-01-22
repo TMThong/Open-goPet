@@ -44,6 +44,11 @@ namespace Gopet.Data.Collections
             }
         }
 
+        public void add(T item)
+        {
+            this.Add(item);
+        }
+
         public bool Contains(T item)
         {
             lock (this)
@@ -58,6 +63,14 @@ namespace Gopet.Data.Collections
             lock (this)
             {
                 this.values = this.values.Remove(item);
+            }
+        }
+
+        public T get(int index)
+        {
+            lock (this)
+            {
+                return this.values[index];
             }
         }
 
@@ -84,6 +97,16 @@ namespace Gopet.Data.Collections
         private string GetDebuggerDisplay()
         {
             return ToString();
+        }
+
+        public bool isEmpty()
+        {
+            return this.values.IsEmpty;
+        }
+
+        public void remove(T item)
+        {
+            this.Remove(item);
         }
     }
 }

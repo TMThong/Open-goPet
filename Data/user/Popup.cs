@@ -1,21 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package data.user;
 
-import lombok.Getter;
+public class Popup
+{
 
-/**
- *
- * @author MINH THONG
- */
-@Getter
-public class Popup {
+    public String text {  get; set; }
 
-    private String text;
-
-    public Popup(String text) {
+    public Popup(String text)
+    {
         this.text = text;
     }
 

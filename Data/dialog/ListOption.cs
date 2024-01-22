@@ -1,15 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package data.dialog;
-
-import server.Player;
-
-/**
- *
- * @author MINH THONG
- */
+ 
 public class ListOption {
 
     protected OptionDialogItem[] options = new OptionDialogItem[0];
@@ -25,7 +14,7 @@ public class ListOption {
 
     public void doSelect(int optionId, Player player)   {
         OptionDialogItem[] optionDialogItems_ = getOptionDialogItems(player);
-        if (optionId >= 0 && optionDialogItems_.length > optionId) {
+        if (optionId >= 0 && optionDialogItems_.Length > optionId) {
             optionDialogItems_[optionId].doSelect(player);
         }
     }

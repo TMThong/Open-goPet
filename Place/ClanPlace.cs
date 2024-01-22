@@ -14,14 +14,14 @@ import server.Player;
 public class ClanPlace extends GopetPlace {
 
     public ClanPlace(GopetMap m, int ID)   {
-        super(m, ID);
-        this.maxPlayer = Integer.MAX_VALUE;
+        base(m, ID);
+        this.maxPlayer = int.MAX_VALUE;
     }
 
     @Override
     public void add(Player player)   {
         player.playerData.x = 326 + (24 * 3);
         player.playerData.y = 236;
-        super.add(player); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        base.add(player); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 }

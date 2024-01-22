@@ -1,34 +1,10 @@
-package server;
+ 
 
-import app.Main;
-import data.item.Item;
-import data.item.SellItem;
-import data.pet.Pet;
-import data.top.TopData;
-import data.top.TopSpendGold;
-import data.user.History;
-import data.user.PlayerData;
-import data.user.UserData;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.regex.Pattern;
-import manager.GopetManager;
-import manager.HistoryManager;
-import manager.JsonManager;
-import manager.MYSQLManager;
-import manager.PlayerManager;
-import place.Place;
-import server.io.Message;
-import server.io.Session;
-import settings.ServerSetting;
-import util.Utilities;
+public class Player : IHandleMessage {
 
-public class Player implements IHandleMessage {
-
-    public const String[] BANNAME = new String[]{"admin", "test", "banquantri", "gofarm"};
-    public transient Session session;
-    public byte CLIENT_TYPE;
+    public static readonly String[] BANNAME = new String[]{"admin", "test", "banquantri", "gofarm"};
+    public Session session { get; }
+    public sbyte CLIENT_TYPE;
     public int PROVIDER;
     public String version;
     public String info;
@@ -49,7 +25,7 @@ public class Player implements IHandleMessage {
     public Player(Session session_)   {
         session = session_;
         if (session_ == null) {
-            throw new NullPointerException();
+            throw new NullReferenceException();
         }
         controller = new GameController(this, session_);
         controller.setTaskCalculator(new TaskCalculator(this));
@@ -63,7 +39,7 @@ public class Player implements IHandleMessage {
         return place_;
     }
 
-    @Override
+     
     public void onMessage(Message ms) {
 //        System.err.println(ms.id);
         try {
@@ -74,7 +50,7 @@ public class Player implements IHandleMessage {
 
             switch (ms.id) {
                 case GopetCMD.CLIENT_INFO: {
-                    CLIENT_TYPE = ms.reader().readByte();
+                    CLIENT_TYPE = ms.reader().readsbyte();
                     PROVIDER = ms.reader().readInt();
                     ApplicationVersion = ms.reader().readUTF();
                     info = ms.reader().readUTF();
@@ -121,7 +97,7 @@ public class Player implements IHandleMessage {
             return;
         }
 //        if (CheckString(username, "^[a-z0-9]+$") && CheckString(password, "^[a-z0-9]+$")) {
-//            if (username.length() >= 6 && password.length() >= 6 && username.length() < 25 && password.length() < 60) {
+//            if (username.Length() >= 6 && password.Length() >= 6 && username.Length() < 25 && password.Length() < 60) {
 //                for (String string : BANNAME) {
 //                    if (username.contains(string)) {
 //                        redDialog("Tài khoản không được phép có những từ này : " + String.join(",", BANNAME));
@@ -166,7 +142,7 @@ public class Player implements IHandleMessage {
     public void requestChangePass(int id, String oldPass, String newPass)   {
         if (oldPass.equals(user.password)) {
             if (!CheckString(newPass, "^[a-z0-9]+$")
-                    || newPass.length() < 5) {
+                    || newPass.Length() < 5) {
                 Message m = new Message(GopetCMD.CHANGE_PASSWORD);
                 m.putUTF("Mật khẩu phải có số lượng kí tự lớn hơn 5 và không chứa các kí tự đặc biệt");
                 m.writer().flush();
@@ -198,9 +174,9 @@ public class Player implements IHandleMessage {
         int[] port = new int[]{Main.PORT_SERVER};
         int[] maxSession = new int[]{100};
         int[] currentSessionSize = new int[]{0};
-        Message ms = new Message((byte) 64);
-        ms.putInt(nameserver.length);
-        for (int i = 0; i < nameserver.length; i++) {
+        Message ms = new Message((sbyte) 64);
+        ms.putInt(nameserver.Length);
+        for (int i = 0; i < nameserver.Length; i++) {
             ms.putString(nameserver[i]);
             ms.putString(ip[i]);
             ms.putInt(port[i]);
@@ -234,7 +210,7 @@ public class Player implements IHandleMessage {
     }
 
     public void redDialog(String text)   {
-        Message ms = new Message((byte) 10);
+        Message ms = new Message((sbyte) 10);
         ms.putString(text);
         ms.cleanup();
         session.sendMessage(ms);
@@ -262,8 +238,8 @@ public class Player implements IHandleMessage {
             user.email = result.getString("email");
             user.banReason = result.getString("banReason");
             user.banTime = result.getBigDecimal("banTime").longValue();
-            user.isBanned = result.getByte("isBaned");
-            user.role = result.getByte("role");
+            user.isBanned = result.getsbyte("isBaned");
+            user.role = result.getsbyte("role");
             user.username = username;
             user.password = password;
             result.close();
@@ -373,7 +349,7 @@ public class Player implements IHandleMessage {
                 }
                 int goldPlus = 0;
                 Connection gameConnection__ = MYSQLManager.create();
-                ArrayList<String> listIdRemove = new ArrayList<>();
+                ArrayList<String> listIdRemove = new();
                 ResultSet resultSetExchangeGold = MYSQLManager.jquery(String.format("SELECT * FROM `exchange_gold` WHERE `user_id` = %s", playerData.user_id), gameConnection__);
                 while (resultSetExchangeGold.next()) {
                     String id = resultSetExchangeGold.getString("id");
@@ -452,7 +428,7 @@ public class Player implements IHandleMessage {
 
     public void Popup(String text)   {
         Message m = new Message(GopetCMD.SERVER_MESSAGE);
-        m.putByte(GopetCMD.POPUP_MESSAGE);
+        m.putsbyte(GopetCMD.POPUP_MESSAGE);
         m.putUTF(text);
         m.writer().flush();
         session.sendMessage(m);
@@ -460,7 +436,7 @@ public class Player implements IHandleMessage {
 
     public void showBanner(String text)   {
         Message m = new Message(GopetCMD.SERVER_MESSAGE);
-        m.putByte(GopetCMD.BANNER_MESSAGE);
+        m.putsbyte(GopetCMD.BANNER_MESSAGE);
         m.putUTF(text);
         m.writer().flush();
         session.sendMessage(m);
@@ -468,7 +444,7 @@ public class Player implements IHandleMessage {
 
     public void okDialog(String str)   {
         Message m = new Message(71);
-        m.putByte(0);
+        m.putsbyte(0);
         m.putUTF(str);
         m.writer().flush();
         session.sendMessage(m);

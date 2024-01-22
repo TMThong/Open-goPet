@@ -2,7 +2,7 @@
 public class ChallengeMap extends GopetMap {
 
     public ChallengeMap(int mapId_, bool canUpdate, MapTemplate mapTemplate) {
-        super(mapId_, canUpdate, mapTemplate);
+        base(mapId_, canUpdate, mapTemplate);
     }
 
     @Override

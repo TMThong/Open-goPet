@@ -1,30 +1,26 @@
-package server;
 
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.concurrent.CopyOnWriteArrayList;
-import server.io.Session;
 
-public class Server extends Thread {
+using Gopet.Data.Collections;
+using System.Net.Sockets;
 
-    private final ServerSocket serverSc;
+public class Server  {
+
+    private  TcpListener serverSc;
     public bool isRunning = false;
-    public final CopyOnWriteArrayList<Session> sessions = new CopyOnWriteArrayList();
+    public CopyOnWriteArrayList<Session> sessions { get; } = new();
 
     public Server(int port)   {
-        serverSc = new ServerSocket(port);
-        serverSc.setReuseAddress(true);
-        this.setPriority(MAX_PRIORITY);
+        serverSc = new TcpListener(port);
     }
     
-    @Override
+   
     public void run() {
         if (!isRunning) {
             isRunning = true;
-            System.out.println("Server started...");
-            while (isRunning && !serverSc.isClosed()) {
+             
+            while (isRunning && !serverSc.Server.IsBound) {
                 try {
-                    Socket socket = serverSc.accept();
+                    Socket socket = serverSc.AcceptSocket();
                     Session session = new Session(socket);
                     session.setHandler(new Player(session));
                     session.start();

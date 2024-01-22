@@ -1,11 +1,11 @@
  
 public class Option {
 
-    public const byte CAN_SELECT = 1;
-    public const byte CANT_SELECT = 0;
+    public const sbyte CAN_SELECT = 1;
+    public const sbyte CANT_SELECT = 0;
     private int optionId;
     private String optionText;
-    private byte optionStatus;
+    private sbyte optionStatus;
 
     public Option() {
     }
@@ -13,7 +13,7 @@ public class Option {
     public Option(int optionId, String optionText, int optionStatus) {
         this.optionId = optionId;
         this.optionText = optionText;
-        this.optionStatus = (byte) optionStatus;
+        this.optionStatus = (sbyte) optionStatus;
     }
 
     public Option(int optionId, String optionText) {

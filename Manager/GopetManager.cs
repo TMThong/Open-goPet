@@ -1,167 +1,116 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package manager;
 
-import com.google.gson.reflect.TypeToken;
-import data.clan.ClanBuffTemplate;
-import data.clan.ClanHouseTemplate;
-import data.clan.ClanTemplate;
-import data.dialog.ExchangeItemInfo;
-import data.item.DropItem;
-import data.item.ItemAttributeTemplate;
-import data.item.ItemTemplate;
-import data.item.SellItem;
-import data.item.TierItem;
-import data.map.Kiosk;
-import data.map.MapTemplate;
-import data.map.NpcTemplate;
-import data.map.Waypoint;
-import data.mob.BossTemplate;
-import data.mob.MobLocation;
-import data.mob.MobLvInfo;
-import data.mob.MobLvlMap;
-import data.pet.PetSkill;
-import data.pet.PetSkillInfo;
-import data.pet.PetSkillLv;
-import data.pet.PetTattoTemplate;
-import data.pet.PetTemplate;
-import data.pet.PetTier;
-import data.shop.ShopArenaTemplate;
-import data.shop.ShopClanTemplate;
-import data.shop.ShopTemplate;
-import data.shop.ShopTemplateItem;
-import data.task.TaskTemplate;
-import data.user.ExchangeData;
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
-import lombok.NonNull;
-import place.MarketPlace;
-import server.MenuController;
-import spring.RestUser;
+using Gopet.Data.Collections;
 
-/**
- *
- * @author MINH THONG
- */
 public class GopetManager {
 
     /**
      * Chỉ số của quái từng cấp độ
      */
-    public const HashMap<@NonNull Integer, @NonNull MobLvInfo> MOBLVLINFO_HASH_MAP = new HashMap<>();
-    public const HashMap<@NonNull Integer, @NonNull MobLvInfo> MOBLVLINFO_CHALLENGE = new HashMap<>();
+    public static HashMap<  int,   MobLvInfo> MOBLVLINFO_HASH_MAP = new();
+    public static HashMap<  int,   MobLvInfo> MOBLVLINFO_CHALLENGE = new();
 
-    public const ArrayList<@NonNull PetTemplate> PET_TEMPLATES = new ArrayList<>();
+    public static ArrayList<  PetTemplate> PET_TEMPLATES = new();
     /**
      * Mẫu pet
      */
-    public const HashMap<Integer, PetTemplate> PETTEMPLATE_HASH_MAP = new HashMap<>();
+    public static HashMap<int, PetTemplate> PETTEMPLATE_HASH_MAP = new();
 
-    public const HashMap<Byte, ArrayList<@NonNull PetTemplate>> typePetTemplate = new HashMap<>();
+    public static HashMap<sbyte, ArrayList<  PetTemplate>> typePetTemplate = new();
     /**
      * Cho thông tin Cấp độ quái giao động (từ - đến)
      */
-    public const HashMap<Integer, MobLvlMap[]> MOBLVL_MAP = new HashMap<>();
+    public static HashMap<int, MobLvlMap[]> MOBLVL_MAP = new();
 
     /**
      * Ví trí quái xuất hiện
      */
-    public const HashMap<Integer, MobLocation[]> mobLocation = new HashMap<>();
+    public static HashMap<int, MobLocation[]> mobLocation = new();
 
     /**
      * Vật phẩm mẫu
      */
-    public const HashMap<Integer, ItemTemplate> itemTemplate = new HashMap<>();
+    public static HashMap<int, ItemTemplate> itemTemplate = new();
 
     /**
      * Tên chỉ số
      */
-    public static HashMap<Integer, String> itemInfoName = new HashMap();
+    public static HashMap<int, String> itemInfoName = new();
 
     /**
      * Chí số có là %
      */
-    public static HashMap<Integer, bool> itemInfoIsPercent = new HashMap();
+    public static HashMap<int, bool> itemInfoIsPercent = new();
 
     /**
      * Chỉ số có thể định dạng
      */
-    public static HashMap<Integer, bool> itemInfoCanFormat = new HashMap();
+    public static HashMap<int, bool> itemInfoCanFormat = new();
 
     /**
      * hệ lửa
      */
-    public const byte FIRE_ELEMENT = 1;
+    public const sbyte FIRE_ELEMENT = 1;
 
     /**
      * hệ mộc
      */
-    public const byte TREE_ELEMENT = 2;
+    public const sbyte TREE_ELEMENT = 2;
 
     /**
      * hệ đá
      */
-    public const byte ROCK_ELEMENT = 3;
+    public const sbyte ROCK_ELEMENT = 3;
 
     /**
      * hệ sét
      */
-    public const byte THUNDER_ELEMENT = 4;
+    public const sbyte THUNDER_ELEMENT = 4;
 
     /**
      * hệ nước
      */
-    public const byte WATER_ELEMENT = 5;
+    public const sbyte WATER_ELEMENT = 5;
 
     /**
      * hệ bóng tối
      */
-    public const byte DARK_ELEMENT = 6;
+    public const sbyte DARK_ELEMENT = 6;
 
     /**
      * hệ ánh sáng
      */
-    public const byte LIGHT_ELEMENT = 7;
+    public const sbyte LIGHT_ELEMENT = 7;
 
     /**
      * chiến binh
      */
-    public const byte Fighter = 0;
+    public const sbyte Fighter = 0;
 
     /**
      * sát thủ
      */
-    public const byte Assassin = 1;
+    public const sbyte Assassin = 1;
 
     /**
      * pháp sư
      */
-    public const byte Wizard = 2;
+    public const sbyte Wizard = 2;
 
     /**
      * thiên sứ
      */
-    public const byte Angel = 3;
+    public const sbyte Angel = 3;
 
     /**
      * thiên binh
      */
-    public const byte Archer = 4;
+    public const sbyte Archer = 4;
 
     /**
      * thiên ma
      *
      */
-    public const byte Demon = 5;
+    public const sbyte Demon = 5;
 
     public const int ITEM_ADMIN = -1;
 
@@ -229,74 +178,74 @@ public class GopetManager {
     /**
      * Kỹ năng của pet (theo skillID)
      */
-    public const HashMap<@NonNull Integer, @NonNull PetSkill> PETSKILL_HASH_MAP = new HashMap<>();
+    public static HashMap<  int,   PetSkill> PETSKILL_HASH_MAP = new();
 
     /**
      * Kỹ năng của pet (theo phái)
      */
-    public const HashMap<@NonNull Byte, @NonNull ArrayList<@NonNull PetSkill>> NCLASS_PETSKILL_HASH_MAP = new HashMap<>();
+    public static HashMap<  sbyte,   ArrayList<  PetSkill>> NCLASS_PETSKILL_HASH_MAP = new();
 
     /**
      * Kỹ năng của pet (tất cả)
      */
-    public const ArrayList<@NonNull PetSkill> PET_SKILLS = new ArrayList<>();
+    public static ArrayList<  PetSkill> PET_SKILLS = new();
 
     /**
      * Kinh nghiệm của pet
      */
-    public const HashMap<@NonNull Integer, @NonNull Integer> PetExp = new HashMap<>();
+    public static HashMap<  int,   int> PetExp = new();
 
-    public const HashMap<@NonNull Integer, @NonNull ArrayList<@NonNull DropItem>> dropItem = new HashMap<>();
+    public static HashMap<  int,   ArrayList<  DropItem>> dropItem = new();
 
-    public const HashMap<@NonNull Integer, @NonNull TierItem> tierItem = new HashMap<>();
+    public static HashMap<  int,   TierItem> tierItem = new();
 
-    public const HashMap<@NonNull Integer, @NonNull PetTier> petTier = new HashMap<>();
+    public static HashMap<  int,   PetTier> petTier = new();
 
-    public const HashMap<@NonNull Integer, @NonNull PetTattoTemplate> tattos = new HashMap<>();
+    public static HashMap<  int,   PetTattoTemplate> tattos = new();
 
-    public const HashMap<@NonNull Integer, @NonNull BossTemplate> boss = new HashMap<>();
+    public static HashMap<  int,   BossTemplate> boss = new();
 
-    public const HashMap<@NonNull Integer, @NonNull ArrayList<@NonNull ItemTemplate>> mergeItemPet = new HashMap<>();
+    public static HashMap<  int,   ArrayList<  ItemTemplate>> mergeItemPet = new();
 
-    public const HashMap<@NonNull Integer, @NonNull ArrayList<@NonNull ItemTemplate>> mergeItemItem = new HashMap<>();
+    public static HashMap<  int,   ArrayList<  ItemTemplate>> mergeItemItem = new();
 
-    public const ArrayList<@NonNull Integer> mapHasDropItemLvlRange = new ArrayList<>();
+    public static ArrayList<  int> mapHasDropItemLvlRange = new();
 
-    public const ArrayList<@NonNull PetTemplate> petEnable = new ArrayList<>();
+    public static ArrayList<  PetTemplate> petEnable = new();
 
-    public const HashMap<@NonNull Integer, String> itemAssetsIcon = new HashMap<>();
+    public static HashMap<  int, String> itemAssetsIcon = new();
 
-    public const ArrayList<@NonNull ShopArenaTemplate> SHOP_ARENA_TEMPLATE = new ArrayList<>();
+    public static ArrayList<  ShopArenaTemplate> SHOP_ARENA_TEMPLATE = new();
 
-    public const HashMap<@NonNull Integer, @NonNull ClanTemplate> clanTemp = new HashMap<>();
+    public static HashMap<  int,   ClanTemplate> clanTemp = new();
 
-    public const HashMap<@NonNull Integer, @NonNull TaskTemplate> taskTemplate = new HashMap<>();
+    public static HashMap<  int,   TaskTemplate> taskTemplate = new();
 
-    public const ArrayList<@NonNull TaskTemplate> taskTemplateList = new ArrayList<>();
+    public static ArrayList<  TaskTemplate> taskTemplateList = new();
 
-    public const HashMap<@NonNull Integer, @NonNull ArrayList<@NonNull TaskTemplate>> taskTemplateByType = new HashMap<>();
+    public static HashMap<  int,   ArrayList<  TaskTemplate>> taskTemplateByType = new();
 
-    public const HashMap<@NonNull Integer, @NonNull ArrayList<@NonNull TaskTemplate>> taskTemplateByNpcId = new HashMap<>();
+    public static HashMap<  int,   ArrayList<  TaskTemplate>> taskTemplateByNpcId = new();
 
-    public const ArrayList<@NonNull ClanBuffTemplate> CLAN_BUFF_TEMPLATES = new ArrayList<>();
+    public static ArrayList<  ClanBuffTemplate> CLAN_BUFF_TEMPLATES = new();
 
-    public const HashMap<@NonNull Integer, @NonNull ClanBuffTemplate> CLANBUFF_HASH_MAP = new HashMap<>();
+    public static HashMap<  int,   ClanBuffTemplate> CLANBUFF_HASH_MAP = new();
 
-    public const HashMap<@NonNull Integer, @NonNull ClanHouseTemplate> clanSkillHouseTemp = new HashMap<>();
+    public static HashMap<  int,   ClanHouseTemplate> clanSkillHouseTemp = new();
 
-    public const HashMap<@NonNull Integer, @NonNull ClanHouseTemplate> clanMarketHouseTemp = new HashMap<>();
+    public static HashMap<  int,   ClanHouseTemplate> clanMarketHouseTemp = new();
 
-    public const HashMap<@NonNull Integer, @NonNull ArrayList<@NonNull ShopClanTemplate>> shopClanByLvl = new HashMap<>();
+    public static HashMap<  int,   ArrayList<  ShopClanTemplate>> shopClanByLvl = new();
 
-    public const HashMap<@NonNull Integer, @NonNull Integer> tierItemHashMap = new HashMap<>();
+    public static HashMap<  int,   int> tierItemHashMap = new();
 
-    public const ArrayList<@NonNull ItemAttributeTemplate> ITEM_ATTRIBUTE_TEMPLATES = new ArrayList<>();
+    public static ArrayList<  ItemAttributeTemplate> ITEM_ATTRIBUTE_TEMPLATES = new();
 
-    public const HashMap<@NonNull Integer, @NonNull ItemAttributeTemplate> ITEM_ATTRIBUTE_TEMPLATE_HASH_MAP = new HashMap<>();
+    public static HashMap<  int,   ItemAttributeTemplate> ITEM_ATTRIBUTE_TEMPLATE_HASH_MAP = new();
 
-    public const ArrayList<@NonNull ExchangeData> EXCHANGE_DATAS = new ArrayList<>();
+    public static ArrayList<  ExchangeData> EXCHANGE_DATAS = new();
 
-    public const ArrayList<@NonNull ItemTemplate> NonAdminItemList = new ArrayList<>();
+    public static ArrayList<  ItemTemplate> NonAdminItemList = new();
 
     public const RestUser DEFAUL_REST_USER = new RestUser("gopet", "384f9013c39a1503596493e36fe607e9cf69482c96fd7837201d2318630c0ee9322170932abcd193a2c4e48e7200cd164d860fd3555e67c95b5113d29910cb3b");
 
@@ -304,16 +253,16 @@ public class GopetManager {
      * Id các map được dịch chuyển
      */
 //    public const int[] TeleMapId = new int[]{11, 19, 24, 22, 27, 26, 28};
-    public const int[] TeleMapId = new int[]{11, 19, 24, 22};
+    public static int[] TeleMapId = new int[]{11, 19, 24, 22};
     /**
      * Giá nâng kỹ năng theo từng giai đoạn
      */
-    public const int[] PriceUPSkill = new int[]{3000, 6000, 10000, 14000, 18000, 22000, 26000, 30000, 34000, 38000};
+    public static int[] PriceUPSkill = new int[]{3000, 6000, 10000, 14000, 18000, 22000, 26000, 30000, 34000, 38000};
 
     /**
      * Tỷ lệ nâng kỵ năng theo từng giai đoạn
      */
-    public const float[] PercentUpSkill = new float[]{90, 80, 70, 60, 50, 40, 30, 20, 10, 0};
+    public static float[] PercentUpSkill = new float[]{90, 80, 70, 60, 50, 40, 30, 20, 10, 0};
 
     /**
      * Số lượt cần để hồi xong 1 kỹ năng
@@ -323,7 +272,7 @@ public class GopetManager {
     /**
      * Mẫu của npc
      */
-    public const HashMap<@NonNull Integer, @NonNull NpcTemplate> npcTemplate = new HashMap<>();
+    public static HashMap<  int,   NpcTemplate> npcTemplate = new();
 
     /**
      * Id các pet trong danh sách nhận pet miễn phí
@@ -333,39 +282,39 @@ public class GopetManager {
     /**
      * Map mẫu
      */
-    public const HashMap<@NonNull Integer, @NonNull MapTemplate> mapTemplate = new HashMap<>();
+    public static HashMap<  int,   MapTemplate> mapTemplate = new();
 
     /**
      * Cửa hàng mẫu
      */
-    public const HashMap<@NonNull Byte, @NonNull ShopTemplate> shopTemplate = new HashMap<>();
+    public static HashMap<  sbyte,   ShopTemplate> shopTemplate = new();
 
     /**
      * Hành trang trang bị của thú cưng
      */
-    public const byte EQUIP_PET_INVENTORY = 0;
+    public const sbyte EQUIP_PET_INVENTORY = 0;
 
     /**
      * Hành trang hay túi đồ của nhân vật
      */
-    public const byte NORMAL_INVENTORY = 1;
-    public const byte SKIN_INVENTORY = 2;
-    public const byte WING_INVENTORY = 3;
-    public const byte GEM_INVENTORY = 4;
+    public const sbyte NORMAL_INVENTORY = 1;
+    public const sbyte SKIN_INVENTORY = 2;
+    public const sbyte WING_INVENTORY = 3;
+    public const sbyte GEM_INVENTORY = 4;
 
-    public const byte MONEY_TYPE_COIN = 1;
+    public const sbyte MONEY_TYPE_COIN = 1;
 
-    public const byte MONEY_TYPE_GOLD = 0;
+    public const sbyte MONEY_TYPE_GOLD = 0;
 
-    public const byte MONEY_TYPE_SILVER_BAR = 2;
+    public const sbyte MONEY_TYPE_SILVER_BAR = 2;
 
-    public const byte MONEY_TYPE_GOLD_BAR = 3;
+    public const sbyte MONEY_TYPE_GOLD_BAR = 3;
 
-    public const byte MONEY_TYPE_BLOOD_GEM = 4;
+    public const sbyte MONEY_TYPE_BLOOD_GEM = 4;
 
-    public const byte MONEY_TYPE_FUND_CLAN = 5;
+    public const sbyte MONEY_TYPE_FUND_CLAN = 5;
 
-    public const byte MONEY_TYPE_GROWTH_POINT_CLAN = 6;
+    public const sbyte MONEY_TYPE_GROWTH_POINT_CLAN = 6;
 
     public const int DAILY_STAR = 20;
 
@@ -374,12 +323,12 @@ public class GopetManager {
     public const int ITEM_OP_MP = 8;
 
     public const String EMPTY_IMG_PATH = "dialog/empty.png";
-    public const byte KIOSK_HAT = 0;
-    public const byte KIOSK_WEAPON = 1;
-    public const byte KIOSK_AMOUR = 2;
-    public const byte KIOSK_GEM = 3;
-    public const byte KIOSK_PET = 4;
-    public const byte KIOSK_OTHER = 5;
+    public const sbyte KIOSK_HAT = 0;
+    public const sbyte KIOSK_WEAPON = 1;
+    public const sbyte KIOSK_AMOUR = 2;
+    public const sbyte KIOSK_GEM = 3;
+    public const sbyte KIOSK_PET = 4;
+    public const sbyte KIOSK_OTHER = 5;
     public const int HOUR_UPLOAD_ITEM = 24;
     public const int DEBUFF_NONONSKY = 100;
     public const int TYPE_SELECT_ENCHANT_MATERIAL1 = 7;
@@ -387,11 +336,11 @@ public class GopetManager {
     public const int TYPE_SELECT_ITEM_UP_SKILL = 9;
     public const int TYPE_SELECT_ITEM_UP_TIER = 123;
     public const long CHANGE_CHANNEL_DELAY = 30000;
-    public const int[] ENCHANT_INFO = new int[]{3, 4, 5, 6, 7, 8, 9, 10, 11, 20};
-    public const float[] PERCENT_ENCHANT = new float[]{90f, 80f, 70f, 60f, 50f, 30f, 20f, 5f, -10f, -20f};
-    public const float[] DISPLAY_PERCENT_ENCHANT = new float[]{90f, 80f, 70f, 60f, 50f, 30f, 20f, 15f, 10f, 5f};
-    public const float[] PERCENT_UP_SKILL = new float[]{60f, 50f, 40f, 30f, 20f, 10f, 0f, -10f, -20f, -30f, -40f};
-    public const int[] PRICE_ENCHANT = new int[]{5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000};
+    public static int[] ENCHANT_INFO = new int[]{3, 4, 5, 6, 7, 8, 9, 10, 11, 20};
+    public static float[] PERCENT_ENCHANT = new float[]{90f, 80f, 70f, 60f, 50f, 30f, 20f, 5f, -10f, -20f};
+    public static float[] DISPLAY_PERCENT_ENCHANT = new float[]{90f, 80f, 70f, 60f, 50f, 30f, 20f, 15f, 10f, 5f};
+    public static float[] PERCENT_UP_SKILL = new float[]{60f, 50f, 40f, 30f, 20f, 10f, 0f, -10f, -20f, -30f, -40f};
+    public static int[] PRICE_ENCHANT = new int[]{5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000};
     public const int PERCENT_LVL_ITEM = 5;
     public const long DELAY_TURN_PET_BATTLE = 3000;
     public const int PRICE_UP_TIER_ITEM = 100000;
@@ -412,12 +361,12 @@ public class GopetManager {
     public const int SILVER_BAR_ID = 270;
     public const int GOLD_BAR_ID = 271;
     public const int BLOOD_GEM_ID = 273;
-    public const int[] ID_BOSS_CHALLENGE = new int[]{11, 12, 13, 14, 15};
+    public static int[] ID_BOSS_CHALLENGE = new int[]{11, 12, 13, 14, 15};
 
-    public const int[] LVL_REQUIRE_PET_TATTO = new int[]{3, 5, 10, 15, 20, 25, 30, 35};
+    public static int[] LVL_REQUIRE_PET_TATTO = new int[]{3, 5, 10, 15, 20, 25, 30, 35};
     public const int MOB_NEED_CAPTCHA = 125;
     public const long TIME_BOSS_DISPOINTED = 1000 * 60 * 10;
-    public const float[] PERCENT_OF_ENCHANT_GEM = new float[]{70f, 65f, 60f, 55f, 50f, 40f, 30f, 20f, 10f, 2f};
+    public static float[] PERCENT_OF_ENCHANT_GEM = new float[]{70f, 65f, 60f, 55f, 50f, 40f, 30f, 20f, 10f, 2f};
     public const int PRICE_KEEP_GEM = 5000;
     public const int MAX_SLOT_SHOP_ARENA = 6;
     public const int DEFAULT_FREE_RESET_ARENA_SHOP = 2;
@@ -429,16 +378,16 @@ public class GopetManager {
     public const long GOLD_CREATE_CLAN = 20000;
     public const int CLAN_MAX_LVL = 10;
     public const int PRICE_SILVER_BAR_CHANGE_GIFT = 10;
-    public const byte[] LVL_CLAN_NEED_TO_ADD_SLOT_SKILL = new byte[]{3, 5, 7};
-    public const int[] PRICE_RENT_SKILL = new int[]{550, 100};
-    public const long[] PRICE_BET_CHALLENGE = new long[]{2000l, 10000l, 15000l};
+    public static readonly sbyte[] LVL_CLAN_NEED_TO_ADD_SLOT_SKILL = new sbyte[]{3, 5, 7};
+    public static readonly int[] PRICE_RENT_SKILL = new int[]{550, 100};
+    public static readonly long[] PRICE_BET_CHALLENGE = new long[]{2000l, 10000l, 15000l};
 
     public static int[][] CHANGE_ITEM_DATA;
     public const int MAX_TIMES_SHOW_CAPTCHA = 5;
 
     public const int PERCENT_EXCHANGE_GOLD_TO_COIN = 20;
 
-    static {
+    static GopetManager() {
         shopTemplate.put(MenuController.SHOP_ARMOUR, new ShopTemplate(MenuController.SHOP_ARMOUR));
         shopTemplate.put(MenuController.SHOP_SKIN, new ShopTemplate(MenuController.SHOP_SKIN));
         shopTemplate.put(MenuController.SHOP_HAT, new ShopTemplate(MenuController.SHOP_HAT));
@@ -449,7 +398,7 @@ public class GopetManager {
         shopTemplate.put(MenuController.SHOP_CLAN, new ShopTemplate(MenuController.SHOP_CLAN));
     }
 
-    public static void readMobLvl(String cmd, HashMap<Integer, MobLvInfo> hashMap) throws SQLException {
+    public static void readMobLvl(String cmd, HashMap<int, MobLvInfo> hashMap)   {
         ResultSet resultSet = MYSQLManager.jquery(cmd);
         while (resultSet.next()) {
             MobLvInfo mobLvInfo = new MobLvInfo();
@@ -482,14 +431,14 @@ public class GopetManager {
             petTemplate.setStr(resultSet.getInt("str"));
             petTemplate.setInt(resultSet.getInt("_int"));
             petTemplate.setAgi(resultSet.getInt("agi"));
-            petTemplate.setType(resultSet.getByte("type"));
-            petTemplate.setElement(resultSet.getByte("element"));
-            petTemplate.setNclass(resultSet.getByte("nClass"));
-            petTemplate.setEnable(resultSet.getByte("enable") == 1);
+            petTemplate.setType(resultSet.getsbyte("type"));
+            petTemplate.setElement(resultSet.getsbyte("element"));
+            petTemplate.setNclass(resultSet.getsbyte("nClass"));
+            petTemplate.setEnable(resultSet.getsbyte("enable") == 1);
             if (petTemplate.isEnable()) {
                 petEnable.add(petTemplate);
                 if (!typePetTemplate.containsKey(petTemplate.getType())) {
-                    typePetTemplate.put(petTemplate.getType(), new ArrayList<>());
+                    typePetTemplate.put(petTemplate.getType(), new());
                 }
                 typePetTemplate.get(petTemplate.getType()).add(petTemplate);
             }
@@ -529,7 +478,7 @@ public class GopetManager {
             petSkill.skillID = resultSet.getInt("skillID");
             petSkill.name = resultSet.getString("name");
             petSkill.description = resultSet.getString("description");
-            petSkill.nClass = resultSet.getByte("nClass");
+            petSkill.nClass = resultSet.getsbyte("nClass");
             ResultSet skillLvResultSet = MYSQLManager.jquery(String.format("SELECT * FROM `skilllv` WHERE skillID = %s ORDER BY lv ASC;", petSkill.skillID));
             while (skillLvResultSet.next()) {
                 PetSkillLv petSkillLv = new PetSkillLv();
@@ -541,39 +490,39 @@ public class GopetManager {
             skillLvResultSet.close();
             PETSKILL_HASH_MAP.put(petSkill.skillID, petSkill);
             if (!NCLASS_PETSKILL_HASH_MAP.containsKey(petSkill.nClass)) {
-                NCLASS_PETSKILL_HASH_MAP.put(petSkill.nClass, new ArrayList<>());
+                NCLASS_PETSKILL_HASH_MAP.put(petSkill.nClass, new());
             }
             NCLASS_PETSKILL_HASH_MAP.get(petSkill.nClass).add(petSkill);
         }
         resultSet.close();
 
-        HashMap<Integer, ArrayList<MobLvlMap>> mobLvlMap_ = new HashMap<>();
+        HashMap<int, ArrayList<MobLvlMap>> mobLvlMap_ = new();
         resultSet = MYSQLManager.jquery("SELECT * FROM `gopet_map_moblvl`");
         while (resultSet.next()) {
             MobLvlMap mobLvlMap = new MobLvlMap(resultSet.getInt("mapId"), resultSet.getInt("lvlFrom"), resultSet.getInt("lvlTo"), resultSet.getInt("petId"));
             if (!mobLvlMap_.containsKey(mobLvlMap.getMapId())) {
-                mobLvlMap_.put(mobLvlMap.getMapId(), new ArrayList<>());
+                mobLvlMap_.put(mobLvlMap.getMapId(), new());
             }
             mobLvlMap_.get(mobLvlMap.getMapId()).add(mobLvlMap);
         }
         resultSet.close();
-        for (Map.Entry<Integer, ArrayList<MobLvlMap>> entry : mobLvlMap_.entrySet()) {
+        for (Map.Entry<int, ArrayList<MobLvlMap>> entry : mobLvlMap_.entrySet()) {
             int key = entry.getKey();
             ArrayList<MobLvlMap> val = entry.getValue();
             MOBLVL_MAP.put(key, val.toArray(new MobLvlMap[0]));
         }
-        HashMap<Integer, ArrayList<MobLocation>> mobLoc = new HashMap<>();
+        HashMap<int, ArrayList<MobLocation>> mobLoc = new();
         resultSet = MYSQLManager.jquery("SELECT * FROM `gopet_mob_location`");
         while (resultSet.next()) {
             MobLocation mobLocation1 = new MobLocation(resultSet.getInt("mapId"), resultSet.getInt("x"), resultSet.getInt("y"));
             if (!mobLoc.containsKey(mobLocation1.getMapId())) {
-                mobLoc.put(mobLocation1.getMapId(), new ArrayList<>());
+                mobLoc.put(mobLocation1.getMapId(), new());
             }
             mobLoc.get(mobLocation1.getMapId()).add(mobLocation1);
         }
         resultSet.close();
 
-        for (Map.Entry<Integer, ArrayList<MobLocation>> entry : mobLoc.entrySet()) {
+        for (Map.Entry<int, ArrayList<MobLocation>> entry : mobLoc.entrySet()) {
             int key = entry.getKey();
             ArrayList<MobLocation> val = entry.getValue();
             mobLocation.put(key, val.toArray(new MobLocation[0]));
@@ -590,7 +539,7 @@ public class GopetManager {
             npcTemp.setX(resultSet.getInt("x"));
             npcTemp.setY(resultSet.getInt("y"));
             npcTemp.setImgPath(resultSet.getString("imgPath"));
-            npcTemp.setType(resultSet.getByte("type"));
+            npcTemp.setType(resultSet.getsbyte("type"));
             npcTemp.setBounds((int[]) JsonManager.LoadFromJson(resultSet.getString("bounds"), int[].class));
             npcTemplate.put(npcTemp.getNpcId(), npcTemp);
         }
@@ -604,8 +553,8 @@ public class GopetManager {
             int[] waypointX = (int[]) JsonManager.LoadFromJson(resultSet.getString("waypointX"), int[].class);
             int[] waypointY = (int[]) JsonManager.LoadFromJson(resultSet.getString("waypointY"), int[].class);
             String[] waypointName = (String[]) JsonManager.LoadFromJson(resultSet.getString("waypointName"), String[].class);
-            Waypoint[] waypoints = new Waypoint[waypointName.length];
-            for (int i = 0; i < waypoints.length; i++) {
+            Waypoint[] waypoints = new Waypoint[waypointName.Length];
+            for (int i = 0; i < waypoints.Length; i++) {
                 waypoints[i] = new Waypoint();
                 waypoints[i].setName(waypointName[i]);
                 waypoints[i].setX(waypointX[i]);
@@ -622,7 +571,7 @@ public class GopetManager {
             PetTattoTemplate petTattoTemplate = new PetTattoTemplate();
             petTattoTemplate.setTattooId(resultSet.getInt("tattooId"));
             petTattoTemplate.setName(resultSet.getString("name"));
-            petTattoTemplate.setType(resultSet.getByte("type"));
+            petTattoTemplate.setType(resultSet.getsbyte("type"));
             petTattoTemplate.setIconPath(resultSet.getString("iconPath"));
             petTattoTemplate.setAtk(resultSet.getInt("atk"));
             petTattoTemplate.setDef(resultSet.getInt("def"));
@@ -652,16 +601,16 @@ public class GopetManager {
             itemTemp.setRequireAgi(resultSet.getInt("requireAgi"));
             itemTemp.setRequireInt(resultSet.getInt("requireInt"));
             itemTemp.setRequireStr(resultSet.getInt("requireStr"));
-            itemTemp.setStackable(resultSet.getByte("isStackable") == 1);
-            itemTemp.setCanTrade(resultSet.getByte("canTrade") == 1);
+            itemTemp.setStackable(resultSet.getsbyte("isStackable") == 1);
+            itemTemp.setCanTrade(resultSet.getsbyte("canTrade") == 1);
             itemTemp.setOption((int[]) JsonManager.LoadFromJson(resultSet.getString("itemOption"), int[].class));
             itemTemp.setOptionValue((int[]) JsonManager.LoadFromJson(resultSet.getString("itemOptionValue"), int[].class));
-            itemTemp.setGender(resultSet.getByte("gender"));
+            itemTemp.setGender(resultSet.getsbyte("gender"));
             itemTemp.setFrameImgPath(resultSet.getString("frameImgPath"));
             itemTemp.setIconPath(resultSet.getString("iconPath"));
-            itemTemp.setOnSky(resultSet.getByte("isOnSky") == 1);
-            itemTemp.setNClass(resultSet.getByte("petNClass"));
-            itemTemp.setElement(resultSet.getByte("element"));
+            itemTemp.setOnSky(resultSet.getsbyte("isOnSky") == 1);
+            itemTemp.setNClass(resultSet.getsbyte("petNClass"));
+            itemTemp.setElement(resultSet.getsbyte("element"));
             itemTemp.setTypeTier(resultSet.getInt("tierType"));
             itemTemp.setIconId(idAssets);
             itemAssetsIcon.put(idAssets, itemTemp.getIconPath());
@@ -672,22 +621,22 @@ public class GopetManager {
             itemTemplate.put(itemTemp.getItemId(), itemTemp);
             if (itemTemp.getType() == ITEM_PART_PET) {
                 int[] optionValue = itemTemp.getOptionValue();
-                if (optionValue.length > 1) {
+                if (optionValue.Length > 1) {
                     PetTemplate petTemplate = PETTEMPLATE_HASH_MAP.get(optionValue[0]);
                     if (petTemplate != null) {
                         int typePet = petTemplate.getType();
                         if (!mergeItemPet.containsKey(typePet)) {
-                            mergeItemPet.put(typePet, new ArrayList<>());
+                            mergeItemPet.put(typePet, new());
                         }
                         mergeItemPet.get(typePet).add(itemTemp);
                     }
                 }
             } else if (itemTemp.getType() == ITEM_PART_ITEM) {
                 int[] optionValue = itemTemp.getOptionValue();
-                if (optionValue.length > 1) {
+                if (optionValue.Length > 1) {
                     int typePet = itemTemp.getTypeTier();
                     if (!mergeItemItem.containsKey(typePet)) {
-                        mergeItemItem.put(typePet, new ArrayList<>());
+                        mergeItemItem.put(typePet, new());
                     }
                     mergeItemItem.get(typePet).add(itemTemp);
                 }
@@ -701,14 +650,14 @@ public class GopetManager {
 
         resultSet = MYSQLManager.jquery("SELECT * FROM `shop`");
         while (resultSet.next()) {
-            byte shopId = resultSet.getByte("ShopId");
+            sbyte shopId = resultSet.getsbyte("ShopId");
             ShopTemplateItem shopTemplate1 = new ShopTemplateItem();
             shopTemplate1.setShopId(resultSet.getInt("shopId"));
             shopTemplate1.setItemTempalteId(resultSet.getInt("itemTemTempleId"));
             shopTemplate1.setCount(resultSet.getInt("count"));
-            shopTemplate1.setMoneyType((byte[]) JsonManager.LoadFromJson(resultSet.getString("moneyType"), byte[].class));
+            shopTemplate1.setMoneyType((sbyte[]) JsonManager.LoadFromJson(resultSet.getString("moneyType"), sbyte[].class));
             shopTemplate1.setPrice((int[]) JsonManager.LoadFromJson(resultSet.getString("price"), int[].class));
-            shopTemplate1.setInventoryType(resultSet.getByte("inventoryType"));
+            shopTemplate1.setInventoryType(resultSet.getsbyte("inventoryType"));
             shopTemplate1.setClanLvl(resultSet.getInt("clanLvl"));
             shopTemplate1.setPerCount(resultSet.getInt("perCount"));
             shopTemplate1.setSellItem(resultSet.getbool("isSellItem"));
@@ -729,7 +678,7 @@ public class GopetManager {
             shopTemplate1.setPercent(resultSet.getFloat("percent"));
             shopTemplate1.setOption((int[][]) JsonManager.LoadFromJson(resultSet.getString("optionValue"), int[][].class));
             if (!shopClanByLvl.containsKey(shopTemplate1.getNeedShopClanLvl())) {
-                shopClanByLvl.put(shopTemplate1.getNeedShopClanLvl(), new ArrayList<>());
+                shopClanByLvl.put(shopTemplate1.getNeedShopClanLvl(), new());
             }
             shopClanByLvl.get(shopTemplate1.getNeedShopClanLvl()).add(shopTemplate1);
         }
@@ -750,7 +699,7 @@ public class GopetManager {
                 }
             }
             if (!dropItem.containsKey(dropItem1.getMapId())) {
-                dropItem.put(dropItem1.getMapId(), new ArrayList<>());
+                dropItem.put(dropItem1.getMapId(), new());
             }
 
             if (dropItem1.getPercent() < 0f) {
@@ -804,7 +753,7 @@ public class GopetManager {
             bossTemplate.setAtk(resultSet.getInt("atk"));
             bossTemplate.setDef(resultSet.getInt("def"));
             bossTemplate.setHp(resultSet.getInt("hp"));
-            bossTemplate.setTypeBoss(resultSet.getByte("typeBoss"));
+            bossTemplate.setTypeBoss(resultSet.getsbyte("typeBoss"));
             bossTemplate.setGift((int[][]) JsonManager.LoadFromJson(resultSet.getString("gift"), int[][].class));
             boss.put(bossTemplate.getBossId(), bossTemplate);
             if (bossTemplate.getPetTemplate() == null) {
@@ -853,12 +802,12 @@ public class GopetManager {
             taskTemplate.put(taskTemp.getTaskId(), taskTemp);
             taskTemplateList.add(taskTemp);
             if (!taskTemplateByType.containsKey(taskTemp.getType())) {
-                taskTemplateByType.put(taskTemp.getType(), new ArrayList<>());
+                taskTemplateByType.put(taskTemp.getType(), new());
             }
             taskTemplateByType.get(taskTemp.getType()).add(taskTemp);
 
             if (!taskTemplateByNpcId.containsKey(taskTemp.getFromNpc())) {
-                taskTemplateByNpcId.put(taskTemp.getFromNpc(), new ArrayList<>());
+                taskTemplateByNpcId.put(taskTemp.getFromNpc(), new());
             }
 
             taskTemplateByNpcId.get(taskTemp.getFromNpc()).add(taskTemp);
@@ -872,7 +821,7 @@ public class GopetManager {
             clanBuffTemplate.setPotentialPointNeed(resultSet.getInt("potentialPointNeed"));
             clanBuffTemplate.setValuePerLevel(resultSet.getInt("valuePerlvl"));
             clanBuffTemplate.setLvlClan(resultSet.getInt("lvlClan"));
-            clanBuffTemplate.setPercent(resultSet.getByte("isPercent") == 1);
+            clanBuffTemplate.setPercent(resultSet.getsbyte("isPercent") == 1);
             clanBuffTemplate.setName(resultSet.getString("name"));
             clanBuffTemplate.setDesc(resultSet.getString("descBuff"));
             clanBuffTemplate.setComment(resultSet.getString("comment"));
@@ -904,7 +853,7 @@ public class GopetManager {
 
         CHANGE_ITEM_DATA = (int[][]) JsonManager.LoadFromJson("[[4,74,5000,1],[4,71,5500,1],[4,75,4500,1],[4,76,2000,1],[4,77,1000,1],[5,1,5000,1]]", int[][].class);
 
-        for (Map.Entry<Integer, TierItem> entry : tierItem.entrySet()) {
+        for (Map.Entry<int, TierItem> entry : tierItem.entrySet()) {
 
             TierItem val = entry.getValue();
 
@@ -912,22 +861,22 @@ public class GopetManager {
                 continue;
             }
 
-            ArrayList<Integer> map = findListTierId(val);
+            ArrayList<int> map = findListTierId(val);
 
             tierItemHashMap.put(val.getItemTemplateIdTier1(), 1);
             for (int i = 0; i < map.size(); i++) {
-                Integer get = map.get(i);
+                int get = map.get(i);
                 tierItemHashMap.put(get, i + 2);
             }
         }
 
     }
 
-    public static ArrayList<Integer> findListTierId(TierItem tInfo) {
-        ArrayList<Integer> list = new ArrayList<>();
+    public static ArrayList<int> findListTierId(TierItem tInfo) {
+        ArrayList<int> list = new();
         list.add(tInfo.getItemTemplateIdTier2());
 
-        for (Map.Entry<Integer, TierItem> entry : tierItem.entrySet()) {
+        for (Map.Entry<int, TierItem> entry : tierItem.entrySet()) {
 
             TierItem val = entry.getValue();
 
@@ -942,7 +891,7 @@ public class GopetManager {
     public static void loadMarket()   {
         ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `market`");
         while (resultSet.next()) {
-            byte typeKiosk = resultSet.getByte("type");
+            sbyte typeKiosk = resultSet.getsbyte("type");
             String sellItem = resultSet.getString("sellItem");
 
             Type arrayType = new TypeToken< CopyOnWriteArrayList<SellItem>>() {

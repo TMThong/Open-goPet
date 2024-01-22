@@ -1,14 +1,8 @@
-package server.io;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-import server.IHandleMessage;
 
-public class Session extends Thread {
+using System.Net.Sockets;
+
+public class Session {
 
     public static ThreadPoolExecutor executorCloseThread = (ThreadPoolExecutor) Executors.newFixedThreadPool(20);
     public const ThreadGroup THREAD_GROUP = new ThreadGroup("session");
@@ -19,12 +13,11 @@ public class Session extends Thread {
     public bool isConnected;
     private MsgSender sender;
     private MsgReader reader;
-    public int sendByteCount;
-    public int recvByteCount;
+    public int sendsbyteCount;
+    public int recvsbyteCount;
     public TEA tea;
     public String currentIp;
     public int currentPort;
-    public final bool isSYNC = false;
     public bool clientOK = false;
     public long msgCount = 0;
 
@@ -33,8 +26,8 @@ public class Session extends Thread {
     }
 
     public void setClientOK(bool ok)   {
-        Message ms = new Message((byte) -36);
-        ms.writer().writeByte(ok ? 1 : 0);
+        Message ms = new Message((sbyte) -36);
+        ms.writer().writesbyte(ok ? 1 : 0);
         ms.writer().flush();
         sendMessage(ms);
         clientOK = true;
@@ -44,7 +37,7 @@ public class Session extends Thread {
         return this.isConnected;
     }
 
-    @Override
+    
     public void run() {
         try {
             isConnected = true;
@@ -65,13 +58,13 @@ public class Session extends Thread {
     }
 
     public void readKey()   {
-        byte[] keys = new byte[9];
+        sbyte[] keys = new sbyte[9];
         dis.read(keys, 0, 9);
         long key = readKey(keys);
         tea = new TEA(key);
     }
 
-    private long readKey(byte[] var10000) {
+    private long readKey(sbyte[] var10000) {
         long time = 0;
         time ^= var10000[1] & 255;
         time <<= 8;
@@ -145,8 +138,8 @@ public class Session extends Thread {
                     socketCount--;
                 }
 
-                sendByteCount = 0;
-                recvByteCount = 0;
+                sendsbyteCount = 0;
+                recvsbyteCount = 0;
 
                 if (messageHandler != null) {
                     messageHandler.onDisconnected();

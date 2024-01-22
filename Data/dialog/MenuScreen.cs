@@ -6,7 +6,7 @@ public class MenuScreen {
     protected int menuId;
     protected ArrayList<MenuItemInfo> menuItemInfos = new ArrayList<MenuItemInfo>();
     private String title;
-    private byte type = 0;
+    private sbyte type = 0;
 
     public MenuScreen(int menuId, String title) {
         this.menuId = menuId;
@@ -37,11 +37,11 @@ public class MenuScreen {
         this.title = title;
     }
 
-    public byte getType() {
+    public sbyte getType() {
         return type;
     }
 
-    public void setType(byte type) {
+    public void setType(sbyte type) {
         this.type = type;
     }
 

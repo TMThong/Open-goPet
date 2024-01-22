@@ -5,7 +5,7 @@ public class ClanMember extends DataVersion {
     public String name;
     public long fundDonate = 0;
     public long growthPointDonate = 0;
-    public byte duty = Clan.TYPE_NORMAL;
+    public sbyte duty = Clan.TYPE_NORMAL;
     public long timeJoin = System.currentTimeMillis();
     public long timeResetData = System.currentTimeMillis() / 2L;
     public int curQuest = 0;

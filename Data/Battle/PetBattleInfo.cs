@@ -2,8 +2,8 @@
 public class PetBattleInfo {
 
     private int turn = 0;
-    private ArrayList<Buff> buffs = new ArrayList<>();
-    private HashMap<Integer, Integer> skill_cooldown = new HashMap<>();
+    private ArrayList<Buff> buffs = new();
+    private HashMap<int, int> skill_cooldown = new();
     private bool isPlayer = false;
     private Player player;
 
@@ -36,7 +36,7 @@ public class PetBattleInfo {
         return buffs;
     }
 
-    public final void addBuff(Buff buff) {
+    public   void addBuff(Buff buff) {
         buffs.add(buff);
     }
 
@@ -61,24 +61,24 @@ public class PetBattleInfo {
             }
         }
         turn++;
-        ArrayList<Integer> skill_cooldownArrayList = new ArrayList<>();
-        for (Map.Entry<Integer, Integer> entry : skill_cooldown.entrySet()) {
-            Integer key = entry.getKey();
-            Integer val = entry.getValue();
+        ArrayList<int> skill_cooldownArrayList = new();
+        for (Map.Entry<int, int> entry : skill_cooldown.entrySet()) {
+            int key = entry.getKey();
+            int val = entry.getValue();
             if (val - 1 <= 0) {
                 skill_cooldownArrayList.add(key);
             } else {
                 skill_cooldown.put(key, val - 1);
             }
         }
-        for (Integer integer : skill_cooldownArrayList) {
-            skill_cooldown.remove(integer);
+        for (int int : skill_cooldownArrayList) {
+            skill_cooldown.remove(int);
         }
     }
 
     public ItemInfo[] getBuff() {
         ItemInfo[] itemInfos = new ItemInfo[GopetManager.itemInfoName.size()];
-        for (int i = 0; i < itemInfos.length; i++) {
+        for (int i = 0; i < itemInfos.Length; i++) {
             itemInfos[i] = new ItemInfo(i, 0);
         }
         for (Buff buff : buffs) {

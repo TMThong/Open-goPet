@@ -39,22 +39,22 @@ public class Clan {
     private long growthPoint = 0;
     private int lvl = 1;
     private int skillHouseLvl = 1;
-    private int superMarketLvl = 0;
+    private int baseMarketLvl = 0;
     private int potentialPoint = 0;
     private CopyOnWriteArrayList<ClanMember> members = new CopyOnWriteArrayList<ClanMember>();
     private CopyOnWriteArrayList<ClanRequestJoin> requestJoin = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<ClanBuff> clanBuffs = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<Integer> bannedJoinRequestId = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<int> bannedJoinRequestId = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<ClanChat> clanChats = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<ClanPotentialSkill> clanPotentialSkills = new CopyOnWriteArrayList<>();
     private ClanPlace clanPlace;
     private String slogan = "HTCGOPET";
     private ShopClan shopClan;
     private Object LOCKObject = new Object();
-    public const byte TYPE_LEADER = 0;
-    public const byte TYPE_DEPUTY_LEADER = 1;
-    public const byte TYPE_SENIOR = 2;
-    public const byte TYPE_NORMAL = 3;
+    public const sbyte TYPE_LEADER = 0;
+    public const sbyte TYPE_DEPUTY_LEADER = 1;
+    public const sbyte TYPE_SENIOR = 2;
+    public const sbyte TYPE_NORMAL = 3;
 
     public Clan() {
 
@@ -74,15 +74,15 @@ public class Clan {
         initClan();
     }
 
-    public final ClanTemplate getTemp() {
+    public   ClanTemplate getTemp() {
         return GopetManager.clanTemp.get(lvl);
     }
 
-    public final void addPotentialPoint(int value) {
+    public   void addPotentialPoint(int value) {
         this.potentialPoint += value;
     }
 
-    public final void sendMessage(Message m) {
+    public   void sendMessage(Message m) {
         for (ClanMember member : members) {
             Player onlinePlayer = PlayerManager.get(member.user_id);
             if (onlinePlayer != null) {
@@ -92,10 +92,10 @@ public class Clan {
     }
 
     public String getClanDesc() {
-        ArrayList<String> clanInfo = new ArrayList<>();
+        ArrayList<String> clanInfo = new();
         clanInfo.add(String.format(" Cấp: %s ", lvl));
         clanInfo.add(String.format(" Thành viên: %s/%s ", curMember, maxMember));
-        clanInfo.add(String.format(" Shop bảo vật cấp: %s ", superMarketLvl));
+        clanInfo.add(String.format(" Shop bảo vật cấp: %s ", baseMarketLvl));
         clanInfo.add(String.format(" Nhà kỹ năng bang hội cấp: %s ", skillHouseLvl));
         return String.join(",", clanInfo.toArray(new String[0]));
     }
@@ -142,7 +142,7 @@ public class Clan {
         player.redDialog("Điểm phát triển không đủ không đủ");
     }
 
-    public bool checkDuty(byte typeDuty) {
+    public bool checkDuty(sbyte typeDuty) {
         int maxOfDutye = getTemp().getPermission()[typeDuty];
         int cur = 0;
         for (ClanMember member : members) {
@@ -265,8 +265,8 @@ public class Clan {
 
     public void create()   {
         Connection connection = MYSQLManager.create();
-        MYSQLManager.updateSql(String.format("INSERT INTO `clan`(`clanId`, `name`, `lvl`, `curMember`, `maxMember`, `leaderId`, `members`, `fund`, `growthPoint`, `skillHouseLvl`, `superMarketLvl`) "
-                + "VALUES (NULL,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')", name, lvl, curMember, maxMember, leaderId, JsonManager.ToJson(members), fund, growthPoint, skillHouseLvl, superMarketLvl), connection);
+        MYSQLManager.updateSql(String.format("INSERT INTO `clan`(`clanId`, `name`, `lvl`, `curMember`, `maxMember`, `leaderId`, `members`, `fund`, `growthPoint`, `skillHouseLvl`, `baseMarketLvl`) "
+                + "VALUES (NULL,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')", name, lvl, curMember, maxMember, leaderId, JsonManager.ToJson(members), fund, growthPoint, skillHouseLvl, baseMarketLvl), connection);
         ResultSet resultSet = MYSQLManager.jquery(String.format("SELECT * FROM `clan` WHERE leaderId = %s", leaderId), connection);
         if (resultSet.next()) {
             setClanId(resultSet.getInt("clanId"));
@@ -279,7 +279,7 @@ public class Clan {
 
     public void save()   {
         Connection connection = MYSQLManager.create();
-        MYSQLManager.updateSql(String.format("UPDATE `clan` set `lvl` = %s , `curMember` = %s , `maxMember` =%s , `leaderId` =%s , `members` = '%s' , `fund` =%s, `growthPoint` =%s , `skillHouseLvl` = %s , `superMarketLvl` =%s , `joinRequest` = '%s' WHERE `clanId` =%s", lvl, curMember, maxMember, leaderId, JsonManager.ToJson(members), fund, growthPoint, skillHouseLvl, superMarketLvl, JsonManager.ToJson(requestJoin), this.clanId), connection);
+        MYSQLManager.updateSql(String.format("UPDATE `clan` set `lvl` = %s , `curMember` = %s , `maxMember` =%s , `leaderId` =%s , `members` = '%s' , `fund` =%s, `growthPoint` =%s , `skillHouseLvl` = %s , `baseMarketLvl` =%s , `joinRequest` = '%s' WHERE `clanId` =%s", lvl, curMember, maxMember, leaderId, JsonManager.ToJson(members), fund, growthPoint, skillHouseLvl, baseMarketLvl, JsonManager.ToJson(requestJoin), this.clanId), connection);
         connection.close();
     }
 
@@ -306,7 +306,7 @@ public class Clan {
         clanChats.add(clanChat);
     }
 
-    public final ClanPotentialSkill getClanPotentialSkillOrCreate(int buffId) {
+    public   ClanPotentialSkill getClanPotentialSkillOrCreate(int buffId) {
         int left = 0;
         int right = clanPotentialSkills.size() - 1;
         while (left <= right) {
@@ -335,14 +335,14 @@ public class Clan {
         return clanPotentialSkill;
     }
 
-    public final ClanBuff getBuff(int index) {
+    public   ClanBuff getBuff(int index) {
         if (index >= 0 && index < clanBuffs.size()) {
             return clanBuffs.get(index);
         }
         return null;
     }
 
-    public final ClanBuff getBuffByIdBuff(int buffId) {
+    public   ClanBuff getBuffByIdBuff(int buffId) {
         for (ClanBuff clanBuff : clanBuffs) {
             if (clanBuff.getBuffId() == buffId) {
                 return clanBuff;

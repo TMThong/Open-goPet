@@ -7,7 +7,7 @@ public class PetSkill {
     public const int PHANDOAN = 110;
 
     public int skillID;
-    public byte nClass;
+    public sbyte nClass;
     public String name, description;
     public ArrayList<PetSkillLv> skillLv = new ArrayList<PetSkillLv>();
 

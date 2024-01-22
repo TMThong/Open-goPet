@@ -23,9 +23,9 @@ public class TopPet extends Top {
     public const TopPet instance = new TopPet();
 
     public TopPet() {
-        super("top_pet");
-        super.name = "TOP Pet";
-        super.desc = "Chỉ những thú cưng mạnh mẽ";
+        base("top_pet");
+        base.name = "TOP Pet";
+        base.desc = "Chỉ những thú cưng mạnh mẽ";
     }
 
     @Override

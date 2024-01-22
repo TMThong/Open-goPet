@@ -1,29 +1,26 @@
-package manager;
 
-import data.map.ChallengeMap;
-import data.map.ClanMap;
-import data.map.GopetMap;
-import data.map.MapTemplate;
-import data.map.MarketMap;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-public class MapManager {
+using Gopet.Data.Collections;
 
-    public static HashMap<Integer, GopetMap> maps = new HashMap();
+public class MapManager
+{
 
-    public static ArrayList<GopetMap> mapArr = new ArrayList<>();
-    
+    public static HashMap<int, GopetMap> maps = new();
+
+    public static ArrayList<GopetMap> mapArr = new();
+
     public const int ID_LINH_THU_CITY = 11;
 
-    public static void init()   {
-        mapArr.clear();
-        for (Map.Entry<Integer, MapTemplate> entry : GopetManager.mapTemplate.entrySet()) {
-            Integer mapid = entry.getKey();
-            MapTemplate mapTemplate = entry.getValue();
+    public static void init()
+    {
+        mapArr.Clear();
+        foreach (var entry in GopetManager.mapTemplate)
+        {
+            int mapid = entry.Key;
+            MapTemplate mapTemplate = entry.Value;
 
-            switch (mapid) {
+            switch (mapid)
+            {
                 case 12:
                     put(mapid, new ChallengeMap(mapid, true, mapTemplate));
                     break;
@@ -40,15 +37,18 @@ public class MapManager {
         }
     }
 
-    public static void put(Integer mapID, GopetMap m) {
+    public static void put(int mapID, GopetMap m)
+    {
         maps.put(mapID, m);
         mapArr.add(m);
     }
 
-    public static void stopUpdate() {
-        for (Map.Entry<Integer, GopetMap> entry : maps.entrySet()) {
-            Integer key = entry.getKey();
-            GopetMap value = entry.getValue();
+    public static void stopUpdate()
+    {
+        foreach (var entry in maps)
+        {
+            int key = entry.Key;
+            GopetMap value = entry.Value;
             value.isRunning = false;
         }
     }

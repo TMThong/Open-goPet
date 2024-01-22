@@ -1,29 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package data.top;
+ 
+public class TopSpendGold : Top {
 
-import java.sql.ResultSet;
-import manager.MYSQLManager;
-import util.Utilities;
+    public static readonly TopSpendGold instance = new TopSpendGold();
 
-/**
- *
- * @author MINH THONG
- */
-public class TopSpendGold extends Top {
-
-    public const TopSpendGold instance = new TopSpendGold();
-
-    public TopSpendGold() {
-        super("top_spendgold");
-        super.name = "Top Đại gia xuống núi";
-        super.desc = "Chỉ người nạp số tiền cao nhất";
+    public TopSpendGold()  : base("top_spendgold"){
+       
+        base.name = "Top Đại gia xuống núi";
+        base.desc = "Chỉ người nạp số tiền cao nhất";
     }
 
     public TopData find(int user_id) {
-        for (TopData data : datas) {
+        foreach (TopData data in datas) {
             if (data.id == user_id) {
                 return data;
             }
@@ -31,8 +18,8 @@ public class TopSpendGold extends Top {
         return null;
     }
 
-    @Override
-    public void update() {
+     
+    public override void update() {
         try {
             lastDatas.clear();
             lastDatas.addAll(datas);

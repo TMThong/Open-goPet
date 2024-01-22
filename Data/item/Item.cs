@@ -1,4 +1,6 @@
- 
+
+
+using Gopet.Data.Collections;
 
 public class Item : DataVersion {
     
@@ -123,7 +125,7 @@ public class Item : DataVersion {
         return arrayList;
     }
 
-    public static CopyOnWriteArrayList<Item> search(ArrayList<Integer> types, CopyOnWriteArrayList<Item> listNeedSearchItems) {
+    public static CopyOnWriteArrayList<Item> search(ArrayList<int> types, CopyOnWriteArrayList<Item> listNeedSearchItems) {
         CopyOnWriteArrayList<Item> arrayList = new CopyOnWriteArrayList<>();
         for (Item item : listNeedSearchItems) {
             if (types.contains(item.getTemp().getType())) {
@@ -141,7 +143,7 @@ public class Item : DataVersion {
     }
 
     public String getEquipName()   {
-        ArrayList<String> infoStrings = new ArrayList<>();
+        ArrayList<String> infoStrings = new();
         if (getAtk() > 0) {
             infoStrings.add(getAtk() + " (atk) ");
         }
@@ -160,7 +162,7 @@ public class Item : DataVersion {
                 if (gemOptionValue == null) {
                     updateGemOption();
                 }
-                for (int i = 0; i < option.length; i++) {
+                for (int i = 0; i < option.Length; i++) {
                     int j = option[i];
                     float info = gemOptionValue[i];
                     switch (j) {
@@ -202,13 +204,13 @@ public class Item : DataVersion {
 
     public void updateGemOption()   {
         if (this.gemInfo != null) {
-            this.gemOptionValue = new float[this.gemInfo.getOption().length];
-            for (int i = 0; i < gemOptionValue.length; i++) {
+            this.gemOptionValue = new float[this.gemInfo.getOption().Length];
+            for (int i = 0; i < gemOptionValue.Length; i++) {
                 this.gemOptionValue[i] = this.gemInfo.getOptionValue()[i] / 100f + (((((this.gemInfo.getOptionValue()[i] / 100f) * 4 + 80) / 100) * 4) / 2) * lvl;
             }
         } else if (getTemp().getType() == GopetManager.ITEM_GEM) {
-            this.gemOptionValue = new float[this.option.length];
-            for (int i = 0; i < option.length; i++) {
+            this.gemOptionValue = new float[this.option.Length];
+            for (int i = 0; i < option.Length; i++) {
                 this.gemOptionValue[i] = optionValue[i] / 100f + (((((optionValue[i] / 100f) * 2 + 80) / 100) * 4) / 2) * lvl;
             }
         } else {
@@ -219,7 +221,7 @@ public class Item : DataVersion {
     private float getPercentGemBuff(int idoption) {
         float percent = 0;
         if (this.gemInfo != null) {
-            for (int i = 0; i < this.gemInfo.getOption().length; i++) {
+            for (int i = 0; i < this.gemInfo.getOption().Length; i++) {
                 int j = this.gemInfo.getOption()[i];
                 if (j == idoption) {
                     return this.gemOptionValue[i];

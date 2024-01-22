@@ -14,13 +14,13 @@ import util.Utilities;
  */
 public class TopGold extends Top {
 
-    private final String[] topNameStrings = new String[]{"Phú hộ", "Bá hộ", "Chủ nông"};
+    private   String[] topNameStrings = new String[]{"Phú hộ", "Bá hộ", "Chủ nông"};
     public static TopGold instance = new TopGold();
 
     public TopGold() {
-        super("top_gold");
-        super.name = "TOP Đại gia";
-        super.desc = "Chỉ những người chơi giàu có";
+        base("top_gold");
+        base.name = "TOP Đại gia";
+        base.desc = "Chỉ những người chơi giàu có";
     }
 
     @Override

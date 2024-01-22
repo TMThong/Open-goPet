@@ -1,16 +1,15 @@
-package server.io;
 
 public class TEA {
    private int[] S = new int[4];
 
-   public TEA(byte[] key) {
+   public TEA(sbyte[] key) {
       int off = 0;
       for(int i = 0; i < 4; ++i) {
          this.S[i] = key[off++] & 255 | (key[off++] & 255) << 8 | (key[off++] & 255) << 16 | (key[off++] & 255) << 24;
       }
    }
    public TEA(long longKey) {
-      byte[] key = new byte[16];
+      sbyte[] key = new sbyte[16];
       generateKey(longKey, key);
       int off = 0;
 
@@ -20,38 +19,38 @@ public class TEA {
 
    }
 
-   public static void generateKey(long value, byte[] array) {
+   public static void generateKey(long value, sbyte[] array) {
       int offset = 0;
-      array[offset] = (byte)((int)(255L & value >> 56));
-      array[offset + 1] = (byte)((int)(255L & value >> 48));
-      array[offset + 2] = (byte)((int)(255L & value >> 40));
-      array[offset + 3] = (byte)((int)(255L & value >> 32));
-      array[offset + 4] = (byte)((int)(255L & value >> 24));
-      array[offset + 5] = (byte)((int)(255L & value >> 16));
-      array[offset + 6] = (byte)((int)(255L & value >> 8));
-      array[offset + 7] = (byte)((int)(255L & value));
-      array[offset + 8] = (byte)((int)(255L & value >> 56));
-      array[offset + 9] = (byte)((int)(255L & value >> 48));
-      array[offset + 10] = (byte)((int)(255L & value >> 40));
-      array[offset + 11] = (byte)((int)(255L & value >> 32));
-      array[offset + 12] = (byte)((int)(255L & value >> 24));
-      array[offset + 13] = (byte)((int)(255L & value >> 16));
-      array[offset + 14] = (byte)((int)(255L & value >> 8));
-      array[offset + 15] = (byte)((int)(255L & value));
+      array[offset] = (sbyte)((int)(255L & value >> 56));
+      array[offset + 1] = (sbyte)((int)(255L & value >> 48));
+      array[offset + 2] = (sbyte)((int)(255L & value >> 40));
+      array[offset + 3] = (sbyte)((int)(255L & value >> 32));
+      array[offset + 4] = (sbyte)((int)(255L & value >> 24));
+      array[offset + 5] = (sbyte)((int)(255L & value >> 16));
+      array[offset + 6] = (sbyte)((int)(255L & value >> 8));
+      array[offset + 7] = (sbyte)((int)(255L & value));
+      array[offset + 8] = (sbyte)((int)(255L & value >> 56));
+      array[offset + 9] = (sbyte)((int)(255L & value >> 48));
+      array[offset + 10] = (sbyte)((int)(255L & value >> 40));
+      array[offset + 11] = (sbyte)((int)(255L & value >> 32));
+      array[offset + 12] = (sbyte)((int)(255L & value >> 24));
+      array[offset + 13] = (sbyte)((int)(255L & value >> 16));
+      array[offset + 14] = (sbyte)((int)(255L & value >> 8));
+      array[offset + 15] = (sbyte)((int)(255L & value));
    }
 
-   public byte[] encrypt(byte[] clear) {
-      int paddedSize = (clear.length >> 3) + (clear.length % 8 == 0 ? 0 : 1) << 1;
+   public sbyte[] encrypt(sbyte[] clear) {
+      int paddedSize = (clear.Length >> 3) + (clear.Length % 8 == 0 ? 0 : 1) << 1;
       int[] buffer = new int[paddedSize + 1];
-      buffer[0] = clear.length;
+      buffer[0] = clear.Length;
       this.pack(clear, buffer, 1);
       this.brew(buffer);
-      return this.unpack(buffer, 0, buffer.length << 2);
+      return this.unpack(buffer, 0, buffer.Length << 2);
    }
 
-   public byte[] decrypt(byte[] crypt) {
-      if (crypt.length % 4 == 0 && (crypt.length >> 2) % 2 == 1) {
-         int[] buffer = new int[crypt.length >> 2];
+   public sbyte[] decrypt(sbyte[] crypt) {
+      if (crypt.Length % 4 == 0 && (crypt.Length >> 2) % 2 == 1) {
+         int[] buffer = new int[crypt.Length >> 2];
          this.pack(crypt, buffer, 0);
          this.unbrew(buffer);
          return this.unpack(buffer, 1, buffer[0]);
@@ -61,8 +60,8 @@ public class TEA {
    }
 
    void brew(int[] buf) {
-      if (buf.length % 2 == 1) {
-         for(int i = 1; i < buf.length; i += 2) {
+      if (buf.Length % 2 == 1) {
+         for(int i = 1; i < buf.Length; i += 2) {
             int n = 32;
             int v0 = buf[i];
             int v1 = buf[i + 1];
@@ -80,8 +79,8 @@ public class TEA {
    }
 
    void unbrew(int[] buf) {
-      if (buf.length % 2 == 1) {
-         for(int i = 1; i < buf.length; i += 2) {
+      if (buf.Length % 2 == 1) {
+         for(int i = 1; i < buf.Length; i += 2) {
             int n = 32;
             int v0 = buf[i];
             int v1 = buf[i + 1];
@@ -98,18 +97,18 @@ public class TEA {
 
    }
 
-   void pack(byte[] src, int[] dest, int destOffset) {
-      if (destOffset + (src.length >> 2) <= dest.length) {
+   void pack(sbyte[] src, int[] dest, int destOffset) {
+      if (destOffset + (src.Length >> 2) <= dest.Length) {
          int i = 0;
          int shift = 24;
          int j = destOffset;
 
-         for(dest[destOffset] = 0; i < src.length; ++i) {
+         for(dest[destOffset] = 0; i < src.Length; ++i) {
             dest[j] |= (src[i] & 255) << shift;
             if (shift == 0) {
                shift = 24;
                ++j;
-               if (j < dest.length) {
+               if (j < dest.Length) {
                   dest[j] = 0;
                }
             } else {
@@ -120,14 +119,14 @@ public class TEA {
 
    }
 
-   byte[] unpack(int[] src, int srcOffset, int destLength) {
-      if (destLength <= src.length - srcOffset << 2) {
-         byte[] dest = new byte[destLength];
+   sbyte[] unpack(int[] src, int srcOffset, int destLength) {
+      if (destLength <= src.Length - srcOffset << 2) {
+         sbyte[] dest = new sbyte[destLength];
          int i = srcOffset;
          int count = 0;
 
          for(int j = 0; j < destLength; ++j) {
-            dest[j] = (byte)(src[i] >> 24 - (count << 3) & 255);
+            dest[j] = (sbyte)(src[i] >> 24 - (count << 3) & 255);
             ++count;
             if (count == 4) {
                count = 0;
