@@ -1,0 +1,648 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package place;
+
+import data.battle.PetBattle;
+import data.clan.ClanMember;
+import data.item.Item;
+import data.map.GopetMap;
+import data.map.NpcTemplate;
+import data.mob.Boss;
+import data.mob.Mob;
+import data.mob.MobLocation;
+import data.mob.MobLvlMap;
+import data.pet.Pet;
+import data.pet.PetTemplate;
+import data.user.History;
+import data.user.UserData;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import manager.GopetManager;
+import manager.HistoryManager;
+import manager.PlayerManager;
+import server.GameController;
+import static server.GameController.messagePetSerive;
+import server.GopetCMD;
+import server.Player;
+import server.io.Message;
+import util.Utilities;
+
+/**
+ *
+ * @author MINH THONG
+ */
+@SuppressWarnings("unchecked")
+public class GopetPlace extends Place {
+
+    public final CopyOnWriteArrayList<Mob> mobs = new CopyOnWriteArrayList<>();
+    public final CopyOnWriteArrayList<PetBattle> petBattles = new CopyOnWriteArrayList<>();
+    public final ConcurrentHashMap<MobLocation, Long> newMob = new ConcurrentHashMap<>();
+    public const long TIME_NEW_MOB = 25000;
+    public int numMobDie = 0;
+    public int numMobDieNeed = Utilities.nextInt(150, 200);
+
+    public GopetPlace(GopetMap m, int ID)   {
+        super(m, ID);
+        if (GopetManager.mobLocation.containsKey(m.mapID) && GopetManager.MOBLVL_MAP.containsKey(m.mapID)) {
+            createNewMob(GopetManager.mobLocation.get(map.mapID));
+        }
+    }
+
+    @Override
+    public void add(Player player)   {
+        HistoryManager.addHistory(new History(player).setLog(String.format("Bạn đã vào khu %s map %s", zoneID, map.mapTemplate.getMapName())));
+        PetBattle petBattle = player.controller.getPetBattle();
+        if (petBattle != null) {
+            petBattle.close(player);
+        }
+        Place place = player.getPlace();
+        if (place != null) {
+            place.remove(player);
+        }
+        player.controller.setLastTimeKillMob(0L);
+        sendNewPlayer(player);
+        players.add(player);
+        player.setPlace(this);
+        numPlayer++;
+        loadInfo(player);
+        sendGameObj(player);
+        sendMob(player);
+        sendListPet(player);
+        sendPetBattleList(player);
+        sendWing(player);
+        sendSkin(player);
+        sendClan(player, true);
+    }
+
+    @Override
+    public void remove(Player player)   {
+        PetBattle petBattle = player.controller.getPetBattle();
+        if (petBattle != null) {
+            petBattle.close(player);
+        }
+        super.remove(player); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    public void addNewMob(Mob gopetMob) {
+
+        while (true) {
+            int mobId = -Utilities.nextInt(2, Integer.MAX_VALUE - 12);
+            bool hasId = false;
+            for (Mob mob : mobs) {
+                if (mob.getMobId() == mobId && mob != gopetMob) {
+                    hasId = true;
+                    break;
+                }
+            }
+            if (!hasId) {
+                gopetMob.setMobId(mobId);
+                mobs.add(gopetMob);
+                return;
+            }
+        }
+    }
+
+    public void mobDie(Mob gopetMob) {
+        mobs.remove(gopetMob);
+        final long timeGen = System.currentTimeMillis() + TIME_NEW_MOB;
+        newMob.put(gopetMob.getMobLocation(), timeGen);
+    }
+
+    public Mob getMob(int mobId)   {
+        for (Mob mob : mobs) {
+            if (mob.getMobId() == mobId) {
+                return mob;
+            }
+        }
+        return null;
+    }
+
+    public Player getPlayer(int user_id)   {
+        for (Player player : players) {
+            if (player.user.user_id == user_id) {
+                return player;
+            }
+        }
+        return null;
+    }
+
+    private void sendMob(Player player)   {
+        CopyOnWriteArrayList<Mob> gopetMobs = (CopyOnWriteArrayList<Mob>) mobs.clone();
+        Message message = new Message(GopetCMD.PET_SERVICE);
+        message.putByte(GopetCMD.SEND_LIST_MOB_ZONE);
+        message.putInt(gopetMobs.size());
+        for (Mob mob : gopetMobs) {
+            message.putInt(mob.getMobId());
+            message.putUTF(mob.getPetTemplate().getFrameImg());
+            message.putUTF(mob.getPetTemplate().getName());
+            message.putInt(mob.getMobLvInfo().getLvl());
+            message.putInt(mob.getMobLocation().getX());
+            message.putInt(mob.getMobLocation().getY());
+            message.putByte(0);
+        }
+        message.cleanup();
+        player.session.sendMessage(message);
+    }
+
+    public void sendMob()   {
+        CopyOnWriteArrayList<Mob> gopetMobs = (CopyOnWriteArrayList<Mob>) mobs.clone();
+        Message message = new Message(GopetCMD.PET_SERVICE);
+        message.putByte(GopetCMD.SEND_LIST_MOB_ZONE);
+        message.putInt(gopetMobs.size());
+        for (Mob mob : gopetMobs) {
+            message.putInt(mob.getMobId());
+            message.putUTF(mob.getPetTemplate().getFrameImg());
+            message.putUTF(mob.getPetTemplate().getName());
+            message.putInt(mob.getMobLvInfo().getLvl());
+            message.putInt(mob.getMobLocation().getX());
+            message.putInt(mob.getMobLocation().getY());
+            message.putByte(0);
+        }
+        message.cleanup();
+        sendMessage(message);
+    }
+
+    private void sendMob(ArrayList<Mob> newMobs)   {
+        Message message = new Message(GopetCMD.PET_SERVICE);
+        message.putByte(GopetCMD.SEND_LIST_MOB_ZONE);
+        message.putInt(newMobs.size());
+        for (Mob mob : newMobs) {
+            message.putInt(mob.getMobId());
+            message.putUTF(mob.getPetTemplate().getFrameImg());
+            message.putUTF(mob.getPetTemplate().getName());
+            message.putInt(mob.getMobLvInfo().getLvl());
+            message.putInt(mob.getMobLocation().getX());
+            message.putInt(mob.getMobLocation().getY());
+            message.putByte(0);
+        }
+        message.cleanup();
+        sendMessage(message);
+    }
+
+    public void sendListPet(Player player)   {
+        HashMap<Player, Pet> hashMap = new HashMap<>();
+        for (Player player1 : players) {
+            if (player1.playerData.petSelected != null) {
+                hashMap.put(player1, player1.playerData.petSelected);
+            }
+        }
+        if (!hashMap.isEmpty()) {
+            Message message = new Message(GopetCMD.PET_SERVICE);
+            message.putByte(GopetCMD.SEND_LIST_PET_ZONE);
+            message.putByte(hashMap.size());
+            for (Map.Entry<Player, Pet> entry : hashMap.entrySet()) {
+                Player player1 = entry.getKey();
+                Pet petSelected = entry.getValue();
+                message.putInt(player1.user.user_id);
+                message.putInt(petSelected.petIdTemplate);
+                message.putUTF(petSelected.getPetTemplate().getFrameImg());
+                message.putUTF(petSelected.getNameWithStar());
+                message.putInt(petSelected.lvl);
+            }
+            message.cleanup();
+            sendMessage(message);
+
+            if (hashMap.containsKey(player)) {
+                player.controller.sendMyPetInfo();
+            }
+        }
+    }
+
+    private void sendGameObj(Player player)   {
+        Message ms = new Message(GopetCMD.GAME_OBJECT);
+        for (int npcId : map.mapTemplate.getNpc()) {
+            NpcTemplate npcTemplate = GopetManager.npcTemplate.get(npcId);
+            if (npcTemplate != null) {
+                ms.putByte(0);
+                ms.putInt(npcTemplate.getBounds()[0]);
+                ms.putInt(npcTemplate.getBounds()[1]);
+                ms.putInt(npcTemplate.getBounds()[2]);
+                ms.putInt(npcTemplate.getBounds()[3]);
+                ms.putInt(npcTemplate.getNpcId());
+                ms.putUTF(npcTemplate.getImgPath());
+                ms.putInt(2);
+                ms.putInt(npcTemplate.getX());
+                ms.putInt(npcTemplate.getY());
+                ms.putInt(6);
+                String[] chat = npcTemplate.getChat();
+                ms.putInt(chat.length);
+                for (String CHAT_String : chat) {
+                    ms.putUTF(CHAT_String);
+                }
+                ms.putUTF(npcTemplate.getName());
+                ms.putByte(npcTemplate.getType());
+            }
+        }
+        ms.writer().flush();
+        ms.cleanup();
+        player.session.sendMessage(ms);
+    }
+
+    private void initPlayer(Player player)   {
+        Message ms = new Message(GopetCMD.INIT_PLAYER);
+        ms.putInt(player.user.user_id);
+        ms.putString(player.playerData.name);
+        ms.putInt(player.playerData.gender);
+        ms.putByte(0);
+        ms.putInt(0);
+        ms.writer().flush();
+        ms.cleanup();
+        player.session.sendMessage(ms);
+    }
+
+    @Override
+    public void sendNewPlayer(Player player)   {
+        initPlayer(player);
+        Message message = new Message(24);
+        message.putInt(player.playerData.user_id);
+        message.putUTF(player.playerData.name);
+        message.putByte(player.playerData.gender);
+        // relation
+        message.putByte(0);
+        message.putByte(player.playerData.speed);
+        message.putByte(player.playerData.faceDir);
+        message.putByte(player.playerData.waypointIndex);
+        message.putInt(player.playerData.x);
+        message.putInt(player.playerData.y);
+        message.cleanup();
+        sendMessage(message);
+    }
+
+    @Override
+    public void sendMove(int channelID, int userID, byte lastDir, short[][] points)   {
+
+    }
+
+    @Override
+    public void chat(Player player, String text)   {
+
+        Message message = new Message(GopetCMD.ON_PLACE_CHAT);
+        message.putInt(player.playerData.user_id);
+        message.putUTF(text);
+        message.cleanup();
+        sendMessage(message);
+//        if (text.equals(  "j")) {
+//            MYSQLManager.updateSql(String.format(  "INSERT INTO `gopet_mob_location`(`mapID`, `x`, `y`) VALUES ('%s','%s','%s')", map.mapID, player.playerData.x, player.playerData.y));
+//        }
+    }
+
+    public void sendMove(int userID, byte lastDir, int[] points)   {
+        Message message = new Message(GopetCMD.ON_OTHER_USER_MOVE);
+        message.putInt(userID);
+        message.putByte(lastDir);
+        message.putInt(map.mapID);
+        message.putInt(points.length);
+        for (int i = 0; i < points.length; i++) {
+            message.putInt(points[i]);
+        }
+        message.cleanup();
+        sendMessage(message);
+    }
+
+    @Override
+    public void sendRemove(Player player)   {
+        Message message = new Message(GopetCMD.ON_PLAYER_EXIT_PLACE);
+        message.putInt(player.playerData.user_id);
+        message.putByte(player.playerData.faceDir);
+        message.putInt(0);
+        message.cleanup();
+        sendMessage(message);
+    }
+
+    @Override
+    public void chat(int user_id, final String name, final String text)   {
+        Message message = new Message(GopetCMD.PET_SERVICE);
+        message.putByte(GopetCMD.CHAT_PUBLIC);
+        message.putByte(1);
+        message.putUTF(name);
+        message.putUTF(text);
+        message.cleanup();
+        sendMessage(message);
+    }
+
+    @Override
+    public void loadInfo(Player player)   {
+        Message message = new Message(GopetCMD.ON_UPDATE_PLAYER_IN_MAP);
+        // Map ID
+        message.putInt(map.mapID);
+
+        message.putInt(zoneID);
+        //waypoint Index
+        message.putByte(player.playerData.waypointIndex);
+        message.putInt(player.playerData.x);
+        message.putInt(player.playerData.y);
+
+        for (Player player1 : players) {
+            if (player1 != player) {
+                message.putInt(player1.user.user_id);
+                message.putUTF(player1.playerData.name);
+                message.putByte(player1.playerData.gender);
+                // relation
+                message.putByte(0);
+                message.putByte(player1.playerData.speed);
+                message.putByte(player1.playerData.faceDir);
+                message.putInt(player1.playerData.x);
+                message.putInt(player1.playerData.y);
+            }
+        }
+
+        message.cleanup();
+        player.session.sendMessage(message);
+    }
+
+    public void startFightMob(int mobId, Player player)   {
+        if (System.currentTimeMillis() - player.controller.getLastTimeKillMob() < 4000) {
+            player.user.ban(UserData.BAN_TIME, "Dùng phiên bản speed để farm quái (thuật toán ver2)!\n Nếu muốn kháng cáo vui lòng quay video lại", System.currentTimeMillis() + 60000L * 5);
+            player.session.close();
+            return;
+        }
+        Mob mob = getMob(mobId);
+        if (mob != null) {
+            if (player.playerData.petSelected != null) {
+                if (player.playerData.petSelected.hp > 0) {
+                    if (mob.getPetBattle() == null && player.controller.getPetBattle() == null) {
+                        if (mob instanceof Boss && !(this instanceof ChallengePlace)) {
+                            if (player.playerData.star - 1 >= 0) {
+                                player.playerData.star--;
+                                player.controller.getTaskCalculator().onAttackBoss((Boss) mob);
+                            } else {
+                                player.Popup("Không đủ năng lượng");
+                                return;
+                            }
+                        }
+                        PetBattle petBattle = new PetBattle(mob, this, player);
+                        player.controller.setPetBattle(petBattle);
+                        addPetBattle(petBattle);
+                        mob.setPetBattle(petBattle);
+                        petBattle.sendStartFightMob(mob, player);
+                    }
+                } else {
+                    player.Popup("Thú cưng của bạn khong đủ máu");
+                }
+            } else {
+                player.Popup("Chưa có thu cưng đi theo");
+            }
+        }
+    }
+
+    public void startFightPlayer(int user_id, Player player, bool isPkMode, int coinBet)   {
+        Player passivePlayer = getPlayer(user_id);
+        if (passivePlayer != null) {
+            if (passivePlayer != player) {
+
+                Pet activePet = player.getPet();
+                Pet passovePet = player.getPet();
+                if (activePet == null || passovePet == null) {
+                    player.petNotFollow();
+                } else {
+                    if (player.controller.getPetBattle() != null || player.controller.getPetBattle() != null) {
+                        player.redDialog("Bạn hoặc người chơi kia đang trong trận chiến");
+                    } else {
+                        PetBattle petBattle = new PetBattle(this, passivePlayer, player);
+                        petBattle.setIsPK(isPkMode);
+                        petBattle.setUserInvitePK(player.user.user_id);
+                        if (!isPkMode) {
+                            petBattle.setPrice(coinBet);
+                        }
+                        player.controller.setPetBattle(petBattle);
+                        passivePlayer.controller.setPetBattle(petBattle);
+                        addPetBattle(petBattle);
+                        petBattle.sendStartFightPlayer();
+                    }
+                }
+            }
+        } else {
+            player.redDialog("Người chơi đã đi rồi");
+        }
+    }
+
+    @Override
+    public void update()   {
+        super.update(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+
+        for (Mob mob : mobs) {
+            if (mob instanceof Boss) {
+                Boss b = (Boss) mob;
+                if (b.isTimeOut() && b.getPetBattle() == null) {
+                    if (System.currentTimeMillis() > b.getTimeoutMilis()) {
+                        this.mobDie(mob);
+                    }
+                }
+            }
+        }
+
+        for (PetBattle petBattle : petBattles) {
+            if (petBattle != null) {
+                petBattle.update();
+                if (petBattle.hasWinner()) {
+                    petBattle.clean();
+                    petBattles.remove(petBattle);
+                }
+            } else {
+                petBattles.remove(petBattle);
+            }
+        }
+
+        ArrayList<MobLocation> mobLocations_newMob = new ArrayList<>();
+
+        for (Map.Entry<MobLocation, Long> entry : newMob.entrySet()) {
+            MobLocation location = entry.getKey();
+            Long timeNewMob = entry.getValue();
+            if (timeNewMob < System.currentTimeMillis()) {
+                mobLocations_newMob.add(location);
+            }
+        }
+
+        for (MobLocation mobLocation : mobLocations_newMob) {
+            newMob.remove(mobLocation);
+        }
+
+        createNewMob(mobLocations_newMob.toArray(new MobLocation[0]));
+    }
+
+    public final void addPetBattle(PetBattle petBattle) {
+        petBattles.add(petBattle);
+    }
+
+    private void createNewMob(MobLocation[] locations)   {
+        MobLocation[] mobLocations = locations;
+        MobLvlMap[] mobLvlMaps = GopetManager.MOBLVL_MAP.get(map.mapID);
+        if (mobLocations.length > 0 && mobLvlMaps.length > 0) {
+            ArrayList<Mob> nGopetMobs = new ArrayList<>();
+            int index = -1;
+            for (MobLocation mobLocation : mobLocations) {
+                index++;
+                if (this.map.mapTemplate.getBoss().length > 0) {
+                    if (numMobDie >= numMobDieNeed) {
+                        Boss boss = new Boss(Utilities.randomArray(this.map.mapTemplate.getBoss()), mobLocation);
+                        boss.setTimeOut(true);
+                        boss.setTimeoutMilis(System.currentTimeMillis() + GopetManager.TIME_BOSS_DISPOINTED);
+
+                        addNewMob(boss);
+                        nGopetMobs.add(boss);
+                        PlayerManager.showBanner(String.format("Boss %s đã xuất hiện tại %s khu %s nhanh tay lên nào!!!!", boss.getBossTemplate().getName(), this.map.mapTemplate.getMapName(), this.zoneID));
+                        numMobDie = 0;
+                        numMobDieNeed = Utilities.nextInt(150, 200);
+                        continue;
+                    }
+                }
+                long deltaTime = System.currentTimeMillis() + 3000;
+                while (deltaTime > System.currentTimeMillis()) {
+                    MobLvlMap mobLvlMap = Utilities.randomArray(mobLvlMaps);
+                    if (GopetManager.PETTEMPLATE_HASH_MAP.containsKey(mobLvlMap.getPetId())) {
+                        PetTemplate petTemplate = GopetManager.PETTEMPLATE_HASH_MAP.get(mobLvlMap.getPetId());
+                        Mob m = new Mob(petTemplate, this, mobLvlMap, mobLocation);
+
+                        addNewMob(m);
+                        nGopetMobs.add(m);
+                        break;
+                    }
+                }
+                numMobDie++;
+            }
+            sendMob(nGopetMobs);
+        }
+    }
+
+    private void sendPetBattleList(Player player)   {
+        for (PetBattle petBattle : petBattles) {
+            petBattle.sendBattleInfo(player);
+        }
+    }
+
+    public void showBigTextEff(String text)   {
+        Message message = messagePetSerive(GopetCMD.SHOW_BIG_TEXT_EFF);
+        message.putUTF(text);
+        message.cleanup();
+        sendMessage(message);
+    }
+
+    private void sendWing(Player player)   {
+        CopyOnWriteArrayList<Player> currentPlayers = (CopyOnWriteArrayList<Player>) players.clone();
+        HashMap<Integer, Item> wingPlayer = new HashMap<>();
+        for (Player currentPlayer : currentPlayers) {
+            Item wingItem = currentPlayer.playerData.wingItem;
+            if (wingItem != null) {
+                wingPlayer.put(currentPlayer.user.user_id, wingItem);
+            }
+        }
+        Message m = messagePetSerive(GopetCMD.WING);
+        m.putByte(3);
+        m.putInt(wingPlayer.size());
+        for (Map.Entry<Integer, Item> entry : wingPlayer.entrySet()) {
+            int key = entry.getKey();
+            Item val = entry.getValue();
+            m.putInt(key);
+            m.putUTF(val.getTemp().getFrameImgPath());
+            m.putByte(val.getTemp().getOptionValue()[0]);
+        }
+        m.cleanup();
+        player.session.sendMessage(m);
+    }
+
+    public void sendMyWing(Player player)   {
+        Item wingItem = player.playerData.wingItem;
+        if (wingItem != null) {
+            Message m = messagePetSerive(GopetCMD.WING);
+            m.putByte(3);
+            m.putInt(1);
+            m.putInt(player.user.user_id);
+            m.putUTF(wingItem.getTemp().getFrameImgPath());
+            m.putByte(wingItem.getTemp().getOptionValue()[0]);
+            m.cleanup();
+            sendMessage(m);
+        }
+    }
+
+    public void sendUnEquipWing(Player player)   {
+        Message m = messagePetSerive(GopetCMD.WING);
+        m.putByte(3);
+        m.putInt(1);
+        m.putInt(player.user.user_id);
+        m.putUTF("");
+        m.putByte(0);
+        m.cleanup();
+        sendMessage(m);
+    }
+
+    private void sendSkin(Player player)   {
+        CopyOnWriteArrayList<Player> currentPlayers = (CopyOnWriteArrayList<Player>) players.clone();
+        HashMap<Integer, Item> skinPlayer = new HashMap<>();
+        for (Player currentPlayer : currentPlayers) {
+            Item itemSkin = currentPlayer.playerData.skinItem;
+            if (itemSkin != null) {
+                skinPlayer.put(currentPlayer.user.user_id, itemSkin);
+            }
+        }
+        Message m = messagePetSerive(GopetCMD.SEND_SKIN);
+        m.putInt(skinPlayer.size());
+        for (Map.Entry<Integer, Item> entry : skinPlayer.entrySet()) {
+            Integer key = entry.getKey();
+            Item val = entry.getValue();
+            m.putInt(key);
+            m.putUTF(val.getTemp().getFrameImgPath());
+        }
+        m.cleanup();
+        player.session.sendMessage(m);
+        sendMySkin(player);
+    }
+
+    public void sendMySkin(Player player)   {
+        Message m = messagePetSerive(GopetCMD.SEND_SKIN);
+        m.putInt(1);
+        m.putInt(player.user.user_id);
+        Item itemSkin = player.playerData.skinItem;
+        if (itemSkin != null) {
+            m.putUTF(itemSkin.getTemp().getFrameImgPath());
+        } else {
+            m.putUTF("");
+        }
+
+        m.cleanup();
+        sendMessage(m);
+    }
+
+    public void sendMessage(Message message, ArrayList<Player> listNoneSend) {
+        for (Player player : players) {
+            if (!listNoneSend.contains(player)) {
+                player.session.sendMessage(message);
+            }
+        }
+    }
+
+    public void sendClan(Player player, bool isAddToplace)   {
+        ClanMember clanMember = player.controller.getClan();
+        if (clanMember != null) {
+            Message m = GameController.clanMessage(GopetCMD.GUILD_NAME_IN_PLACE);
+            m.putInt(1);
+            m.putInt(clanMember.user_id);
+            m.putUTF(clanMember.getClan().getName().toUpperCase());
+            m.cleanup();
+            sendMessage(m);
+        }
+
+        if (isAddToplace) {
+            ArrayList<ClanMember> clanMembers = new ArrayList<>();
+            for (Player player1 : players) {
+                ClanMember clanMember1 = player1.controller.getClan();
+                if (clanMember1 != null) {
+                    clanMembers.add(clanMember1);
+                }
+            }
+
+            Message m = GameController.clanMessage(GopetCMD.GUILD_NAME_IN_PLACE);
+            m.putInt(clanMembers.size());
+            for (ClanMember clanMember1 : clanMembers) {
+                m.putInt(clanMember1.user_id);
+                m.putUTF(clanMember1.getClan().getName().toUpperCase());
+            }
+            m.cleanup();
+            player.session.sendMessage(m);
+        }
+    }
+}
