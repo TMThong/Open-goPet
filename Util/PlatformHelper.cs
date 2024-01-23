@@ -1,4 +1,6 @@
 
+using Gopet.IO;
+
 public class PlatformHelper
 {
 
@@ -34,7 +36,7 @@ public class PlatformHelper
         sbyte[] buffer = null;
         try
         {
-            buffer = Files.readAllsbytes(Path.Combine(assetsPath + path));
+            buffer = File.ReadAllBytes(Path.Combine(assetsPath + path)).sbytes();
         }
         catch (Exception e)
         {

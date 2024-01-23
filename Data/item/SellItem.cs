@@ -34,9 +34,9 @@ public class SellItem : DataVersion {
 
     public String getName() {
         if (pet != null) {
-            return pet.getNameWithoutStar() + String.format(" (Mã định danh:%s)", itemId);
+            return pet.getNameWithoutStar() + Utilities.Format(" (Mã định danh:%s)", itemId);
         }
-        return ItemSell.getTemp().getName() + String.format(" (Mã định danh:%s)", itemId);
+        return ItemSell.getTemp().getName() + Utilities.Format(" (Mã định danh:%s)", itemId);
     }
 
     public String getFrameImgPath() {

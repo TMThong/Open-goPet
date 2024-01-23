@@ -3,46 +3,44 @@ public class ServerSetting : Settings {
 
     public static readonly ServerSetting instance = new ServerSetting();
 
-    private int portGopetServer;
-    private int portHttpServer;
-    private String webDomainName;
-    private bool initLog;
-    private String outputFileName;
-    private String errorFileName;
-    private int hourMaintenance;
-    private int minMaintenance;
-    private bool isOnlyAdminLogin;
-    private bool isServerTest;
-    private bool isShowMessageWhenLogin = false;
-    private String messageWhenLogin;
-    private String apiKey;
+    public int portGopetServer { get; protected set; }
+    public int portHttpServer { get; protected set; }
+    public String webDomainName { get; protected set; }
+    public bool initLog { get; protected set; } 
+    public String outputFileName { get; protected set; }
+    public String errorFileName { get; protected set; }
+    public int hourMaintenance { get; protected set; }
+    public int minMaintenance { get; protected set; }
+    public bool isOnlyAdminLogin { get; protected set; }
+    public bool isServerTest { get; protected set; }
+    public bool isShowMessageWhenLogin { get; protected set; } = false;
+    public String messageWhenLogin { get; protected set; }
+    public String apiKey { get; protected set; }
 
     public ServerSetting() {
-        try {
-            load(new SettingsFile("server.properties"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        
+            load(new SettingsFile("server.json"));
+        
     }
 
-    @Override
+    
     public void load(SettingsFile settingsFile) {
-        portGopetServer = settingsFile.getint("portGopetServer", 19180);
-        portHttpServer = settingsFile.getint("portHttpServer", 8080);
-        webDomainName = settingsFile.getString("webDomainName", "gopetvn.me");
-        initLog = settingsFile.getbool("initLog", false);
-        outputFileName = settingsFile.getString("outputFileName", "output.txt");
-        errorFileName = settingsFile.getString("errorFileName", "error.txt");
-        hourMaintenance = settingsFile.getint("hourMaintenance", 5);
-        minMaintenance = settingsFile.getint("minMaintenance", 0);
-        isOnlyAdminLogin = settingsFile.getbool("isOnlyAdminLogin", false);
-        isServerTest = settingsFile.getbool("isServerTest", false);
-        isShowMessageWhenLogin = settingsFile.getbool("isShowMessageWhenLogin", false);
-        messageWhenLogin = settingsFile.getString("messageWhenLogin", "");
-        apiKey = settingsFile.getString("apiKey", null);
+        portGopetServer = settingsFile.Data.portGopetServer;
+        portHttpServer = settingsFile.Data.portHttpServer;
+        webDomainName = settingsFile.Data.webDomainName;
+        initLog = settingsFile.Data.initLog;
+        outputFileName = settingsFile.Data.outputFileName;
+        errorFileName = settingsFile.Data.errorFileName;
+        hourMaintenance = settingsFile.Data.hourMaintenance;
+        minMaintenance = settingsFile.Data.minMaintenance;
+        isOnlyAdminLogin = settingsFile.Data.isOnlyAdminLogin;
+        isServerTest = settingsFile.Data.isServerTest;
+        isShowMessageWhenLogin = settingsFile.Data.isShowMessageWhenLogin;
+        messageWhenLogin = settingsFile.Data.messageWhenLogin;
+        apiKey = settingsFile.Data.apiKey;
     }
 
-    @Override
+    
     public String toString() {
         return "ServerSetting{" + "portGopetServer=" + portGopetServer + ", portHttpServer=" + portHttpServer + ", webDomainName=" + webDomainName + ", initLog=" + initLog + ", outputFileName=" + outputFileName + ", errorFileName=" + errorFileName + ", hourMaintenance=" + hourMaintenance + ", minMaintenance=" + minMaintenance + ", isOnlyAdminLogin=" + isOnlyAdminLogin + ", isServerTest=" + isServerTest + ", isShowMessageWhenLogin=" + isShowMessageWhenLogin + ", messageWhenLogin=" + messageWhenLogin + ", apiKey=" + apiKey + '}';
     }

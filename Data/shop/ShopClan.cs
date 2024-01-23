@@ -1,26 +1,29 @@
- 
+
+using Gopet.Data.Collections;
+
 public class ShopClan : ShopTemplate {
 
     private Clan clan;
     private long timeRefresh;
 
-    public ShopClan(Clan clan_) throws CloneNotSupportedException {
-        base(MenuController.SHOP_CLAN);
+    public ShopClan(Clan clan_) : base(MenuController.SHOP_CLAN)
+    {
+         
         this.clan = clan_;
         this.refresh();
     }
 
-    public   void refresh() throws CloneNotSupportedException {
-        timeRefresh = System.currentTimeMillis();
-        this.shopTemplateItems.clear();
+    public   void refresh()   {
+        timeRefresh = Utilities.CurrentTimeMillis;
+        this.shopTemplateItems.Clear();
         ArrayList<ShopClanTemplate> list = GopetManager.shopClanByLvl.get(clan.getbaseMarketLvl());
         if (list != null) {
-            for (ShopClanTemplate shopClanTemplate : list) {
-                this.shopTemplateItems.addAll(shopClanTemplate.next());
+            foreach (ShopClanTemplate shopClanTemplate in list) {
+                this.shopTemplateItems.AddRange(shopClanTemplate.next());
             }
         }
 
-        for (int i = 0; i < shopTemplateItems.size(); i++) {
+        for (int i = 0; i < shopTemplateItems.Count; i++) {
             ShopTemplateItem get = shopTemplateItems.get(i);
             get.setHasId(true);
             get.setMenuId(i);
@@ -29,7 +32,7 @@ public class ShopClan : ShopTemplate {
 
     public   ShopTemplateItem getShopTemplateItem(int mneuId)   {
         int left = 0;
-        int right = shopTemplateItems.size() - 1;
+        int right = shopTemplateItems.Count - 1;
         while (left <= right) {
             int mid = left + (right - left) / 2;
             ShopTemplateItem midItem = shopTemplateItems.get(mid);

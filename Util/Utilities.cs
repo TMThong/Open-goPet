@@ -1,186 +1,164 @@
+using System;
+using System.Globalization;
+using System.Net;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 
-
-public static class Utilities
+public class Utilities
 {
+    private static readonly NumberFormatInfo viNumberFormat = new CultureInfo("vi").NumberFormat;
+    private static readonly Random rand = new Random();
+    private static readonly DateTimeFormat dateFormat = new DateTimeFormat("yyyy-MM-dd HH:mm:ss");
 
-    private static DecimalFormat df = new DecimalFormat("###,###,###");
-    private static Locale locale = new Locale("vi");
-    private static NumberFormat en = NumberFormat.getInstance(locale);
-    private static Random rand = new Random();
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    public const SimpleDateFormat dateFormatVI = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", new Locale("vi", "VN"));
-
-
-    public static Date getCurrentDate()
+    public static DateTime GetCurrentDate()
     {
-        return new Date(System.currentTimeMillis());
+        return DateTime.Now;
     }
 
-    public static Date getDate(String dateString)
+    public static DateTime GetDate(string dateString)
     {
-        try
-        {
-            return dateFormat.parse(dateString);
-        }
-        catch (ParseException e)
-        {
-            e.printStackTrace();
-        }
-        return null;
+        return DateTime.Parse(dateString, dateFormat.FormatProvider);
     }
 
-    public static Date getDate(long time)
+    public static DateTime GetDate(long time)
     {
-        Date o = new Date(time);
-
-        return getDate(dateFormat.format(o));
+        DateTime o = new DateTime(time);
+        return GetDate(o.ToString(dateFormat.FormatProvider));
     }
 
     public static long TimeDay(int nDays)
     {
-        return System.currentTimeMillis() + (nDays * 86400000L);
+        return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + (nDays * 86400000L);
     }
 
-    public static long afterDay(int nDays)
+    public static long AfterDay(int nDays)
     {
-        return System.currentTimeMillis() + (nDays * 86400000L);
+        return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + (nDays * 86400000L);
     }
 
     public static long TimeHours(int nHours)
     {
-        return System.currentTimeMillis() + (nHours * 3600000L);
+        return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + (nHours * 3600000L);
     }
 
     public static long TimeMinutes(int nMinutes)
     {
-        return System.currentTimeMillis() + (nMinutes * 60000L);
+        return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + (nMinutes * 60000L);
     }
 
     public static long TimeSeconds(long nSeconds)
     {
-        return System.currentTimeMillis() + (nSeconds * 1000L);
+        return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + (nSeconds * 1000L);
     }
 
     public static long TimeMillis(long nMillis)
     {
-        return System.currentTimeMillis() + nMillis;
+        return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + nMillis;
     }
 
-    public static Date DateDay(int nDays)
+    public static DateTime DateDay(int nDays)
     {
-        Date dat = new Date();
-        dat.setTime(dat.getTime() + nDays * 86400000L);
+        DateTime dat = DateTime.Now;
+        dat = dat.AddDays(nDays);
         return dat;
     }
 
-    public static String toDateString(Date date)
+    public static string ToDateString(DateTime date)
     {
-        return dateFormat.format(date);
+        return date.ToString(dateFormat.FormatProvider);
     }
 
-    public static Date DateHours(int nHours)
+    public static DateTime DateHours(int nHours)
     {
-        Date dat = new Date();
-        dat.setTime(dat.getTime() + nHours * 3600000L);
+        DateTime dat = DateTime.Now;
+        dat = dat.AddHours(nHours);
         return dat;
     }
 
-    public static Date DateMinutes(int nMinutes)
+    public static DateTime DateMinutes(int nMinutes)
     {
-        Date dat = new Date();
-        dat.setTime(dat.getTime() + nMinutes * 60000L);
+        DateTime dat = DateTime.Now;
+        dat = dat.AddMinutes(nMinutes);
         return dat;
     }
 
-    public static Date DateSeconds(long nSeconds)
+    public static DateTime DateSeconds(long nSeconds)
     {
-        Date dat = new Date();
-        dat.setTime(dat.getTime() + nSeconds * 1000L);
+        DateTime dat = DateTime.Now;
+        dat = dat.AddSeconds(nSeconds);
         return dat;
     }
 
-    public static String getFormatNumber(long num)
+    public static string GetFormatNumber(long num)
     {
-        return en.format(num);
+        return num.ToString("N0", viNumberFormat);
     }
 
-    public static bool checkNumInt(String num)
+    public static bool CheckNumInt(string num)
     {
-        return Pattern.compile("^[0-9]+$").matcher(num).find();
+        return Regex.IsMatch(num, "^[0-9]+$");
     }
 
-    public static int Unsignedsbyte(sbyte b)
+    public static int UnsignedByte(byte b)
     {
-        int ch = b;
-        if (ch < 0)
-        {
-            return ch + 256;
-        }
-        return ch;
+        return (b < 0) ? b + 256 : b;
     }
 
-    public static String parseString(String str, String wall)
+    public static string ParseString(string str, string wall)
     {
-        return (!str.contains(wall)) ? null : str.substring(str.indexOf(wall) + 1);
+        return (str.Contains(wall)) ? str.Substring(str.IndexOf(wall) + 1) : null;
     }
 
-    public static bool CheckString(String str, String c)
+    public static bool CheckString(string str, string c)
     {
-        return Pattern.compile(c).matcher(str).find();
+        return Regex.IsMatch(str, c);
     }
 
-    public static String strSQL(String str)
+    public static string StrSQL(string str)
     {
-        return str.replaceAll("['\"\\\\]", "\\\\$0");
+        return Regex.Replace(str, "['\"\\\\]", "\\$0");
     }
 
     public static int nextInt(int x1, int x2)
     {
-        int to = x2;
-        int from = x1;
-        if (x2 < x1)
-        {
-            to = x1;
-            from = x2;
-        }
-        return from + rand.nextInt((to + 1) - from);
+        return rand.Next(x1, x2);
     }
 
-    public static float nextFloat()
+    public static float NextFloat()
     {
-        return rand.nextFloat();
+        return rand.NextSingle();
     }
 
-    public static float nextFloatPer()
+    public static float NextFloatPer()
     {
-        return nextFloat() * 100;
+        return NextFloat() * 100;
     }
 
     public static int nextInt(int max)
     {
-        return rand.nextInt(max);
+        return rand.Next(max);
     }
 
-    public static bool nextbool()
+    public static bool NextBoolean()
     {
         return nextInt(0, 1) == 0;
     }
 
-    public static <T> T randomArray(T[] arr)
+    public static T RandomArray<T>(T[] arr)
     {
         return arr[nextInt(arr.Length)];
     }
 
-    public static bool isValidName(String s)
+    public static bool IsValidName(string s)
     {
         if (s == null)
         {
             return false;
         }
-        int len = s.Length();
+        int len = s.Length;
         for (int i = 0; i < len; i++)
         {
-            if ((!Character.isLetterOrDigit(s.charAt(i))))
+            if (!Char.IsLetterOrDigit(s[i]))
             {
                 return false;
             }
@@ -188,39 +166,69 @@ public static class Utilities
         return true;
     }
 
-    public static String formatNumber(long number)
+    public static string FormatNumber(long number)
     {
-        return df.format(number);
+        return number.ToString("###,###,###", viNumberFormat);
     }
 
-    public static float percent(float toal, float value)
+    public static float Percent(float total, float value)
     {
-        return value / toal * 100;
+        return value / total * 100;
     }
 
-    public static float percent(long toal, long value)
+    public static float Percent(long total, long value)
     {
-        return percent((float)toal, (float)value);
+        return Percent((float)total, (float)value);
     }
 
-    public static float getValueFromPercent(float total, float percent)
+    public static float GetValueFromPercent(float total, float percent)
     {
         return total / 100 * percent;
     }
 
-    public static String getUID()
+    public static string GetUID()
     {
         return Guid.NewGuid().ToString();
     }
 
-    public static String serverIP()
+    public static string ServerIP()
     {
-        InetAddress ip = InetAddress.getLocalHost();
-        return ip.getHostAddress();
+        try
+        {
+            return Dns.GetHostEntry(Dns.GetHostName()).AddressList[0].ToString();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.StackTrace);
+        }
+        return null;
     }
 
-    public static int randomArray(int[] optionValue)
+    public static int RandomArray(int[] optionValue)
     {
         return optionValue[nextInt(optionValue.Length)];
+    }
+
+    public static long CurrentTimeMillis
+    {
+        get
+        {
+            return DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+        }
+    }
+
+
+    public static string Format(string value, params object[] objects)
+    {
+        int num = 0;
+        string text = string.Empty + value;
+        while (text.Contains("%s"))
+        {
+            int indexOf = text.IndexOf("%s");
+            text = text.Remove(indexOf, 2);
+            text = text.Insert(indexOf, "{" + num + "}");
+            num++;
+        }
+        return Utilities.Format(text, objects);
     }
 }

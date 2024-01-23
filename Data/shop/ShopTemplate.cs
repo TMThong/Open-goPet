@@ -40,6 +40,7 @@ public class ShopTemplate : DataVersion {
                 break;
             default:
                 name = "Error shop type " + type;
+                break;
         }
     }
 

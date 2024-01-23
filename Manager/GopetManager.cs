@@ -1,5 +1,6 @@
 
 using Gopet.Data.Collections;
+using MySql.Data.MySqlClient;
 
 public class GopetManager {
 
@@ -342,7 +343,7 @@ public class GopetManager {
     public static float[] PERCENT_UP_SKILL = new float[]{60f, 50f, 40f, 30f, 20f, 10f, 0f, -10f, -20f, -30f, -40f};
     public static int[] PRICE_ENCHANT = new int[]{5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000};
     public const int PERCENT_LVL_ITEM = 5;
-    public const long DELAY_TURN_PET_BATTLE = 3000;
+    public const int DELAY_TURN_PET_BATTLE = 3000;
     public const int PRICE_UP_TIER_ITEM = 100000;
     public const float PERCENT_ITEM_TIER_INFO = 70f;
     public const int PART_NEED_MERGE_PET = 160;
@@ -351,7 +352,7 @@ public class GopetManager {
     public const long TIME_BUFF_EXP = 1000 * 60 * 30;
     public const int LVL_PET_REQUIER_UP_TIER = 25;
     public const float KIOSK_PER_SELL = 5f;
-    public const long DELAY_INVITE_PLAYER_CHALLENGE = 40000;
+    public const int DELAY_INVITE_PLAYER_CHALLENGE = 40000;
     public const int MAX_PK_POINT = 10;
     public const long MIN_PET_EXP_PK = -20000000;
     public const long TIME_DECREASE_PK_POINT = 1000 * 60 * 30;
@@ -447,8 +448,8 @@ public class GopetManager {
             PET_TEMPLATES.add(petTemplate);
         }
         resultSet.close();
-        Connection webConnection = MYSQLManager.createWebConnection();
-        resultSet = MYSQLManager.jquery("SELECT * FROM `exchange`", webConnection);
+        MySqlConnection webMySqlConnection = MYSQLManager.createWebMySqlConnection();
+        resultSet = MYSQLManager.jquery("SELECT * FROM `exchange`", webMySqlConnection);
         while (resultSet.next()) {
             ExchangeData exchangeData = new ExchangeData();
             exchangeData.setId(resultSet.getInt("id"));
@@ -459,7 +460,7 @@ public class GopetManager {
         }
 
         resultSet.close();
-        webConnection.close();
+        webMySqlConnection.close();
         resultSet = MYSQLManager.jquery("SELECT * FROM `iteminfo`");
         while (resultSet.next()) {
             int ID = resultSet.getInt("ID");
@@ -479,7 +480,7 @@ public class GopetManager {
             petSkill.name = resultSet.getString("name");
             petSkill.description = resultSet.getString("description");
             petSkill.nClass = resultSet.getsbyte("nClass");
-            ResultSet skillLvResultSet = MYSQLManager.jquery(String.format("SELECT * FROM `skilllv` WHERE skillID = %s ORDER BY lv ASC;", petSkill.skillID));
+            ResultSet skillLvResultSet = MYSQLManager.jquery(Utilities.Format("SELECT * FROM `skilllv` WHERE skillID = %s ORDER BY lv ASC;", petSkill.skillID));
             while (skillLvResultSet.next()) {
                 PetSkillLv petSkillLv = new PetSkillLv();
                 petSkillLv.lv = skillLvResultSet.getInt("lv");
@@ -864,7 +865,7 @@ public class GopetManager {
             ArrayList<int> map = findListTierId(val);
 
             tierItemHashMap.put(val.getItemTemplateIdTier1(), 1);
-            for (int i = 0; i < map.size(); i++) {
+            for (int i = 0; i < map.Count; i++) {
                 int get = map.get(i);
                 tierItemHashMap.put(get, i + 2);
             }
@@ -881,7 +882,7 @@ public class GopetManager {
             TierItem val = entry.getValue();
 
             if (val.getItemTemplateIdTier1() == tInfo.getItemTemplateIdTier2()) {
-                list.addAll(findListTierId(val));
+                list.AddRange(findListTierId(val));
             }
         }
 
@@ -909,14 +910,14 @@ public class GopetManager {
     }
 
     public static void saveMarket()   {
-        Connection connection = MYSQLManager.create();
+        MySqlConnection MySqlConnection = MYSQLManager.create();
         try {
             for (Kiosk kiosk : MarketPlace.kiosks) {
-                MYSQLManager.updateSql(String.format("INSERT INTO `market`(`type`,  `sellItem`) VALUES (%s,'%s')", kiosk.getKioskType(), JsonManager.ToJson(kiosk.kioskItems)), connection);
+                MYSQLManager.updateSql(Utilities.Format("INSERT INTO `market`(`type`,  `sellItem`) VALUES (%s,'%s')", kiosk.getKioskType(), JsonManager.ToJson(kiosk.kioskItems)), MySqlConnection);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        connection.close();
+        MySqlConnection.close();
     }
 }

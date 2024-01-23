@@ -1,4 +1,7 @@
- 
+
+using Gopet.Data.Collections;
+using MySqlX.XDevAPI;
+
 public class PetBattleInfo {
 
     private int turn = 0;
@@ -53,36 +56,37 @@ public class PetBattleInfo {
     }
 
     public void nextTurn() {
-        for (Iterator<Buff> iterator = buffs.iterator(); iterator.hasNext();) {
-            Buff buff = iterator.next();
+        foreach(Buff buff in buffs.ToArray())
+        {
             buff.turn--;
-            if (buff.turn <= 0) {
-                iterator.remove();
+            if (buff.turn <= 0)
+            {
+                buffs.Remove(buff);
             }
         }
         turn++;
         ArrayList<int> skill_cooldownArrayList = new();
-        for (Map.Entry<int, int> entry : skill_cooldown.entrySet()) {
-            int key = entry.getKey();
-            int val = entry.getValue();
-            if (val - 1 <= 0) {
+        foreach (var entry in skill_cooldown) {
+            int key = entry.Key;
+            int val = entry.Value;
+            if(val - 1 <= 0) {
                 skill_cooldownArrayList.add(key);
             } else {
                 skill_cooldown.put(key, val - 1);
             }
         }
-        for (int int : skill_cooldownArrayList) {
-            skill_cooldown.remove(int);
+        foreach (var i in skill_cooldownArrayList) {
+            skill_cooldown.Remove(i);
         }
     }
 
     public ItemInfo[] getBuff() {
-        ItemInfo[] itemInfos = new ItemInfo[GopetManager.itemInfoName.size()];
+        ItemInfo[] itemInfos = new ItemInfo[GopetManager.itemInfoName.Count()];
         for (int i = 0; i < itemInfos.Length; i++) {
             itemInfos[i] = new ItemInfo(i, 0);
         }
-        for (Buff buff : buffs) {
-            for (ItemInfo info : buff.infos) {
+        foreach (Buff buff in buffs) {
+            foreach (ItemInfo info in buff.infos) {
                 itemInfos[info.id].value += info.value;
             }
         }

@@ -1,38 +1,22 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package data.map;
 
-import data.clan.Clan;
-import manager.ClanManager;
-import place.Place;
-import server.Player;
-
-/**
- *
- * @author MINH THONG
- */
-public class ClanMap extends GopetMap {
-
-    public ClanMap(int mapId_, bool canUpdate, MapTemplate mapTemplate) {
-        base(mapId_, canUpdate, mapTemplate);
+public class ClanMap : GopetMap {
+    public ClanMap(int mapId_, bool canUpdate, MapTemplate mapTemplate) : base(mapId_, canUpdate, mapTemplate)
+    {
     }
 
-    @Override
-    public void addPlace(Place place) {
+    public override void addPlace(Place place) {
         throw new UnsupportedOperationException("Place dua vao clan");
     }
 
-    @Override
-    public void addRandom(Player player)   {
+    
+    public override void addRandom(Player player)   {
         player.redDialog("Map này cần phải có bang hội mới vào được");
     }
 
-    @Override
-    public void update()   {
+     
+    public override void update()   {
         try {
-            for (Clan clan : ClanManager.clans) {
+            foreach (Clan clan in ClanManager.clans) {
                 clan.update();
             }
         } catch (Exception e) {
@@ -40,8 +24,8 @@ public class ClanMap extends GopetMap {
         }
     }
 
-    @Override
-    public void createZoneDefault() {
+    
+    public override void createZoneDefault() {
 
     }
 }

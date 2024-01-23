@@ -7,7 +7,7 @@ public class GameController {
     private PetBattle petBattle;
     private PetUpgradeInfo petUpgradeInfo;
     public HashMap<int, Object> objectPerformed = new();
-    private long changePlaceDelay = System.currentTimeMillis();
+    private long changePlaceDelay = Utilities.CurrentTimeMillis;
     private ClanMember _clanMember;
 
     
@@ -29,9 +29,9 @@ public class GameController {
     }
 
     public bool canTypeGiftCode() {
-        bool can = lastTimeTypeGiftCode < System.currentTimeMillis();
+        bool can = lastTimeTypeGiftCode < Utilities.CurrentTimeMillis;
         if (can) {
-            lastTimeTypeGiftCode = System.currentTimeMillis() + 5000L;
+            lastTimeTypeGiftCode = Utilities.CurrentTimeMillis + 5000L;
             return true;
         }
         return false;
@@ -119,7 +119,7 @@ public class GameController {
         }
     }
 
-    private long timeMove = System.currentTimeMillis();
+    private long timeMove = Utilities.CurrentTimeMillis;
     private int hackMoveCounter = 0;
     public const long TIME_MOVE_SEND = 2000;
 
@@ -154,13 +154,13 @@ public class GameController {
                     hackMoveCounter++;
                 }
 
-                if (!(System.currentTimeMillis() - timeMove > TIME_MOVE_SEND) && !player.playerData.isAdmin) {
+                if (!(Utilities.CurrentTimeMillis - timeMove > TIME_MOVE_SEND) && !player.playerData.isAdmin) {
                     hackMoveCounter++;
                 }
-                timeMove = System.currentTimeMillis();
+                timeMove = Utilities.CurrentTimeMillis;
 
                 if (hackMoveCounter > 200) {
-                    //player.user.ban(UserData.BAN_TIME, "Hack speed", System.currentTimeMillis() + (1000l * 60 * 60 * 24));
+                    //player.user.ban(UserData.BAN_TIME, "Hack speed", Utilities.CurrentTimeMillis + (1000l * 60 * 60 * 24));
                     player.session.close();
                 }
             }
@@ -170,7 +170,7 @@ public class GameController {
                 if (place != null) {
                     String text = message.reader().readUTF();
                     place.chat(player, text);
-                    HistoryManager.addHistory(new History(player).setLog(String.format("Chat khu vực nội dung là :%s", text)));
+                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Chat khu vực nội dung là :%s", text)));
                 }
             }
             break;
@@ -296,7 +296,7 @@ public class GameController {
             }
             message.putInt(1);
             CopyOnWriteArrayList<PetTatto> petTattos = (CopyOnWriteArrayList<PetTatto>) pet.tatto.clone();
-            message.putInt(petTattos.size());
+            message.putInt(petTattos.Count);
 
             for (PetTatto petTatto : petTattos) {
                 message.putInt(1);
@@ -330,24 +330,24 @@ public class GameController {
                 player.loginOK();
                 return;
             }
-            Connection connection = MYSQLManager.create();
+            MySqlConnection MySqlConnection = MYSQLManager.create();
             try {
-                ResultSet resultSet = MYSQLManager.jquery("select user_id from player where name = '" + name + "'", connection);
+                ResultSet resultSet = MYSQLManager.jquery("select user_id from player where name = '" + name + "'", MySqlConnection);
                 if (resultSet.next()) {
                     resultSet.close();
                     player.redDialog("Tên nhân vật đã tồn tại");
-                    Thread.sleep(1000);
+                    Thread.Sleep(1000);
                     player.session.close();
-                    connection.close();
+                    MySqlConnection.close();
                     return;
                 }
                 resultSet.close();
             } catch (Exception e) {
                 e.printStackTrace();
-                connection.close();
+                MySqlConnection.close();
                 return;
             }
-            connection.close();
+            MySqlConnection.close();
 
             PlayerData.create(player.user.user_id, name, gender);
             player.login(player.user.username, player.user.password, "");
@@ -425,8 +425,8 @@ public class GameController {
         message.putInt(listID);
         message.putsbyte(type);
         message.putUTF(title);
-        message.putInt(menuItemInfos.size());
-        for (int i = 0; i < menuItemInfos.size(); i++) {
+        message.putInt(menuItemInfos.Count);
+        for (int i = 0; i < menuItemInfos.Count; i++) {
             MenuItemInfo menuItemInfo = menuItemInfos.get(i);
             if (menuItemInfo.isHasId()) {
                 message.putInt(menuItemInfo.getItemId());
@@ -517,16 +517,16 @@ public class GameController {
                 player.redDialog("Mật khẩu phải có số lượng kí tự lớn hơn 5 và không chứa các kí tự đặc biệt");
                 return;
             }
-            Connection connection = MYSQLManager.createWebConnection();
+            MySqlConnection MySqlConnection = MYSQLManager.createWebMySqlConnection();
             try {
                 player.user.password = newPass;
-                MYSQLManager.updateSql(String.format("update user set password = '%s' where user_id = %s", newPass, player.user.user_id), connection);
+                MYSQLManager.updateSql(Utilities.Format("update user set password = '%s' where user_id = %s", newPass, player.user.user_id), MySqlConnection);
                 player.okDialog("Đổi mật khẩu thành công, vui lòng nhớ kỷ thông tin");
-                HistoryManager.addHistory(new History(player).setLog(String.format("Đổi mật khẩu từ %s thành %s", oldPass, newPass)));
+                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Đổi mật khẩu từ %s thành %s", oldPass, newPass)));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            connection.close();
+            MySqlConnection.close();
         } else {
             player.redDialog("Mật khẩu không chính xác");
         }
@@ -543,7 +543,7 @@ public class GameController {
                 if (p != null) {
                     p.chat(player.user.user_id, name, text);
                 }
-                HistoryManager.addHistory(new History(player).setLog(String.format("Chat khu vực nội dung : \'%s\' và người nhận là \'%s\'", text, name)));
+                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Chat khu vực nội dung : \'%s\' và người nhận là \'%s\'", text, name)));
                 break;
             }
             case GopetCMD.PET_INVENTORY:
@@ -635,7 +635,7 @@ public class GameController {
                 upTierItem(message.readInt(), message.readInt(), false);
                 break;
             case GopetCMD.PRICE_UP_TIER_PET:
-                setPricePetUpgrade(int.MAX_VALUE, GopetManager.PRICE_UP_TIER_PET);
+                setPricePetUpgrade(int.MaxValue, GopetManager.PRICE_UP_TIER_PET);
                 break;
             case GopetCMD.PET_UP_TIER:
                 petUpTier(message.readInt(), message.readInt(), message.readUTF(), message.readsbyte());
@@ -821,7 +821,7 @@ public class GameController {
     private void changeChannel(int[] info)   {
         if (!(player.getPlace() instanceof ClanPlace)) {
             if (getPetBattle() == null) {
-                if (changePlaceDelay < System.currentTimeMillis()) {
+                if (changePlaceDelay < Utilities.CurrentTimeMillis) {
                     int mapId = info[0];
                     int placeId = info[1];
                     if (MapManager.maps.get(mapId) != null) {
@@ -832,10 +832,10 @@ public class GameController {
                             player.Popup("Không tồn tại khu này");
                         }
                     }
-                    changePlaceDelay = System.currentTimeMillis() + GopetManager.CHANGE_CHANNEL_DELAY;
+                    changePlaceDelay = Utilities.CurrentTimeMillis + GopetManager.CHANGE_CHANNEL_DELAY;
                 } else {
-                    int second = Math.round((changePlaceDelay - System.currentTimeMillis()) / 1000);
-                    player.redDialog(String.format("Vui lòng chờ %s giây nữa", second));
+                    int second = Math.round((changePlaceDelay - Utilities.CurrentTimeMillis) / 1000);
+                    player.redDialog(Utilities.Format("Vui lòng chờ %s giây nữa", second));
                 }
             } else {
                 player.redDialog("Không cho phép đánh chuyển khu cảm ơn");
@@ -884,7 +884,7 @@ public class GameController {
         if (player.playerData.loginDate.getDay() != serverDate.getDay() || player.playerData.loginDate.getMonth() != serverDate.getMonth() || player.playerData.loginDate.getYear() != serverDate.getYear()) {
             this.player.playerData.star = GopetManager.DAILY_STAR;
         }
-        player.playerData.loginDate = new Date(System.currentTimeMillis());
+        player.playerData.loginDate = new Date(Utilities.CurrentTimeMillis);
         HistoryManager.addHistory(new History(player).setLog("Vào game và kiểm tra có phải qua ngày mới nếu qua ngày mới thì nhận 20 năng lượng và năng lượng hiện tại là:" + player.playerData.star).setObj(player.playerData));
     }
 
@@ -987,7 +987,7 @@ public class GameController {
             }
             message.cleanup();
             player.session.sendMessage(message);
-            HistoryManager.addHistory(new History(player).setLog(String.format("Xem gym pet %s", pet.getNameWithoutStar())).setObj(pet));
+            HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Xem gym pet %s", pet.getNameWithoutStar())).setObj(pet));
         } else {
             player.petNotFollow();
         }
@@ -1007,7 +1007,7 @@ public class GameController {
                     pet.tiemnang[index]++;
                     pet.applyInfo(player);
                     updateTiemnang();
-                    HistoryManager.addHistory(new History(player).setLog(String.format("Cộng tìm năng cho pet %s [num =%s,index=%s]", pet.getNameWithoutStar(), num, index)).setObj(pet));
+                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cộng tìm năng cho pet %s [num =%s,index=%s]", pet.getNameWithoutStar(), num, index)).setObj(pet));
                 } else {
                     player.redDialog("Pet không có đủ tiềm năng");
                 }
@@ -1062,9 +1062,9 @@ public class GameController {
                 message.cleanup();
                 player.session.sendMessage(message);
                 if (oPlayer != player) {
-                    oPlayer.Popup(String.format("Người chơi %s đang xem trang bị của thú cưng bạn", player.playerData.name));
+                    oPlayer.Popup(Utilities.Format("Người chơi %s đang xem trang bị của thú cưng bạn", player.playerData.name));
                 }
-                HistoryManager.addHistory(new History(player).setLog(String.format("Xem trang bị pet của người chơi %s", oPlayer.playerData.name)).setObj(oPlayer.playerData));
+                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Xem trang bị pet của người chơi %s", oPlayer.playerData.name)).setObj(oPlayer.playerData));
             } else {
                 player.petNotFollow();
             }
@@ -1074,8 +1074,8 @@ public class GameController {
     }
 
     private void writeListItemEquip(CopyOnWriteArrayList<Item> petEquipItem, Message message, bool isReSend)    {
-        message.putInt(petEquipItem.size());
-        for (int i = 0; i < petEquipItem.size(); i++) {
+        message.putInt(petEquipItem.Count);
+        for (int i = 0; i < petEquipItem.Count; i++) {
             Item item = petEquipItem.get(i);
             writeItemEquip(item, message, isReSend);
         }
@@ -1099,14 +1099,14 @@ public class GameController {
             message.putbool(hasGem);
             if (hasGem) {
                 message.putLong(item.gemInfo.getTimeUnequip());
-                message.putInt(Math.round((item.gemInfo.getTimeUnequip() - System.currentTimeMillis()) / 1000L));
+                message.putInt(Math.round((item.gemInfo.getTimeUnequip() - Utilities.CurrentTimeMillis) / 1000L));
             }
         } else {
             bool hasGem = item.gemInfo != null;
             message.putbool(hasGem);
             if (hasGem) {
                 message.putLong(item.gemInfo.getTimeUnequip());
-                message.putInt(Math.round((item.gemInfo.getTimeUnequip() - System.currentTimeMillis()) / 1000L));
+                message.putInt(Math.round((item.gemInfo.getTimeUnequip() - Utilities.CurrentTimeMillis) / 1000L));
             } else {
                 message.putLong(-1);
                 message.putInt(-1);
@@ -1264,13 +1264,13 @@ public class GameController {
                         message.putInt(itemId);
                         message.cleanup();
                         player.session.sendMessage(message);
-                        HistoryManager.addHistory(new History(player).setLog(String.format("Mặc trang bị %s cho pet", item.getName())).setObj(item));
+                        HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Mặc trang bị %s cho pet", item.getName())).setObj(item));
 
                     } else {
                         player.redDialog("Vật phẩm này đã trang bị cho pet rồi!");
                     }
                 } else {
-                    player.redDialog("Không đủ chỉ số.\n" + String.format("Cần %s(str) %s(agi) và %s(int)", item.getTemp().getRequireStr(), item.getTemp().getRequireAgi(), item.getTemp().getRequireInt()));
+                    player.redDialog("Không đủ chỉ số.\n" + Utilities.Format("Cần %s(str) %s(agi) và %s(int)", item.getTemp().getRequireStr(), item.getTemp().getRequireAgi(), item.getTemp().getRequireInt()));
                 }
 
             } else {
@@ -1419,14 +1419,14 @@ public class GameController {
             ArrayList<String> listInfoClan = new();
             listInfoClan.add("Tên bang hội: " + clan.getName());
             listInfoClan.add("Bang chủ: " + clan.getMemberByUserId(clan.getLeaderId()).name);
-            listInfoClan.add(String.format("Thành viên: %s/%s", clan.getCurMember(), clan.getMaxMember()));
+            listInfoClan.add(Utilities.Format("Thành viên: %s/%s", clan.getCurMember(), clan.getMaxMember()));
             listInfoClan.add("Khẩu hiệu: " + clan.getSlogan());
-            listInfoClan.add(String.format("Quỹ: %s", Utilities.formatNumber(clan.getFund())));
-            listInfoClan.add(String.format("Điểm cống hiến: %s", Utilities.formatNumber(clan.getGrowthPoint())));
+            listInfoClan.add(Utilities.Format("Quỹ: %s", Utilities.formatNumber(clan.getFund())));
+            listInfoClan.add(Utilities.Format("Điểm cống hiến: %s", Utilities.formatNumber(clan.getGrowthPoint())));
             Message message = clanMessage(GopetCMD.CLAN_INFO);
             message.putInt(clan.getClanId());
-            message.putsbyte(listInfoClan.size());
-            for (int i = 0; i < listInfoClan.size(); i++) {
+            message.putsbyte(listInfoClan.Count);
+            for (int i = 0; i < listInfoClan.Count; i++) {
                 message.putUTF(listInfoClan.get(i));
             }
             message.cleanup();
@@ -1441,11 +1441,11 @@ public class GameController {
         if (clanMember != null) {
             CopyOnWriteArrayList<ClanMemberDonateInfo> donateInfos = (CopyOnWriteArrayList<ClanMemberDonateInfo>) clanMember.clanMemberDonateInfos.clone();
             Message message = clanMessage(GopetCMD.DONATE_CLAN);
-            message.putInt(donateInfos.size());
-            for (int i = 0; i < donateInfos.size(); i++) {
+            message.putInt(donateInfos.Count);
+            for (int i = 0; i < donateInfos.Count; i++) {
                 ClanMemberDonateInfo get = donateInfos.get(i);
                 message.putInt(i);
-                message.putUTF("Mốc " + (i + 1) + String.format(": Quyên góp %s để nhận %s quỹ và %s điểm cống hiến (Còn %s lần)", MenuController.getMoneyText(get.getPriceType(), get.getPrice()), Utilities.formatNumber(get.getFund()), Utilities.formatNumber(get.getGrowthPoint()), (get.getMaxDonate() - get.getCurDonate())));
+                message.putUTF("Mốc " + (i + 1) + Utilities.Format(": Quyên góp %s để nhận %s quỹ và %s điểm cống hiến (Còn %s lần)", MenuController.getMoneyText(get.getPriceType(), get.getPrice()), Utilities.formatNumber(get.getFund()), Utilities.formatNumber(get.getGrowthPoint()), (get.getMaxDonate() - get.getCurDonate())));
             }
             message.cleanup();
             player.session.sendMessage(message);
@@ -1458,7 +1458,7 @@ public class GameController {
         ClanMember clanMember = getClan();
         if (clanMember != null) {
             CopyOnWriteArrayList<ClanMemberDonateInfo> donateInfos = (CopyOnWriteArrayList<ClanMemberDonateInfo>) clanMember.clanMemberDonateInfos.clone();
-            if (menuId >= 0 && menuId < donateInfos.size()) {
+            if (menuId >= 0 && menuId < donateInfos.Count) {
                 ClanMemberDonateInfo clanMemberDonateInfo = donateInfos.get(menuId);
                 if (clanMemberDonateInfo.getMaxDonate() > clanMemberDonateInfo.getCurDonate()) {
                     if (MenuController.checkMoney(clanMemberDonateInfo.getPriceType(), clanMemberDonateInfo.getPrice(), player)) {
@@ -1494,12 +1494,12 @@ public class GameController {
             m.putInt(0);
             m.putsbyte(0);
             m.putsbyte(0);
-            m.putsbyte(clan.getMembers().size());
+            m.putsbyte(clan.getMembers().Count);
             for (ClanMember member : clan.getMembers()) {
                 m.putInt(member.user_id);
                 m.putUTF(member.getAvatar());
-                m.putUTF(member.name + String.format(" (Chức vụ: %s)", member.getDutyName()));
-                m.putUTF(String.format("Đóng góp quỹ: %s , điểm cống hiến: %s", Utilities.formatNumber(member.fundDonate), Utilities.formatNumber(member.growthPointDonate)));
+                m.putUTF(member.name + Utilities.Format(" (Chức vụ: %s)", member.getDutyName()));
+                m.putUTF(Utilities.Format("Đóng góp quỹ: %s , điểm cống hiến: %s", Utilities.formatNumber(member.fundDonate), Utilities.formatNumber(member.growthPointDonate)));
             }
             m.putbool(false);
             player.session.sendMessage(m);
@@ -1540,7 +1540,7 @@ public class GameController {
             if (Pet.canEuip(item)) {
                 if (item.petEuipId < 0) {
                     objectPerformed.put(MenuController.OBJKEY_REMOVE_ITEM_EQUIP, itemid);
-                    MenuController.showYNDialog(MenuController.DIALOG_CONFIRM_REMOVE_ITEM_EQUIP, String.format("Bạn có chắc muốn hủy vật phẩm", item.getTemp().getName()), player);
+                    MenuController.showYNDialog(MenuController.DIALOG_CONFIRM_REMOVE_ITEM_EQUIP, Utilities.Format("Bạn có chắc muốn hủy vật phẩm", item.getTemp().getName()), player);
                 } else {
                     player.redDialog("Vật phẩm này đã trang bị cho pet rồi");
                 }
@@ -1558,7 +1558,7 @@ public class GameController {
 
     public Item selectItem(int itemindex, sbyte inventoryItem)   {
         CopyOnWriteArrayList<Item> inventory = player.playerData.getInventoryOrCreate(inventoryItem);
-        if (itemindex >= 0 && itemindex < inventory.size()) {
+        if (itemindex >= 0 && itemindex < inventory.Count) {
             Item item = inventory.get(itemindex);
             return item;
         } else {
@@ -1569,7 +1569,7 @@ public class GameController {
     public Item selectItemByItemId(int itemId, sbyte inventoryItem)   {
         CopyOnWriteArrayList<Item> inventory = (CopyOnWriteArrayList<Item>) player.playerData.getInventoryOrCreate(inventoryItem);
         int left = 0;
-        int right = inventory.size() - 1;
+        int right = inventory.Count - 1;
         while (left <= right) {
             int mid = left + (right - left) / 2;
             Item midItem = inventory.get(mid);
@@ -1598,7 +1598,7 @@ public class GameController {
     public Pet selectPetByItemId(int petId)   {
         CopyOnWriteArrayList<Pet> inventory = player.playerData.pets;
         int left = 0;
-        int right = inventory.size() - 1;
+        int right = inventory.Count - 1;
         while (left <= right) {
             int mid = left + (right - left) / 2;
             Pet midPet = inventory.get(mid);
@@ -1656,7 +1656,7 @@ public class GameController {
             m.putUTF(sellItem.getFrameImgPath());
             m.putUTF(sellItem.getName());
             m.putUTF(sellItem.getDescription());
-            m.putInt(Math.round((sellItem.expireTime - System.currentTimeMillis()) / 1000l));
+            m.putInt(Math.round((sellItem.expireTime - Utilities.CurrentTimeMillis) / 1000l));
         }
         m.cleanup();
         player.session.sendMessage(m);
@@ -1680,8 +1680,8 @@ public class GameController {
                     } else {
                         player.addItemToInventory(sellItem.ItemSell);
                     }
-                    player.okDialog(String.format("Gỡ vật phẩm về túi thành công", sellItem.getName()));
-                    HistoryManager.addHistory(new History(player).setLog(String.format("Gỡ vật phẩm về túi thành công", sellItem.getName())).setObj(sellItem));
+                    player.okDialog(Utilities.Format("Gỡ vật phẩm về túi thành công", sellItem.getName()));
+                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Gỡ vật phẩm về túi thành công", sellItem.getName())).setObj(sellItem));
                     sellItem.hasRemoved = true;
                 }
             }
@@ -1693,7 +1693,7 @@ public class GameController {
     public void checkExpire() {
         Item skinItem = player.playerData.skinItem;
         if (skinItem != null) {
-            if (skinItem.expire < System.currentTimeMillis()) {
+            if (skinItem.expire < Utilities.CurrentTimeMillis) {
                 player.playerData.skinItem = null;
             }
         }
@@ -1703,7 +1703,7 @@ public class GameController {
                 skinItem = item;
                 if (skinItem != null) {
                     if (skinItem.expire > 0) {
-                        if (skinItem.expire < System.currentTimeMillis()) {
+                        if (skinItem.expire < Utilities.CurrentTimeMillis) {
                             val.remove(item);
                         }
                     }
@@ -1849,23 +1849,23 @@ public class GameController {
                         subCountItem(materialItem, 1, GopetManager.NORMAL_INVENTORY);
                         subCountItem(materialCrystal, 1, GopetManager.NORMAL_INVENTORY);
                         if (isSuccec) {
-                            player.okDialog(String.format("Chức mưng bạn đã cường hóa thành công %s lên +%s", itemEuip.getName(), itemEuip.lvl));
+                            player.okDialog(Utilities.Format("Chức mưng bạn đã cường hóa thành công %s lên +%s", itemEuip.getName(), itemEuip.lvl));
                             if (itemEuip.lvl >= 7) {
-                                PlayerManager.showBanner(String.format("Chúc mừng người chơi %s đã cường hoá trang bị %s lên +%s,lực chiến tăng mạnh!!!", player.playerData.name, itemEuip.getTemp().getName(), itemEuip.lvl));
+                                PlayerManager.showBanner(Utilities.Format("Chúc mừng người chơi %s đã cường hoá trang bị %s lên +%s,lực chiến tăng mạnh!!!", player.playerData.name, itemEuip.getTemp().getName(), itemEuip.lvl));
                             }
-                            HistoryManager.addHistory(new History(player).setLog(String.format("Cường hóa %s lên +%s", itemEuip.getTemp().getName(), itemEuip.lvl)).setObj(itemEuip));
+                            HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cường hóa %s lên +%s", itemEuip.getTemp().getName(), itemEuip.lvl)).setObj(itemEuip));
                         } else {
                             if (destroyItem) {
                                 player.redDialog("Thật không may, trong lúc cường hóa thì trang bị của bạn đã bị vỡ");
-                                PlayerManager.showBanner(String.format("Thật đáng tiếc người chơi %s đã cường hoá %s thất bại,hư hỏng vĩnh viễn!!!", player.playerData.name, itemEuip.getTemp().getName()));
-                                HistoryManager.addHistory(new History(player).setLog(String.format("Cường hóa %s thất bại bị vỡ", itemEuip.getTemp().getName())).setObj(itemEuip));
+                                PlayerManager.showBanner(Utilities.Format("Thật đáng tiếc người chơi %s đã cường hoá %s thất bại,hư hỏng vĩnh viễn!!!", player.playerData.name, itemEuip.getTemp().getName()));
+                                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cường hóa %s thất bại bị vỡ", itemEuip.getTemp().getName())).setObj(itemEuip));
                             } else {
                                 if (levelDrop > 0) {
-                                    player.redDialog(String.format("Cường hóa thất bại trang bị giảm %s cấp", levelDrop));
-                                    HistoryManager.addHistory(new History(player).setLog(String.format("Cường hóa %s thất bại bị giảm %s cấp", itemEuip.getTemp().getName(), levelDrop)).setObj(itemEuip));
+                                    player.redDialog(Utilities.Format("Cường hóa thất bại trang bị giảm %s cấp", levelDrop));
+                                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cường hóa %s thất bại bị giảm %s cấp", itemEuip.getTemp().getName(), levelDrop)).setObj(itemEuip));
                                 } else {
                                     player.redDialog("Cường hóa trang bị thất bại");
-                                    HistoryManager.addHistory(new History(player).setLog(String.format("Cường hóa %s thất bại bị giảm %s cấp", itemEuip.getTemp().getName(), levelDrop)).setObj(itemEuip));
+                                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cường hóa %s thất bại bị giảm %s cấp", itemEuip.getTemp().getName(), levelDrop)).setObj(itemEuip));
                                 }
                             }
                         }
@@ -1916,12 +1916,12 @@ public class GameController {
                 String dropStr = "";
                 String destStr = "";
                 if (levelDrop > 0) {
-                    dropStr = String.format("\n Nếu thất bại trang bị của bạn sẽ giảm %s cấp.", levelDrop);
+                    dropStr = Utilities.Format("\n Nếu thất bại trang bị của bạn sẽ giảm %s cấp.", levelDrop);
                 }
                 if (canDest) {
                     destStr = "\n Nếu thất bại trang bị của bạn sẽ mất";
                 }
-                MenuController.showYNDialog(MenuController.DIALOG_ENCHANT, String.format("Bạn có chắc muốn cường hóa %s với tỉ lệ (%s /) + %s/ với giá %s (ngoc) không?", itemEuip.getTemp().getName(), isGem ? GopetManager.PERCENT_OF_ENCHANT_GEM[itemEuip.lvl] : GopetManager.DISPLAY_PERCENT_ENCHANT[itemEuip.lvl], materialCrystal.getTemp().getOptionValue()[0], GopetManager.PRICE_ENCHANT[itemEuip.lvl]).replace('/', '%') + dropStr + destStr, player);
+                MenuController.showYNDialog(MenuController.DIALOG_ENCHANT, Utilities.Format("Bạn có chắc muốn cường hóa %s với tỉ lệ (%s /) + %s/ với giá %s (ngoc) không?", itemEuip.getTemp().getName(), isGem ? GopetManager.PERCENT_OF_ENCHANT_GEM[itemEuip.lvl] : GopetManager.DISPLAY_PERCENT_ENCHANT[itemEuip.lvl], materialCrystal.getTemp().getOptionValue()[0], GopetManager.PRICE_ENCHANT[itemEuip.lvl]).replace('/', '%') + dropStr + destStr, player);
             }
         } else {
             player.redDialog("Trang bị đã đạt cấp tối đa");
@@ -1955,10 +1955,10 @@ public class GameController {
         objectPerformed.put(MenuController.OBJKEY_ITEM_UP_TIER_PASSIVE, itemEuipPassive);
         objectPerformed.put(MenuController.OBJKEY_IS_ENCHANT_GEM, isGem);
         if (isGem) {
-            MenuController.showYNDialog(MenuController.DIALOG_ASK_KEEP_GEM, String.format("Bạn có muốn dùng %s (vang) để giữ ngọc không bị vỡ không?", GopetManager.PRICE_KEEP_GEM), player);
-            objectPerformed.put(MenuController.OBJKEY_ASK_UP_TIER_GEM_STR, String.format("Bạn có chắc muốn tiến hóa %s với giá %s (ngoc) không?", itemEuipActive.getName(), GopetManager.PRICE_UP_TIER_ITEM));
+            MenuController.showYNDialog(MenuController.DIALOG_ASK_KEEP_GEM, Utilities.Format("Bạn có muốn dùng %s (vang) để giữ ngọc không bị vỡ không?", GopetManager.PRICE_KEEP_GEM), player);
+            objectPerformed.put(MenuController.OBJKEY_ASK_UP_TIER_GEM_STR, Utilities.Format("Bạn có chắc muốn tiến hóa %s với giá %s (ngoc) không?", itemEuipActive.getName(), GopetManager.PRICE_UP_TIER_ITEM));
         } else {
-            MenuController.showYNDialog(MenuController.DIALOG_UP_TIER_ITEM, String.format("Bạn có chắc muốn tiến hóa %s với giá %s (ngoc) không?", itemEuipActive.getName(), GopetManager.PRICE_UP_TIER_ITEM), player);
+            MenuController.showYNDialog(MenuController.DIALOG_UP_TIER_ITEM, Utilities.Format("Bạn có chắc muốn tiến hóa %s với giá %s (ngoc) không?", itemEuipActive.getName(), GopetManager.PRICE_UP_TIER_ITEM), player);
         }
     }
 
@@ -2012,7 +2012,7 @@ public class GameController {
                                 if (!isKeepGem) {
                                     bool isActive = Utilities.nextInt(2) == 1;
                                     removeGem(isActive ? itemEuipActive.itemId : itemEuipPassive.itemId);
-                                    PlayerManager.showBanner(String.format("Người chơi %s cường hóa %s thất bại làm bể viên ngọc", player.playerData.name, (itemEuipActive.getTemp().getName())));
+                                    PlayerManager.showBanner(Utilities.Format("Người chơi %s cường hóa %s thất bại làm bể viên ngọc", player.playerData.name, (itemEuipActive.getTemp().getName())));
                                 }
                             }
                         } else {
@@ -2099,8 +2099,8 @@ public class GameController {
                                 petActive.isUpTier = true;
                                 petActive.wasSell = oldPet.wasSell;
                                 petActive.pointTiemNangLvl = gym_up_level;
-                                player.okDialog(String.format("Chức mừng bạn đã tiến hóa thành công %s và thú cưng của bạn được cộng %s điểm gym", petActive.getNameWithStar(), gym_add));
-                                HistoryManager.addHistory(new History(player).setLog(String.format("Tiến hóa pet %s thành công", petActive.getNameWithoutStar())).setObj(petActive));
+                                player.okDialog(Utilities.Format("Chức mừng bạn đã tiến hóa thành công %s và thú cưng của bạn được cộng %s điểm gym", petActive.getNameWithStar(), gym_add));
+                                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Tiến hóa pet %s thành công", petActive.getNameWithoutStar())).setObj(petActive));
                                 Message message = messagePetSerive(GopetCMD.PET_UP_TIER);
                                 message.cleanup();
                                 player.session.sendMessage(message);
@@ -2115,7 +2115,7 @@ public class GameController {
                         player.redDialog("Tên pet phải lớn hơn 20 ký tự hoặc bé hơn 6 ký tự");
                     }
                 } else {
-                    player.redDialog(String.format("Bạn cần thú cưng đạt cấp %s mới có thể tiến hóa và ảo ảnh cần cấp %s", GopetManager.LVL_PET_REQUIER_UP_TIER, GopetManager.LVL_PET_PASSIVE_REQUIER_UP_TIER));
+                    player.redDialog(Utilities.Format("Bạn cần thú cưng đạt cấp %s mới có thể tiến hóa và ảo ảnh cần cấp %s", GopetManager.LVL_PET_REQUIER_UP_TIER, GopetManager.LVL_PET_PASSIVE_REQUIER_UP_TIER));
                 }
             } else {
                 player.redDialog("Bạn phải tháo trang bị cho cả 2 pet");
@@ -2138,8 +2138,8 @@ public class GameController {
                 if (succes) {
                     pet.skill[skillIndex][1]++;
                     this.taskCalculator.onUpdateSkillPet(pet, pet.skill[skillIndex][1]);
-                    player.okDialog(String.format("Chức mừng bạn đã nâng cấp %s lên cấp %s !", petSkill.name, pet.skill[skillIndex][1]));
-                    HistoryManager.addHistory(new History(player).setLog(String.format("Bạn đã nâng cấp %s lên cấp %s  cho pet %s!", petSkill.name, pet.skill[skillIndex][1], pet.getNameWithoutStar())).setObj(pet));
+                    player.okDialog(Utilities.Format("Chức mừng bạn đã nâng cấp %s lên cấp %s !", petSkill.name, pet.skill[skillIndex][1]));
+                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Bạn đã nâng cấp %s lên cấp %s  cho pet %s!", petSkill.name, pet.skill[skillIndex][1], pet.getNameWithoutStar())).setObj(pet));
                 } else {
                     player.redDialog("Nâng cấp thất bại");
                 }
@@ -2195,7 +2195,7 @@ public class GameController {
         player.session.sendMessage(m);
     }
 
-    private long timeInviteDelay = System.currentTimeMillis();
+    private long timeInviteDelay = Utilities.CurrentTimeMillis;
 
     private void inviteChallenge(int user_id)   {
         Player playerChallenge = PlayerManager.get(user_id);
@@ -2219,8 +2219,8 @@ public class GameController {
     }
 
     public void sendChallenge(Player playerChallenge, int price)   {
-        if (timeInviteDelay < System.currentTimeMillis()) {
-            timeInviteDelay = System.currentTimeMillis() + GopetManager.DELAY_INVITE_PLAYER_CHALLENGE;
+        if (timeInviteDelay < Utilities.CurrentTimeMillis) {
+            timeInviteDelay = Utilities.CurrentTimeMillis + GopetManager.DELAY_INVITE_PLAYER_CHALLENGE;
             playerChallenge.controller.showChallenge(player, price);
         } else {
             player.redDialog("Vui lòng chờ");
@@ -2276,8 +2276,8 @@ public class GameController {
                                         player.playerData.pkPoint++;
                                         GopetPlace place = (GopetPlace) player.getPlace();
                                         place.startFightPlayer(user_id, player, true, 0);
-                                        HistoryManager.addHistory(new History(playerPassive).setLog(String.format("Bị người chơi %s PK", player.playerData.name)));
-                                        HistoryManager.addHistory(new History(player).setLog(String.format("PK người chơi %s", playerPassive.playerData.name)));
+                                        HistoryManager.addHistory(new History(playerPassive).setLog(Utilities.Format("Bị người chơi %s PK", player.playerData.name)));
+                                        HistoryManager.addHistory(new History(player).setLog(Utilities.Format("PK người chơi %s", playerPassive.playerData.name)));
                                     }
                                 }
                             } else {
@@ -2300,7 +2300,7 @@ public class GameController {
 
     private void showChallenge(Player playerInvite, int price)   {
         if (playerInvite.controller.getPetBattle() == null) {
-            MenuController.showYNDialog(MenuController.DIALOG_INVITE_CHALLENGE, String.format("Người chơi %s muốn thách đấu bạn với mức cược %s (ngoc)\n Bạn có đồng ý lời mời này không?", playerInvite.playerData.name, Utilities.formatNumber(price)), player);
+            MenuController.showYNDialog(MenuController.DIALOG_INVITE_CHALLENGE, Utilities.Format("Người chơi %s muốn thách đấu bạn với mức cược %s (ngoc)\n Bạn có đồng ý lời mời này không?", playerInvite.playerData.name, Utilities.formatNumber(price)), player);
             objectPerformed.put(MenuController.OBJKEY_INVITE_CHALLENGE_PLAYER, playerInvite);
             objectPerformed.put(MenuController.OBJKEY_PRICE_BET_CHALLENGE, price);
         }
@@ -2322,8 +2322,8 @@ public class GameController {
                             playerInvite.mineCoin(coinBet);
                             player.mineCoin(coinBet);
                             place.startFightPlayer(playerInvite.user.user_id, player, false, coinBet);
-                            HistoryManager.addHistory(new History(player).setLog(String.format("Tiến hành thách đấu với người chơi %s tiền cược là %s ngọc", playerInvite.playerData.name, Utilities.formatNumber(coinBet))));
-                            HistoryManager.addHistory(new History(playerInvite).setLog(String.format("Tiến hành thách đấu với người chơi %s tiền cược là %s ngọc", player.playerData.name, Utilities.formatNumber(coinBet))));
+                            HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Tiến hành thách đấu với người chơi %s tiền cược là %s ngọc", playerInvite.playerData.name, Utilities.formatNumber(coinBet))));
+                            HistoryManager.addHistory(new History(playerInvite).setLog(Utilities.Format("Tiến hành thách đấu với người chơi %s tiền cược là %s ngọc", player.playerData.name, Utilities.formatNumber(coinBet))));
                         }
                     } else {
                         player.redDialog("Người chơi mới bạn không có nằm trong khu này");
@@ -2347,8 +2347,8 @@ public class GameController {
                         subCountItem(itemSelect, countNeed, GopetManager.NORMAL_INVENTORY);
                         mypet.tiemnang_point += mypet.star;
                         mypet.star++;
-                        player.okDialog(String.format("Chúc mừng bạn đã nâng sao thành công cho\n %s", mypet.getNameWithStar()));
-                        HistoryManager.addHistory(new History(player).setLog(String.format("Nâng sao thú cưng %s lên %s sao", mypet.getPetTemplate().getName(), mypet.star)));
+                        player.okDialog(Utilities.Format("Chúc mừng bạn đã nâng sao thành công cho\n %s", mypet.getNameWithStar()));
+                        HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Nâng sao thú cưng %s lên %s sao", mypet.getPetTemplate().getName(), mypet.star)));
                     } else {
                         player.redDialog("Số mảnh không đủ\n Cần " + countNeed + " mảnh!");
                     }
@@ -2370,7 +2370,7 @@ public class GameController {
             int j = GopetManager.LVL_REQUIRE_PET_TATTO[i];
             if (pet.lvl >= j) {
                 index++;
-                if (pet.tatto.size() < index) {
+                if (pet.tatto.Count < index) {
                     return index;
                 }
             }
@@ -2399,7 +2399,7 @@ public class GameController {
             m.putsbyte(GopetCMD.TATTOO_INIT_SCREEN);
             m.putInt(GopetManager.LVL_REQUIRE_PET_TATTO.Length);
             for (int i = 0; i < GopetManager.LVL_REQUIRE_PET_TATTO.Length; i++) {
-                if (i >= pet.tatto.size()) {
+                if (i >= pet.tatto.Count) {
                     if (indexUnlock > i) {
                         m.putInt(0);
                         m.putUTF("Chưa xăm");
@@ -2407,7 +2407,7 @@ public class GameController {
                         m.putUTF("tatoos/0.png");
                     } else {
                         m.putInt(0);
-                        m.putUTF(String.format("Mốc cấp %s", GopetManager.LVL_REQUIRE_PET_TATTO[i]));
+                        m.putUTF(Utilities.Format("Mốc cấp %s", GopetManager.LVL_REQUIRE_PET_TATTO[i]));
                         m.putsbyte(i + 1);
                         m.putUTF("tatoos/-1.png");
                     }
@@ -2430,11 +2430,11 @@ public class GameController {
             Pet pet = player.getPet();
             if (pet != null) {
                 int indexTatto = getIndexOfPetCanTatto();
-                if (indexTatto >= 0 && pet.tatto.size() < indexTatto) {
+                if (indexTatto >= 0 && pet.tatto.Count < indexTatto) {
                     int randTatto = randTattoo(itemSelect.getTemp().getOptionValue());
                     PetTatto petTatto = new PetTatto(randTatto);
                     pet.addTatto(petTatto);
-                    player.okDialog(String.format("Chức mừng bạn xăm thành công %s", petTatto.getName()));
+                    player.okDialog(Utilities.Format("Chức mừng bạn xăm thành công %s", petTatto.getName()));
                     pet.applyInfo(player);
                     subCountItem(itemSelect, 1, GopetManager.NORMAL_INVENTORY);
                     showPetTattoUI();
@@ -2463,10 +2463,10 @@ public class GameController {
                 if (checkCount(itemSelect, 1)) {
                     p.tatto.remove(tatto);
                     showPetTattoUI();
-                    player.okDialog(String.format("Xóa thành công %s", tatto.getTemp().getName()));
+                    player.okDialog(Utilities.Format("Xóa thành công %s", tatto.getTemp().getName()));
                     subCountItem(itemSelect, 1, GopetManager.NORMAL_INVENTORY);
                     objectPerformed.remove(MenuController.OBJKEY_TATTO_ID_REMOVE);
-                    HistoryManager.addHistory(new History(player).setLog(String.format("Xóa xăm %s cho pet %s", tatto.getTemp().getName(), p.getNameWithoutStar())));
+                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Xóa xăm %s cho pet %s", tatto.getTemp().getName(), p.getNameWithoutStar())));
                 }
             }
         }
@@ -2480,12 +2480,12 @@ public class GameController {
             switch (giftInfo[0]) {
                 case GopetManager.GIFT_GOLD:
                     player.addGold(giftInfo[1]);
-                    popups.add(new Popup(String.format("%s (vang)", Utilities.formatNumber(giftInfo[1]))));
+                    popups.add(new Popup(Utilities.Format("%s (vang)", Utilities.formatNumber(giftInfo[1]))));
                     break;
 
                 case GopetManager.GIFT_COIN:
                     player.addCoin(giftInfo[1]);
-                    popups.add(new Popup(String.format("%s (ngoc)", Utilities.formatNumber(giftInfo[1]))));
+                    popups.add(new Popup(Utilities.Format("%s (ngoc)", Utilities.formatNumber(giftInfo[1]))));
                     break;
                 case GopetManager.GIFT_ITEM: {
                     int itemId = giftInfo[1];
@@ -2545,7 +2545,7 @@ public class GameController {
                         if (nextBool) {
                             ArrayList<ItemTemplate> partItem = GopetManager.mergeItemItem.get(typePart);
                             if (partItem != null) {
-                                Item item = new Item(partItem.get(util.Utilities.nextInt(partItem.size())).getItemId());
+                                Item item = new Item(partItem.get(Utilities.nextInt(partItem.Count)).getItemId());
                                 item.count = giftInfo[3];
                                 player.addItemToInventory(item);
                                 popups.add(new Popup(item.getName()));
@@ -2607,7 +2607,7 @@ public class GameController {
         selectGemM1 = false;
         CopyOnWriteArrayList<Item> items = player.playerData.getInventoryOrCreate(GopetManager.GEM_INVENTORY);
         Message m = messagePetSerive(GopetCMD.SHOW_GEM_INVENTORY);
-        m.putInt(items.size());
+        m.putInt(items.Count);
         for (Item item : items) {
             m.putInt(item.itemId);
             m.putInt(item.getTemp().getIconId());
@@ -2714,7 +2714,7 @@ public class GameController {
                 if (item.gemInfo.getTimeUnequip() > 0) {
                     player.redDialog("Vật phẩm đang tháo");
                 } else {
-                    item.gemInfo.setTimeUnequip(System.currentTimeMillis() + GopetManager.TIME_UNEQUIP_GEM);
+                    item.gemInfo.setTimeUnequip(Utilities.CurrentTimeMillis + GopetManager.TIME_UNEQUIP_GEM);
                     resendPetEquipInfo(item);
                 }
             }
@@ -2727,7 +2727,7 @@ public class GameController {
         if (item != null) {
             if (item.gemInfo != null) {
                 if (item.gemInfo.getTimeUnequip() > 0) {
-                    if (item.gemInfo.getTimeUnequip() < System.currentTimeMillis()) {
+                    if (item.gemInfo.getTimeUnequip() < Utilities.CurrentTimeMillis) {
                         ItemGem itemGem = item.gemInfo;
                         item.gemInfo = null;
                         item.updateGemOption();
@@ -2773,7 +2773,7 @@ public class GameController {
 
     private void fastUnequipGem(int itemId)   {
         objectPerformed.put(MenuController.OBJKEY_ID_ITEM_FAST_REMOVE_GEM, itemId);
-        MenuController.showYNDialog(MenuController.DIALOG_ASK_FAST_REMOVE_GEM, String.format("Bạn có muốn dùng %s (vang) để tháo ngọc nhanh không?", Utilities.formatNumber(GopetManager.PRICE_UNEQUIP_GEM)), player);
+        MenuController.showYNDialog(MenuController.DIALOG_ASK_FAST_REMOVE_GEM, Utilities.Format("Bạn có muốn dùng %s (vang) để tháo ngọc nhanh không?", Utilities.formatNumber(GopetManager.PRICE_UNEQUIP_GEM)), player);
     }
 
     private void showListClan()   {
@@ -2781,11 +2781,11 @@ public class GameController {
         m.putUTF("");
         m.putsbyte(0);
         m.putsbyte(0);
-        m.putInt(ClanManager.clans.size());
+        m.putInt(ClanManager.clans.Count);
         for (Clan clan : ClanManager.clans) {
             m.putInt(clan.getClanId());
             m.putInt(-1);
-            m.putUTF("Bang " + clan.getName() + String.format(" (Bang chủ: %s)", clan.getMemberByUserId(clan.getLeaderId()).name));
+            m.putUTF("Bang " + clan.getName() + Utilities.Format(" (Bang chủ: %s)", clan.getMemberByUserId(clan.getLeaderId()).name));
             m.putUTF(clan.getClanDesc());
         }
         m.cleanup();
@@ -2798,7 +2798,7 @@ public class GameController {
             if (clanName.Length() > 5 && clanName.Length() < 21 && Utilities.CheckString(clanName, "^[a-z0-9]+$")) {
                 if (ClanManager.clanHashMapName.containsKey(clanName)) {
                     objectPerformed.put(MenuController.OBJKEY_CLAN_NAME_REQUEST, clanName);
-                    MenuController.showYNDialog(MenuController.DIALOG_ASK_REQUEST_JOIN_CLAN, String.format("Bạn có muốn xin vào bang hội %s không?", clanName), player);
+                    MenuController.showYNDialog(MenuController.DIALOG_ASK_REQUEST_JOIN_CLAN, Utilities.Format("Bạn có muốn xin vào bang hội %s không?", clanName), player);
                 } else {
                     player.redDialog("Không tồn tại bang hội này");
                 }
@@ -2816,7 +2816,7 @@ public class GameController {
             Clan clan = clanMember.getClan();
             CopyOnWriteArrayList<ClanMember> listMember = (CopyOnWriteArrayList<ClanMember>) clan.getMembers().clone();
             listMember.sort(new Comparator<ClanMember>() {
-                @Override
+                 
                 public int compare(ClanMember o1, ClanMember o2) {
                     return Math.round(o2.fundDonate - o1.fundDonate);
                 }
@@ -2824,12 +2824,12 @@ public class GameController {
             Message m = clanMessage(GopetCMD.GUILD_TOP_FUND);
             m.putsbyte(0);
             m.putsbyte(0);
-            m.putsbyte(listMember.size());
+            m.putsbyte(listMember.Count);
             for (ClanMember clanMember1 : listMember) {
                 m.putInt(clanMember1.user_id);
                 m.putUTF(clanMember1.getAvatar());
-                m.putUTF(clanMember1.name + String.format(" (Chức vụ: %s)", clanMember1.getDutyName()));
-                m.putUTF(String.format("Đóng góp quỹ: %s ,đóng góp điểm cống hiến: %s", Utilities.formatNumber(clanMember1.fundDonate), Utilities.formatNumber(clanMember1.growthPointDonate)));
+                m.putUTF(clanMember1.name + Utilities.Format(" (Chức vụ: %s)", clanMember1.getDutyName()));
+                m.putUTF(Utilities.Format("Đóng góp quỹ: %s ,đóng góp điểm cống hiến: %s", Utilities.formatNumber(clanMember1.fundDonate), Utilities.formatNumber(clanMember1.growthPointDonate)));
             }
             m.cleanup();
             player.session.sendMessage(m);
@@ -2844,7 +2844,7 @@ public class GameController {
             Clan clan = clanMember.getClan();
             CopyOnWriteArrayList<ClanMember> listMember = (CopyOnWriteArrayList<ClanMember>) clan.getMembers().clone();
             listMember.sort(new Comparator<ClanMember>() {
-                @Override
+                 
                 public int compare(ClanMember o1, ClanMember o2) {
                     return Math.round(o2.growthPointDonate - o1.growthPointDonate);
                 }
@@ -2852,12 +2852,12 @@ public class GameController {
             Message m = clanMessage(GopetCMD.GUILD_TOP_GROWTH_POINT);
             m.putsbyte(0);
             m.putsbyte(0);
-            m.putsbyte(listMember.size());
+            m.putsbyte(listMember.Count);
             for (ClanMember clanMember1 : listMember) {
                 m.putInt(clanMember1.user_id);
                 m.putUTF(clanMember1.getAvatar());
-                m.putUTF(clanMember1.name + String.format(" (Chức vụ: %s)", clanMember1.getDutyName()));
-                m.putUTF(String.format("Đóng góp quỹ: %s ,đóng góp điểm cống hiến: %s", Utilities.formatNumber(clanMember1.fundDonate), Utilities.formatNumber(clanMember1.growthPointDonate)));
+                m.putUTF(clanMember1.name + Utilities.Format(" (Chức vụ: %s)", clanMember1.getDutyName()));
+                m.putUTF(Utilities.Format("Đóng góp quỹ: %s ,đóng góp điểm cống hiến: %s", Utilities.formatNumber(clanMember1.fundDonate), Utilities.formatNumber(clanMember1.growthPointDonate)));
             }
             m.cleanup();
             player.session.sendMessage(m);
@@ -2896,7 +2896,7 @@ public class GameController {
         m.putInt(listId);
         m.putUTF(title);
         m.putUTF(message);
-        m.putInt(options.size());
+        m.putInt(options.Count);
         for (Option option : options) {
             m.putInt(option.getOptionId());
             m.putUTF(option.getOptionText());
@@ -2920,7 +2920,7 @@ public class GameController {
             Message m = clanMessage(GopetCMD.GUILD_CHAT);
             m.putInt(clanMember.getClan().getClanId());
             m.putUTF("");
-            m.putsbyte(clanChats.size());
+            m.putsbyte(clanChats.Count);
             for (ClanChat clanChat : clanChats) {
                 m.putUTF(clanChat.getWho());
                 m.putUTF(clanChat.getText());
@@ -2961,7 +2961,7 @@ public class GameController {
                     bool hasSlot = clan.getLvl() >= GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[i];
                     if (hasSlot) {
                         CopyOnWriteArrayList<ClanBuff> clanBuffs = (CopyOnWriteArrayList<ClanBuff>) clan.getClanBuffs().clone();
-                        bool slotHasSkill = clanBuffs.size() > i;
+                        bool slotHasSkill = clanBuffs.Count > i;
                         if (slotHasSkill) {
                             ClanBuff clanBuff = clanBuffs.get(i);
                             m.putInt(GopetCMD.SKILL_CLAN_CHANGE);
@@ -2990,7 +2990,7 @@ public class GameController {
                 if (olPlayer == player) {
                     notClan();
                 } else {
-                    player.redDialog(String.format("Người chơi %s chưa có bang hội", olPlayer.playerData.name));
+                    player.redDialog(Utilities.Format("Người chơi %s chưa có bang hội", olPlayer.playerData.name));
                 }
             }
         } else {
@@ -3030,7 +3030,7 @@ public class GameController {
                         break;
                     }
                 }
-                player.okDialog(String.format("Bang hội của bạn cần đạt cấp %s để mở khóa ô tiếp theo\n Lưu ý: Khi đạt được yêu cầu hệ thống sẽ tự mở ô", clanLvlNeed));
+                player.okDialog(Utilities.Format("Bang hội của bạn cần đạt cấp %s để mở khóa ô tiếp theo\n Lưu ý: Khi đạt được yêu cầu hệ thống sẽ tự mở ô", clanLvlNeed));
             }
         } else {
             notClan();
@@ -3136,13 +3136,13 @@ public class GameController {
         for (Item item : player.playerData.getInventoryOrCreate(GopetManager.EQUIP_PET_INVENTORY)) {
             if (item.petEuipId == 0) {
                 player.playerData.removeItem(GopetManager.EQUIP_PET_INVENTORY, item);
-                HistoryManager.addHistory(new History(player).setLog(String.format("Xóa vật phẩm bug (%s)", item.getName())).setObj(item));
+                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Xóa vật phẩm bug (%s)", item.getName())).setObj(item));
                 num++;
             }
         }
 
         if (num > 0) {
-            player.redDialog(String.format("Nhân vật của bạn vừa bị xóa %s vật phẩm do BUG mà có!", num));
+            player.redDialog(Utilities.Format("Nhân vật của bạn vừa bị xóa %s vật phẩm do BUG mà có!", num));
         }
     }
 }

@@ -1,58 +1,62 @@
- 
-public class MysqlSetting : Settings {
 
-    private String host;
-    private int port;
-    private String database;
-    private String username;
-    private String password;
+public class MysqlSetting : Settings
+{
 
-    private String host_web;
-    private int port_web;
-    private String database_web;
-    private String username_web;
-    private String password_web;
+    public String host {  get; protected set; }
+    public int port { get; protected set; }
+    public String database { get; protected set; }
+    public String username { get; protected set; }
+    public String password { get; protected set; }
 
-    public MysqlSetting() {
-        try {
-            load(new SettingsFile("database.properties"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public String host_web { get; protected set; }
+    public int port_web { get; protected set; }
+    public String database_web { get; protected set; }
+    public String username_web { get; protected set; }
+    public String password_web { get; protected set; }
+
+    public MysqlSetting()
+    {
+        load(new SettingsFile("database.json"));
     }
 
-    public void load(SettingsFile settingsFile) {
-        host = settingsFile.getString("host", "localhost");
-        port = settingsFile.getint("port", 3306);
-        database = settingsFile.getString("database", "test");
-        username = settingsFile.getString("username", "root");
-        password = settingsFile.getString("password", "");
-        host_web = settingsFile.getString("host_web", "localhost");
-        port_web = settingsFile.getint("port_web", 3306);
-        database_web = settingsFile.getString("database_web", "test");
-        username_web = settingsFile.getString("username_web", "root");
-        password_web = settingsFile.getString("password_web", "");
+    public void load(SettingsFile settingsFile)
+    {
+        host = settingsFile.Data.host;
+        port = settingsFile.Data.port;
+        database = settingsFile.Data.database;
+        username = settingsFile.Data.username;
+        password = settingsFile.Data.password;
+        host_web = settingsFile.Data.host_web;
+        port_web = settingsFile.Data.port_web;
+        database_web = settingsFile.Data.database_web;
+        username_web = settingsFile.Data.username_web;
+        password_web = settingsFile.Data.password_web;
     }
 
-    public String getUrl() {
+    public String getUrl()
+    {
         return "jdbc:mysql://" + host + ":" + port + "/" + database;
     }
-    
-    public String getUrlWeb() {
+
+    public String getUrlWeb()
+    {
         return "jdbc:mysql://" + host_web + ":" + port_web + "/" + database_web;
     }
 
-    public static MysqlSetting getInstance() {
+    public static MysqlSetting getInstance()
+    {
         return SINGLETON.INSTANCE;
     }
 
-    public static class SINGLETON {
+    public static class SINGLETON
+    {
 
         public static readonly MysqlSetting INSTANCE = new MysqlSetting();
     }
 
-    
-    public String toString() {
+
+    public String toString()
+    {
         return "MysqlSetting{" + "host=" + host + ", port=" + port + ", database=" + database + ", username=" + username + ", password=" + password + ", host_web=" + host_web + ", port_web=" + port_web + ", database_web=" + database_web + ", username_web=" + username_web + ", password_web=" + password_web + '}';
     }
 }

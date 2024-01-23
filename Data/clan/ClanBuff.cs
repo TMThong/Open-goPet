@@ -33,15 +33,18 @@ public class ClanBuff : DataVersion
         return getDesc(value, buffId);
     }
 
-    public const String getDesc(int value, int buffId) {
-        return String.format(GopetManager.CLANBUFF_HASH_MAP.get(buffId).getDesc(), value / 100f).replace('/', '%');
-}
+    public static String getDesc(int value, int buffId)
+    {
+        return Utilities.Format(GopetManager.CLANBUFF_HASH_MAP.get(buffId).getDesc(), value / 100f).replace('/', '%');
+    }
 
-public  String getName() {
-    return getName(value, buffId);
-}
+    public String getName()
+    {
+        return getName(value, buffId);
+    }
 
-public const String getName(int value, int buffId) {
-    return String.format(GopetManager.CLANBUFF_HASH_MAP.get(buffId).getName(), value / 100f).replace('/', '%');
-}
+    public static String getName(int value, int buffId)
+    {
+        return Utilities.Format(GopetManager.CLANBUFF_HASH_MAP.get(buffId).getName(), value / 100f).replace('/', '%');
+    }
 }

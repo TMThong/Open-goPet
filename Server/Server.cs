@@ -23,7 +23,7 @@ public class Server  {
                     Socket socket = serverSc.AcceptSocket();
                     Session session = new Session(socket);
                     session.setHandler(new Player(session));
-                    session.start();
+                    session.run();
                     sessions.add(session);
                     Session.socketCount++;
                 } catch (Exception e) {
@@ -36,6 +36,6 @@ public class Server  {
 
     public void stopServer()   {
         isRunning = false;
-        serverSc.close();
+        serverSc.Stop();
     }
 }

@@ -10,13 +10,13 @@ public class TopGem : Top {
         base.desc = "";
     }
 
-    @Override
-    public void update() {
+    
+    public override void update() {
         try {
 
-            lastDatas.clear();
-            lastDatas.addAll(datas);
-            datas.clear();
+            lastDatas.Clear();
+            lastDatas.AddRange(datas);
+            datas.Clear();
             try (ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `player` WHERE coin > 0 && isAdmin = 0 ORDER BY `player`.`coin` DESC LIMIT 10")) {
                 int index = 1;
                 while (resultSet.next()) {
@@ -25,7 +25,7 @@ public class TopGem : Top {
                     topData.name = resultSet.getString("name");
                     topData.imgPath = resultSet.getString("avatarPath");
                     topData.title = topData.name;
-                    topData.desc = String.format("Hạng %s : đang có %s (ngoc)", index, Utilities.formatNumber(resultSet.getBigDecimal("coin").longValue()));
+                    topData.desc = Utilities.Format("Hạng %s : đang có %s (ngoc)", index, Utilities.formatNumber(resultSet.getBigDecimal("coin").longValue()));
                     datas.add(topData);
                     index++;
                 }

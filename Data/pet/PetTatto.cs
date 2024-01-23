@@ -67,6 +67,6 @@ public class PetTatto : DataVersion {
             infoStrings.add(getMp() + " (mp) ");
         }
 
-        return getTemp().getName() + "  " + String.join(" ", infoStrings);
+        return getTemp().getName() + "  " + String.Join(" ", infoStrings);
     }
 }

@@ -1,17 +1,19 @@
 
+using Gopet.IO;
+
 public class Message
 {
 
     public int id;
-    private sbyteArrayOutputStream baos;
+
     private DataOutputStream dos;
     private DataInputStream dis;
     public bool isEncrypted;
     public static bool isiWin = false;
 
-    public Message(int command)
+    public Message(int command) : this(command, true)
     {
-        this(command, true);
+
     }
 
     public Message(int command, bool isEncrypted)
@@ -25,20 +27,20 @@ public class Message
     {
         this.isEncrypted = false;
         sbyte[] msgData = new sbyte[data.Length - 1];
-        System.arraycopy(data, 1, msgData, 0, msgData.Length);
+        Buffer.BlockCopy(data, 1, msgData, 0, msgData.Length);
         this.id = data[0];
-        this.dis = new DataInputStream(new sbyteArrayInputStream(msgData));
+        this.dis = new DataInputStream(msgData);
     }
 
     public sbyte[] getBuffer()
     {
-        if (this.baos == null)
+        if (this.dos == null)
         {
             return new sbyte[] { (sbyte)this.id };
         }
         else
         {
-            sbyte[] data = this.baos.tosbyteArray();
+            sbyte[] data = this.dos.getData();
             sbyte[] buffer;
             if (isiWin)
             {
@@ -46,14 +48,14 @@ public class Message
                 buffer[0] = 40;
                 buffer[1] = (sbyte)(this.id >>> 8 & 255);
                 buffer[2] = (sbyte)(this.id >>> 0 & 255);
-                System.arraycopy(data, 0, buffer, 3, data.Length);
+                Buffer.BlockCopy(data, 0, buffer, 3, data.Length);
                 return buffer;
             }
             else
             {
                 buffer = new sbyte[data.Length + 1];
                 buffer[0] = (sbyte)this.id;
-                System.arraycopy(data, 0, buffer, 1, data.Length);
+                Buffer.BlockCopy(data, 0, buffer, 1, data.Length);
                 return buffer;
             }
         }
@@ -66,10 +68,9 @@ public class Message
 
     public DataOutputStream writer()
     {
-        if (this.baos == null)
+        if (this.dos == null)
         {
-            this.baos = new sbyteArrayOutputStream();
-            this.dos = new DataOutputStream(this.baos);
+            this.dos = new DataOutputStream();
         }
 
         return this.dos;
@@ -78,7 +79,7 @@ public class Message
     public void putsbyte(int value)
     {
 
-        this.writer().writesbyte(value);
+        this.writer().writeInt(value);
 
     }
 
@@ -106,7 +107,7 @@ public class Message
     public void putbool(bool value)
     {
 
-        this.writer().writebool(value);
+        this.writer().writeBool(value);
 
     }
 
@@ -155,7 +156,7 @@ public class Message
 
     public int readUnsignedsbyte()
     {
-        return reader().readUnsignedsbyte();
+        return reader().readUnsignedByte();
     }
 
     public int readUnsignedShort()
@@ -173,15 +174,9 @@ public class Message
         return reader().readLong();
     }
 
-    public float readFloat()
-    {
-        return reader().readFloat();
-    }
 
-    public double readDouble()
-    {
-        return reader().readDouble();
-    }
+
+
 
     public int readInt()
     {
@@ -191,6 +186,5 @@ public class Message
     public void close()
     {
         cleanup();
-        baos = null;
     }
 }

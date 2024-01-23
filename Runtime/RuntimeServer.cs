@@ -1,19 +1,20 @@
-package runtime;
 
-import java.util.ArrayList;
+using Gopet.Data.Collections;
 
-public class RuntimeServer extends Thread {
+public class RuntimeServer   {
 
-    public ArrayList<IRuntime> runtimes = new ArrayList();
-    public static long MINUTE = 1000 * 60;
+    public ArrayList<IRuntime> runtimes = new  ();
+    public static int MINUTE = 1000 * 60;
     public static bool isRunning = true;
     public static RuntimeServer instance = new RuntimeServer();
-
+    public Thread MyThread;
     public RuntimeServer() {
-        setName("Runtime Server Thread");
+        MyThread = new Thread(run);
+        MyThread.IsBackground = true;
+        MyThread.Name = "Runtime Server Thread";
     }
 
-    @Override
+    
     public void run() {
         try {
             while (isRunning) {
@@ -25,13 +26,13 @@ public class RuntimeServer extends Thread {
     }
 
     public void update()   {
-        for (IRuntime r : runtimes) {
+        foreach (IRuntime r in runtimes) {
             try {
                 r.update();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        Thread.sleep(MINUTE);
+        Thread.Sleep(MINUTE);
     }
 }

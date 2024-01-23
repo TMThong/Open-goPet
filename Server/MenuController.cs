@@ -1,82 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package server;
-
-import data.battle.PetBattle;
-import data.clan.Clan;
-import data.clan.ClanBuff;
-import data.clan.ClanBuffTemplate;
-import data.clan.ClanHouseTemplate;
-import data.clan.ClanMember;
-import data.clan.ClanPotentialSkill;
-import data.clan.ClanRequestJoin;
-import data.clan.ClanTemplate;
-import data.dialog.AdminItemInfo;
-import data.dialog.ExchangeItemInfo;
-import data.dialog.InputReader;
-import data.dialog.MenuItemInfo;
-import data.dialog.Option;
-import data.item.Item;
-import data.item.ItemTemplate;
-import data.item.SellItem;
-import data.map.GopetMap;
-import data.map.Kiosk;
-import data.map.NpcTemplate;
-import data.pet.Pet;
-import data.pet.PetMenuItemInfo;
-import data.pet.PetSkill;
-import data.pet.PetUpgradeInfo;
-import data.shop.ShopArena;
-import data.shop.ShopTemplate;
-import data.shop.ShopTemplateItem;
-import data.task.TaskData;
-import data.task.TaskTemplate;
-import data.top.Top;
-import data.top.TopData;
-import data.top.TopGem;
-import data.top.TopGold;
-import data.top.TopLVLClan;
-import data.top.TopPet;
-import data.top.TopSpendGold;
-import data.user.BuffExp;
-import data.user.GiftCodeData;
-import data.user.GopetCaptcha;
-import data.user.History;
-import data.user.PlayerData;
-import data.user.Popup;
-import data.user.UserData;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.Predicate;
-import lombok.NonNull;
-import manager.ClanManager;
-import manager.GopetManager;
-import manager.HistoryManager;
-import manager.JsonManager;
-import manager.MYSQLManager;
-import manager.MapManager;
-import manager.PlayerManager;
-import place.ChallengePlace;
-import place.GopetPlace;
-import place.MarketPlace;
-import place.Place;
-import server.io.Message;
-import util.Utilities;
-
-/**
- *
- * @author MINH THONG
- */
+ 
 public class MenuController {
 
     /**
@@ -382,7 +304,7 @@ public class MenuController {
                 PetMenuItemInfo petMenuItemInfo = new PetMenuItemInfo(GopetManager.PETTEMPLATE_HASH_MAP.get(petFreeId));
                 petMenuItemInfo.setCloseScreenAfterClick(true);
                 petMenuItemInfo.setShowDialog(true);
-                petMenuItemInfo.setDialogText(String.format("Bạn có muốn chọn nó không?"));
+                petMenuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn nó không?"));
                 petMenuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                 PetFreeList.add(petMenuItemInfo);
             }
@@ -407,7 +329,7 @@ public class MenuController {
                     MenuItemInfo menuItemInfo = new PetMenuItemInfo(pet);
                     menuItemInfo.setCloseScreenAfterClick(true);
                     menuItemInfo.setShowDialog(true);
-                    menuItemInfo.setDialogText(String.format("Bạn có muốn chọn %s không?", pet.getNameWithStar()));
+                    menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", pet.getNameWithStar()));
                     menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                     petItemInfos.add(menuItemInfo);
                     menuItemInfo.setItemId(i);
@@ -423,9 +345,9 @@ public class MenuController {
             case MENU_SHOW_ALL_PLAYER_HAVE_ITEM_LVL_10 -> {
                 if (player.checkIsAdmin()) {
 
-                    Connection gameConnection = MYSQLManager.create();
+                    MySqlConnection gameMySqlConnection = MYSQLManager.create();
                     try {
-                        ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `player`", gameConnection);
+                        ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `player`", gameMySqlConnection);
                         ArrayList<MenuItemInfo> menuItemInfos = new();
                         while (resultSet.next()) {
                             PlayerData playerData = PlayerData.read(resultSet);
@@ -434,7 +356,7 @@ public class MenuController {
                                 playerData = onlinePlayer.playerData;
                             }
                             int numItemLvl10 = (int) playerData.getInventoryOrCreate(GopetManager.EQUIP_PET_INVENTORY).stream().filter(new Predicate<Item>() {
-                                @Override
+                                 
                                 public bool test(Item t) {
                                     return t.lvl >= 10;
                                 }
@@ -444,12 +366,12 @@ public class MenuController {
                                 continue;
                             }
 
-                            MenuItemInfo m = new MenuItemInfo(String.format("Người chơi %s có %s món cấp 10", playerData.name, numItemLvl10), String.format("Người chơi %s hiện đang sở hữu %s món đạt cấp 10", playerData.name, numItemLvl10), playerData.avatarPath, false);
+                            MenuItemInfo m = new MenuItemInfo(Utilities.Format("Người chơi %s có %s món cấp 10", playerData.name, numItemLvl10), Utilities.Format("Người chơi %s hiện đang sở hữu %s món đạt cấp 10", playerData.name, numItemLvl10), playerData.avatarPath, false);
                             m.setItemId(numItemLvl10);
                             menuItemInfos.add(m);
                         }
                         menuItemInfos.sort(new Comparator<MenuItemInfo>() {
-                            @Override
+                             
                             public int compare(MenuItemInfo o1, MenuItemInfo o2) {
                                 return o2.getItemId() - o1.getItemId();
                             }
@@ -458,7 +380,7 @@ public class MenuController {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }  ly {
-                        gameConnection.close();
+                        gameMySqlConnection.close();
                     }
                 }
             }
@@ -520,7 +442,7 @@ public class MenuController {
                 if (player.controller.objectPerformed.containsKey(OBJKEY_NPC_ID_FOR_MAIN_TASK)) {
                     int npcId = (int) player.controller.objectPerformed.get(OBJKEY_NPC_ID_FOR_MAIN_TASK);
                     ArrayList<TaskTemplate> taskTemplates = player.controller.getTaskCalculator().getTaskTemplate(npcId);
-                    if (taskTemplates.size() > 0) {
+                    if (taskTemplates.Count > 0) {
                         ArrayList<MenuItemInfo> taskMenuInfos = new();
                         for (TaskTemplate taskTemplate : taskTemplates) {
                             MenuItemInfo menuItemInfo = new MenuItemInfo(taskTemplate.getName(), taskTemplate.getDescription(), "dialog/1.png", true);
@@ -544,9 +466,9 @@ public class MenuController {
                     ArrayList<MenuItemInfo> skillMenuItem = new();
                     for (PetSkill petSkill : getPetSkills(player)) {
                         MenuItemInfo menuItemInfo = new MenuItemInfo(petSkill.name, petSkill.description, petSkill.skillID + "", true);
-                        menuItemInfo.setImgPath(String.format("skills/skill_%s.png", petSkill.skillID));
+                        menuItemInfo.setImgPath(Utilities.Format("skills/skill_%s.png", petSkill.skillID));
                         menuItemInfo.setShowDialog(true);
-                        menuItemInfo.setDialogText(String.format("Bạn có muốn chọn %s không?", petSkill.name));
+                        menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", petSkill.name));
                         menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                         skillMenuItem.add(menuItemInfo);
                     }
@@ -556,7 +478,7 @@ public class MenuController {
             }
 
             case MENU_EXCHANGE_GOLD -> {
-                player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, String.format("Đổi (vang) (Bạn hiện có: %svnđ)", Utilities.formatNumber(player.user.getCoin())), EXCHANGE_ITEM_INFOS);
+                player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, Utilities.Format("Đổi (vang) (Bạn hiện có: %svnđ)", Utilities.formatNumber(player.user.getCoin())), EXCHANGE_ITEM_INFOS);
             }
 
             case MENU_SELECT_TYPE_CHANGE_GIFT -> {
@@ -590,10 +512,10 @@ public class MenuController {
                     Clan clan = clanMember.getClan();
                     ArrayList<MenuItemInfo> approvalElements = new();
                     for (ClanRequestJoin clanRequestJoin : clan.getRequestJoin()) {
-                        MenuItemInfo menuItemInfo = new MenuItemInfo(clanRequestJoin.name, String.format("Xin vào bang lúc: %s", Utilities.getDate(clanRequestJoin.timeRequest).toString()), "", true);
+                        MenuItemInfo menuItemInfo = new MenuItemInfo(clanRequestJoin.name, Utilities.Format("Xin vào bang lúc: %s", Utilities.getDate(clanRequestJoin.timeRequest).toString()), "", true);
                         menuItemInfo.setImgPath(clanRequestJoin.getAvatar());
                         menuItemInfo.setShowDialog(true);
-                        menuItemInfo.setDialogText(String.format("Bạn có muốn chọn %s không?", clanRequestJoin.name));
+                        menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", clanRequestJoin.name));
                         menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                         menuItemInfo.setHasId(true);
                         menuItemInfo.setItemId(clanRequestJoin.user_id);
@@ -611,10 +533,10 @@ public class MenuController {
                     Clan clan = clanMember.getClan();
                     ArrayList<MenuItemInfo> approvalElements = new();
                     for (ClanMember clanMemberSelect : clan.getMembers()) {
-                        MenuItemInfo menuItemInfo = new MenuItemInfo(clanMemberSelect.name + "(Chức vụ: " + clanMemberSelect.getDutyName() + ")", String.format("Đóng góp quỹ :%s và %s điểm cống hiến", Utilities.formatNumber(clanMemberSelect.fundDonate), Utilities.formatNumber(clanMember.growthPointDonate)), "", true);
+                        MenuItemInfo menuItemInfo = new MenuItemInfo(clanMemberSelect.name + "(Chức vụ: " + clanMemberSelect.getDutyName() + ")", Utilities.Format("Đóng góp quỹ :%s và %s điểm cống hiến", Utilities.formatNumber(clanMemberSelect.fundDonate), Utilities.formatNumber(clanMember.growthPointDonate)), "", true);
                         menuItemInfo.setImgPath(clanMemberSelect.getAvatar());
                         menuItemInfo.setShowDialog(true);
-                        menuItemInfo.setDialogText(String.format("Bạn có muốn chọn %s không?", clanMemberSelect.name));
+                        menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", clanMemberSelect.name));
                         menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                         menuItemInfo.setHasId(true);
                         menuItemInfo.setItemId(clanMemberSelect.user_id);
@@ -633,7 +555,7 @@ public class MenuController {
                         MenuItemInfo menuItemInfo = new MenuItemInfo(gopetMap.mapTemplate.getMapName() + "  (" + gopetMap.mapID + ")", "", "", true);
                         menuItemInfo.setImgPath("npcs/mgo.png");
                         menuItemInfo.setShowDialog(true);
-                        menuItemInfo.setDialogText(String.format("Bạn có muốn chọn %s không?", gopetMap.mapTemplate.getMapName()));
+                        menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", gopetMap.mapTemplate.getMapName()));
                         menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                         mapMenuItem.add(menuItemInfo);
                     }
@@ -643,9 +565,9 @@ public class MenuController {
             case MENU_DELETE_TIEM_NANG -> {
                 ArrayList<MenuItemInfo> menuItemInfos = new();
                 for (String option : gym_options) {
-                    MenuItemInfo menuItemInfo = new MenuItemInfo(String.format("Tẩy %s", option), String.format("Xóa 1 %s với giá %s (vang) và sẽ nhận lại 1 tiềm năng", option, PriceDeleteTiemNang), "", true);
+                    MenuItemInfo menuItemInfo = new MenuItemInfo(Utilities.Format("Tẩy %s", option), Utilities.Format("Xóa 1 %s với giá %s (vang) và sẽ nhận lại 1 tiềm năng", option, PriceDeleteTiemNang), "", true);
                     menuItemInfo.setShowDialog(true);
-                    menuItemInfo.setDialogText(String.format("Bạn có muốn chọn %s không?", String.format("Tẩy %s", option)));
+                    menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", Utilities.Format("Tẩy %s", option)));
                     menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                     menuItemInfos.add(menuItemInfo);
                 }
@@ -665,7 +587,7 @@ public class MenuController {
                 for (Item item : listItems) {
                     MenuItemInfo menuItemInfo = new MenuItemInfo(item.getTemp().isStackable() ? item.getName() : item.getEquipName(), item.getDescription(player), item.getTemp().getIconPath(), true);
                     menuItemInfo.setShowDialog(true);
-                    menuItemInfo.setDialogText(String.format("Bạn có muốn chọn %s không?", item.getName()));
+                    menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", item.getName()));
                     menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                     menuItemInfo.setCloseScreenAfterClick(true);
                     menuItemMaterial1Infos.add(menuItemInfo);
@@ -677,7 +599,7 @@ public class MenuController {
             case MENU_SELECT_ITEM_ADMIN -> {
                 ArrayList<MenuItemInfo> menuItemInfos = new(Arrays.asList(ADMIN_INFOS));
                 player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "MENU ADMIN", menuItemInfos);
-                menuItemInfos.clear();
+                menuItemInfos.Clear();
             }
             case MENU_KIOSK_AMOUR_SELECT, MENU_KIOSK_HAT_SELECT, MENU_KIOSK_WEAPON_SELECT, MENU_KIOSK_GEM_SELECT -> {
                 CopyOnWriteArrayList<Item> listItems = Item.search(typeSelectItemMaterial(menuId, player), player.playerData.getInventoryOrCreate(menuId != MENU_KIOSK_GEM_SELECT ? GopetManager.EQUIP_PET_INVENTORY : GopetManager.GEM_INVENTORY));
@@ -685,7 +607,7 @@ public class MenuController {
                 for (Item item : listItems) {
                     MenuItemInfo menuItemInfo = new MenuItemInfo(item.getEquipName(), item.getDescription(player), item.getTemp().getIconPath(), true);
                     menuItemInfo.setShowDialog(true);
-                    menuItemInfo.setDialogText(String.format("Bạn có muốn chọn %s không?", item.getName()));
+                    menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", item.getName()));
                     menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                     menuItemInfo.setCloseScreenAfterClick(true);
                     menuItemEquipInfos.add(menuItemInfo);
@@ -699,7 +621,7 @@ public class MenuController {
                 for (Item item : listItems) {
                     MenuItemInfo menuItemInfo = new MenuItemInfo(item.getName(), item.getDescription(player), item.getTemp().getIconPath(), true);
                     menuItemInfo.setShowDialog(true);
-                    menuItemInfo.setDialogText(String.format("Bạn có muốn chọn %s không?", item.getName()));
+                    menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", item.getName()));
                     menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                     menuItemInfo.setCloseScreenAfterClick(true);
                     menuItemEquipInfos.add(menuItemInfo);
@@ -720,13 +642,13 @@ public class MenuController {
                 ClanMember clanMember = player.controller.getClan();
                 if (clanMember != null) {
                     Clan clan = clanMember.getClan();
-                    if (clan.getClanPotentialSkills().size() > 0) {
+                    if (clan.getClanPotentialSkills().Count > 0) {
                         ArrayList<MenuItemInfo> skillMenuItemInfos = new();
                         for (ClanPotentialSkill clanPotentialSkill : clan.getClanPotentialSkills()) {
                             ClanBuffTemplate clanBuffTemplate = GopetManager.CLANBUFF_HASH_MAP.get(clanPotentialSkill.getBuffId());
                             MenuItemInfo menuItemInfo = new MenuItemInfo(ClanBuff.getName(clanBuffTemplate.getValuePerLevel() * clanPotentialSkill.getPoint(), clanPotentialSkill.getBuffId()), ClanBuff.getDesc(clanBuffTemplate.getValuePerLevel() * clanPotentialSkill.getPoint(), clanPotentialSkill.getBuffId()), "npcs/gopet.png", true);
                             menuItemInfo.setShowDialog(true);
-                            menuItemInfo.setDialogText(String.format("Bạn có muốn chọn %s không?", menuItemInfo.getTitleMenu()));
+                            menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", menuItemInfo.getTitleMenu()));
                             menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                             menuItemInfo.setCloseScreenAfterClick(true);
                             skillMenuItemInfos.add(menuItemInfo);
@@ -747,7 +669,7 @@ public class MenuController {
                     for (ClanBuffTemplate clanBuffTemplate : GopetManager.CLAN_BUFF_TEMPLATES) {
                         MenuItemInfo menuItemInfo = new MenuItemInfo(ClanBuff.getName(clanBuffTemplate.getValuePerLevel() * 1, clanBuffTemplate.getBuffId()) + " Yêu cấu bang cấp: " + clanBuffTemplate.getLvlClan(), ClanBuff.getDesc(clanBuffTemplate.getValuePerLevel() * 1, clanBuffTemplate.getBuffId()), "npcs/gopet.png", true);
                         menuItemInfo.setShowDialog(true);
-                        menuItemInfo.setDialogText(String.format("Bạn có muốn chọn %s không?", menuItemInfo.getTitleMenu()));
+                        menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", menuItemInfo.getTitleMenu()));
                         menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                         menuItemInfo.setCloseScreenAfterClick(true);
                         skillMenuItemInfos.add(menuItemInfo);
@@ -801,9 +723,9 @@ public class MenuController {
                         for (SellItem kioskItem : kiosk.kioskItems) {
                             MenuItemInfo menuItemInfo = new MenuItemInfo();
                             menuItemInfo.setCanSelect(true);
-                            menuItemInfo.setTitleMenu((menuId != MENU_KIOSK_OHTER ? kioskItem.ItemSell.getEquipName() : kioskItem.ItemSell.getName()) + String.format(" (Mã định danh:%s)", kioskItem.itemId));
+                            menuItemInfo.setTitleMenu((menuId != MENU_KIOSK_OHTER ? kioskItem.ItemSell.getEquipName() : kioskItem.ItemSell.getName()) + Utilities.Format(" (Mã định danh:%s)", kioskItem.itemId));
                             menuItemInfo.setImgPath(kioskItem.getFrameImgPath());
-                            menuItemInfo.setDesc(String.format("Giá %s (ngoc) ", Utilities.formatNumber(kioskItem.price)) + kioskItem.ItemSell.getTemp().getDescription());
+                            menuItemInfo.setDesc(Utilities.Format("Giá %s (ngoc) ", Utilities.formatNumber(kioskItem.price)) + kioskItem.ItemSell.getTemp().getDescription());
                             menuItemInfo.setCloseScreenAfterClick(true);
                             menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                             menuItemInfo.setHasId(true);
@@ -820,9 +742,9 @@ public class MenuController {
                         for (SellItem kioskItem : kiosk.kioskItems) {
                             MenuItemInfo menuItemInfo = new MenuItemInfo();
                             menuItemInfo.setCanSelect(true);
-                            menuItemInfo.setTitleMenu(kioskItem.pet.getNameWithStar() + String.format(" (Mã định danh:%s)", kioskItem.itemId));
+                            menuItemInfo.setTitleMenu(kioskItem.pet.getNameWithStar() + Utilities.Format(" (Mã định danh:%s)", kioskItem.itemId));
                             menuItemInfo.setImgPath(kioskItem.pet.getPetTemplate().getIcon());
-                            menuItemInfo.setDesc(String.format("Giá %s (ngoc) ", Utilities.formatNumber(kioskItem.price)) + kioskItem.pet.getDesc());
+                            menuItemInfo.setDesc(Utilities.Format("Giá %s (ngoc) ", Utilities.formatNumber(kioskItem.price)) + kioskItem.pet.getDesc());
                             menuItemInfo.setCloseScreenAfterClick(true);
                             menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                             menuItemInfo.setHasId(true);
@@ -957,22 +879,22 @@ public class MenuController {
                         sendMenu(MENU_EXCHANGE_GOLD, player);
                         break;
                     case 1:
-                        player.controller.showInputDialog(INPUT_DIALOG_EXCHANGE_GOLD_TO_COIN, String.format("Tỉ lệ 1 (vang) lấy %s (ngoc)", GopetManager.PERCENT_EXCHANGE_GOLD_TO_COIN), new String[]{"Số gold :"});
+                        player.controller.showInputDialog(INPUT_DIALOG_EXCHANGE_GOLD_TO_COIN, Utilities.Format("Tỉ lệ 1 (vang) lấy %s (ngoc)", GopetManager.PERCENT_EXCHANGE_GOLD_TO_COIN), new String[]{"Số gold :"});
                         break;
                 }
             }
             break;
 
             case MENU_EXCHANGE_GOLD: {
-                if (index >= 0 && index < EXCHANGE_ITEM_INFOS.size()) {
+                if (index >= 0 && index < EXCHANGE_ITEM_INFOS.Count) {
                     ExchangeItemInfo exchangeItemInfo = (ExchangeItemInfo) EXCHANGE_ITEM_INFOS.get(index);
                     int mycoin = player.user.getCoin();
                     if (mycoin >= exchangeItemInfo.getExchangeData().getAmount()) {
                         player.user.mineCoin(exchangeItemInfo.getExchangeData().getAmount(), mycoin);
                         if (player.user.getCoin() >= 0) {
                             player.addGold(exchangeItemInfo.getExchangeData().getGold());
-                            player.okDialog(String.format("Đổi thành công %s (vang)", Utilities.formatNumber(exchangeItemInfo.getExchangeData().getGold())));
-                            HistoryManager.addHistory(new History(player).setLog(String.format("Đổi %s vàng trong game thành công", Utilities.formatNumber(exchangeItemInfo.getExchangeData().getGold()))));
+                            player.okDialog(Utilities.Format("Đổi thành công %s (vang)", Utilities.formatNumber(exchangeItemInfo.getExchangeData().getGold())));
+                            HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Đổi %s vàng trong game thành công", Utilities.formatNumber(exchangeItemInfo.getExchangeData().getGold()))));
                         } else {
                             UserData.banBySQL(UserData.BAN_INFINITE, "Bug gold", Long.MAX_VALUE, player.user.user_id);
                             player.session.close();
@@ -988,7 +910,7 @@ public class MenuController {
                 if (player.controller.objectPerformed.containsKey(OBJKEY_NPC_ID_FOR_MAIN_TASK)) {
                     int npcId = (int) player.controller.objectPerformed.get(OBJKEY_NPC_ID_FOR_MAIN_TASK);
                     ArrayList<TaskTemplate> taskTemplates = player.controller.getTaskCalculator().getTaskTemplate(npcId);
-                    if (index >= 0 && index < taskTemplates.size()) {
+                    if (index >= 0 && index < taskTemplates.Count) {
                         TaskTemplate taskTemplate = taskTemplates.get(index);
                         player.playerData.tasking.add(taskTemplate.getTaskId());
                         player.playerData.task.add(new TaskData(taskTemplate));
@@ -1013,7 +935,7 @@ public class MenuController {
                     int indexTask = (int) player.controller.objectPerformed.get(OBJKEY_INDEX_TASK_IN_MY_LIST);
                     player.controller.objectPerformed.remove(OBJKEY_INDEX_TASK_IN_MY_LIST);
 
-                    if (indexTask >= 0 && indexTask < player.playerData.task.size()) {
+                    if (indexTask >= 0 && indexTask < player.playerData.task.Count) {
                         TaskData taskData = player.playerData.task.get(indexTask);
                         switch (index) {
                             case 0:
@@ -1034,14 +956,14 @@ public class MenuController {
             break;
 
             case MENU_LIST_PET_FREE:
-                if (index >= 0 && index < PetFreeList.size()) {
+                if (index >= 0 && index < PetFreeList.Count) {
                       PetMenuItemInfo petMenuItemInfo = (PetMenuItemInfo) PetFreeList.get(index);
                     if (!player.playerData.isFirstFree) {
                         player.playerData.isFirstFree = true;
                         Pet p = new Pet(petMenuItemInfo.getPetTemplate().getPetId());
                         player.playerData.addPet(p, player);
-                        player.okDialog(String.format("Nhận pet %s thành công vào túi pet để xem", petMenuItemInfo.getPetTemplate().getName()));
-                        HistoryManager.addHistory(new History(player).setLog(String.format("Nhận pet %s miễn phí tại NPC trân trân", petMenuItemInfo.getPetTemplate().getName())).setObj(p));
+                        player.okDialog(Utilities.Format("Nhận pet %s thành công vào túi pet để xem", petMenuItemInfo.getPetTemplate().getName()));
+                        HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Nhận pet %s miễn phí tại NPC trân trân", petMenuItemInfo.getPetTemplate().getName())).setObj(p));
                     } else {
                         player.redDialog("Trước đó bạn đã nhận rồi");
                     }
@@ -1055,7 +977,7 @@ public class MenuController {
                         return;
                     }
                     if (priceChallenge > 100000) {
-                        player.redDialog(String.format("Giới hạn (ngoc) là %s", Utilities.formatNumber(100000)));
+                        player.redDialog(Utilities.Format("Giới hạn (ngoc) là %s", Utilities.formatNumber(100000)));
                         return;
                     }
                     player.controller.sendChallenge((Player) player.controller.objectPerformed.get(OBJKEY_INVITE_CHALLENGE_PLAYER), priceChallenge);
@@ -1101,7 +1023,7 @@ public class MenuController {
                                     player.addCoin(-GopetManager.PriceLearnSkill);
                                     player.controller.magic(GopetCMD.MAGIC_LEARN_SKILL, true);
                                     player.okDialog("Học kỹ năng thành công");
-                                    HistoryManager.addHistory(new History(player).setLog(String.format("Học kỹ năng thành công cho pet %s", pet.getNameWithoutStar())).setObj(pet));
+                                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Học kỹ năng thành công cho pet %s", pet.getNameWithoutStar())).setObj(pet));
                                 } else {
                                     player.redDialog("Không có kỹ năng này");
                                 }
@@ -1144,7 +1066,7 @@ public class MenuController {
                     sendMenu(MENU_UNEQUIP_PET, player);
                     return;
                 }
-                if (index >= 0 && index < player.playerData.pets.size()) {
+                if (index >= 0 && index < player.playerData.pets.Count) {
                     Pet pet = player.playerData.pets.get(index);
                     player.playerData.pets.remove(pet);
                     Pet oldPet = player.playerData.petSelected;
@@ -1161,7 +1083,7 @@ public class MenuController {
                     return;
                 }
                 CopyOnWriteArrayList<Item> listSkinItems = player.playerData.getInventoryOrCreate(GopetManager.SKIN_INVENTORY);
-                if (index >= 0 && index < listSkinItems.size()) {
+                if (index >= 0 && index < listSkinItems.Count) {
                     Item skinItem = listSkinItems.get(index);
                     Item oldSkinItem = player.playerData.skinItem;
                     if (oldSkinItem != null) {
@@ -1182,7 +1104,7 @@ public class MenuController {
                     return;
                 }
                 CopyOnWriteArrayList<Item> listWingItems = player.playerData.getInventoryOrCreate(GopetManager.WING_INVENTORY);
-                if (index >= 0 && index < listWingItems.size()) {
+                if (index >= 0 && index < listWingItems.Count) {
                     Item wingItem = listWingItems.get(index);
                     Item oldWingItem = player.playerData.wingItem;
                     if (oldWingItem != null) {
@@ -1203,7 +1125,7 @@ public class MenuController {
                 if (clanMember != null) {
                     Clan clan = clanMember.getClan();
                     bool canEdit = clanMember.duty == Clan.TYPE_LEADER || clanMember.duty == Clan.TYPE_DEPUTY_LEADER;
-                    if (index >= 0 && index < clan.getClanPotentialSkills().size()) {
+                    if (index >= 0 && index < clan.getClanPotentialSkills().Count) {
                         ClanPotentialSkill clanPotentialSkill = clan.getClanPotentialSkills().get(index);
                         ClanBuffTemplate clanBuffTemplate = GopetManager.CLANBUFF_HASH_MAP.get(clanPotentialSkill.getBuffId());
                         if (canEdit) {
@@ -1245,7 +1167,7 @@ public class MenuController {
                 if (clanMember != null) {
                     Clan clan = clanMember.getClan();
                     bool canEdit = clanMember.duty == Clan.TYPE_LEADER || clanMember.duty == Clan.TYPE_DEPUTY_LEADER;
-                    if (index >= 0 && index < GopetManager.CLAN_BUFF_TEMPLATES.size()) {
+                    if (index >= 0 && index < GopetManager.CLAN_BUFF_TEMPLATES.Count) {
                         ClanBuffTemplate clanBuffTemplate = GopetManager.CLAN_BUFF_TEMPLATES.get(index);
                         if (clan.getLvl() >= clanBuffTemplate.getLvlClan()) {
                             if (canEdit) {
@@ -1279,7 +1201,7 @@ public class MenuController {
             case SHOP_FOOD:
             case SHOP_ARENA:
                 ShopTemplate shopTemplate = getShop((sbyte) menuId, player);
-                if ((index >= 0 && index < shopTemplate.getShopTemplateItems().size() && menuId != SHOP_CLAN) || menuId == SHOP_CLAN) {
+                if ((index >= 0 && index < shopTemplate.getShopTemplateItems().Count && menuId != SHOP_CLAN) || menuId == SHOP_CLAN) {
                     ShopTemplateItem shopTemplateItem = null;
                     if (menuId != SHOP_CLAN) {
                         shopTemplateItem = shopTemplate.getShopTemplateItems().get(index);
@@ -1310,18 +1232,18 @@ public class MenuController {
                                     Item item = new Item(shopTemplateItem.getItemTempalteId());
                                     item.count = shopTemplateItem.getCount();
                                     if (item.getTemp().expire > 0) {
-                                        item.expire = System.currentTimeMillis() + item.getTemp().getExpire();
+                                        item.expire = Utilities.CurrentTimeMillis + item.getTemp().getExpire();
                                     }
                                     if (shopTemplateItem.getInventoryType() == GopetManager.NORMAL_INVENTORY) {
                                         player.addItemToNormalInventory(item);
                                     } else {
                                         player.playerData.addItem(shopTemplateItem.getInventoryType(), item);
                                     }
-                                    player.okDialog(String.format("Bạn đã mua thành công %s", item.getTemp().getName()));
+                                    player.okDialog(Utilities.Format("Bạn đã mua thành công %s", item.getTemp().getName()));
                                 } else {
                                     Pet p = new Pet(shopTemplateItem.getPetId());
                                     player.playerData.addPet(p, player);
-                                    player.okDialog(String.format("Bạn đã mua thành công %s", p.getPetTemplate().getName()));
+                                    player.okDialog(Utilities.Format("Bạn đã mua thành công %s", p.getPetTemplate().getName()));
                                 }
                                 if (shopTemplateItem.isCloseScreenAfterClick()) {
                                     sendMenu(menuId, player);
@@ -1355,13 +1277,13 @@ public class MenuController {
                 }
                 break;
             case MENU_SELECT_PET_UPGRADE_ACTIVE: {
-                if (index >= 0 && index < player.playerData.pets.size()) {
+                if (index >= 0 && index < player.playerData.pets.Count) {
                     Pet pet = player.playerData.pets.get(index);
                     player.controller.addPetUpgrade(pet, GopetCMD.PET_UPGRADE_ACTIVE, pet.petId);
                 }
             }
             case MENU_SELECT_PET_UPGRADE_PASSIVE: {
-                if (index >= 0 && index < player.playerData.pets.size()) {
+                if (index >= 0 && index < player.playerData.pets.Count) {
                     Pet pet = player.playerData.pets.get(index);
                     player.controller.addPetUpgrade(pet, GopetCMD.PET_UPGRADE_PASSIVE, pet.petId);
                 }
@@ -1382,7 +1304,7 @@ public class MenuController {
             case MENU_SELECT_ITEM_SUPPORT_PET:
             case MENU_MERGE_PART_ITEM:
                 CopyOnWriteArrayList<Item> listItems = Item.search(typeSelectItemMaterial(menuId, player), player.playerData.getInventoryOrCreate(getTypeInventorySelect(menuId)));
-                if (index >= 0 && listItems.size() > index) {
+                if (index >= 0 && listItems.Count > index) {
                     Item itemSelect = listItems.get(index);
                     switch (menuId) {
                         case MENU_SELECT_ENCHANT_MATERIAL1 ->
@@ -1403,9 +1325,9 @@ public class MenuController {
                                 int petTemplateId = itemSelect.getTemp().getOptionValue()[0];
                                 Pet pet = new Pet(petTemplateId);
                                 player.playerData.addPet(pet, player);
-                                player.okDialog(String.format("Chức mừng bạn ghép thành công %s", pet.getNameWithStar()));
+                                player.okDialog(Utilities.Format("Chức mừng bạn ghép thành công %s", pet.getNameWithStar()));
                             } else {
-                                player.redDialog(String.format("Bạn không đủ", GopetManager.PART_NEED_MERGE_PET));
+                                player.redDialog(Utilities.Format("Bạn không đủ", GopetManager.PART_NEED_MERGE_PET));
                             }
                         }
                         case MENU_SELECT_ITEM_UP_SKILL -> {
@@ -1416,7 +1338,7 @@ public class MenuController {
                             if (itemSelect.count > 0) {
                                 if (pet.skill[skillIndex][1] < 8) {
                                     player.controller.objectPerformed.put(OBJKEY_ITEM_UP_SKILL, itemSelect);
-                                    showYNDialog(DIALOG_UP_SKILL, String.format("Bạn có chắc muốn nâng cấp kỹ năng %s lên cấp %s \n với tỉ lệ (%s/) + %s/ bằng %s/ không?", petSkill.name, pet.skill[skillIndex][1] + 1, GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]], itemSelect.getTemp().getOptionValue()[0], GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]] + itemSelect.getTemp().getOptionValue()[0]).replace("/", "%"), player);
+                                    showYNDialog(DIALOG_UP_SKILL, Utilities.Format("Bạn có chắc muốn nâng cấp kỹ năng %s lên cấp %s \n với tỉ lệ (%s/) + %s/ bằng %s/ không?", petSkill.name, pet.skill[skillIndex][1] + 1, GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]], itemSelect.getTemp().getOptionValue()[0], GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]] + itemSelect.getTemp().getOptionValue()[0]).replace("/", "%"), player);
                                 } else {
                                     player.redDialog("Kỹ năng đạt cấp tối đa rồi");
                                 }
@@ -1455,9 +1377,9 @@ public class MenuController {
                                 Item item = new Item(optionValue[0]);
                                 item.count = 1;
                                 player.addItemToInventory(item);
-                                player.okDialog(String.format("Đổi thành công\n %s", item.getTemp().getName()));
+                                player.okDialog(Utilities.Format("Đổi thành công\n %s", item.getTemp().getName()));
                             } else {
-                                player.redDialog(String.format("Bạn phải đủ %s mảnh mới đổi được", optionValue[1]));
+                                player.redDialog(Utilities.Format("Bạn phải đủ %s mảnh mới đổi được", optionValue[1]));
                             }
                         }
                         case MENU_SELECT_GEM_TO_INLAY -> {
@@ -1469,15 +1391,15 @@ public class MenuController {
                 break;
             case MENU_SELECT_EQUIP_PET_TIER:
                 CopyOnWriteArrayList<Item> listItemEquip = player.playerData.getInventoryOrCreate(GopetManager.EQUIP_PET_INVENTORY);
-                if (index >= 0 && listItemEquip.size() > index) {
+                if (index >= 0 && listItemEquip.Count > index) {
                     Item itemSelect = listItemEquip.get(index);
-                    player.controller.selectMaterialEnchant(itemSelect.itemId, itemSelect.getTemp().getIconPath(), itemSelect.getEquipName(), int.MAX_VALUE);
+                    player.controller.selectMaterialEnchant(itemSelect.itemId, itemSelect.getTemp().getIconPath(), itemSelect.getEquipName(), int.MaxValue);
                 }
                 break;
 
             case MENU_NORMAL_INVENTORY:
                 CopyOnWriteArrayList<Item> listItemNormal = player.playerData.getInventoryOrCreate(GopetManager.NORMAL_INVENTORY);
-                if (index >= 0 && listItemNormal.size() > index) {
+                if (index >= 0 && listItemNormal.Count > index) {
                     Item itemSelect = listItemNormal.get(index);
                     switch (itemSelect.getTemp().getType()) {
                         case GopetManager.ITEM_BUFF_EXP -> {
@@ -1489,7 +1411,7 @@ public class MenuController {
                                 buffExp.set_buffPercent(itemSelect.getTemp().getOptionValue()[0]);
                             }
                             player.playerData.buffExp.addTime(GopetManager.TIME_BUFF_EXP);
-                            player.okDialog(String.format("Bạn đang được buff %s/ kinh nghiệm trong %s phút!", buffExp.getPercent(), Math.round(buffExp.getBuffExpTime() / 1000 / 60)).replace("/", "%"));
+                            player.okDialog(Utilities.Format("Bạn đang được buff %s/ kinh nghiệm trong %s phút!", buffExp.getPercent(), Math.round(buffExp.getBuffExpTime() / 1000 / 60)).replace("/", "%"));
                             break;
                         }
 
@@ -1518,7 +1440,7 @@ public class MenuController {
             case MENU_KIOSK_OHTER_SELECT: {
                 if (menuId == MENU_KIOSK_OHTER_SELECT) {
                     CopyOnWriteArrayList<Item> listEquipItems = player.playerData.getInventoryOrCreate(GopetManager.NORMAL_INVENTORY);
-                    if (listEquipItems.size() > index && index >= 0) {
+                    if (listEquipItems.Count > index && index >= 0) {
                         Item sItem = listEquipItems.get(index);
                         player.controller.objectPerformed.put(OBJKEY_SELECT_SELL_ITEM, sItem);
                         player.controller.objectPerformed.put(OBJKEY_MENU_OF_KIOSK, menuId);
@@ -1531,7 +1453,7 @@ public class MenuController {
                     }
                 } else {
                     CopyOnWriteArrayList<Item> listEquipItems = Item.search(typeSelectItemMaterial(menuId, player), player.playerData.getInventoryOrCreate(menuId != MENU_KIOSK_GEM_SELECT ? GopetManager.EQUIP_PET_INVENTORY : GopetManager.GEM_INVENTORY));
-                    if (listEquipItems.size() > index && index >= 0) {
+                    if (listEquipItems.Count > index && index >= 0) {
                         Item sItem = listEquipItems.get(index);
                         if (sItem != null) {
                             if (sItem.petEuipId <= 0) {
@@ -1551,7 +1473,7 @@ public class MenuController {
             }
             break;
             case MENU_KIOSK_PET_SELECT: {
-                if (index >= 0 && index < player.playerData.pets.size()) {
+                if (index >= 0 && index < player.playerData.pets.Count) {
                     Pet pet = player.playerData.pets.get(index);
                     player.controller.objectPerformed.put(OBJKEY_SELECT_SELL_ITEM, pet);
                     player.controller.objectPerformed.put(OBJKEY_MENU_OF_KIOSK, menuId);
@@ -1623,12 +1545,12 @@ public class MenuController {
                             switch (index) {
                                 case 0:
                                     if (clan.canAddNewMember()) {
-                                        Connection connection = MYSQLManager.create();
+                                        MySqlConnection MySqlConnection = MYSQLManager.create();
                                         try {
                                             bool hasClan = false;
                                             Player onlinePlayer = PlayerManager.get(requestJoin.user_id);
                                             if (onlinePlayer == null) {
-                                                ResultSet resultSet = MYSQLManager.jquery(String.format("SELECT * from `player` where user_id = %s AND clanId > 0", requestJoin.user_id), connection);
+                                                ResultSet resultSet = MYSQLManager.jquery(Utilities.Format("SELECT * from `player` where user_id = %s AND clanId > 0", requestJoin.user_id), MySqlConnection);
                                                 hasClan = resultSet.next();
                                                 resultSet.close();
                                             } else {
@@ -1638,7 +1560,7 @@ public class MenuController {
                                                 clan.addMember(user_id, requestJoin.name);
                                                 clan.getRequestJoin().remove(requestJoin);
                                                 if (onlinePlayer == null) {
-                                                    MYSQLManager.updateSql(String.format("UPDATE `player` set clanId =%s where user_id =%s;", requestJoin.user_id, clanMember.getClan().getClanId()), connection);
+                                                    MYSQLManager.updateSql(Utilities.Format("UPDATE `player` set clanId =%s where user_id =%s;", requestJoin.user_id, clanMember.getClan().getClanId()), MySqlConnection);
                                                 } else {
                                                     onlinePlayer.playerData.clanId = clanMember.getClan().getClanId();
                                                     onlinePlayer.okDialog("Lời xin vào bang hội của bạn được chấp nhận");
@@ -1650,7 +1572,7 @@ public class MenuController {
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }  ly {
-                                            connection.close();
+                                            MySqlConnection.close();
                                         }
                                     } else {
                                         player.redDialog("Thành viên trong bang hội này đã đủ");
@@ -1665,7 +1587,7 @@ public class MenuController {
                                     clan.getBannedJoinRequestId().addIfAbsent(user_id);
                                     break;
                                 case 3:
-                                    clan.getRequestJoin().clear();
+                                    clan.getRequestJoin().Clear();
                                     player.okDialog("Xóa tất cả thành công");
                                     break;
                             }
@@ -1688,14 +1610,14 @@ public class MenuController {
                             player.controller.showInputDialog(INPUT_DIALOG_SET_PET_SELECTED_INFo, "Đặt chỉ số pet đang đi theo", new String[]{"LVL:  ", "STAR:  ", "GYM:  "});
                             break;
                         case ADMIN_INDEX_COUNT_PLAYER:
-                            player.okDialog(String.format("Online player: %s", PlayerManager.players.size()));
+                            player.okDialog(Utilities.Format("Online player: %s", PlayerManager.players.Count));
                             break;
                         case ADMIN_INDEX_COUNT_OF_MAP:
                             int numPlayerMap = 0;
                             for (Place place1 : place.map.places) {
                                 numPlayerMap += place1.numPlayer;
                             }
-                            player.okDialog(String.format("Online player %s: %s", place.map.mapTemplate.getMapName(), numPlayerMap));
+                            player.okDialog(Utilities.Format("Online player %s: %s", place.map.mapTemplate.getMapName(), numPlayerMap));
                             break;
                         case ADMIN_INDEX_TELE_TO_MAP:
                             sendMenu(MENU_ADMIN_MAP, player);
@@ -1760,7 +1682,7 @@ public class MenuController {
                         txtInfo.add(petBattleText.getText());
                     }
 
-                    player.okDialog(String.format("Chúc mừng bạn nhận được: %s", String.join(",", txtInfo.toArray(new String[0]))));
+                    player.okDialog(Utilities.Format("Chúc mừng bạn nhận được: %s", String.Join(",", txtInfo.toArray(new String[0]))));
                 } else {
                     player.controller.notEnoughSilverBar();
                 }
@@ -1781,14 +1703,14 @@ public class MenuController {
                         switch (index) {
                             case 0:
                                 if (clanMember.duty == Clan.TYPE_LEADER) {
-                                    showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, String.format("Bạn có chắc muốn nhường chúc vụ bang chủ cho người chơi %s không?", memberSelect.name), player);
+                                    showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, Utilities.Format("Bạn có chắc muốn nhường chúc vụ bang chủ cho người chơi %s không?", memberSelect.name), player);
                                 } else {
                                     player.redDialog("Bạn không phải bang chủ!");
                                 }
                                 break;
                             case 1:
                                 if (clanMember.duty == Clan.TYPE_LEADER) {
-                                    showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, String.format("Bạn có chắc muốn phong chúc vụ bang phó cho người chơi %s không?", memberSelect.name), player);
+                                    showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, Utilities.Format("Bạn có chắc muốn phong chúc vụ bang phó cho người chơi %s không?", memberSelect.name), player);
                                 } else {
                                     player.redDialog("Bạn không phải bang chủ!");
                                 }
@@ -1796,7 +1718,7 @@ public class MenuController {
 
                             case 2:
                                 if (clanMember.duty == Clan.TYPE_LEADER || clanMember.duty == Clan.TYPE_DEPUTY_LEADER) {
-                                    showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, String.format("Bạn có chắc muốn phong chúc vụ trưởng lão cho người chơi %s không?", memberSelect.name), player);
+                                    showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, Utilities.Format("Bạn có chắc muốn phong chúc vụ trưởng lão cho người chơi %s không?", memberSelect.name), player);
                                 } else {
                                     player.redDialog("Bạn không có quyền này!");
                                 }
@@ -1804,7 +1726,7 @@ public class MenuController {
 
                             case 3:
                                 if (clanMember.duty == Clan.TYPE_LEADER || clanMember.duty == Clan.TYPE_DEPUTY_LEADER) {
-                                    showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, String.format("Bạn có chắc muốn phong chúc vụ thành viên cho người chơi %s không?", memberSelect.name), player);
+                                    showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, Utilities.Format("Bạn có chắc muốn phong chúc vụ thành viên cho người chơi %s không?", memberSelect.name), player);
                                 } else {
                                     player.redDialog("Bạn không có quyền này!");
                                 }
@@ -1812,7 +1734,7 @@ public class MenuController {
 
                             case 4:
                                 if (clanMember.duty == Clan.TYPE_LEADER || clanMember.duty == Clan.TYPE_DEPUTY_LEADER || clanMember.duty == Clan.TYPE_SENIOR) {
-                                    showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, String.format("Bạn có chắc muốn đuổi người chơi %s không?", memberSelect.name), player);
+                                    showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, Utilities.Format("Bạn có chắc muốn đuổi người chơi %s không?", memberSelect.name), player);
                                 } else {
                                     player.redDialog("Bạn không có quyền này!");
                                 }
@@ -1861,7 +1783,7 @@ public class MenuController {
 
             default: {
                 player.redDialog("KHONG TON TAI MENU NAY");
-                Thread.sleep(1000);
+                Thread.Sleep(1000);
             }
         }
     }
@@ -1876,7 +1798,7 @@ public class MenuController {
             String[] optionName = npcTemplate.getOptionName();
             int LengthOP = optionName.Length;
             ArrayList<TaskTemplate> taskTemplates = player.controller.getTaskCalculator().getTaskTemplate(npcId);
-            if (taskTemplates.size() > 0) {
+            if (taskTemplates.Count > 0) {
                 LengthOP++;
             }
             ms.putInt(LengthOP);
@@ -1885,7 +1807,7 @@ public class MenuController {
                 ms.putUTF(optionName[i]);
             }
 
-            if (taskTemplates.size() > 0) {
+            if (taskTemplates.Count > 0) {
                 ms.putInt(MenuController.OP_MAIN_TASK);
                 ms.putUTF("Nhận nhiệm vụ chính");
                 player.controller.objectPerformed.put(OBJKEY_NPC_ID_FOR_MAIN_TASK, npcId);
@@ -1984,7 +1906,7 @@ public class MenuController {
                         if (player.checkCoin(GopetManager.PRICE_REVIVAL_PET_FATER_PK)) {
                             player.mineCoin(GopetManager.PRICE_REVIVAL_PET_FATER_PK);
                             pet.petDieByPK = false;
-                            player.okDialog(String.format("Hồi sinh %s thành công, nhờ trân trọng nó nhé'", pet.getNameWithStar()));
+                            player.okDialog(Utilities.Format("Hồi sinh %s thành công, nhờ trân trọng nó nhé'", pet.getNameWithStar()));
                         } else {
                             player.controller.notEnoughCoin();
                         }
@@ -2005,11 +1927,11 @@ public class MenuController {
                 sendMenu(MENU_MERGE_PART_ITEM, player);
             }
             case OP_CREATE_CLAN -> {
-                player.controller.showInputDialog(INPUT_DIALOG_CREATE_CLAN, String.format("Tạo bang hội (Phí %s (ngoc) + %s (vang)", Utilities.formatNumber(GopetManager.COIN_CREATE_CLAN), Utilities.formatNumber(GopetManager.GOLD_CREATE_CLAN)), new String[]{"Tên bang hội: "});
+                player.controller.showInputDialog(INPUT_DIALOG_CREATE_CLAN, Utilities.Format("Tạo bang hội (Phí %s (ngoc) + %s (vang)", Utilities.formatNumber(GopetManager.COIN_CREATE_CLAN), Utilities.formatNumber(GopetManager.GOLD_CREATE_CLAN)), new String[]{"Tên bang hội: "});
             }
 
             case OP_NUM_OF_TASK -> {
-                player.okDialog(String.format("Số nhiệm vụ đã hoàn thành là: ", player.playerData.wasTask.size()));
+                player.okDialog(Utilities.Format("Số nhiệm vụ đã hoàn thành là: ", player.playerData.wasTask.Count));
             }
 
             case OP_TOP_LVL_CLAN -> {
@@ -2035,7 +1957,7 @@ public class MenuController {
             case OP_FAST_INFO_CLAN -> {
                 ClanMember clanMember = player.controller.getClan();
                 if (clanMember != null) {
-                    player.okDialog(String.format("Bạn đã quyên góp quỹ được:%s\n Điểm cống hiến:%s", Utilities.formatNumber(clanMember.fundDonate), Utilities.formatNumber(clanMember.growthPointDonate)));
+                    player.okDialog(Utilities.Format("Bạn đã quyên góp quỹ được:%s\n Điểm cống hiến:%s", Utilities.formatNumber(clanMember.fundDonate), Utilities.formatNumber(clanMember.growthPointDonate)));
                 } else {
                     player.controller.notClan();
                 }
@@ -2073,7 +1995,7 @@ public class MenuController {
                 ClanMember clanMember = player.controller.getClan();
                 if (clanMember != null) {
                     if (clanMember.duty == Clan.TYPE_LEADER) {
-                        showYNDialog(DIALOG_ASK_REQUEST_UPGRADE_MAIN_HOUSE, String.format("Bạn có muốn năng cấp nhà chính lên cấp %s không?", clanMember.getClan().getLvl() + 1), player);
+                        showYNDialog(DIALOG_ASK_REQUEST_UPGRADE_MAIN_HOUSE, Utilities.Format("Bạn có muốn năng cấp nhà chính lên cấp %s không?", clanMember.getClan().getLvl() + 1), player);
                     } else {
                         player.redDialog("Bạn không có quyền này, chỉ có bang chủ mới thao tác được.");
                     }
@@ -2121,7 +2043,7 @@ public class MenuController {
                     Clan clan = clanMember.getClan();
                     if (clan.getLvl() >= 1) {
 //                        Calendar calendar = new GregorianCalendar();
-//                        calendar.setTimeInMillis(System.currentTimeMillis());
+//                        calendar.setTimeInMillis(Utilities.CurrentTimeMillis);
 //                        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY && calendar.get(Calendar.HOUR_OF_DAY) >= 20 && calendar.get(Calendar.HOUR_OF_DAY) < 24) {
                         showShop(SHOP_CLAN, player);
 //                        } else {
@@ -2143,7 +2065,7 @@ public class MenuController {
                         int marketHouse = clan.getbaseMarketLvl();
                         ClanHouseTemplate clanHouseTemplate = GopetManager.clanSkillHouseTemp.get(marketHouse + 1);
                         if (clanHouseTemplate != null) {
-                            showYNDialog(DIALOG_ASK_UPGRADE_SHOP_HOUSE, String.format("Bạn có chắc muốn nâng nhà kỹ năng bang hội không ? Cần %s quỹ và %s cống hiến", Utilities.formatNumber(clanHouseTemplate.getFundNeed()), Utilities.formatNumber(clanHouseTemplate.getGrowthPointNeed())), player);
+                            showYNDialog(DIALOG_ASK_UPGRADE_SHOP_HOUSE, Utilities.Format("Bạn có chắc muốn nâng nhà kỹ năng bang hội không ? Cần %s quỹ và %s cống hiến", Utilities.formatNumber(clanHouseTemplate.getFundNeed()), Utilities.formatNumber(clanHouseTemplate.getGrowthPointNeed())), player);
                         } else {
                             player.redDialog("Nhà kỹ năng đã đạt cấp tối đa");
                         }
@@ -2161,7 +2083,7 @@ public class MenuController {
                         int marketHouse = clan.getbaseMarketLvl();
                         ClanHouseTemplate clanHouseTemplate = GopetManager.clanMarketHouseTemp.get(marketHouse + 1);
                         if (clanHouseTemplate != null) {
-                            showYNDialog(DIALOG_ASK_UPGRADE_SHOP_HOUSE, String.format("Bạn có chắc muốn nâng shop bang hội không ? Cần %s quỹ và %s cống hiến", Utilities.formatNumber(clanHouseTemplate.getFundNeed()), Utilities.formatNumber(clanHouseTemplate.getGrowthPointNeed())), player);
+                            showYNDialog(DIALOG_ASK_UPGRADE_SHOP_HOUSE, Utilities.Format("Bạn có chắc muốn nâng shop bang hội không ? Cần %s quỹ và %s cống hiến", Utilities.formatNumber(clanHouseTemplate.getFundNeed()), Utilities.formatNumber(clanHouseTemplate.getGrowthPointNeed())), player);
                         } else {
                             player.redDialog("Shop đã đạt cấp tối đa");
                         }
@@ -2355,7 +2277,7 @@ public class MenuController {
             MenuItemInfo menuItemInfo = new MenuItemInfo(typeInventory == GopetManager.EQUIP_PET_INVENTORY ? item.getEquipName() : item.getName(), item.getDescription(player), "", true);
             menuItemInfo.setImgPath(itemTemplate.getIconPath());
             menuItemInfo.setShowDialog(true);
-            menuItemInfo.setDialogText(String.format("Bạn có muốn chọn %s không?", itemTemplate.getName()));
+            menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", itemTemplate.getName()));
             menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
             menuItemInfo.setCloseScreenAfterClick(true);
             menuItemInfo.setHasId(true);
@@ -2571,12 +2493,12 @@ public class MenuController {
                                         clan.mineFund(clanHouseTemplate.getFundNeed());
                                         clan.mineGrowthPoint(clanHouseTemplate.getGrowthPointNeed());
                                         clan.setbaseMarketLvl(marketHouse + 1);
-                                        player.okDialog(String.format("Shop của bang hội bạn đã lên cấp: %s", clan.getSkillHouseLvl()));
+                                        player.okDialog(Utilities.Format("Shop của bang hội bạn đã lên cấp: %s", clan.getSkillHouseLvl()));
                                     } else {
                                         player.redDialog("Bang hội không đủ điểm");
                                     }
                                 } else {
-                                    player.redDialog(String.format("Bang hội cần đạt cấp %s", clanHouseTemplate.getNeedClanLvl()));
+                                    player.redDialog(Utilities.Format("Bang hội cần đạt cấp %s", clanHouseTemplate.getNeedClanLvl()));
                                 }
                             } else {
                                 player.redDialog("Shop đã đạt cấp tối đa");
@@ -2599,7 +2521,7 @@ public class MenuController {
                                     clan.mineFund(clanHouseTemplate.getFundNeed());
                                     clan.mineGrowthPoint(clanHouseTemplate.getGrowthPointNeed());
                                     clan.setSkillHouseLvl(skillHouse + 1);
-                                    player.okDialog(String.format("Nhà kỹ năng của bang hội bạn đã lên cấp: %s", clan.getSkillHouseLvl()));
+                                    player.okDialog(Utilities.Format("Nhà kỹ năng của bang hội bạn đã lên cấp: %s", clan.getSkillHouseLvl()));
                                 } else {
                                     player.redDialog("Bang hội không đủ điểm");
                                 }
@@ -2614,7 +2536,7 @@ public class MenuController {
 
                 default -> {
                     player.redDialog("khong ton tai dialog nay");
-                    Thread.sleep(1000);
+                    Thread.Sleep(1000);
                 }
             }
         } else {
@@ -2637,7 +2559,7 @@ public class MenuController {
                         return;
                     }
                     if (priceItem > 2000000000) {
-                        player.redDialog(String.format("Giới hạn (ngoc) là %s", Utilities.formatNumber(2000000000)));
+                        player.redDialog(Utilities.Format("Giới hạn (ngoc) là %s", Utilities.formatNumber(2000000000)));
                         return;
                     }
 
@@ -2727,16 +2649,16 @@ public class MenuController {
                     if (!code.isEmpty()) {
                         if (Utilities.CheckString(code, "^[a-z0-9A-Z]+$")) {
                             player.okDialog("Vui lòng chờ");
-                            Connection connection = MYSQLManager.create();
+                            MySqlConnection MySqlConnection = MYSQLManager.create();
                             try {
-                                ResultSet keyLOCK = MYSQLManager.jquery(String.format("SELECT GET_LOCK('gift_code_lock_%s', 10) as hasLock;", code), connection);
+                                ResultSet keyLOCK = MYSQLManager.jquery(Utilities.Format("SELECT GET_LOCK('gift_code_lock_%s', 10) as hasLock;", code), MySqlConnection);
                                 if (keyLOCK.next()) {
                                     bool hasLock = keyLOCK.getbool("hasLock");
                                     if (!hasLock) {
                                         player.redDialog("Quá nhiều người cố gắng dùng mã quà tặng này nên hệ thống quá tải!");
                                     } else {
                                         keyLOCK.close();
-                                        ResultSet resultSet = MYSQLManager.jquery(String.format("SELECT * FROM `gift_code` WHERE `gift_code`.`code` = '%s';", code), connection);
+                                        ResultSet resultSet = MYSQLManager.jquery(Utilities.Format("SELECT * FROM `gift_code` WHERE `gift_code`.`code` = '%s';", code), MySqlConnection);
                                         if (resultSet.next()) {
                                             GiftCodeData giftCodeData = new GiftCodeData(resultSet);
                                             if (giftCodeData.getUsersOfUseThis().contains(player.user.user_id)) {
@@ -2745,7 +2667,7 @@ public class MenuController {
                                                 if (giftCodeData.getCurUser() >= giftCodeData.getMaxUser()) {
                                                     player.redDialog("Số người dùng mã quà tặng này đã đạt giới hạn!");
                                                 } else {
-                                                    if (giftCodeData.getExpire().getTime() < System.currentTimeMillis()) {
+                                                    if (giftCodeData.getExpire().getTime() < Utilities.CurrentTimeMillis) {
                                                         player.redDialog("Mã quà tặng đã hết hạn");
                                                     } else {
                                                         giftCodeData.getUsersOfUseThis().add(player.user.user_id);
@@ -2758,10 +2680,10 @@ public class MenuController {
                                                             for (Popup popup : popups) {
                                                                 textInfo.add(popup.getText());
                                                             }
-                                                            player.okDialog(String.format("Chức mừng bạn nhận được: %s", String.join(",", textInfo)));
+                                                            player.okDialog(Utilities.Format("Chức mừng bạn nhận được: %s", String.Join(",", textInfo)));
                                                         }
                                                         resultSet.close();
-                                                        MYSQLManager.updateSql(String.format("UPDATE `gift_code` SET `currentUser` = %s , `usersOfUseThis` = '%s' WHERE `id` = '%s';", giftCodeData.getCurUser(), JsonManager.ToJson(giftCodeData.getUsersOfUseThis()), giftCodeData.getId()), connection);
+                                                        MYSQLManager.updateSql(Utilities.Format("UPDATE `gift_code` SET `currentUser` = %s , `usersOfUseThis` = '%s' WHERE `id` = '%s';", giftCodeData.getCurUser(), JsonManager.ToJson(giftCodeData.getUsersOfUseThis()), giftCodeData.getId()), MySqlConnection);
                                                     }
                                                 }
                                             }
@@ -2775,8 +2697,8 @@ public class MenuController {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }  ly {
-                                MYSQLManager.updateSql(String.format("DO RELEASE_LOCK('gift_code_lock_%s');", code), connection);
-                                connection.close();
+                                MYSQLManager.updateSql(Utilities.Format("DO RELEASE_LOCK('gift_code_lock_%s');", code), MySqlConnection);
+                                MySqlConnection.close();
                             }
                         } else {
                             player.redDialog("Có kí tự lạ");
@@ -2793,7 +2715,7 @@ public class MenuController {
                         return;
                     }
                     if (priceChallenge > 100000) {
-                        player.redDialog(String.format("Giới hạn (ngoc) là %s", Utilities.formatNumber(100000)));
+                        player.redDialog(Utilities.Format("Giới hạn (ngoc) là %s", Utilities.formatNumber(100000)));
                         return;
                     }
 
@@ -2858,7 +2780,7 @@ public class MenuController {
                         player.mineGold(value);
                         long valueCoin = value * GopetManager.PERCENT_EXCHANGE_GOLD_TO_COIN;
                         player.addCoin(valueCoin);
-                        player.okDialog(String.format("Chúc mừng bạn đổi thành công %s (ngoc)", Utilities.formatNumber(valueCoin)));
+                        player.okDialog(Utilities.Format("Chúc mừng bạn đổi thành công %s (ngoc)", Utilities.formatNumber(valueCoin)));
                     } else {
                         player.controller.notEnoughGold();
                     }
@@ -2870,25 +2792,25 @@ public class MenuController {
                         String namePlayer = reader.readString(0);
                         Date date = new Date(reader.readString(1));
                         int user_id = 0;
-                        Connection connectionWeb = MYSQLManager.createWebConnection();
-                        Connection connectionPlayer = MYSQLManager.create();
+                        MySqlConnection MySqlConnectionWeb = MYSQLManager.createWebMySqlConnection();
+                        MySqlConnection MySqlConnectionPlayer = MYSQLManager.create();
                         try {
-                            ResultSet resultSet = MYSQLManager.jquery("Select user_id from player where name ='" + namePlayer + "'", connectionPlayer);
+                            ResultSet resultSet = MYSQLManager.jquery("Select user_id from player where name ='" + namePlayer + "'", MySqlConnectionPlayer);
                             if (resultSet.next()) {
                                 user_id = resultSet.getInt("user_id");
                                 resultSet.close();
 
                             } else {
                                 resultSet.close();
-                                connectionPlayer.close();
-                                connectionWeb.close();
+                                MySqlConnectionPlayer.close();
+                                MySqlConnectionWeb.close();
                                 player.redDialog("Người chơi này không tồn tại");
                                 return;
                             }
                         } catch (Exception e) {
                         }
-                        connectionPlayer.close();
-                        connectionWeb.close();
+                        MySqlConnectionPlayer.close();
+                        MySqlConnectionWeb.close();
                     }
                 }
                 break;
@@ -2921,25 +2843,25 @@ public class MenuController {
                     if (player.checkIsAdmin()) {
                         String namePlayer = reader.readString(0);
                         int user_id = 0;
-                        Connection connectionWeb = MYSQLManager.createWebConnection();
-                        Connection connectionPlayer = MYSQLManager.create();
+                        MySqlConnection MySqlConnectionWeb = MYSQLManager.createWebMySqlConnection();
+                        MySqlConnection MySqlConnectionPlayer = MYSQLManager.create();
                         try {
-                            ResultSet resultSet = MYSQLManager.jquery("Select user_id from player where name ='" + namePlayer + "'", connectionPlayer);
+                            ResultSet resultSet = MYSQLManager.jquery("Select user_id from player where name ='" + namePlayer + "'", MySqlConnectionPlayer);
                             if (resultSet.next()) {
                                 user_id = resultSet.getInt("user_id");
                                 resultSet.close();
-                                MYSQLManager.updateSql("Update `user` set isBenned = 0 where user_id = " + user_id, connectionWeb);
+                                MYSQLManager.updateSql("Update `user` set isBenned = 0 where user_id = " + user_id, MySqlConnectionWeb);
                             } else {
                                 resultSet.close();
-                                connectionPlayer.close();
-                                connectionWeb.close();
+                                MySqlConnectionPlayer.close();
+                                MySqlConnectionWeb.close();
                                 player.redDialog("Người chơi này không tồn tại");
                                 return;
                             }
                         } catch (Exception e) {
                         }
-                        connectionPlayer.close();
-                        connectionWeb.close();
+                        MySqlConnectionPlayer.close();
+                        MySqlConnectionWeb.close();
                     }
                 }
                 break;
@@ -2951,25 +2873,25 @@ public class MenuController {
                         int min = reader.readInt(2);
                         String reason = reader.readString(0);
                         int user_id = 0;
-                        Connection connectionWeb = MYSQLManager.createWebConnection();
-                        Connection connectionPlayer = MYSQLManager.create();
+                        MySqlConnection MySqlConnectionWeb = MYSQLManager.createWebMySqlConnection();
+                        MySqlConnection MySqlConnectionPlayer = MYSQLManager.create();
                         try {
-                            ResultSet resultSet = MYSQLManager.jquery("Select user_id from player where name ='" + namePlayer + "'", connectionPlayer);
+                            ResultSet resultSet = MYSQLManager.jquery("Select user_id from player where name ='" + namePlayer + "'", MySqlConnectionPlayer);
                             if (resultSet.next()) {
                                 user_id = resultSet.getInt("user_id");
                                 resultSet.close();
                             } else {
                                 resultSet.close();
-                                connectionPlayer.close();
-                                connectionWeb.close();
+                                MySqlConnectionPlayer.close();
+                                MySqlConnectionWeb.close();
                                 player.redDialog("Người chơi này không tồn tại");
                                 return;
                             }
                         } catch (Exception e) {
                         }
-                        connectionPlayer.close();
-                        connectionWeb.close();
-                        UserData.banBySQL(typeLock, reason, System.currentTimeMillis() + (min * 1000L * 60), user_id);
+                        MySqlConnectionPlayer.close();
+                        MySqlConnectionWeb.close();
+                        UserData.banBySQL(typeLock, reason, Utilities.CurrentTimeMillis + (min * 1000L * 60), user_id);
                         Player playerPassive = PlayerManager.get(namePlayer);
                         if (playerPassive != null) {
                             playerPassive.session.close();
@@ -2984,7 +2906,7 @@ public class MenuController {
                         Player playerOnline = PlayerManager.get(name);
                         if (playerOnline != null) {
                             playerOnline.controller.setBuffEnchent(true);
-                            player.okDialog(String.format("Buff cho người chơi đập không thất bại thành công!", name));
+                            player.okDialog(Utilities.Format("Buff cho người chơi đập không thất bại thành công!", name));
                         } else {
                             player.redDialog("Người chơi đã offline");
                         }
@@ -3032,7 +2954,7 @@ public class MenuController {
                                             player.playerData.clanId = clan.getClanId();
                                             player.mineCoin(GopetManager.COIN_CREATE_CLAN);
                                             player.mineGold(GopetManager.GOLD_CREATE_CLAN);
-                                            player.okDialog(String.format("Tạo bang %s thành công", clanName));
+                                            player.okDialog(Utilities.Format("Tạo bang %s thành công", clanName));
                                         } catch (SQLException e) {
                                             if (e.getErrorCode() == 1062) {
                                                 System.out.println("Duplicate clan entry detected!");

@@ -1,23 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package manager;
 
-import com.google.gson.reflect.TypeToken;
-import data.clan.Clan;
-import data.clan.ClanMember;
-import data.clan.ClanRequestJoin;
-import data.shop.ShopClan;
-import java.lang.reflect.Type;
-import java.sql.ResultSet;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
+using Gopet.Data.Collections;
+using Gopet.Data.user;
 
-/**
- *
- * @author MINH THONG
- */
 public class ClanManager {
 
     public static CopyOnWriteArrayList<Clan> clans = new CopyOnWriteArrayList<>();

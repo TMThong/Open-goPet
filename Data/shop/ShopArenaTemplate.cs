@@ -1,4 +1,6 @@
- 
+
+using Gopet.Data.Collections;
+
 public class ShopArenaTemplate {
     private int Id;
     private int[][] option;
@@ -29,7 +31,7 @@ public class ShopArenaTemplate {
                     shopTemplateItem.setMoneyType(new sbyte[]{(sbyte) optionInfo[4]});
                     shopTemplateItem.setPrice(new int[]{optionInfo[5]});
                     ArrayList<ItemTemplate> partPet = GopetManager.mergeItemPet.get(typePart);
-                    shopTemplateItem.setItemTempalteId(partPet.get(util.Utilities.nextInt(partPet.size())).getItemId());
+                    shopTemplateItem.setItemTempalteId(partPet.get(Utilities.nextInt(partPet.Count)).getItemId());
                 }
                 break;
                 case ITEM_PART_ITEM: {
@@ -39,7 +41,7 @@ public class ShopArenaTemplate {
                     shopTemplateItem.setMoneyType(new sbyte[]{(sbyte) optionInfo[4]});
                     shopTemplateItem.setPrice(new int[]{optionInfo[5]});
                     ArrayList<ItemTemplate> partItem = GopetManager.mergeItemItem.get(typePart);
-                    shopTemplateItem.setItemTempalteId(partItem.get(util.Utilities.nextInt(partItem.size())).getItemId());
+                    shopTemplateItem.setItemTempalteId(partItem.get(Utilities.nextInt(partItem.Count())).getItemId());
                 }
                 break;
             }

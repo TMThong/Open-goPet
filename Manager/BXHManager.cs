@@ -23,13 +23,13 @@ public class BXHManager : Thread {
 
     public void update()   {
         while (isRunning) {
-            if (lastTime < System.currentTimeMillis()) {
+            if (lastTime < Utilities.CurrentTimeMillis) {
                 for (Top next : listTop) {
                     next.update();
                 }
-                lastTime = System.currentTimeMillis() + 1000 * 60 * 15;
+                lastTime = Utilities.CurrentTimeMillis + 1000 * 60 * 15;
             }
-            Thread.sleep(60000);
+            Thread.Sleep(60000);
         }
     }
 

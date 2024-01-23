@@ -1,33 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package data.clan;
 
-import data.shop.ShopClan;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.concurrent.CopyOnWriteArrayList;
-import lombok.Getter;
-import lombok.Setter;
-import manager.GopetManager;
-import manager.JsonManager;
-import manager.MYSQLManager;
-import manager.MapManager;
-import manager.PlayerManager;
-import place.ClanPlace;
-import place.Place;
-import server.Player;
-import server.io.Message;
+using Gopet.Data.Collections;
 
-/**
- *
- * @author MINH THONG
- */
-@Getter
-@Setter
 public class Clan {
 
     private int clanId;
@@ -93,11 +66,11 @@ public class Clan {
 
     public String getClanDesc() {
         ArrayList<String> clanInfo = new();
-        clanInfo.add(String.format(" Cấp: %s ", lvl));
-        clanInfo.add(String.format(" Thành viên: %s/%s ", curMember, maxMember));
-        clanInfo.add(String.format(" Shop bảo vật cấp: %s ", baseMarketLvl));
-        clanInfo.add(String.format(" Nhà kỹ năng bang hội cấp: %s ", skillHouseLvl));
-        return String.join(",", clanInfo.toArray(new String[0]));
+        clanInfo.add(Utilities.Format(" Cấp: %s ", lvl));
+        clanInfo.add(Utilities.Format(" Thành viên: %s/%s ", curMember, maxMember));
+        clanInfo.add(Utilities.Format(" Shop bảo vật cấp: %s ", baseMarketLvl));
+        clanInfo.add(Utilities.Format(" Nhà kỹ năng bang hội cấp: %s ", skillHouseLvl));
+        return String.Join(",", clanInfo.toArray(new String[0]));
     }
 
     private void initClan()   {
@@ -172,7 +145,7 @@ public class Clan {
         members.add(clanMember);
         curMember++;
         members.sort(new Comparator<ClanMember>() {
-            @Override
+             
             public int compare(ClanMember o1, ClanMember o2) {
                 return o1.user_id - o2.user_id;
             }
@@ -181,7 +154,7 @@ public class Clan {
 
     public ClanRequestJoin getJoinRequestByUserId(int user_id) {
         int left = 0;
-        int right = requestJoin.size() - 1;
+        int right = requestJoin.Count - 1;
         while (left <= right) {
             int mid = left + (right - left) / 2;
             ClanRequestJoin midRequest = requestJoin.get(mid);
@@ -198,11 +171,11 @@ public class Clan {
     }
 
     public void addJoinRequest(int user_id, String name, String avatarPath)   {
-        ClanRequestJoin clanRequestJoin = new ClanRequestJoin(user_id, name, System.currentTimeMillis());
+        ClanRequestJoin clanRequestJoin = new ClanRequestJoin(user_id, name, Utilities.CurrentTimeMillis);
         clanRequestJoin.avatarPath = avatarPath;
         requestJoin.add(clanRequestJoin);
         requestJoin.sort(new Comparator<ClanRequestJoin>() {
-            @Override
+             
             public int compare(ClanRequestJoin o1, ClanRequestJoin o2) {
                 return o1.user_id - o2.user_id;
             }
@@ -228,7 +201,7 @@ public class Clan {
 
     public ClanMember getMemberByUserId(int user_id) {
         int left = 0;
-        int right = members.size() - 1;
+        int right = members.Count - 1;
         while (left <= right) {
             int mid = left + (right - left) / 2;
             ClanMember midClanMem = members.get(mid);
@@ -253,34 +226,34 @@ public class Clan {
         }
 
         for (ClanBuff clanBuff : clanBuffs) {
-            if (clanBuff.getTimeEndBuff() < System.currentTimeMillis()) {
+            if (clanBuff.getTimeEndBuff() < Utilities.CurrentTimeMillis) {
                 clanBuffs.remove(clanBuff);
             }
         }
 
-        if (shopClan.getTimeRefresh() + (1000l * 60 * 60 * 24 * 7) <= System.currentTimeMillis()) {
+        if (shopClan.getTimeRefresh() + (1000l * 60 * 60 * 24 * 7) <= Utilities.CurrentTimeMillis) {
             shopClan.refresh();
         }
     }
 
     public void create()   {
-        Connection connection = MYSQLManager.create();
-        MYSQLManager.updateSql(String.format("INSERT INTO `clan`(`clanId`, `name`, `lvl`, `curMember`, `maxMember`, `leaderId`, `members`, `fund`, `growthPoint`, `skillHouseLvl`, `baseMarketLvl`) "
-                + "VALUES (NULL,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')", name, lvl, curMember, maxMember, leaderId, JsonManager.ToJson(members), fund, growthPoint, skillHouseLvl, baseMarketLvl), connection);
-        ResultSet resultSet = MYSQLManager.jquery(String.format("SELECT * FROM `clan` WHERE leaderId = %s", leaderId), connection);
+        MySqlConnection MySqlConnection = MYSQLManager.create();
+        MYSQLManager.updateSql(Utilities.Format("INSERT INTO `clan`(`clanId`, `name`, `lvl`, `curMember`, `maxMember`, `leaderId`, `members`, `fund`, `growthPoint`, `skillHouseLvl`, `baseMarketLvl`) "
+                + "VALUES (NULL,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')", name, lvl, curMember, maxMember, leaderId, JsonManager.ToJson(members), fund, growthPoint, skillHouseLvl, baseMarketLvl), MySqlConnection);
+        ResultSet resultSet = MYSQLManager.jquery(Utilities.Format("SELECT * FROM `clan` WHERE leaderId = %s", leaderId), MySqlConnection);
         if (resultSet.next()) {
             setClanId(resultSet.getInt("clanId"));
         } else {
             throw new NullPointerException("Không tìm thấy clan có người lãnh đạo này");
         }
         resultSet.close();
-        connection.close();
+        MySqlConnection.close();
     }
 
     public void save()   {
-        Connection connection = MYSQLManager.create();
-        MYSQLManager.updateSql(String.format("UPDATE `clan` set `lvl` = %s , `curMember` = %s , `maxMember` =%s , `leaderId` =%s , `members` = '%s' , `fund` =%s, `growthPoint` =%s , `skillHouseLvl` = %s , `baseMarketLvl` =%s , `joinRequest` = '%s' WHERE `clanId` =%s", lvl, curMember, maxMember, leaderId, JsonManager.ToJson(members), fund, growthPoint, skillHouseLvl, baseMarketLvl, JsonManager.ToJson(requestJoin), this.clanId), connection);
-        connection.close();
+        MySqlConnection MySqlConnection = MYSQLManager.create();
+        MYSQLManager.updateSql(Utilities.Format("UPDATE `clan` set `lvl` = %s , `curMember` = %s , `maxMember` =%s , `leaderId` =%s , `members` = '%s' , `fund` =%s, `growthPoint` =%s , `skillHouseLvl` = %s , `baseMarketLvl` =%s , `joinRequest` = '%s' WHERE `clanId` =%s", lvl, curMember, maxMember, leaderId, JsonManager.ToJson(members), fund, growthPoint, skillHouseLvl, baseMarketLvl, JsonManager.ToJson(requestJoin), this.clanId), MySqlConnection);
+        MySqlConnection.close();
     }
 
     public void setTemplate(ClanTemplate clanTemplate) {
@@ -291,7 +264,7 @@ public class Clan {
     public void outClan(ClanMember clanMember)   {
         if (members.contains(clanMember)) {
             members.remove(clanMember);
-            this.curMember = members.size();
+            this.curMember = members.Count;
         }
     }
 
@@ -300,7 +273,7 @@ public class Clan {
     }
 
     public void addChat(ClanChat clanChat) {
-        if (clanChats.size() >= 50) {
+        if (clanChats.Count >= 50) {
             clanChats.remove(0);
         }
         clanChats.add(clanChat);
@@ -308,7 +281,7 @@ public class Clan {
 
     public   ClanPotentialSkill getClanPotentialSkillOrCreate(int buffId) {
         int left = 0;
-        int right = clanPotentialSkills.size() - 1;
+        int right = clanPotentialSkills.Count - 1;
         while (left <= right) {
             int mid = left + (right - left) / 2;
             ClanPotentialSkill midP = clanPotentialSkills.get(mid);
@@ -327,7 +300,7 @@ public class Clan {
         clanPotentialSkill.setPoint(0);
         this.clanPotentialSkills.addIfAbsent(clanPotentialSkill);
         this.clanPotentialSkills.sort(new Comparator<ClanPotentialSkill>() {
-            @Override
+             
             public int compare(ClanPotentialSkill o1, ClanPotentialSkill o2) {
                 return o1.getBuffId() - o2.getBuffId();
             }
@@ -336,7 +309,7 @@ public class Clan {
     }
 
     public   ClanBuff getBuff(int index) {
-        if (index >= 0 && index < clanBuffs.size()) {
+        if (index >= 0 && index < clanBuffs.Count) {
             return clanBuffs.get(index);
         }
         return null;

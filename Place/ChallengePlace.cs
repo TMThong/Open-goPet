@@ -1,30 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package place;
+ 
+public class ChallengePlace : GopetPlace {
 
-import data.map.GopetMap;
-import data.mob.Boss;
-import data.mob.Mob;
-import data.mob.MobLocation;
-import data.mob.MobLvInfo;
-import data.mob.MobLvlMap;
-import data.pet.PetTemplate;
-import manager.GopetManager;
-import static server.GameController.messagePetSerive;
-import server.GopetCMD;
-import server.Player;
-import server.io.Message;
-import util.Utilities;
-
-/**
- *
- * @author MINH THONG
- */
-public class ChallengePlace extends GopetPlace {
-
-    public long placeTime = System.currentTimeMillis();
+    public long placeTime = Utilities.CurrentTimeMillis;
     public const long TIME_WAIT = 60 * 1000;
     public const long TIME_ATTACK = 60 * 3 * 1000;
     public const int MAX_PLAYER_JOIN = 4;
@@ -33,7 +10,7 @@ public class ChallengePlace extends GopetPlace {
     public bool isFinish = false;
     private bool isWaitForNewTurn = false;
     private int turn = 0;
-    public const int[][] MOB_XY = new int[][]{
+    public static readonly int[][] MOB_XY = new int[][]{
         new int[]{240, 161},
         new int[]{341, 97},
         new int[]{393, 229},
@@ -44,50 +21,51 @@ public class ChallengePlace extends GopetPlace {
         new int[]{402, 261}
     };
 
-    public ChallengePlace(GopetMap m, int ID)   {
-        base(m, ID);
-        placeTime = System.currentTimeMillis() + TIME_WAIT;
+    public ChallengePlace(GopetMap m, int ID)  : base(m, ID)
+    {
+        
+        placeTime = Utilities.CurrentTimeMillis + TIME_WAIT;
         maxPlayer = MAX_PLAYER_JOIN;
-        this.numMobDieNeed = int.MAX_VALUE;
+        this.numMobDieNeed = int.MaxValue;
     }
 
-    @Override
+     
     public void add(Player player)   {
         base.add(player); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-        player.controller.sendPlaceTime(Math.round(placeTime - System.currentTimeMillis()) / 1000);
+        player.controller.sendPlaceTime(Math.round(placeTime - Utilities.CurrentTimeMillis) / 1000);
         player.controller.showBigTextEff("PHÒNG CHỜ");
     }
 
-    @Override
+     
     public bool canAdd(Player player)   {
         return base.canAdd(player) && isWait; // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 
-    @Override
+     
     public void update()   {
         base.update(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
         if (isWait) {
-            if (placeTime < System.currentTimeMillis()) {
+            if (placeTime < Utilities.CurrentTimeMillis) {
                 isWait = false;
                 nextTurn();
             }
-        } else if (mobs.size() == 0) {
-            if (isWaitForNewTurn && System.currentTimeMillis() > placeTime) {
+        } else if (mobs.Count == 0) {
+            if (isWaitForNewTurn && Utilities.CurrentTimeMillis > placeTime) {
                 nextTurn();
             } else if (!isWaitForNewTurn) {
                 isWaitForNewTurn = true;
-                placeTime = System.currentTimeMillis() + 15000;
+                placeTime = Utilities.CurrentTimeMillis + 15000;
                 this.sendTimePlace();
             }
         }
     }
 
-    @Override
+     
     public bool needRemove() {
-        return !isWait && (numPlayer == 0 || placeTime < System.currentTimeMillis());
+        return !isWait && (numPlayer == 0 || placeTime < Utilities.CurrentTimeMillis);
     }
 
-    @Override
+     
     public void removeAllPlayer()   {
         for (Player player : players) {
             player.controller.LoadMap();
@@ -126,10 +104,10 @@ public class ChallengePlace extends GopetPlace {
             for (Player player : players) {
                 player.controller.getTaskCalculator().onNextChellengePlace(this.turn);
             }
-            placeTime = System.currentTimeMillis() + TIME_ATTACK;
+            placeTime = Utilities.CurrentTimeMillis + TIME_ATTACK;
             this.sendMob();
             this.sendTimePlace();
-            this.showBigTextEff(String.format("LƯỢT", turn));
+            this.showBigTextEff(Utilities.Format("LƯỢT", turn));
         } else {
             isFinish = true;
         }
@@ -150,14 +128,14 @@ public class ChallengePlace extends GopetPlace {
         return 1;
     }
 
-    @Override
+     
     public void mobDie(Mob gopetMob) {
         this.mobs.remove(gopetMob);
     }
 
     public void sendTimePlace()   {
         Message message = messagePetSerive(GopetCMD.TIME_PLACE);
-        message.putInt(Math.round(placeTime - System.currentTimeMillis()) / 1000);
+        message.putInt(Math.round(placeTime - Utilities.CurrentTimeMillis) / 1000);
         message.cleanup();
         sendMessage(message);
     }

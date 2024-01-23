@@ -51,7 +51,7 @@ public class ShopClanTemplate {
                         shopTemplateItem.setMoneyType(new sbyte[]{(sbyte) optionInfo[4]});
                         shopTemplateItem.setPrice(new int[]{optionInfo[5]});
                         ArrayList<ItemTemplate> partPet = GopetManager.mergeItemPet.get(typePart);
-                        shopTemplateItem.setItemTempalteId(partPet.get(util.Utilities.nextInt(partPet.size())).getItemId());
+                        shopTemplateItem.setItemTempalteId(partPet.get(Utilities.nextInt(partPet.Count)).getItemId());
                         shopTemplateItems.add(shopTemplateItem);
                     }
                 }
@@ -68,7 +68,7 @@ public class ShopClanTemplate {
                         shopTemplateItem.setMoneyType(new sbyte[]{(sbyte) optionInfo[4]});
                         shopTemplateItem.setPrice(new int[]{optionInfo[5]});
                         ArrayList<ItemTemplate> partItem = GopetManager.mergeItemItem.get(typePart);
-                        shopTemplateItem.setItemTempalteId(partItem.get(util.Utilities.nextInt(partItem.size())).getItemId());
+                        shopTemplateItem.setItemTempalteId(partItem.get(Utilities.nextInt(partItem.Count)).getItemId());
                         shopTemplateItems.add(shopTemplateItem);
                     }
                 }

@@ -1,18 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package runtime;
-
-import app.Main;
-import manager.PlayerManager;
-import util.PlatformHelper;
-
-/**
- *
- * @author MINH THONG
- */
-public class Maintenance implements IRuntime {
+ 
+public class Maintenance : IRuntime {
 
     private long beginMaintenance;
     private int min;
@@ -26,14 +13,14 @@ public class Maintenance implements IRuntime {
      *
      * @ 
      */
-    @Override
+     
     public void update()   {
         if (isMaintenance) {
             if (min > 0) {
-                if (System.currentTimeMillis() - beginMaintenance >= 1000 * 60) {
-                    beginMaintenance = System.currentTimeMillis();
+                if (Utilities.CurrentTimeMillis - beginMaintenance >= 1000 * 60) {
+                    beginMaintenance = Utilities.CurrentTimeMillis;
                     min--;
-                    PlayerManager.showBanner(String.format("Sau %s phút nữa sẽ bảo trì, các người chơi vui lòng thoát game sớm tránh bị mất dữ liệu", min));
+                    PlayerManager.showBanner(Utilities.Format("Sau %s phút nữa sẽ bảo trì, các người chơi vui lòng thoát game sớm tránh bị mất dữ liệu", min));
                 }
             } else if (min <= 0) {
                 if (needExit) {
@@ -57,7 +44,7 @@ public class Maintenance implements IRuntime {
      */
     public void setMaintenanceTime(int minute) {
         if (!isMaintenance) {
-            beginMaintenance = System.currentTimeMillis();
+            beginMaintenance = Utilities.CurrentTimeMillis;
             min = minute + 1;
             isMaintenance = true;
         }

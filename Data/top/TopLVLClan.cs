@@ -1,32 +1,21 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package data.top;
-
-import java.sql.ResultSet;
-import manager.MYSQLManager;
-
-/**
- *
- * @author MINH THONG
- */
-public class TopLVLClan extends Top {
+ 
+public class TopLVLClan : Top {
 
     public const TopLVLClan instance = new TopLVLClan();
 
-    public TopLVLClan() {
-        base("top_clan");
+    public TopLVLClan() : base("top_clan")
+    {
+       
         base.name = "TOP LVL Bang hội";
         base.desc = "Chỉ những bang hội có cấp độ cao";
     }
 
-    @Override
-    public void update() {
+    
+    public override void update() {
         try {
-            lastDatas.clear();
-            lastDatas.addAll(datas);
-            datas.clear();
+            lastDatas.Clear();
+            lastDatas.AddRange(datas);
+            datas.Clear();
             try (ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `clan` ORDER BY `lvl` DESC LIMIT 10;")) {
                 int index = 1;
                 while (resultSet.next()) {
@@ -35,7 +24,7 @@ public class TopLVLClan extends Top {
                     topData.name = "Bang " + resultSet.getString("name");
                     topData.imgPath = "npcs/gopet.png";
                     topData.title = topData.name;
-                    topData.desc = String.format("Hạng %s : bang lvl %s", index, resultSet.getInt("lvl"));
+                    topData.desc = Utilities.Format("Hạng %s : bang lvl %s", index, resultSet.getInt("lvl"));
                     datas.add(topData);
                     index++;
                 }

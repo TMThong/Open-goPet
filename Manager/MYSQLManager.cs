@@ -1,75 +1,33 @@
-package manager;
 
-import com.mysql.cj.jdbc.MysqlDataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import settings.MysqlSetting;
+
+using Gopet.Data.user;
+using MySql.Data.MySqlClient;
 
 public class MYSQLManager {
 
-    public static MysqlDataSource dataSource = null;
-    public static MysqlDataSource dataSourceWeb = null;
-
+    
     public MYSQLManager() {
     }
 
     public static void init()   {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            System.exit(0);
-        }
-        MysqlSetting setting = MysqlSetting.getInstance();
-        MysqlDataSource mysqlDataSource = new MysqlDataSource();
-        mysqlDataSource.setURL(setting.getUrl());
-        mysqlDataSource.setUser(setting.getUsername());
-        mysqlDataSource.setPassword(setting.getPassword());
-        mysqlDataSource.setMaxReconnects(int.MAX_VALUE);
-        mysqlDataSource.setMaxAllowedPacket(int.MAX_VALUE);
-        mysqlDataSource.setAutoReconnect(true);
-        mysqlDataSource.setTcpNoDelay(true);
-        mysqlDataSource.setUseSSL(true);
-        dataSourceWeb = new MysqlDataSource();
-        dataSourceWeb.setURL(setting.getUrlWeb());
-        dataSourceWeb.setUser(setting.getUsername_web());
-        dataSourceWeb.setPassword(setting.getPassword_web());
-        dataSourceWeb.setMaxReconnects(int.MAX_VALUE);
-        dataSourceWeb.setMaxAllowedPacket(int.MAX_VALUE);
-        dataSourceWeb.setAutoReconnect(true);
-        dataSourceWeb.setTcpNoDelay(true);
-        dataSourceWeb.setUseSSL(true);
-        // Lấy DataSource để sử dụng
-        dataSource = mysqlDataSource;
+         
     }
 
-    private static Connection connection;
+    private static MySqlConnection MySqlConnection;
 
-    public static Connection getConnection()   {
-        if (connection == null) {
-            connection = dataSource.getConnection();
-        }
+    public static MySqlConnection getMySqlConnection()   {
+         
 
-        if (connection.isClosed()) {
-            connection = dataSource.getConnection();
-        }
-
-        return connection;
+        return MySqlConnection;
     }
 
     public static void resetConnect() {
-        try {
-            connection = dataSource.getConnection();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+         
     }
 
     public static ResultSet jquery(String sql)   {
         PreparedStatement pre
-                = getConnection().prepareStatement(
+                = getMySqlConnection().prepareStatement(
                         sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
         //pre.setQueryTimeout(60);
@@ -77,32 +35,32 @@ public class MYSQLManager {
     }
 
     public static void updateSql(String sql)   {
-        PreparedStatement pre = getConnection().prepareStatement(sql);
+        PreparedStatement pre = getMySqlConnection().prepareStatement(sql);
         //pre.setQueryTimeout(60);
         pre.execute();
         pre.close();
     }
 
-    public static ResultSet jquery(String sql, Connection connection)   {
+    public static ResultSet jquery(String sql, MySqlConnection MySqlConnection)   {
         PreparedStatement pre
-                = connection.prepareStatement(
+                = MySqlConnection.prepareStatement(
                         sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
         //pre.setQueryTimeout(60);
         return pre.executeQuery();
     }
 
-    public static void updateSql(String sql, Connection connection)   {
-        PreparedStatement pre = connection.prepareStatement(sql);
+    public static void updateSql(String sql, MySqlConnection MySqlConnection)   {
+        PreparedStatement pre = MySqlConnection.prepareStatement(sql);
         //pre.setQueryTimeout(60);
         pre.execute();
         pre.close();
     }
 
-    public static Connection create()   {
-        return dataSource.getConnection();
+    public static MySqlConnection create()   {
+        return dataSource.getMySqlConnection();
     }
 
-    public static Connection createWebConnection()   {
-        return dataSourceWeb.getConnection();
+    public static MySqlConnection createWebMySqlConnection()   {
+        return dataSourceWeb.getMySqlConnection();
     }
 }

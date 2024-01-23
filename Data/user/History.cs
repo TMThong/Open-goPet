@@ -12,22 +12,22 @@ public class History {
     private int spceialType = 0;
 
     public History(Player player) {
-        currentTime = System.currentTimeMillis();
+        currentTime = Utilities.CurrentTimeMillis;
         date = new Date(currentTime);
         this.player = player;
         setUser_id(player.user.user_id);
     }
 
     public History(int user_id) {
-        currentTime = System.currentTimeMillis();
+        currentTime = Utilities.CurrentTimeMillis;
         date = new Date(currentTime);
         setUser_id(user_id);
     }
 
-    public String charName(Connection connection) {
+    public String charName(MySqlConnection MySqlConnection) {
         if (this.player == null) {
             try {
-                ResultSet resultSet = MYSQLManager.jquery(String.format("Select * from player where user_id = %s", this.user_id), connection);
+                ResultSet resultSet = MYSQLManager.jquery(Utilities.Format("Select * from player where user_id = %s", this.user_id), MySqlConnection);
                 if (resultSet.next()) {
                     String charname = resultSet.getString("name");
                     resultSet.close();

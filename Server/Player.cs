@@ -15,8 +15,8 @@ public class Player : IHandleMessage {
     public PlayerData playerData;
     public GameController controller;
     private Place place_;
-    public long timeSaveDelta = System.currentTimeMillis() + TIME_SAVE_DATA;
-    public long petHpRecovery = System.currentTimeMillis() + TIME_PET_RECOVERY;
+    public long timeSaveDelta = Utilities.CurrentTimeMillis + TIME_SAVE_DATA;
+    public long petHpRecovery = Utilities.CurrentTimeMillis + TIME_PET_RECOVERY;
     public const long TIME_SAVE_DATA = 1000l * 60 * 15;
     public const long TIME_PET_RECOVERY = 1000l * 3;
     public bool isPetRecovery = false;
@@ -81,7 +81,7 @@ public class Player : IHandleMessage {
         } catch (Exception e) {
             e.printStackTrace();
             try {
-                Thread.sleep(1000);
+                Thread.Sleep(1000);
             } catch (Exception ex) {
             }
         }
@@ -100,36 +100,36 @@ public class Player : IHandleMessage {
 //            if (username.Length() >= 6 && password.Length() >= 6 && username.Length() < 25 && password.Length() < 60) {
 //                for (String string : BANNAME) {
 //                    if (username.contains(string)) {
-//                        redDialog("Tài khoản không được phép có những từ này : " + String.join(",", BANNAME));
+//                        redDialog("Tài khoản không được phép có những từ này : " + String.Join(",", BANNAME));
 //                        return;
 //                    }
 //                }
 //                InetSocketAddress netSocket = (InetSocketAddress) session.sc.getRemoteSocketAddress();
-//                PreparedStatement preparedStatement = MYSQLManager.createWebConnection().prepareStatement(String.format("SELECT * FROM `user` WHERE ipv4Create = '%s' && dayCreate > %s;", netSocket.getHostString(), System.currentTimeMillis() - (1000l * 60l * 60l * 24l * 7)));
+//                PreparedStatement preparedStatement = MYSQLManager.createWebMySqlConnection().prepareStatement(Utilities.Format("SELECT * FROM `user` WHERE ipv4Create = '%s' && dayCreate > %s;", netSocket.getHostString(), Utilities.CurrentTimeMillis - (1000l * 60l * 60l * 24l * 7)));
 ////                try (ResultSet result = preparedStatement.executeQuery()) {
 ////                    if (result.next()) {
 ////                        redDialog("Tạo tài khoản cách nhau 1 tuần nhé");
 ////                        result.close();
-////                        preparedStatement.getConnection().close();
+////                        preparedStatement.getMySqlConnection().close();
 ////                        return;
 ////                    }
 ////                    result.close();
 ////                } catch (Exception e) {
 ////                    e.printStackTrace();
 ////                }
-//                preparedStatement = preparedStatement.getConnection().prepareStatement(String.format("SELECT * FROM `user` WHERE username = '%s';", username));
+//                preparedStatement = preparedStatement.getMySqlConnection().prepareStatement(Utilities.Format("SELECT * FROM `user` WHERE username = '%s';", username));
 //                try (ResultSet result = preparedStatement.executeQuery()) {
 //                    if (result.next()) {
 //                        redDialog("Tên tài khoản đã tồn tại rồi");
 //                    } else {
-//                        preparedStatement.getConnection().createStatement().execute(String.format("INSERT INTO `user`(`user_id`, `username`, `password` , `ipv4Create` , `dayCreate`, `avatar`) VALUES (NULL,'%s','%s', '%s', %s, NULL)", username, password, netSocket.getHostString(), System.currentTimeMillis()));
+//                        preparedStatement.getMySqlConnection().createStatement().execute(Utilities.Format("INSERT INTO `user`(`user_id`, `username`, `password` , `ipv4Create` , `dayCreate`, `avatar`) VALUES (NULL,'%s','%s', '%s', %s, NULL)", username, password, netSocket.getHostString(), Utilities.CurrentTimeMillis));
 //                        okDialog("Đăng ký tài khoản thành công mời bạn đăng nhập");
 //                    }
 //                    result.close();
 //                } catch (Exception e) {
 //                    e.printStackTrace();
 //                }
-//                preparedStatement.getConnection().close();
+//                preparedStatement.getMySqlConnection().close();
 //
 //            } else {
 //                redDialog("Tài khoản và mật khẩu phải có số lượng kí tự lớn hơn 6 và bé hơn 25 đối với tài khoản , bé hơn 45 đối với mật khẩu");
@@ -150,9 +150,9 @@ public class Player : IHandleMessage {
                 return;
             }
             user.password = newPass;
-            Connection connection = MYSQLManager.createWebConnection();
+            MySqlConnection MySqlConnection = MYSQLManager.createWebMySqlConnection();
             try {
-                MYSQLManager.updateSql(String.format("update user set password = '%s' where user_id = %s", newPass, user.user_id), connection);
+                MYSQLManager.updateSql(Utilities.Format("update user set password = '%s' where user_id = %s", newPass, user.user_id), MySqlConnection);
                 Message m = new Message(GopetCMD.CHANGE_PASSWORD);
                 m.putUTF("Đổi mật khẩu thành công, vui lòng nhớ kỷ thông tin");
                 m.writer().flush();
@@ -160,7 +160,7 @@ public class Player : IHandleMessage {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            connection.close();
+            MySqlConnection.close();
         } else {
             Message m = new Message(GopetCMD.CHANGE_PASSWORD);
             m.writer().flush();
@@ -198,14 +198,14 @@ public class Player : IHandleMessage {
         }
     }
 
-    private long currentTimeUpdateHP_MP = System.currentTimeMillis();
+    private long currentTimeUpdateHP_MP = Utilities.CurrentTimeMillis;
 
     private void UpdateHP_MP()   {
-        if (isPetRecovery && petHpRecovery < System.currentTimeMillis() && !playerData.petSelected.petDieByPK) {
+        if (isPetRecovery && petHpRecovery < Utilities.CurrentTimeMillis && !playerData.petSelected.petDieByPK) {
             playerData.petSelected.addHp((int) Utilities.getValueFromPercent(20f, playerData.petSelected.maxHp));
             playerData.petSelected.addMp((int) Utilities.getValueFromPercent(20f, playerData.petSelected.maxMp));
             controller.sendMyPetInfo();
-            petHpRecovery = System.currentTimeMillis() + TIME_PET_RECOVERY;
+            petHpRecovery = Utilities.CurrentTimeMillis + TIME_PET_RECOVERY;
         }
     }
 
@@ -225,12 +225,12 @@ public class Player : IHandleMessage {
             redDialog("Tồn tại ký tự lạ");
             return;
         }
-        Connection connection = MYSQLManager.createWebConnection();
+        MySqlConnection MySqlConnection = MYSQLManager.createWebMySqlConnection();
         ResultSet result
                 = MYSQLManager.jquery(
-                        String.format(
+                        Utilities.Format(
                                 "SELECT * FROM `user` where username = '%s' && password = '%s'",
-                                username, password), connection);
+                                username, password), MySqlConnection);
         if (result.next()) {
             user = new UserData();
             user.user_id = result.getInt("user_id");
@@ -244,31 +244,31 @@ public class Player : IHandleMessage {
             user.password = password;
             result.close();
             if (user.role == UserData.ROLE_NON_ACTIVE) {
-                redDialog(String.format("Tài khoản của bạn chưa kích hoạt vui lòng lên trang web %s để kích hoạt tài khoản!", ServerSetting.instance.getWebDomainName()));
+                redDialog(Utilities.Format("Tài khoản của bạn chưa kích hoạt vui lòng lên trang web %s để kích hoạt tài khoản!", ServerSetting.instance.getWebDomainName()));
                 return;
             }
 
             switch (user.isBanned) {
                 case UserData.BAN_INFINITE: {
-                    this.redDialog(String.format("Tài khoản của bạn đã bị khóa vĩnh viên \n Lý do :%s", user.banReason));
-                    Thread.sleep(100);
+                    this.redDialog(Utilities.Format("Tài khoản của bạn đã bị khóa vĩnh viên \n Lý do :%s", user.banReason));
+                    Thread.Sleep(100);
                     this.session.close();
-                    connection.close();
+                    MySqlConnection.close();
                     return;
                 }
                 case UserData.BAN_TIME: {
-                    if (System.currentTimeMillis() < user.banTime) {
-                        long deltaTime = user.banTime - System.currentTimeMillis();
+                    if (Utilities.CurrentTimeMillis < user.banTime) {
+                        long deltaTime = user.banTime - Utilities.CurrentTimeMillis;
                         int hours = (int) (deltaTime / 1000 / 60 / 60);
                         int min = (int) ((deltaTime - (hours * 1000 * 60 * 60)) / 1000 / 60);
-                        this.redDialog(String.format("Tài khoản của bạn đã bị khóa vì %s \n Sau %s giờ %s phút nữa tài khoản sẽ được mở khóa", user.banReason, hours, min));
-                        Thread.sleep(100);
+                        this.redDialog(Utilities.Format("Tài khoản của bạn đã bị khóa vì %s \n Sau %s giờ %s phút nữa tài khoản sẽ được mở khóa", user.banReason, hours, min));
+                        Thread.Sleep(100);
                         this.session.close();
-                        connection.close();
+                        MySqlConnection.close();
                         return;
                     } else {
                         user.isBanned = UserData.BAN_NONE;
-                        MYSQLManager.updateSql(String.format("update user set isBaned = DEFAULT where user_id = %s", user.user_id), connection);
+                        MYSQLManager.updateSql(Utilities.Format("update user set isBaned = DEFAULT where user_id = %s", user.user_id), MySqlConnection);
                     }
                     break;
                 }
@@ -281,21 +281,21 @@ public class Player : IHandleMessage {
                 player2.session.close();
                 player2.onDisconnected();
                 this.session.close();
-                connection.close();
+                MySqlConnection.close();
                 return;
             }
             long timeWait = PlayerManager.getTimeWaitLogin(user.user_id);
             if (timeWait > 0) {
-                String str = String.format("Vui lòng chờ %s giây nữa để đăng nhập", timeWait / 1000);
+                String str = Utilities.Format("Vui lòng chờ %s giây nữa để đăng nhập", timeWait / 1000);
                 this.redDialog(str);
-                Thread.sleep(500);
+                Thread.Sleep(500);
                 this.session.close();
-                connection.close();
+                MySqlConnection.close();
                 return;
             }
-            Connection connectionPlayer = MYSQLManager.create();
+            MySqlConnection MySqlConnectionPlayer = MYSQLManager.create();
             try (ResultSet result2 = MYSQLManager.jquery(
-                    String.format("SELECT * FROM `player` where user_id = %s", user.user_id), connectionPlayer)) {
+                    Utilities.Format("SELECT * FROM `player` where user_id = %s", user.user_id), MySqlConnectionPlayer)) {
                 if (result2.next()) {
                     try {
                         playerData = PlayerData.read(result2);
@@ -307,7 +307,7 @@ public class Player : IHandleMessage {
                     } catch (Exception e) {
                         e.printStackTrace();
                         redDialog("Đăng nhập xảy ra lỗi");
-                        Thread.sleep(100);
+                        Thread.Sleep(100);
                         session.close();
                         return;
                     }
@@ -318,7 +318,7 @@ public class Player : IHandleMessage {
             }
             try {
                 ResultSet result2 = MYSQLManager.jquery(
-                        String.format("SELECT * FROM `kiosk_recovery` where user_id = %s", user.user_id), connectionPlayer);
+                        Utilities.Format("SELECT * FROM `kiosk_recovery` where user_id = %s", user.user_id), MySqlConnectionPlayer);
                 while (result2.next()) {
                     SellItem sellItem = (SellItem) JsonManager.LoadFromJson(result2.getString("item"), SellItem.class);
                     if (sellItem.pet == null) {
@@ -331,8 +331,8 @@ public class Player : IHandleMessage {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            MYSQLManager.updateSql(String.format("DELETE FROM `kiosk_recovery` where user_id = %s", user.user_id), connectionPlayer);
-            connectionPlayer.close();
+            MYSQLManager.updateSql(Utilities.Format("DELETE FROM `kiosk_recovery` where user_id = %s", user.user_id), MySqlConnectionPlayer);
+            MySqlConnectionPlayer.close();
             loginOK();
             controller.LoadMap();
             controller.sendMail();
@@ -348,9 +348,9 @@ public class Player : IHandleMessage {
                     }
                 }
                 int goldPlus = 0;
-                Connection gameConnection__ = MYSQLManager.create();
+                MySqlConnection gameMySqlConnection__ = MYSQLManager.create();
                 ArrayList<String> listIdRemove = new();
-                ResultSet resultSetExchangeGold = MYSQLManager.jquery(String.format("SELECT * FROM `exchange_gold` WHERE `user_id` = %s", playerData.user_id), gameConnection__);
+                ResultSet resultSetExchangeGold = MYSQLManager.jquery(Utilities.Format("SELECT * FROM `exchange_gold` WHERE `user_id` = %s", playerData.user_id), gameMySqlConnection__);
                 while (resultSetExchangeGold.next()) {
                     String id = resultSetExchangeGold.getString("id");
                     int g = resultSetExchangeGold.getInt("gold");
@@ -361,12 +361,12 @@ public class Player : IHandleMessage {
                 resultSetExchangeGold.close();
                 if (!listIdRemove.isEmpty()) {
                     for (String uuidString : listIdRemove) {
-                        MYSQLManager.updateSql(String.format("DELETE FROM `exchange_gold` WHERE `id`  = '%s' AND `user_id` = %s;", uuidString, playerData.user_id), gameConnection__);
+                        MYSQLManager.updateSql(Utilities.Format("DELETE FROM `exchange_gold` WHERE `id`  = '%s' AND `user_id` = %s;", uuidString, playerData.user_id), gameMySqlConnection__);
                     }
                 }
-                gameConnection__.close();
+                gameMySqlConnection__.close();
                 if (goldPlus > 0) {
-                    okDialog(String.format("Nhận dược %s (vang) do nạp tiền", Utilities.formatNumber(goldPlus)));
+                    okDialog(Utilities.Format("Nhận dược %s (vang) do nạp tiền", Utilities.formatNumber(goldPlus)));
                 }
             } else {
                 controller.createChar();
@@ -376,7 +376,7 @@ public class Player : IHandleMessage {
             result.close();
             loginFailed("Tài khoản hoặc mật khẩu của bạn không chính xác");
         }
-        connection.close();
+        MySqlConnection.close();
     }
 
     public void loginOK()   {
@@ -406,7 +406,7 @@ public class Player : IHandleMessage {
         return Pattern.compile(c).matcher(str).find();
     }
 
-    @Override
+     
     public void onDisconnected() {
         try {
             Place place = getPlace();
@@ -466,11 +466,11 @@ public class Player : IHandleMessage {
     public void addGold(long gold)   {
         playerData.gold += gold;
         controller.updateUserInfo();
-        if (gold < 0 && System.currentTimeMillis() < 1705330800000L) {
+        if (gold < 0 && Utilities.CurrentTimeMillis < 1705330800000L) {
             playerData.spendGold -= gold;
             TopData topData = TopSpendGold.instance.find(playerData.user_id);
             if (topData != null) {
-                topData.desc = String.format("Hạng %s: Đã tiêu %s (vang)", TopSpendGold.instance.datas.indexOf(topData) + 1, Utilities.formatNumber(playerData.spendGold));
+                topData.desc = Utilities.Format("Hạng %s: Đã tiêu %s (vang)", TopSpendGold.instance.datas.indexOf(topData) + 1, Utilities.formatNumber(playerData.spendGold));
             }
         }
     }
@@ -484,11 +484,11 @@ public class Player : IHandleMessage {
         playerData.gold -= gold;
 
         controller.updateUserInfo();
-        if (System.currentTimeMillis() < 1705330800000L) {
+        if (Utilities.CurrentTimeMillis < 1705330800000L) {
             playerData.spendGold += gold;
             TopData topData = TopSpendGold.instance.find(playerData.user_id);
             if (topData != null) {
-                topData.desc = String.format("Hạng %s: Đã tiêu %s (vang)", TopSpendGold.instance.datas.indexOf(topData) + 1, Utilities.formatNumber(playerData.spendGold));
+                topData.desc = Utilities.Format("Hạng %s: Đã tiêu %s (vang)", TopSpendGold.instance.datas.indexOf(topData) + 1, Utilities.formatNumber(playerData.spendGold));
             }
         }
     }
@@ -578,13 +578,13 @@ public class Player : IHandleMessage {
 
     private void updatePkPoint() {
         if (playerData.pkPoint > 0) {
-            if (System.currentTimeMillis() - GopetManager.TIME_DECREASE_PK_POINT >= playerData.pkPointTime.getTime()) {
+            if (Utilities.CurrentTimeMillis - GopetManager.TIME_DECREASE_PK_POINT >= playerData.pkPointTime.getTime()) {
                 playerData.pkPoint--;
-                playerData.pkPointTime.setTime(System.currentTimeMillis());
+                playerData.pkPointTime.setTime(Utilities.CurrentTimeMillis);
             }
         } else {
-            if (System.currentTimeMillis() - GopetManager.TIME_DECREASE_PK_POINT >= playerData.pkPointTime.getTime()) {
-                playerData.pkPointTime.setTime(System.currentTimeMillis());
+            if (Utilities.CurrentTimeMillis - GopetManager.TIME_DECREASE_PK_POINT >= playerData.pkPointTime.getTime()) {
+                playerData.pkPointTime.setTime(Utilities.CurrentTimeMillis);
             }
         }
     }

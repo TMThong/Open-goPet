@@ -20,6 +20,175 @@ public class ShopTemplateItem : DataVersion {
     public int petId;
     public bool isSellItem = true;
 
+    public void setShopId(int shopId)
+    {
+        this.shopId = shopId;
+    }
+
+    public void setItemTempalteId(int itemTempalteId)
+    {
+        this.itemTempalteId = itemTempalteId;
+    }
+
+    public void setCount(int count)
+    {
+        this.count = count;
+    }
+
+    public void setMoneyType(sbyte[] moneyType)
+    {
+        this.moneyType = moneyType;
+    }
+
+    public void setPrice(int[] price)
+    {
+        this.price = price;
+    }
+
+    public void setInventoryType(sbyte inventoryType)
+    {
+        this.inventoryType = inventoryType;
+    }
+
+    
+
+    public void setNameSpeceial(String nameSpeceial)
+    {
+        this.nameSpeceial = nameSpeceial;
+    }
+
+    public void setDescriptionSpeceial(String descriptionSpeceial)
+    {
+        this.descriptionSpeceial = descriptionSpeceial;
+    }
+
+    public void setNeedRemove(bool needRemove)
+    {
+        this.needRemove = needRemove;
+    }
+
+    public void setSpceialType(int spceialType)
+    {
+        this.spceialType = spceialType;
+    }
+
+    public void setCloseScreenAfterClick(bool closeScreenAfterClick)
+    {
+        this.closeScreenAfterClick = closeScreenAfterClick;
+    }
+
+    public void setClanLvl(int clanLvl)
+    {
+        this.clanLvl = clanLvl;
+    }
+
+    public void setPerCount(int perCount)
+    {
+        this.perCount = perCount;
+    }
+
+    public void setHasId(bool hasId)
+    {
+        this.hasId = hasId;
+    }
+
+    public void setMenuId(int menuId)
+    {
+        this.menuId = menuId;
+    }
+
+    public void setPetId(int petId)
+    {
+        this.petId = petId;
+    }
+
+     
+
+    public int getShopId()
+    {
+        return this.shopId;
+    }
+
+    public int getItemTempalteId()
+    {
+        return this.itemTempalteId;
+    }
+
+    public int getCount()
+    {
+        return this.count;
+    }
+
+    public sbyte[] getMoneyType()
+    {
+        return this.moneyType;
+    }
+
+    public int[] getPrice()
+    {
+        return this.price;
+    }
+
+    public sbyte getInventoryType()
+    {
+        return this.inventoryType;
+    }
+
+    
+
+    public String getNameSpeceial()
+    {
+        return this.nameSpeceial;
+    }
+
+    public String getDescriptionSpeceial()
+    {
+        return this.descriptionSpeceial;
+    }
+
+    public bool isNeedRemove()
+    {
+        return this.needRemove;
+    }
+
+    public int getSpceialType()
+    {
+        return this.spceialType;
+    }
+
+    public bool isCloseScreenAfterClick()
+    {
+        return this.closeScreenAfterClick;
+    }
+
+    public int getClanLvl()
+    {
+        return this.clanLvl;
+    }
+
+    public int getPerCount()
+    {
+        return this.perCount;
+    }
+
+    public bool isHasId()
+    {
+        return this.hasId;
+    }
+
+    public int getMenuId()
+    {
+        return this.menuId;
+    }
+
+    public int getPetId()
+    {
+        return this.petId;
+    }
+
+     
+ 
+
     public ItemTemplate getItemTemplate() {
         return GopetManager.itemTemplate.get(itemTempalteId);
     }
@@ -43,17 +212,17 @@ public class ShopTemplateItem : DataVersion {
 
         if (!isSellItem) {
             PetTemplate petTemplate = getPetTemplate();
-            return String.format("( + %s (str) , + %s (agi) , + %s (int) , + %s (hp) , + %s (mp))", petTemplate.getStr(), petTemplate.getAgi(), petTemplate.getInt(), petTemplate.getHp(), petTemplate.getMp());
+            return Utilities.Format("( + %s (str) , + %s (agi) , + %s (int) , + %s (hp) , + %s (mp))", petTemplate.getStr(), petTemplate.getAgi(), petTemplate.getInt(), petTemplate.getHp(), petTemplate.getMp());
         }
 
         ItemTemplate itemTemplate = getItemTemplate();
 
         if (itemTemplate.getType() == GopetManager.PET_EQUIP_ARMOUR || itemTemplate.getType() == GopetManager.PET_EQUIP_GLOVE || itemTemplate.getType() == GopetManager.PET_EQUIP_HAT || itemTemplate.getType() == GopetManager.PET_EQUIP_SHOE || itemTemplate.getType() == GopetManager.PET_EQUIP_WEAPON) {
-            return itemTemplate.getDescription() + String.format("( + %s (atk) , + %s (def) , + %s (hp) , + %s (mp))", itemTemplate.getAtk(), itemTemplate.getDef(), itemTemplate.getHp(), itemTemplate.getMp());
+            return itemTemplate.getDescription() + Utilities.Format("( + %s (atk) , + %s (def) , + %s (hp) , + %s (mp))", itemTemplate.getAtk(), itemTemplate.getDef(), itemTemplate.getHp(), itemTemplate.getMp());
         }
 
         if (itemTemplate.getType() == GopetManager.SKIN_ITEM) {
-            return String.format("+%s (atk) +%s (def) +%s (hp) +%s (mp)", itemTemplate.getAtk(), itemTemplate.getDef(), itemTemplate.getHp(), itemTemplate.getMp());
+            return Utilities.Format("+%s (atk) +%s (def) +%s (hp) +%s (mp)", itemTemplate.getAtk(), itemTemplate.getDef(), itemTemplate.getHp(), itemTemplate.getMp());
         }
         return itemTemplate.getDescription();
     }
@@ -69,7 +238,7 @@ public class ShopTemplateItem : DataVersion {
         ItemTemplate itemTemplate = getItemTemplate();
 
         if (itemTemplate.getType() == GopetManager.PET_EQUIP_ARMOUR || itemTemplate.getType() == GopetManager.PET_EQUIP_GLOVE || itemTemplate.getType() == GopetManager.PET_EQUIP_HAT || itemTemplate.getType() == GopetManager.PET_EQUIP_SHOE || itemTemplate.getType() == GopetManager.PET_EQUIP_WEAPON) {
-            return itemTemplate.getName() + String.format("(Yêu cầu   %s (str) ,  %s (agi) ,  %s (int))", itemTemplate.getRequireStr(), itemTemplate.getRequireAgi(), itemTemplate.getRequireInt());
+            return itemTemplate.getName() + Utilities.Format("(Yêu cầu   %s (str) ,  %s (agi) ,  %s (int))", itemTemplate.getRequireStr(), itemTemplate.getRequireAgi(), itemTemplate.getRequireInt());
         }
 
         if (count > 1 && shopId != MenuController.SHOP_CLAN) {

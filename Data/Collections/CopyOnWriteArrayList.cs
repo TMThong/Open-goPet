@@ -108,5 +108,21 @@ namespace Gopet.Data.Collections
         {
             this.Remove(item);
         }
+
+        public void Clear()
+        {
+            lock (this)
+            {
+                this.values = ImmutableList<T>.Empty;
+            }
+        }
+
+        public void AddRange(IEnumerable<T> datas)
+        {
+            lock (this)
+            {
+                this.values = this.values.AddRange(datas);
+            }
+        }
     }
 }

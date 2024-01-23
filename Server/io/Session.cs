@@ -1,16 +1,14 @@
 
 
+using Gopet.IO;
 using System.Net.Sockets;
 
 public class Session {
-
-    public static ThreadPoolExecutor executorCloseThread = (ThreadPoolExecutor) Executors.newFixedThreadPool(20);
-    public const ThreadGroup THREAD_GROUP = new ThreadGroup("session");
     public IHandleMessage messageHandler;
-    public DataOutputStream dos;
-    public DataInputStream dis;
+    public BinaryWriter dos;
+    public BinaryReader dis;
     public Socket sc;
-    public bool isConnected;
+    public bool isSocketConnected;
     private MsgSender sender;
     private MsgReader reader;
     public int sendsbyteCount;
@@ -27,40 +25,41 @@ public class Session {
 
     public void setClientOK(bool ok)   {
         Message ms = new Message((sbyte) -36);
-        ms.writer().writesbyte(ok ? 1 : 0);
+        ms.writer().writeSByte(ok ? 1 : 0);
         ms.writer().flush();
         sendMessage(ms);
         clientOK = true;
     }
 
     public bool isConnected() {
-        return this.isConnected;
+        return this.isSocketConnected;
     }
 
     
     public void run() {
         try {
-            isConnected = true;
-            dis = new DataInputStream(sc.getInputStream());
-            dos = new DataOutputStream(sc.getOutputStream());
+            isSocketConnected = true;
+            NetworkStream networkStream = new NetworkStream(sc);
+            dis = new BinaryReader(networkStream);
+            dos = new BinaryWriter(networkStream);
             readKey();
             setSender(new MsgSender(this));
             setReader(new MsgReader(this));
-            Thread sendThread = new Thread(THREAD_GROUP, sender);
-            sendThread.setName("Send Msg thread");
-            sendThread.start();
-            Thread readThread = new Thread(THREAD_GROUP, reader);
-            readThread.setName("Read Msg thread");
-            readThread.start();
+            Thread sendThread = new Thread(this.sender.run);
+            sendThread.IsBackground = true;
+            sendThread.Start();
+            Thread readThread = new Thread(this.reader.run);
+            readThread.IsBackground = true;
+            readThread.Start();
         } catch (Exception e) {
             close();
         }
     }
 
     public void readKey()   {
-        sbyte[] keys = new sbyte[9];
-        dis.read(keys, 0, 9);
-        long key = readKey(keys);
+        byte[] keys = new byte[9];
+        dis.Read(keys, 0, 9);
+        long key = readKey(keys.sbytes());
         tea = new TEA(key);
     }
 
@@ -107,47 +106,52 @@ public class Session {
     public static int socketCount = 0;
 
     public void close() {
-        executorCloseThread.execute(new CloseSessionTask());
+        ThreadPool.QueueUserWorkItem(Exit);
     }
 
-    class CloseSessionTask implements Runnable {
-
-        @Override
-        public void run() {
-            try {
-                currentIp = null;
-                currentPort = -1;
-                isConnected = false;
-                if (sender != null) {
-                    sender.stop();
-                }
-
-                if (dos != null) {
-                    dos.close();
-                    dos = null;
-                }
-
-                if (dis != null) {
-                    dis.close();
-                    dis = null;
-                }
-
-                if (sc != null) {
-                    sc.close();
-                    sc = null;
-                    socketCount--;
-                }
-
-                sendsbyteCount = 0;
-                recvsbyteCount = 0;
-
-                if (messageHandler != null) {
-                    messageHandler.onDisconnected();
-                }
-
-            } catch (Exception var2) {
-
+    public void Exit(object state)
+    {
+        try
+        {
+            currentIp = null;
+            currentPort = -1;
+            isSocketConnected = false;
+            if (sender != null)
+            {
+                sender.stop();
             }
+
+            if (dos != null)
+            {
+                dos.Close();
+                dos = null;
+            }
+
+            if (dis != null)
+            {
+                dis.Close();
+                dis = null;
+            }
+
+            if (sc != null)
+            {
+                sc.Close();
+                sc = null;
+                socketCount--;
+            }
+
+            sendsbyteCount = 0;
+            recvsbyteCount = 0;
+
+            if (messageHandler != null)
+            {
+                messageHandler.onDisconnected();
+            }
+
+        }
+        catch (Exception var2)
+        {
+
         }
     }
 }

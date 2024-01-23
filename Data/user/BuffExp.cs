@@ -8,7 +8,7 @@ public class BuffExp : DataVersion {
     
     private float _buffPercent = 0f;
     
-    private long currentTime = System.currentTimeMillis();
+    private long currentTime = Utilities.CurrentTimeMillis;
 
     public BuffExp() {
 
@@ -22,18 +22,18 @@ public class BuffExp : DataVersion {
     }
 
     public void update() {
-        if (buffExpTime >= 0 && System.currentTimeMillis() - currentTime > 2000L) {
-            buffExpTime -= (System.currentTimeMillis() - currentTime);
-            currentTime = System.currentTimeMillis();
+        if (buffExpTime >= 0 && Utilities.CurrentTimeMillis - currentTime > 2000L) {
+            buffExpTime -= (Utilities.CurrentTimeMillis - currentTime);
+            currentTime = Utilities.CurrentTimeMillis;
         }
     }
     
     public void loadCurrentTime() {
-        currentTime = System.currentTimeMillis();
+        currentTime = Utilities.CurrentTimeMillis;
     }
 
     public void addTime(long time) {
-        currentTime = System.currentTimeMillis();
+        currentTime = Utilities.CurrentTimeMillis;
         if (buffExpTime + time > GopetManager.MAX_TIME_BUFF_EXP) {
             buffExpTime = GopetManager.MAX_TIME_BUFF_EXP;
         } else {

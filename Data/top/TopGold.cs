@@ -6,7 +6,7 @@ package data.top;
 
 import java.sql.ResultSet;
 import manager.MYSQLManager;
-import util.Utilities;
+import Utilities;
 
 /**
  *
@@ -23,13 +23,13 @@ public class TopGold extends Top {
         base.desc = "Chỉ những người chơi giàu có";
     }
 
-    @Override
+     
     public void update() {
         try {
 
-            lastDatas.clear();
-            lastDatas.addAll(datas);
-            datas.clear();
+            lastDatas.Clear();
+            lastDatas.AddRange(datas);
+            datas.Clear();
             try (ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `player` WHERE gold > 0 && isAdmin = 0 ORDER BY `player`.`gold` DESC LIMIT 10")) {
                 int index = 1;
                 while (resultSet.next()) {
@@ -38,7 +38,7 @@ public class TopGold extends Top {
                     topData.name = resultSet.getString("name");
                     topData.imgPath = resultSet.getString("avatarPath");
                     topData.title = topData.name;
-                    topData.desc = String.format("Hạng %s : đang có %s (vang)", index, Utilities.formatNumber(resultSet.getBigDecimal("gold").longValue()));
+                    topData.desc = Utilities.Format("Hạng %s : đang có %s (vang)", index, Utilities.formatNumber(resultSet.getBigDecimal("gold").longValue()));
                     datas.add(topData);
                     index++;
                 }

@@ -1,28 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+ 
 using Gopet.Data.Collections;
-
-package data.battle;
-
-import data.clan.ClanBuff;
-import data.clan.ClanMember;
-import data.item.DropItem;
-import data.item.Item;
-import data.item.ItemAttributeTemplate;
-import data.item.ItemInfo;
-import data.mob.Boss;
-import data.mob.Mob;
-import data.pet.Pet;
-import data.pet.PetSkill;
-import data.pet.PetSkillInfo;
-import data.pet.PetSkillLv;
-import data.user.History;
-import data.user.Popup;
-import data.user.UserData;
-import java.io.IOException;
-import java.util.ArrayList;
+ 
  
 public class PetBattle {
 
@@ -48,7 +26,7 @@ public class PetBattle {
         this.passivePet = passivePlayer.playerData.petSelected;
         setIsActiveTurn(activePet.getAgi() >= passivePet.getAgi());
         setPetAttackMob(false);
-        setDelaTimeTurn(System.currentTimeMillis() + GopetManager.TimeNextTurn);
+        setDelaTimeTurn(Utilities.CurrentTimeMillis + GopetManager.TimeNextTurn);
         setActiveBattleInfo(new PetBattleInfo(activePlayer));
         setPassiveBattleInfo(new PetBattleInfo(passivePlayer));
         if (isActiveTurn) {
@@ -68,13 +46,13 @@ public class PetBattle {
         this.activePlayer = activePlayer;
         this.activePlayer.isPetRecovery = false;
         setActivePet(activePlayer.playerData.petSelected);
-        setDelaTimeTurn(System.currentTimeMillis() + GopetManager.TimeNextTurn);
+        setDelaTimeTurn(Utilities.CurrentTimeMillis + GopetManager.TimeNextTurn);
         setIsActiveTurn(false);
         setActiveBattleInfo(new PetBattleInfo(activePlayer));
         if (isKhacChe(mob.getPetTemplate().getElement(), activePet.getPetTemplate().getElement())) {
             getActiveBattleInfo().addBuff(new Debuff(new ItemInfo[]{new ItemInfo(10, -3000)}, 1));
         }
-        timeCheckplayer = System.currentTimeMillis() + 7000L;
+        timeCheckplayer = Utilities.CurrentTimeMillis + 7000L;
     }
 
     public void setUserInvitePK(int userInvitePK) {
@@ -223,7 +201,7 @@ public class PetBattle {
                 win();
             }
             if (petAttackMob) {
-                Thread.sleep(GopetManager.DELAY_TURN_PET_BATTLE);
+                Thread.Sleep(GopetManager.DELAY_TURN_PET_BATTLE);
             }
         } else {
             player.redDialog("Chưa tới lượt của bạn");
@@ -235,7 +213,7 @@ public class PetBattle {
         message.putsbyte(GopetCMD.PET_BATTLE);
         message.putInt(activePlayer.user.user_id);
         message.putInt(mainTurnData.petId);
-        message.putInt(Math.round(delaTimeTurn - System.currentTimeMillis()));
+        message.putInt(Math.round(delaTimeTurn - Utilities.CurrentTimeMillis));
         message.putInt((int) GopetManager.TimeNextTurn);
         message.putsbyte(mainTurnData.type);
         if (mainTurnData.type == TurnEffect.TYPE_EFFECT_WAIT) {
@@ -246,7 +224,7 @@ public class PetBattle {
 
             message.putInt(mainTurnData.mp);
         }
-        message.putInt(turnDatas.size());
+        message.putInt(turnDatas.Count);
         for (TurnEffect turnData : turnDatas) {
 
             message.putInt(turnData.petId);
@@ -273,7 +251,7 @@ public class PetBattle {
             message.putsbyte(GopetCMD.PET_BATTLE);
             message.putInt(passivePlayer.user.user_id);
             message.putInt(mainTurnData.petId);
-            message.putInt(Math.round(delaTimeTurn - System.currentTimeMillis()));
+            message.putInt(Math.round(delaTimeTurn - Utilities.CurrentTimeMillis));
             message.putInt((int) GopetManager.TimeNextTurn);
             message.putsbyte(mainTurnData.type);
             if (mainTurnData.type == TurnEffect.TYPE_EFFECT_WAIT) {
@@ -284,7 +262,7 @@ public class PetBattle {
 
                 message.putInt(mainTurnData.mp);
             }
-            message.putInt(turnDatas.size());
+            message.putInt(turnDatas.Count);
             for (TurnEffect turnData : turnDatas) {
 
                 message.putInt(turnData.petId);
@@ -370,7 +348,7 @@ public class PetBattle {
             Message message = new Message(GopetCMD.PET_SERVICE);
             message.putsbyte(GopetCMD.ATTACK_MOB);
             //Turn time
-            message.putInt(Math.round(delaTimeTurn - System.currentTimeMillis()));
+            message.putInt(Math.round(delaTimeTurn - Utilities.CurrentTimeMillis));
             //max turn Time
             message.putInt((int) GopetManager.TimeNextTurn);
             message.putInt(player.user.user_id);
@@ -381,7 +359,7 @@ public class PetBattle {
             playerInZone.session.sendMessage(message);
         } else {
             Message message = GameController.messagePetSerive(GopetCMD.PLAYER_BATTLE);
-            message.putInt(Math.round(delaTimeTurn - System.currentTimeMillis()));
+            message.putInt(Math.round(delaTimeTurn - Utilities.CurrentTimeMillis));
             message.putInt((int) GopetManager.TimeNextTurn);
             message.putInt(activePlayer.user.user_id);
             message.putsbyte(0);
@@ -395,7 +373,7 @@ public class PetBattle {
 
     public void sendStartFightPlayer()    {
         Message message = GameController.messagePetSerive(GopetCMD.PLAYER_BATTLE);
-        message.putInt(Math.round(delaTimeTurn - System.currentTimeMillis()));
+        message.putInt(Math.round(delaTimeTurn - Utilities.CurrentTimeMillis));
         message.putInt((int) GopetManager.TimeNextTurn);
         message.putInt(activePlayer.user.user_id);
         message.putsbyte(1);
@@ -407,7 +385,7 @@ public class PetBattle {
         activePlayer.session.sendMessage(message);
 
         message = GameController.messagePetSerive(GopetCMD.PLAYER_BATTLE);
-        message.putInt(Math.round(delaTimeTurn - System.currentTimeMillis()));
+        message.putInt(Math.round(delaTimeTurn - Utilities.CurrentTimeMillis));
         message.putInt((int) GopetManager.TimeNextTurn);
         message.putInt(passivePlayer.user.user_id);
         message.putsbyte(0);
@@ -427,7 +405,7 @@ public class PetBattle {
         Message message = new Message(GopetCMD.PET_SERVICE);
         message.putsbyte(GopetCMD.ATTACK_MOB);
         //Turn time
-        message.putInt(Math.round(delaTimeTurn - System.currentTimeMillis()));
+        message.putInt(Math.round(delaTimeTurn - Utilities.CurrentTimeMillis));
         //max turn Time
         message.putInt((int) GopetManager.TimeNextTurn);
         message.putInt(player.user.user_id);
@@ -518,15 +496,15 @@ public class PetBattle {
             return;
         } else {
             if (petAttackMob) {
-                if (timeCheckplayer < System.currentTimeMillis()) {
+                if (timeCheckplayer < Utilities.CurrentTimeMillis) {
                     if (!mob.bound.contains(activePlayer.playerData.x, activePlayer.playerData.y)) {
-                        activePlayer.user.ban(UserData.BAN_TIME, "Hệ thống thấy bạn dùng auto", System.currentTimeMillis() + (1000l * 60 * 15));
+                        activePlayer.user.ban(UserData.BAN_TIME, "Hệ thống thấy bạn dùng auto", Utilities.CurrentTimeMillis + (1000l * 60 * 15));
                         activePlayer.session.close();
                     }
                 }
             }
         }
-        if (System.currentTimeMillis() > delaTimeTurn) {
+        if (Utilities.CurrentTimeMillis > delaTimeTurn) {
             nextTurn();
         }
         if (isPetAttackMob()) {
@@ -553,7 +531,7 @@ public class PetBattle {
 
     private void nextTurn()   {
         setIsActiveTurn(!isActiveTurn);
-        setDelaTimeTurn(System.currentTimeMillis() + GopetManager.TimeNextTurn);
+        setDelaTimeTurn(Utilities.CurrentTimeMillis + GopetManager.TimeNextTurn);
         updateDamageToxic();
         updateDamagePhanDoan();
         if (isActiveTurn) {
@@ -616,7 +594,7 @@ public class PetBattle {
                     }
                     if (listItemDrop != null) {
                         if (!listItemDrop.isEmpty()) {
-                            DropItem next = listItemDrop.get(Utilities.nextInt(listItemDrop.size()));
+                            DropItem next = listItemDrop.get(Utilities.nextInt(listItemDrop.Count));
                             float nextPer = Utilities.nextFloatPer();
                             if (next.getPercent() > nextPer) {
                                 Item item = new Item(next.getItemTemplateId());
@@ -630,20 +608,20 @@ public class PetBattle {
                     this.activePlayer.controller.getTaskCalculator().onKillMob(this.mob.getPetTemplate().getPetId());
                 } else {
                     Boss boss = (Boss) mob;
-                    petBattleTexts.addAll(activePlayer.controller.onReiceiveGift(boss.getBossTemplate().getGift()));
+                    petBattleTexts.AddRange(activePlayer.controller.onReiceiveGift(boss.getBossTemplate().getGift()));
                     place.mobDie(mob);
                     ArrayList<String> txtInfo = new();
                     for (Popup petBattleText : petBattleTexts) {
                         txtInfo.add(petBattleText.getText());
                     }
-                    activePlayer.okDialog(String.format("Chức mừng bạn kích sát %s nhận được :\n%s", boss.getBossTemplate().getName(), String.join(",", txtInfo)));
+                    activePlayer.okDialog(Utilities.Format("Chức mừng bạn kích sát %s nhận được :\n%s", boss.getBossTemplate().getName(), String.Join(",", txtInfo)));
                     activePlayer.controller.getTaskCalculator().onKillBoss(boss);
                 }
-                HistoryManager.addHistory(new History(activePlayer).setLog(String.format("Tiếu diệt quái %s", mob.getName())).setObj(mob).setSpceialType(History.KILL_MOB));
+                HistoryManager.addHistory(new History(activePlayer).setLog(Utilities.Format("Tiếu diệt quái %s", mob.getName())).setObj(mob).setSpceialType(History.KILL_MOB));
                 activePlayer.controller.randomCaptcha();
             }
             win(petBattleTexts.toArray(new Popup[0]), coin, exp);
-            activePlayer.controller.setLastTimeKillMob(System.currentTimeMillis());
+            activePlayer.controller.setLastTimeKillMob(Utilities.CurrentTimeMillis);
         } else {
             Player winner = getWinner();
             Player nonWinner = getNonWinner();
@@ -694,9 +672,9 @@ public class PetBattle {
                 winner.addCoin(Math.round(Utilities.getValueFromPercent(coinPK, 50f)));
                 nonWinner.mineCoin(coinPK);
                 if (exp_sub_winner > 0) {
-                    winner.okDialog(String.format("Pet của bạn đã bị trừ %s exp", Utilities.formatNumber(exp_sub_winner)));
+                    winner.okDialog(Utilities.Format("Pet của bạn đã bị trừ %s exp", Utilities.formatNumber(exp_sub_winner)));
                 }
-                nonWinner.okDialog(String.format("Pet của bạn đã bị trừ %s exp", Utilities.formatNumber(exp_sub)));
+                nonWinner.okDialog(Utilities.Format("Pet của bạn đã bị trừ %s exp", Utilities.formatNumber(exp_sub)));
             } else {
                 if (price > 0) {
                     int totalPrice = Math.round((price * 2) - Utilities.getValueFromPercent(price * 2, GopetManager.BET_PRICE_PLAYER_CHALLENGE));
@@ -845,7 +823,7 @@ public class PetBattle {
                             win();
                         }
                         if (petAttackMob) {
-                            Thread.sleep(GopetManager.DELAY_TURN_PET_BATTLE);
+                            Thread.Sleep(GopetManager.DELAY_TURN_PET_BATTLE);
                         }
                     } else {
                         player.redDialog("Thú cưng của bạn không đủ thể lực");
@@ -854,7 +832,7 @@ public class PetBattle {
                     player.redDialog("Không có kỹ năng này");
                 }
             } else {
-                player.redDialog(String.format("Chưa hồi kỹ năng xong.\n Còn %s hiệp", petBattleInfo.getTurnCoolDown(skillId)));
+                player.redDialog(Utilities.Format("Chưa hồi kỹ năng xong.\n Còn %s hiệp", petBattleInfo.getTurnCoolDown(skillId)));
             }
         } else {
             player.redDialog("Không phải lượt của bạn");
@@ -1069,7 +1047,7 @@ public class PetBattle {
 ////                    System.out.println("data.battle.PetBattle.mobAttack() list skill not null");
 //                    if (!listSkill.isEmpty()) {
 ////                        System.out.println("data.battle.PetBattle.mobAttack() list skill not empty");
-//                        PetSkill petSkill = listSkill.get(Utilities.nextInt(listSkill.size()));
+//                        PetSkill petSkill = listSkill.get(Utilities.nextInt(listSkill.Count));
 //                        int skillLv = Utilities.nextInt(0, Math.min(7, this.mob.getMobLvInfo().getLvl() / 7));
 //                        PetSkillLv petSkillLv = petSkill.skillLv.get(skillLv);
 ////                        System.out.println("data.battle.PetBattle.mobAttack() mp mob " + this.mob.mp);
@@ -1210,7 +1188,7 @@ public class PetBattle {
                 sendPetAttack(new(), TurnEffect.createWait(p.hp - oldHp, p.mp - oldMp, getUserTurnId()));
                 player.controller.subCountItem(itemSelect, 1, GopetManager.NORMAL_INVENTORY);
                 if (!petAttackMob) {
-                    String str = String.format("Người chơi %s đã sử dụng %s", player.playerData.name, itemSelect.getTemp().getName());
+                    String str = Utilities.Format("Người chơi %s đã sử dụng %s", player.playerData.name, itemSelect.getTemp().getName());
                     Player playerNeedSend = (player == activePlayer ? passivePlayer : activePlayer);
                     playerNeedSend.Popup(str);
                 }

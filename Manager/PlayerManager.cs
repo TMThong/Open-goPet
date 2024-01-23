@@ -33,7 +33,7 @@ public class PlayerManager {
         players.remove(player);
         player_ID.remove(player.user.user_id);
         player_name.remove(player.playerData.name);
-        waitLogin.put(player.user.user_id, System.currentTimeMillis() + 15000);
+        waitLogin.put(player.user.user_id, Utilities.CurrentTimeMillis + 15000);
 
     }
 
@@ -41,11 +41,11 @@ public class PlayerManager {
         Long time = waitLogin.get(ID);
         if (time == null) {
             return 0;
-        } else if (System.currentTimeMillis() - time >= 0) {
+        } else if (Utilities.CurrentTimeMillis - time >= 0) {
             waitLogin.remove(ID);
             return -1;
         } else {
-            return time - System.currentTimeMillis();
+            return time - Utilities.CurrentTimeMillis;
         }
     }
 

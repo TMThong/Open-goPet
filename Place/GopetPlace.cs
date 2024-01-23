@@ -1,61 +1,27 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package place;
 
-import data.battle.PetBattle;
-import data.clan.ClanMember;
-import data.item.Item;
-import data.map.GopetMap;
-import data.map.NpcTemplate;
-import data.mob.Boss;
-import data.mob.Mob;
-import data.mob.MobLocation;
-import data.mob.MobLvlMap;
-import data.pet.Pet;
-import data.pet.PetTemplate;
-import data.user.History;
-import data.user.UserData;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import manager.GopetManager;
-import manager.HistoryManager;
-import manager.PlayerManager;
-import server.GameController;
-import static server.GameController.messagePetSerive;
-import server.GopetCMD;
-import server.Player;
-import server.io.Message;
-import util.Utilities;
 
-/**
- *
- * @author MINH THONG
- */
-@SuppressWarnings("unchecked")
-public class GopetPlace extends Place {
+using Gopet.Data.Collections;
+ 
+public class GopetPlace : Place {
 
-    public   CopyOnWriteArrayList<Mob> mobs = new CopyOnWriteArrayList<>();
-    public   CopyOnWriteArrayList<PetBattle> petBattles = new CopyOnWriteArrayList<>();
-    public   ConcurrentHashMap<MobLocation, Long> newMob = new ConcurrentHashMap<>();
+    public   CopyOnWriteArrayList<Mob> mobs = new  ();
+    public   CopyOnWriteArrayList<PetBattle> petBattles = new  ();
+    public   ConcurrentHashMap<MobLocation, long> newMob = new  ();
     public const long TIME_NEW_MOB = 25000;
     public int numMobDie = 0;
     public int numMobDieNeed = Utilities.nextInt(150, 200);
 
-    public GopetPlace(GopetMap m, int ID)   {
-        base(m, ID);
+    public GopetPlace(GopetMap m, int ID)  : base(m, ID)
+    {
+       
         if (GopetManager.mobLocation.containsKey(m.mapID) && GopetManager.MOBLVL_MAP.containsKey(m.mapID)) {
             createNewMob(GopetManager.mobLocation.get(map.mapID));
         }
     }
 
-    @Override
-    public void add(Player player)   {
-        HistoryManager.addHistory(new History(player).setLog(String.format("Bạn đã vào khu %s map %s", zoneID, map.mapTemplate.getMapName())));
+   
+    public override void add(Player player)   {
+        HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Bạn đã vào khu %s map %s", zoneID, map.mapTemplate.getMapName())));
         PetBattle petBattle = player.controller.getPetBattle();
         if (petBattle != null) {
             petBattle.close(player);
@@ -79,8 +45,8 @@ public class GopetPlace extends Place {
         sendClan(player, true);
     }
 
-    @Override
-    public void remove(Player player)   {
+    
+    public override void remove(Player player)   {
         PetBattle petBattle = player.controller.getPetBattle();
         if (petBattle != null) {
             petBattle.close(player);
@@ -91,9 +57,9 @@ public class GopetPlace extends Place {
     public void addNewMob(Mob gopetMob) {
 
         while (true) {
-            int mobId = -Utilities.nextInt(2, int.MAX_VALUE - 12);
+            int mobId = -Utilities.nextInt(2, int.MaxValue - 12);
             bool hasId = false;
-            for (Mob mob : mobs) {
+            foreach (Mob mob in mobs) {
                 if (mob.getMobId() == mobId && mob != gopetMob) {
                     hasId = true;
                     break;
@@ -109,7 +75,7 @@ public class GopetPlace extends Place {
 
     public void mobDie(Mob gopetMob) {
         mobs.remove(gopetMob);
-          long timeGen = System.currentTimeMillis() + TIME_NEW_MOB;
+          long timeGen = Utilities.CurrentTimeMillis + TIME_NEW_MOB;
         newMob.put(gopetMob.getMobLocation(), timeGen);
     }
 
@@ -135,7 +101,7 @@ public class GopetPlace extends Place {
         CopyOnWriteArrayList<Mob> gopetMobs = (CopyOnWriteArrayList<Mob>) mobs.clone();
         Message message = new Message(GopetCMD.PET_SERVICE);
         message.putsbyte(GopetCMD.SEND_LIST_MOB_ZONE);
-        message.putInt(gopetMobs.size());
+        message.putInt(gopetMobs.Count);
         for (Mob mob : gopetMobs) {
             message.putInt(mob.getMobId());
             message.putUTF(mob.getPetTemplate().getFrameImg());
@@ -153,7 +119,7 @@ public class GopetPlace extends Place {
         CopyOnWriteArrayList<Mob> gopetMobs = (CopyOnWriteArrayList<Mob>) mobs.clone();
         Message message = new Message(GopetCMD.PET_SERVICE);
         message.putsbyte(GopetCMD.SEND_LIST_MOB_ZONE);
-        message.putInt(gopetMobs.size());
+        message.putInt(gopetMobs.Count);
         for (Mob mob : gopetMobs) {
             message.putInt(mob.getMobId());
             message.putUTF(mob.getPetTemplate().getFrameImg());
@@ -170,7 +136,7 @@ public class GopetPlace extends Place {
     private void sendMob(ArrayList<Mob> newMobs)   {
         Message message = new Message(GopetCMD.PET_SERVICE);
         message.putsbyte(GopetCMD.SEND_LIST_MOB_ZONE);
-        message.putInt(newMobs.size());
+        message.putInt(newMobs.Count);
         for (Mob mob : newMobs) {
             message.putInt(mob.getMobId());
             message.putUTF(mob.getPetTemplate().getFrameImg());
@@ -194,7 +160,7 @@ public class GopetPlace extends Place {
         if (!hashMap.isEmpty()) {
             Message message = new Message(GopetCMD.PET_SERVICE);
             message.putsbyte(GopetCMD.SEND_LIST_PET_ZONE);
-            message.putsbyte(hashMap.size());
+            message.putsbyte(hashMap.Count);
             for (Map.Entry<Player, Pet> entry : hashMap.entrySet()) {
                 Player player1 = entry.getKey();
                 Pet petSelected = entry.getValue();
@@ -255,7 +221,7 @@ public class GopetPlace extends Place {
         player.session.sendMessage(ms);
     }
 
-    @Override
+     
     public void sendNewPlayer(Player player)   {
         initPlayer(player);
         Message message = new Message(24);
@@ -273,12 +239,12 @@ public class GopetPlace extends Place {
         sendMessage(message);
     }
 
-    @Override
+     
     public void sendMove(int channelID, int userID, sbyte lastDir, short[][] points)   {
 
     }
 
-    @Override
+     
     public void chat(Player player, String text)   {
 
         Message message = new Message(GopetCMD.ON_PLACE_CHAT);
@@ -287,7 +253,7 @@ public class GopetPlace extends Place {
         message.cleanup();
         sendMessage(message);
 //        if (text.equals(  "j")) {
-//            MYSQLManager.updateSql(String.format(  "INSERT INTO `gopet_mob_location`(`mapID`, `x`, `y`) VALUES ('%s','%s','%s')", map.mapID, player.playerData.x, player.playerData.y));
+//            MYSQLManager.updateSql(Utilities.Format(  "INSERT INTO `gopet_mob_location`(`mapID`, `x`, `y`) VALUES ('%s','%s','%s')", map.mapID, player.playerData.x, player.playerData.y));
 //        }
     }
 
@@ -304,7 +270,7 @@ public class GopetPlace extends Place {
         sendMessage(message);
     }
 
-    @Override
+     
     public void sendRemove(Player player)   {
         Message message = new Message(GopetCMD.ON_PLAYER_EXIT_PLACE);
         message.putInt(player.playerData.user_id);
@@ -314,7 +280,7 @@ public class GopetPlace extends Place {
         sendMessage(message);
     }
 
-    @Override
+     
     public void chat(int user_id,   String name,   String text)   {
         Message message = new Message(GopetCMD.PET_SERVICE);
         message.putsbyte(GopetCMD.CHAT_PUBLIC);
@@ -325,7 +291,7 @@ public class GopetPlace extends Place {
         sendMessage(message);
     }
 
-    @Override
+     
     public void loadInfo(Player player)   {
         Message message = new Message(GopetCMD.ON_UPDATE_PLAYER_IN_MAP);
         // Map ID
@@ -356,8 +322,8 @@ public class GopetPlace extends Place {
     }
 
     public void startFightMob(int mobId, Player player)   {
-        if (System.currentTimeMillis() - player.controller.getLastTimeKillMob() < 4000) {
-            player.user.ban(UserData.BAN_TIME, "Dùng phiên bản speed để farm quái (thuật toán ver2)!\n Nếu muốn kháng cáo vui lòng quay video lại", System.currentTimeMillis() + 60000L * 5);
+        if (Utilities.CurrentTimeMillis - player.controller.getLastTimeKillMob() < 4000) {
+            player.user.ban(UserData.BAN_TIME, "Dùng phiên bản speed để farm quái (thuật toán ver2)!\n Nếu muốn kháng cáo vui lòng quay video lại", Utilities.CurrentTimeMillis + 60000L * 5);
             player.session.close();
             return;
         }
@@ -421,7 +387,7 @@ public class GopetPlace extends Place {
         }
     }
 
-    @Override
+     
     public void update()   {
         base.update(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
 
@@ -429,7 +395,7 @@ public class GopetPlace extends Place {
             if (mob instanceof Boss) {
                 Boss b = (Boss) mob;
                 if (b.isTimeOut() && b.getPetBattle() == null) {
-                    if (System.currentTimeMillis() > b.getTimeoutMilis()) {
+                    if (Utilities.CurrentTimeMillis > b.getTimeoutMilis()) {
                         this.mobDie(mob);
                     }
                 }
@@ -453,7 +419,7 @@ public class GopetPlace extends Place {
         for (Map.Entry<MobLocation, Long> entry : newMob.entrySet()) {
             MobLocation location = entry.getKey();
             Long timeNewMob = entry.getValue();
-            if (timeNewMob < System.currentTimeMillis()) {
+            if (timeNewMob < Utilities.CurrentTimeMillis) {
                 mobLocations_newMob.add(location);
             }
         }
@@ -481,18 +447,18 @@ public class GopetPlace extends Place {
                     if (numMobDie >= numMobDieNeed) {
                         Boss boss = new Boss(Utilities.randomArray(this.map.mapTemplate.getBoss()), mobLocation);
                         boss.setTimeOut(true);
-                        boss.setTimeoutMilis(System.currentTimeMillis() + GopetManager.TIME_BOSS_DISPOINTED);
+                        boss.setTimeoutMilis(Utilities.CurrentTimeMillis + GopetManager.TIME_BOSS_DISPOINTED);
 
                         addNewMob(boss);
                         nGopetMobs.add(boss);
-                        PlayerManager.showBanner(String.format("Boss %s đã xuất hiện tại %s khu %s nhanh tay lên nào!!!!", boss.getBossTemplate().getName(), this.map.mapTemplate.getMapName(), this.zoneID));
+                        PlayerManager.showBanner(Utilities.Format("Boss %s đã xuất hiện tại %s khu %s nhanh tay lên nào!!!!", boss.getBossTemplate().getName(), this.map.mapTemplate.getMapName(), this.zoneID));
                         numMobDie = 0;
                         numMobDieNeed = Utilities.nextInt(150, 200);
                         continue;
                     }
                 }
-                long deltaTime = System.currentTimeMillis() + 3000;
-                while (deltaTime > System.currentTimeMillis()) {
+                long deltaTime = Utilities.CurrentTimeMillis + 3000;
+                while (deltaTime > Utilities.CurrentTimeMillis) {
                     MobLvlMap mobLvlMap = Utilities.randomArray(mobLvlMaps);
                     if (GopetManager.PETTEMPLATE_HASH_MAP.containsKey(mobLvlMap.getPetId())) {
                         PetTemplate petTemplate = GopetManager.PETTEMPLATE_HASH_MAP.get(mobLvlMap.getPetId());
@@ -533,7 +499,7 @@ public class GopetPlace extends Place {
         }
         Message m = messagePetSerive(GopetCMD.WING);
         m.putsbyte(3);
-        m.putInt(wingPlayer.size());
+        m.putInt(wingPlayer.Count);
         for (Map.Entry<int, Item> entry : wingPlayer.entrySet()) {
             int key = entry.getKey();
             Item val = entry.getValue();
@@ -580,7 +546,7 @@ public class GopetPlace extends Place {
             }
         }
         Message m = messagePetSerive(GopetCMD.SEND_SKIN);
-        m.putInt(skinPlayer.size());
+        m.putInt(skinPlayer.Count);
         for (Map.Entry<int, Item> entry : skinPlayer.entrySet()) {
             int key = entry.getKey();
             Item val = entry.getValue();
@@ -636,7 +602,7 @@ public class GopetPlace extends Place {
             }
 
             Message m = GameController.clanMessage(GopetCMD.GUILD_NAME_IN_PLACE);
-            m.putInt(clanMembers.size());
+            m.putInt(clanMembers.Count);
             for (ClanMember clanMember1 : clanMembers) {
                 m.putInt(clanMember1.user_id);
                 m.putUTF(clanMember1.getClan().getName().toUpperCase());

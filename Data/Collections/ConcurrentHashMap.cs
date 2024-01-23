@@ -52,5 +52,12 @@ namespace Gopet.Data.Collections
             }
             return base[key];
         }
+
+        public TValue remove(TKey key)
+        {
+            TValue v;
+            base.TryRemove(key, out v);
+            return v;
+        }
     }
 }

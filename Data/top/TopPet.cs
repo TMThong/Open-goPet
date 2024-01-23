@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import manager.GopetManager;
 import manager.MYSQLManager;
-import util.Utilities;
+import Utilities;
 
 /**
  *
@@ -28,13 +28,13 @@ public class TopPet extends Top {
         base.desc = "Chỉ những thú cưng mạnh mẽ";
     }
 
-    @Override
+     
     public void update() {
         Connection connection = null;
         try {
-            lastDatas.clear();
-            lastDatas.addAll(datas);
-            datas.clear();
+            lastDatas.Clear();
+            lastDatas.AddRange(datas);
+            datas.Clear();
             connection = MYSQLManager.create();
             MYSQLManager.updateSql("DELETE FROM `top_pet`;", connection);
             MYSQLManager.updateSql("INSERT INTO `top_pet` (`ownerId`, `ownerName`,`petTemplateId`, `star`, `lvl`, `exp`, `maxHp`, `maxMp`, `def`, `atk`) SELECT `player`.`user_id` as `ownerId`, `player`.`name` as` ownerName`, JSON_VALUE(`player`.`pets`, '$[*].petIdTemplate') AS `petIdTemplate`, JSON_VALUE(`player`.`pets`, '$[*].star') AS `star`, JSON_VALUE(`player`.`pets`, '$[*].lvl') AS `lvl`, JSON_VALUE(`player`.`pets`, '$[*].exp') AS `exp`, JSON_VALUE(`player`.`pets`, '$[*].maxHp') AS `maxHp`, JSON_VALUE(`player`.`pets`, '$[*].maxMp') AS `maxMp`, JSON_VALUE(`player`.`pets`, '$[*].def') AS def, JSON_VALUE(player.pets, '$[*].atk') AS `atk` FROM `player` WHERE `player`.`pets` IS NOT NULL && JSON_VALUE(`player`.`pets`, '$[*].exp') IS NOT NULL;", connection);
@@ -48,7 +48,7 @@ public class TopPet extends Top {
                     topData.name = resultSet.getString("ownerName");
                     topData.imgPath = petTemplate.getIcon();
                     topData.title = getNameWithStar(resultSet.getInt("star"), petTemplate) + " của " + topData.name;
-                    topData.desc = String.format("Hạng %s : Cấp %s  hiện có %s kinh nghiệm (hp) %s (mp) %s (def) %s (atk) %s",
+                    topData.desc = Utilities.Format("Hạng %s : Cấp %s  hiện có %s kinh nghiệm (hp) %s (mp) %s (def) %s (atk) %s",
                             index,
                             resultSet.getInt("lvl"),
                             Utilities.formatNumber(resultSet.getBigDecimal("exp").longValue()),

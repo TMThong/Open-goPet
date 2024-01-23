@@ -12,7 +12,7 @@ public class PetSkill {
     public ArrayList<PetSkillLv> skillLv = new ArrayList<PetSkillLv>();
 
     public String getDescription(PetSkillLv petSkillLv) {
-        return String.join("\n", ItemInfo.getName(petSkillLv.skillInfo));
+        return String.Join("\n", ItemInfo.getName(petSkillLv.skillInfo));
     }
 
     /**

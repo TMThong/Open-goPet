@@ -58,7 +58,7 @@ public class Item : DataVersion {
 
                
 
-                return String.format("+%s (atk) +%s (def) +%s (hp) +%s (mp)", itemTemplate.getAtk(), itemTemplate.getDef(), itemTemplate.getHp(), itemTemplate.getMp()) + " (HSD: " + Utilities.dateFormatVI.format(expire) + " )";
+                return Utilities.Format("+%s (atk) +%s (def) +%s (hp) +%s (mp)", itemTemplate.getAtk(), itemTemplate.getDef(), itemTemplate.getHp(), itemTemplate.getMp()) + " (HSD: " + Utilities.dateFormatVI.format(expire) + " )";
             case GopetManager.WING_ITEM:
                 String strExpire = "";
                 if (expire > 0) {
@@ -66,7 +66,7 @@ public class Item : DataVersion {
                 } else {
                     strExpire = "Hạn sử dụng đến : vĩnh viễn .";
                 }
-                return strExpire + " Chỉ số áp dụng" + String.format(" +%s (atk) +%s (def) +%s (hp) +%s (mp)", getAtk(), getDef(), getHp(), getMp());
+                return strExpire + " Chỉ số áp dụng" + Utilities.Format(" +%s (atk) +%s (def) +%s (hp) +%s (mp)", getAtk(), getDef(), getHp(), getMp());
         }
 
         if (expire > 0) {
@@ -167,16 +167,16 @@ public class Item : DataVersion {
                     float info = gemOptionValue[i];
                     switch (j) {
                         case ItemInfo.OptionType.PERCENT_HP:
-                            infoStrings.add(String.format("Tăng %s/ ", info).replace('/', '%') + " (hp) ");
+                            infoStrings.add(Utilities.Format("Tăng %s/ ", info).replace('/', '%') + " (hp) ");
                             break;
                         case ItemInfo.OptionType.PERCENT_MP:
-                            infoStrings.add(String.format("Tăng %s/ ", info).replace('/', '%') + " (mp) ");
+                            infoStrings.add(Utilities.Format("Tăng %s/ ", info).replace('/', '%') + " (mp) ");
                             break;
                         case ItemInfo.OptionType.PERCENT_ATK:
-                            infoStrings.add(String.format("Tăng %s/ ", info).replace('/', '%') + " (atk) ");
+                            infoStrings.add(Utilities.Format("Tăng %s/ ", info).replace('/', '%') + " (atk) ");
                             break;
                         case ItemInfo.OptionType.PERCENT_DEF:
-                            infoStrings.add(String.format("Tăng %s/ ", info).replace('/', '%') + " (def) ");
+                            infoStrings.add(Utilities.Format("Tăng %s/ ", info).replace('/', '%') + " (def) ");
                             break;
                     }
                 }
@@ -199,7 +199,7 @@ public class Item : DataVersion {
                 }
             }
         }
-        return getTemp().getName() + "  " + String.format("up: %s ", lvl) + String.join(" ", infoStrings) + (this.gemInfo == null ? "" : " " + this.gemInfo.getElementIcon());
+        return getTemp().getName() + "  " + Utilities.Format("up: %s ", lvl) + String.Join(" ", infoStrings) + (this.gemInfo == null ? "" : " " + this.gemInfo.getElementIcon());
     }
 
     public void updateGemOption()   {

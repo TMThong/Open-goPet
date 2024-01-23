@@ -21,9 +21,9 @@ public class TopSpendGold : Top {
      
     public override void update() {
         try {
-            lastDatas.clear();
-            lastDatas.addAll(datas);
-            datas.clear();
+            lastDatas.Clear();
+            lastDatas.AddRange(datas);
+            datas.Clear();
             try (ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `player`  WHERE isAdmin = 0 ORDER BY  `spendGold` DESC LIMIT 300;")) {
                 int index = 1;
                 while (resultSet.next()) {
@@ -32,7 +32,7 @@ public class TopSpendGold : Top {
                     topData.name = resultSet.getString("name");
                     topData.imgPath = resultSet.getString("avatarPath");
                     topData.title = topData.name;
-                    topData.desc = String.format("Hạng %s: Đã tiêu %s (vang)", index, Utilities.formatNumber(resultSet.getBigDecimal("spendGold").longValue()));
+                    topData.desc = Utilities.Format("Hạng %s: Đã tiêu %s (vang)", index, Utilities.formatNumber(resultSet.getBigDecimal("spendGold").longValue()));
                     datas.add(topData);
                     index++;
                 }

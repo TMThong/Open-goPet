@@ -1,22 +1,23 @@
- 
-public class ClanMember extends DataVersion {
+
+using Gopet.Data.Collections;
+
+public class ClanMember : DataVersion {
     public String avatarPath;
     public int user_id;
     public String name;
     public long fundDonate = 0;
     public long growthPointDonate = 0;
     public sbyte duty = Clan.TYPE_NORMAL;
-    public long timeJoin = System.currentTimeMillis();
-    public long timeResetData = System.currentTimeMillis() / 2L;
+    public long timeJoin = Utilities.CurrentTimeMillis;
+    public long timeResetData = Utilities.CurrentTimeMillis / 2L;
     public int curQuest = 0;
     public CopyOnWriteArrayList<ClanMemberDonateInfo> clanMemberDonateInfos;
-    @Getter
-    @Setter
-    private transient Clan clan;
+ 
+    public Clan clan;
 
     public void reset() {
-        timeResetData = System.currentTimeMillis();
-        clanMemberDonateInfos = new CopyOnWriteArrayList<>(new ClanMemberDonateInfo[]{
+        timeResetData = Utilities.CurrentTimeMillis;
+        clanMemberDonateInfos = new(new ClanMemberDonateInfo[]{
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_COIN, 10000l, 0, 10, 3),
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_COIN, 100000l, 0, 110, 3),
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 1000l, 20, 100, 3),
@@ -27,9 +28,9 @@ public class ClanMember extends DataVersion {
     }
 
     public bool needReset() {
-        Date resetDate = new Date(timeResetData);
-        Date serer = Utilities.getCurrentDate();
-        return resetDate.getDay() != serer.getDay() || resetDate.getMonth() != serer.getMonth() || resetDate.getYear() != serer.getYear();
+        DateTime resetDateTime = new DateTime(timeResetData);
+        DateTime serer = Utilities.GetCurrentDate();
+        return resetDateTime.Day != serer.Day || resetDateTime.Month != serer.Month || resetDateTime.Year != serer.Year;
     }
 
     public String getDutyName() {

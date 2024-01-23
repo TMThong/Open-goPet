@@ -237,14 +237,14 @@ public class Pet : GameObject {
             if (it.petEuipId != petId) {
                 iterator.remove();
                 it.petEuipId = -1;
-                player.Popup(String.format("Hệ thống tự gỡ vật phẩm do phiên bản trước có lỗi, vui lòng đeo %s lại", it.getTemp().getName()));
+                player.Popup(Utilities.Format("Hệ thống tự gỡ vật phẩm do phiên bản trước có lỗi, vui lòng đeo %s lại", it.getTemp().getName()));
                 continue;
             }
 
             if (this.getAgi() < it.getTemp().getRequireAgi() || this.getStr() < it.getTemp().getRequireStr() || this.getInt() < it.getTemp().getRequireInt()) {
                 iterator.remove();
                 it.petEuipId = -1;
-                player.Popup(String.format("Pet của bạn đã tự tháo trang bị %s do pet cảm thấy khó chịu vì không đủ chỉ số", it.getTemp().getName()));
+                player.Popup(Utilities.Format("Pet của bạn đã tự tháo trang bị %s do pet cảm thấy khó chịu vì không đủ chỉ số", it.getTemp().getName()));
                 continue;
             }
 
@@ -322,7 +322,7 @@ public class Pet : GameObject {
     public void addTatto(PetTatto petTatto) {
         tatto.add(petTatto);
         while (true) {
-            petTatto.tattoId = Utilities.nextInt(1, int.MAX_VALUE - 2);
+            petTatto.tattoId = Utilities.nextInt(1, int.MaxValue - 2);
             bool flag = true;
             for (PetTatto item1 : tatto) {
                 if (item1 != petTatto) {
@@ -336,7 +336,7 @@ public class Pet : GameObject {
             }
         }
         tatto.sort(new Comparator<PetTatto>() {
-            @Override
+             
             public int compare(PetTatto obj1, PetTatto obj2) {
                 return obj1.tattoId - obj2.tattoId;
             }
@@ -371,9 +371,9 @@ public class Pet : GameObject {
             }
             tattooStrings.add(petTatto.getName());
         }
-        String desc = String.format("(str) %s (int) %s (agi) %s", getStr(), getInt(), getAgi());
+        String desc = Utilities.Format("(str) %s (int) %s (agi) %s", getStr(), getInt(), getAgi());
 
-        return desc + String.format("  lvl: %s , ", lvl) + String.join(" , ", infoStrings) + String.join(" , ", tattooStrings);
+        return desc + Utilities.Format("  lvl: %s , ", lvl) + String.Join(" , ", infoStrings) + String.Join(" , ", tattooStrings);
     }
 
      

@@ -20,7 +20,7 @@ public class PlayerData
     public sbyte speed = 4;
     public sbyte faceDir = 3;
     public sbyte waypointIndex = -1;
-    public long deltaTimeQuestion = System.currentTimeMillis();
+    public long deltaTimeQuestion = Utilities.CurrentTimeMillis;
     public sbyte questIndex = 1;
     public Date loginDate;
     public int star = 0;
@@ -172,26 +172,26 @@ return playerData;
 
     public static void create(int user_id, String name, sbyte gender)
 {
-    Connection connection = MYSQLManager.create();
+    MySqlConnection MySqlConnection = MYSQLManager.create();
     MYSQLManager.updateSql(
-            String.format(
+            Utilities.Format(
                     "INSERT INTO `player` (`ID`, `user_id`, `name`, `gender` , `items`) VALUES (NULL, '%s', '%s', '%s' , NULL);",
-                    user_id, name, gender), connection);
-    connection.close();
+                    user_id, name, gender), MySqlConnection);
+    MySqlConnection.close();
 }
 
 public void save()
 {
-    Connection connection = MYSQLManager.create();
-    MYSQLManager.updateSql(String.format("update player set  " + getGopetSQLString() + "   coin = %s , gold = %s  ,  friends = '%s'   ,    items = '%s',   favouriteList = '%s'  where ID = "
+    MySqlConnection MySqlConnection = MYSQLManager.create();
+    MYSQLManager.updateSql(Utilities.Format("update player set  " + getGopetSQLString() + "   coin = %s , gold = %s  ,  friends = '%s'   ,    items = '%s',   favouriteList = '%s'  where ID = "
             + charID,
             coin,
             gold,
             JsonManager.ToJson(friends),
             JsonManager.ToJson(items),
             JsonManager.ToJson(favouriteList)
-    ), connection);
-    connection.close();
+    ), MySqlConnection);
+    MySqlConnection.close();
 }
 
 public String getGopetSQLString()
@@ -217,7 +217,7 @@ public String getGopetSQLString()
             "wasTask = '" + JsonManager.ToJson(wasTask) + "'",
             "spendGold = " + spendGold
         };
-    String str = String.join(",", lines) + " ,";
+    String str = String.Join(",", lines) + " ,";
     return str;
 }
 
@@ -242,7 +242,7 @@ public void addItem(sbyte type, Item item)
     list.add(item);
     while (true)
     {
-        item.itemId = Utilities.nextInt(10, int.MAX_VALUE - 2);
+        item.itemId = Utilities.nextInt(10, int.MaxValue - 2);
         bool flag = true;
         for (Item item1 : getInventoryOrCreate(type)) {
     if (item1 != item)
@@ -259,7 +259,7 @@ if (flag)
 }
         }
         list.sort(new Comparator<Item>() {
-            @Override
+             
             public int compare(Item obj1, Item obj2)
 {
     return obj1.itemId - obj2.itemId;
@@ -284,7 +284,7 @@ public void addPet(Pet pet, Player player)
         }
         else
         {
-            pet.petId = Utilities.nextInt(10, int.MAX_VALUE - 2);
+            pet.petId = Utilities.nextInt(10, int.MaxValue - 2);
         }
         bool flag = true;
         for (Pet item1 : pets) {
@@ -302,7 +302,7 @@ if (flag)
 }
         }
         pets.sort(new Comparator<Pet>() {
-            @Override
+             
             public int compare(Pet obj1, Pet obj2)
 {
     return obj1.petId - obj2.petId;

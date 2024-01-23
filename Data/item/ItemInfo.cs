@@ -26,9 +26,9 @@ public class ItemInfo {
         bool canFormat = GopetManager.itemInfoCanFormat.containsKey(id);
         if (canFormat) {
             if (GopetManager.itemInfoIsPercent.get(id)) {
-                return String.format(GopetManager.itemInfoName.get(id), value / 100f).replace('/', '%');
+                return Utilities.Format(GopetManager.itemInfoName.get(id), value / 100f).replace('/', '%');
             }
-            return String.format(GopetManager.itemInfoName.get(id), value).replace('/', '%');
+            return Utilities.Format(GopetManager.itemInfoName.get(id), value).replace('/', '%');
         }
         return GopetManager.itemInfoName.get(id);
     }
@@ -54,7 +54,7 @@ public class ItemInfo {
      * @return
      */
     public static String getNameJoin(ItemInfo[] itemInfos, String joinText) {
-        return String.join(joinText, getName(itemInfos));
+        return String.Join(joinText, getName(itemInfos));
     }
 
     /**

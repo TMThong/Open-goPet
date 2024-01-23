@@ -63,5 +63,10 @@ namespace Gopet.Data.Collections
             }
             return base[key];
         }
+
+        public void Clear()
+        {
+            base.Clear();
+        }
     }
 }

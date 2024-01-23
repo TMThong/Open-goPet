@@ -31,7 +31,7 @@ public class MarketPlace extends GopetPlace {
         maxPlayer = 50;
     }
 
-    @Override
+     
     public void update()   {
         base.update(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
         for (int i = 0; i < kiosks.Length; i++) {

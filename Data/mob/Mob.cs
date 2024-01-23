@@ -15,24 +15,24 @@ public class Mob : GameObject {
 
     public  Rectangle bound;
 
-    public PetBattle getPetBattle() {
+    public virtual PetBattle getPetBattle() {
         return petBattle;
     }
 
-    public void setPetBattle(PetBattle petBattle) {
+    public virtual void setPetBattle(PetBattle petBattle) {
 
         this.petBattle = petBattle;
     }
 
-    public MobLvlMap getMobLvlMap() {
+    public virtual MobLvlMap getMobLvlMap() {
         return mobLvlMap;
     }
 
-    public void setMobLvlMap(MobLvlMap mobLvlMap) {
+    public virtual void setMobLvlMap(MobLvlMap mobLvlMap) {
         this.mobLvlMap = mobLvlMap;
     }
 
-    public int getMobId() {
+    public virtual int getMobId() {
         return mobId;
     }
 
@@ -98,7 +98,7 @@ public class Mob : GameObject {
         this.hp = hp;
     }
 
-    public void initMob() {
+    public virtual void initMob() {
         if (mobLvInfo == null) {
             this.mobLvInfo = GopetManager.MOBLVLINFO_HASH_MAP.get(Utilities.nextInt(mobLvlMap.getLvlFrom(), mobLvlMap.getLvlTo()));
         }
