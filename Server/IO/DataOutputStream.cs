@@ -130,7 +130,16 @@ namespace Gopet.IO
 
         public void writeUTF(string value)
         {
-            writeString(value);
+            Encoding unicode = Encoding.Unicode;
+            Encoding encoding = Encoding.GetEncoding(65001);
+            byte[] bytes = unicode.GetBytes(value);
+            byte[] array = Encoding.Convert(unicode, encoding, bytes);
+            this.writeShort((short)array.Length);
+            this.checkLenght(array.Length);
+            foreach (sbyte value2 in array)
+            {
+                this.writeSByteUncheck(value2);
+            }
         }
 
         public void write(sbyte value)

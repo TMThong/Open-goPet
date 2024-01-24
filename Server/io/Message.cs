@@ -11,7 +11,7 @@ public class Message
     public bool isEncrypted;
     public static bool isiWin = false;
 
-    public Message(int command) : this(command, true)
+    public Message(int command) : this(command, false)
     {
 
     }
@@ -79,18 +79,18 @@ public class Message
     public void putsbyte(int value)
     {
 
-        this.writer().writeInt(value);
+        this.writer().writeByte(value);
 
     }
 
-    public void putString(String text)
+    public void putString(string text)
     {
 
         this.writer().writeUTF(text);
 
     }
 
-    public void putUTF(String text)
+    public void putUTF(string text)
     {
 
         this.writer().writeUTF(text);
