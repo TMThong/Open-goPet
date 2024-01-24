@@ -40,7 +40,7 @@ namespace Gopet.Data.Collections
             base[key] = value;
         }
 
-        public bool containsKey(TKey key)
+        public bool ContainsKey(TKey key)
         {
             return base.ContainsKey(key);
         }

@@ -35,10 +35,7 @@ public class MYSQLManager {
     }
 
     public static void updateSql(String sql)   {
-        PreparedStatement pre = getMySqlConnection().prepareStatement(sql);
-        //pre.setQueryTimeout(60);
-        pre.execute();
-        pre.close();
+         
     }
 
     public static ResultSet jquery(String sql, MySqlConnection MySqlConnection)   {
@@ -50,10 +47,7 @@ public class MYSQLManager {
     }
 
     public static void updateSql(String sql, MySqlConnection MySqlConnection)   {
-        PreparedStatement pre = MySqlConnection.prepareStatement(sql);
-        //pre.setQueryTimeout(60);
-        pre.execute();
-        pre.close();
+        
     }
 
     public static MySqlConnection create()   {

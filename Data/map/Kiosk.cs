@@ -1,9 +1,10 @@
 
 using Gopet.Data.Collections;
+using Gopet.Util;
 
 public class Kiosk {
 
-    private sbyte kioskType;
+    public sbyte kioskType {  get; protected set; }
 
     public CopyOnWriteArrayList<SellItem> kioskItems = new  ();
 
@@ -17,9 +18,9 @@ public class Kiosk {
                 item.wasSell = true;
             }
             addKioskItem(new SellItem(item, price, GopetManager.HOUR_UPLOAD_ITEM), player);
-            HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Treo vật phẩm %s với giá %s ngọc", item.getTemp().getName(), Utilities.formatNumber(price))).setObj(item));
+            HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Treo vật phẩm %s với giá %s ngọc", item.getTemp().getName(), Utilities.FormatNumber(price))).setObj(item));
         } else {
-            throw new NullPointerException("item is null");
+            throw new NullReferenceException("item is null");
         }
     }
 
@@ -29,7 +30,7 @@ public class Kiosk {
                 pet.wasSell = true;
             }
             addKioskItem(new SellItem(price, pet, GopetManager.HOUR_UPLOAD_ITEM), player);
-            HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Treo pet %s với giá %s ngọc", pet.getPetTemplate().getName(), Utilities.formatNumber(price))).setObj(pet));
+            HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Treo pet %s với giá %s ngọc", pet.getPetTemplate().getName(), Utilities.FormatNumber(price))).setObj(pet));
             return;
         }
     }
@@ -40,7 +41,7 @@ public class Kiosk {
         while (true) {
             item.itemId = Utilities.nextInt(1, int.MaxValue - 2);
             bool flag = true;
-            for (SellItem item1 : kioskItems) {
+            foreach (SellItem item1 in kioskItems) {
                 if (item1 != item) {
                     if (item1.itemId == item.itemId) {
                         flag = false;
@@ -86,12 +87,12 @@ public class Kiosk {
             } else {
                 player.controller.objectPerformed.put(MenuController.OBJKEY_KIOSK_ITEM, new Map.Entry< Kiosk, SellItem>() {
                      
-                    public Kiosk getKey() {
+                    public Kiosk Key {
                         return Kiosk.this;
                     }
 
                      
-                    public SellItem getValue() {
+                    public SellItem Value {
                         return sellItem;
                     }
 
@@ -108,7 +109,7 @@ public class Kiosk {
     }
 
     public void confirmBuy(Player player, SellItem sellItem)   {
-        if (!this.kioskItems.contains(sellItem)) {
+        if (!this.kioskItems.Contains(sellItem)) {
             player.redDialog("Vật phẩm đã bị người khác mua!");
             return;
         }
@@ -124,7 +125,7 @@ public class Kiosk {
                 player.okDialog("Mua thành công");
                 kioskItems.remove(sellItem);
                 Player sellPlayer = PlayerManager.get(sellItem.user_id);
-                long priceReiceived = Math.round(Utilities.getValueFromPercent(sellItem.price, 100f - GopetManager.KIOSK_PER_SELL));
+                long priceReiceived = Utilities.round(Utilities.GetValueFromPercent(sellItem.price, 100f - GopetManager.KIOSK_PER_SELL));
                 if (sellPlayer != null) {
                     sellPlayer.addCoin(priceReiceived);
                     sellPlayer.playerData.save();
@@ -138,7 +139,7 @@ public class Kiosk {
                         e.printStackTrace();
                         System.err.println("Error them tien khi ng choi mua vp , tien them là " + sellItem.price + " vào user_id = " + sellItem.user_id);
                     }
-                    MySqlConnection.close();
+                    MySqlConnection.Close();
                 }
             } else {
                 player.redDialog("Vật phẩm đã này dược người khác mua rồi");
@@ -187,7 +188,7 @@ public class Kiosk {
                     e.printStackTrace();
                     HistoryManager.addHistory(new History(kioskItem.user_id).setObj(kioskItem).setLog("Trao trả vật phẩm ki ốt thất bại"));
                 }
-                MySqlConnection.close();
+                MySqlConnection.Close();
             }
         }
     }

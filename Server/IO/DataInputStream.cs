@@ -86,7 +86,7 @@ namespace Gopet.IO
             return num;
         }
 
-        public long readLong()
+        public long readlong()
         {
             long num = 0L;
             for (int i = 0; i < 8; i++)
@@ -220,9 +220,14 @@ namespace Gopet.IO
             this.buffer = null;
         }
 
-        public void close()
+        public void Close()
         {
             this.buffer = null;
+        }
+
+        public bool readbool()
+        {
+            return readBoolean();
         }
 
         public sbyte[] buffer;

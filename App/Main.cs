@@ -1,6 +1,7 @@
- 
 
-public class Main {
+using Gopet.Util;
+public class Main
+{
 
     public static Server server;
     public static int PORT_SERVER = ServerSetting.instance.portGopetServer;
@@ -13,14 +14,16 @@ public class Main {
      * @param args
      * @ 
      */
-    public static void main(String[] args)   {
-        Thread.currentThread().setName("MAIN THREAD (GOPET)");
-        if (ServerSetting.instance.isInitLog()) {
+    public static void main(String[] args)
+    {
+        Thread.CurrentThread.Name = "MAIN THREAD (GOPET)";
+        if (ServerSetting.instance.initLog)
+        {
             initLog();
         }
-        
-//        AutoMaintenance autoMaintenance = new AutoMaintenance();
-//        autoMaintenance.start(ServerSetting.instance.getHourMaintenance(), ServerSetting.instance.getMinMaintenance());
+
+        //        AutoMaintenance autoMaintenance = new AutoMaintenance();
+        //        autoMaintenance.start(ServerSetting.instance.getHourMaintenance(), ServerSetting.instance.getMinMaintenance());
         MYSQLManager.init();
         GopetManager.init();
         HistoryManager.instance.start();
@@ -33,42 +36,50 @@ public class Main {
         RuntimeServer.instance.start();
         server = new Server(PORT_SERVER);
         server.start();
-        springApp.start(args);
     }
 
-    public static void initRuntime()   {
+    public static void initRuntime()
+    {
         RuntimeServer.instance.runtimes.add(new AutoSave());
         RuntimeServer.instance.runtimes.add(Maintenance.gI());
     }
-     
 
-    public static void initLog()   {
-        
+
+    public static void initLog()
+    {
+
     }
 
-    public static void shutdown()   {
+    public static void shutdown()
+    {
         MapManager.stopUpdate();
         GopetManager.saveMarket();
         server.stopServer();
         RuntimeServer.isRunning = false;
         Thread.Sleep(1000);
 
-        foreach (Player player in PlayerManager.players) {
-            player.session.close();
+        foreach (Player player in PlayerManager.players)
+        {
+            player.session.Close();
             player.onDisconnected();
             PlayerManager.players.remove(player);
         }
 
-        foreach (Clan clan in ClanManager.clans) {
-            try {
+        foreach (Clan clan in ClanManager.clans)
+        {
+            try
+            {
                 clan.save();
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 e.printStackTrace();
             }
         }
     }
 
-    public static void SocketLog(Exception e) {
-        
+    public static void SocketLog(Exception e)
+    {
+
     }
 }

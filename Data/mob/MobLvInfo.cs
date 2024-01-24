@@ -12,7 +12,7 @@ public class MobLvInfo {
 
     private int lvl , hp, strength, exp;
 
-    public int getLvl() {
+    public virtual int getLvl() {
         return lvl;
     }
 
@@ -20,15 +20,15 @@ public class MobLvInfo {
         this.lvl = lvl;
     }
 
-    public int getHp() {
+    public virtual int getHp() {
         return hp;
     }
 
-    public void setHp(int hp) {
+    public  void setHp(int hp) {
         this.hp = hp;
     }
 
-    public int getStrength() {
+    public virtual int getStrength() {
         return strength;
     }
 
@@ -36,7 +36,7 @@ public class MobLvInfo {
         this.strength = strength;
     }
 
-    public int getExp() {
+    public virtual int getExp() {
         return exp;
     }
 

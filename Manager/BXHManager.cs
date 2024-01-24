@@ -1,30 +1,50 @@
- 
-public class BXHManager : Thread {
+
+using Gopet.Data.Collections;
+using Gopet.Util;
+
+public class BXHManager
+{
 
     private long lastTime = 0;
     public static BXHManager instance = new BXHManager();
     public bool isRunning = false;
-
-    public BXHManager() {
-        setName("BXH Thread");
+    public Thread BXHThread { get; private set; }
+    public BXHManager()
+    {
+        BXHThread = new Thread(run);
+        BXHThread.IsBackground = true;
+        BXHThread.Name = "BXH Thread";
     }
 
-    
-    public void run() {
-        if (!isRunning) {
-            try {
+    public void strat()
+    {
+        BXHThread.Start();
+    }
+
+    public void run()
+    {
+        if (!isRunning)
+        {
+            try
+            {
                 isRunning = true;
                 update();
-            } catch (Exception ex) {
-                Logger.getLogger(BXHManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
             }
         }
     }
 
-    public void update()   {
-        while (isRunning) {
-            if (lastTime < Utilities.CurrentTimeMillis) {
-                for (Top next : listTop) {
+    public void update()
+    {
+        while (isRunning)
+        {
+            if (lastTime < Utilities.CurrentTimeMillis)
+            {
+                foreach (Top next in listTop)
+                {
                     next.update();
                 }
                 lastTime = Utilities.CurrentTimeMillis + 1000 * 60 * 15;
@@ -33,10 +53,11 @@ public class BXHManager : Thread {
         }
     }
 
-    public const CopyOnWriteArrayList<Top> listTop = new CopyOnWriteArrayList<>();
+    public static CopyOnWriteArrayList<Top> listTop = new();
 
     static BXHManager
-(){
+()
+    {
         listTop.add(TopGold.instance);
         listTop.add(TopPet.instance);
         listTop.add(TopGem.instance);

@@ -14,7 +14,7 @@ public class PetBattle {
     private bool isPK = false;
     private int price = 0;
     private bool isClose = false;
-    private Player closePlayer = null;
+    private Player ClosePlayer = null;
     private int userInvitePK = -1;
     private long timeCheckplayer = 0;
 
@@ -213,7 +213,7 @@ public class PetBattle {
         message.putsbyte(GopetCMD.PET_BATTLE);
         message.putInt(activePlayer.user.user_id);
         message.putInt(mainTurnData.petId);
-        message.putInt(Math.round(delaTimeTurn - Utilities.CurrentTimeMillis));
+        message.putInt(Utilities.round(delaTimeTurn - Utilities.CurrentTimeMillis));
         message.putInt((int) GopetManager.TimeNextTurn);
         message.putsbyte(mainTurnData.type);
         if (mainTurnData.type == TurnEffect.TYPE_EFFECT_WAIT) {
@@ -251,7 +251,7 @@ public class PetBattle {
             message.putsbyte(GopetCMD.PET_BATTLE);
             message.putInt(passivePlayer.user.user_id);
             message.putInt(mainTurnData.petId);
-            message.putInt(Math.round(delaTimeTurn - Utilities.CurrentTimeMillis));
+            message.putInt(Utilities.round(delaTimeTurn - Utilities.CurrentTimeMillis));
             message.putInt((int) GopetManager.TimeNextTurn);
             message.putsbyte(mainTurnData.type);
             if (mainTurnData.type == TurnEffect.TYPE_EFFECT_WAIT) {
@@ -339,7 +339,7 @@ public class PetBattle {
     }
 
     public static bool isCrit() {
-        return Utilities.nextFloatPer() > Utilities.nextInt(100 - 40, 100 - 30);
+        return Utilities.NextFloatPer() > Utilities.nextInt(100 - 40, 100 - 30);
     }
 
     public void sendBattleInfo(Player playerInZone)   {
@@ -348,7 +348,7 @@ public class PetBattle {
             Message message = new Message(GopetCMD.PET_SERVICE);
             message.putsbyte(GopetCMD.ATTACK_MOB);
             //Turn time
-            message.putInt(Math.round(delaTimeTurn - Utilities.CurrentTimeMillis));
+            message.putInt(Utilities.round(delaTimeTurn - Utilities.CurrentTimeMillis));
             //max turn Time
             message.putInt((int) GopetManager.TimeNextTurn);
             message.putInt(player.user.user_id);
@@ -359,7 +359,7 @@ public class PetBattle {
             playerInZone.session.sendMessage(message);
         } else {
             Message message = GameController.messagePetSerive(GopetCMD.PLAYER_BATTLE);
-            message.putInt(Math.round(delaTimeTurn - Utilities.CurrentTimeMillis));
+            message.putInt(Utilities.round(delaTimeTurn - Utilities.CurrentTimeMillis));
             message.putInt((int) GopetManager.TimeNextTurn);
             message.putInt(activePlayer.user.user_id);
             message.putsbyte(0);
@@ -373,7 +373,7 @@ public class PetBattle {
 
     public void sendStartFightPlayer()    {
         Message message = GameController.messagePetSerive(GopetCMD.PLAYER_BATTLE);
-        message.putInt(Math.round(delaTimeTurn - Utilities.CurrentTimeMillis));
+        message.putInt(Utilities.round(delaTimeTurn - Utilities.CurrentTimeMillis));
         message.putInt((int) GopetManager.TimeNextTurn);
         message.putInt(activePlayer.user.user_id);
         message.putsbyte(1);
@@ -385,7 +385,7 @@ public class PetBattle {
         activePlayer.session.sendMessage(message);
 
         message = GameController.messagePetSerive(GopetCMD.PLAYER_BATTLE);
-        message.putInt(Math.round(delaTimeTurn - Utilities.CurrentTimeMillis));
+        message.putInt(Utilities.round(delaTimeTurn - Utilities.CurrentTimeMillis));
         message.putInt((int) GopetManager.TimeNextTurn);
         message.putInt(passivePlayer.user.user_id);
         message.putsbyte(0);
@@ -405,7 +405,7 @@ public class PetBattle {
         Message message = new Message(GopetCMD.PET_SERVICE);
         message.putsbyte(GopetCMD.ATTACK_MOB);
         //Turn time
-        message.putInt(Math.round(delaTimeTurn - Utilities.CurrentTimeMillis));
+        message.putInt(Utilities.round(delaTimeTurn - Utilities.CurrentTimeMillis));
         //max turn Time
         message.putInt((int) GopetManager.TimeNextTurn);
         message.putInt(player.user.user_id);
@@ -497,9 +497,9 @@ public class PetBattle {
         } else {
             if (petAttackMob) {
                 if (timeCheckplayer < Utilities.CurrentTimeMillis) {
-                    if (!mob.bound.contains(activePlayer.playerData.x, activePlayer.playerData.y)) {
+                    if (!mob.bound.Contains(activePlayer.playerData.x, activePlayer.playerData.y)) {
                         activePlayer.user.ban(UserData.BAN_TIME, "Hệ thống thấy bạn dùng auto", Utilities.CurrentTimeMillis + (1000l * 60 * 15));
-                        activePlayer.session.close();
+                        activePlayer.session.Close();
                     }
                 }
             }
@@ -565,7 +565,7 @@ public class PetBattle {
             int exp = 0;
             int coin = 0;
             if (getWinId() == activePlayer.user.user_id) {
-                if (!(mob instanceof Boss)) {
+                if (!(mob is Boss)) {
                     ClanMember clanMember = activePlayer.controller.getClan();
                     float perExpPlus = 0f;
                     float coinPlus = 0f;
@@ -574,15 +574,15 @@ public class PetBattle {
                         coinPlus += clanMember.getClan().getBuffByIdBuff(ClanBuff.BUFF_GEM).getPercent();
                     }
                     exp = genExpWhenMobDie(activePlayer, activePet, mob, mob.getMobLvInfo().getExp());
-                    exp = Math.max(0, exp + Math.round(Utilities.getValueFromPercent(exp, activePlayer.playerData.buffExp.getPercent() + perExpPlus)));
+                    exp = Math.max(0, exp + Utilities.round(Utilities.GetValueFromPercent(exp, activePlayer.playerData.buffExp.getPercent() + perExpPlus)));
                     int constCoin = genGemWhenMobDie(activePlayer, activePet, mob);
-                    coin = (int) (constCoin + Utilities.getValueFromPercent(constCoin, coinPlus));
+                    coin = (int) (constCoin + Utilities.GetValueFromPercent(constCoin, coinPlus));
                     activePlayer.addCoin(coin);
                     activePet.addExp(exp);
                     activePlayer.controller.updatePetLvl();
                     place.mobDie(mob);
                     ArrayList<DropItem> listItemDrop = (ArrayList<DropItem>) GopetManager.dropItem.get(place.map.mapID).clone();
-                    if (GopetManager.mapHasDropItemLvlRange.contains(this.place.map.mapID)) {
+                    if (GopetManager.mapHasDropItemLvlRange.Contains(this.place.map.mapID)) {
                         for (Iterator<DropItem> iterator = listItemDrop.iterator(); iterator.hasNext();) {
                             DropItem next = iterator.next();
                             if (next.getLvlRange() != null) {
@@ -595,7 +595,7 @@ public class PetBattle {
                     if (listItemDrop != null) {
                         if (!listItemDrop.isEmpty()) {
                             DropItem next = listItemDrop.get(Utilities.nextInt(listItemDrop.Count));
-                            float nextPer = Utilities.nextFloatPer();
+                            float nextPer = Utilities.NextFloatPer();
                             if (next.getPercent() > nextPer) {
                                 Item item = new Item(next.getItemTemplateId());
                                 item.count = next.getCount();
@@ -632,27 +632,27 @@ public class PetBattle {
                 long exp_sub_winner = 0;
                 Pet nonPet = nonWinner.getPet();
                 Pet winnerPet = winner.getPet();
-                long coinPK = Math.round(Utilities.getValueFromPercent(nonWinner.playerData.coin, 1f));
+                long coinPK = Utilities.round(Utilities.GetValueFromPercent(nonWinner.playerData.coin, 1f));
                 long expCurrentLvl = GopetManager.PetExp.get(nonPet.lvl);
                 if (nonWinner.playerData.pkPoint > 0) {
-                    exp_sub = Math.round(Utilities.getValueFromPercent(expCurrentLvl, 10f));
+                    exp_sub = Utilities.round(Utilities.GetValueFromPercent(expCurrentLvl, 10f));
                     nonWinner.playerData.pkPoint--;
                 } else {
-                    exp_sub = Math.round(Utilities.getValueFromPercent(expCurrentLvl, 5f));
+                    exp_sub = Utilities.round(Utilities.GetValueFromPercent(expCurrentLvl, 5f));
                 }
                 expCurrentLvl = GopetManager.PetExp.get(winnerPet.lvl);
                 if (getWinId() == userInvitePK) {
-                    exp_sub_winner = Math.round(Utilities.getValueFromPercent(expCurrentLvl, 3f));
+                    exp_sub_winner = Utilities.round(Utilities.GetValueFromPercent(expCurrentLvl, 3f));
                 }
                 if (nonPlayerClanMember != null) {
                     ClanBuff minBuff = nonPlayerClanMember.getClan().getBuffByIdBuff(ClanBuff.BUFF_DESCREASE_EXP_WHEN_PK);
                     if (!(minBuff.getPercent() >= 100f)) {
-                        exp_sub -= Utilities.getValueFromPercent(exp_sub, minBuff.getPercent());
+                        exp_sub -= Utilities.GetValueFromPercent(exp_sub, minBuff.getPercent());
                     } else {
                         exp_sub = 0;
                     }
                     ClanBuff minBuffSkipDie = nonPlayerClanMember.getClan().getBuffByIdBuff(ClanBuff.BUFF_SKIP_PET_DIE_WHEN_PK);
-                    if (!(Utilities.nextFloatPer() < minBuffSkipDie.getPercent())) {
+                    if (!(Utilities.NextFloatPer() < minBuffSkipDie.getPercent())) {
                         nonPet.petDieByPK = true;
                     }
                 } else {
@@ -662,22 +662,22 @@ public class PetBattle {
                 if (winPlayerClanMember != null) {
                     ClanBuff minBuff = nonPlayerClanMember.getClan().getBuffByIdBuff(ClanBuff.BUFF_DESCREASE_EXP_WHEN_PK);
                     if (!(minBuff.getPercent() >= 100f)) {
-                        exp_sub_winner -= Utilities.getValueFromPercent(exp_sub_winner, minBuff.getPercent());
+                        exp_sub_winner -= Utilities.GetValueFromPercent(exp_sub_winner, minBuff.getPercent());
                     } else {
                         exp_sub_winner = 0;
                     }
                 }
                 winnerPet.subExpPK(exp_sub_winner);
                 win(petBattleTexts.toArray(new PetBattleText[0]), price, 0);
-                winner.addCoin(Math.round(Utilities.getValueFromPercent(coinPK, 50f)));
+                winner.addCoin(Utilities.round(Utilities.GetValueFromPercent(coinPK, 50f)));
                 nonWinner.mineCoin(coinPK);
                 if (exp_sub_winner > 0) {
-                    winner.okDialog(Utilities.Format("Pet của bạn đã bị trừ %s exp", Utilities.formatNumber(exp_sub_winner)));
+                    winner.okDialog(Utilities.Format("Pet của bạn đã bị trừ %s exp", Utilities.FormatNumber(exp_sub_winner)));
                 }
-                nonWinner.okDialog(Utilities.Format("Pet của bạn đã bị trừ %s exp", Utilities.formatNumber(exp_sub)));
+                nonWinner.okDialog(Utilities.Format("Pet của bạn đã bị trừ %s exp", Utilities.FormatNumber(exp_sub)));
             } else {
                 if (price > 0) {
-                    int totalPrice = Math.round((price * 2) - Utilities.getValueFromPercent(price * 2, GopetManager.BET_PRICE_PLAYER_CHALLENGE));
+                    int totalPrice = Utilities.round((price * 2) - Utilities.GetValueFromPercent(price * 2, GopetManager.BET_PRICE_PLAYER_CHALLENGE));
                     winner.addCoin(totalPrice);
                     win(petBattleTexts.toArray(new PetBattleText[0]), price, 0);
                 }
@@ -717,18 +717,18 @@ public class PetBattle {
         return isClose ? (petAttackMob ? mob.getMobId() : getPlayerHere().user.user_id) : (petAttackMob ? (mob.hp <= 0 ? activePlayer.user.user_id : mob.getMobId()) : (activePet.hp <= 0 ? passivePlayer.user.user_id : activePlayer.user.user_id));
     }
 
-    public void close(Player player) {
+    public void Close(Player player) {
         this.isClose = true;
-        this.closePlayer = player;
+        this.ClosePlayer = player;
         clean();
     }
 
     public Player getPlayerNotHere() {
-        return (this.closePlayer == activePlayer) ? activePlayer : passivePlayer;
+        return (this.ClosePlayer == activePlayer) ? activePlayer : passivePlayer;
     }
 
     public Player getPlayerHere() {
-        return (this.closePlayer == activePlayer) ? passivePlayer : activePlayer;
+        return (this.ClosePlayer == activePlayer) ? passivePlayer : activePlayer;
     }
 
     public void clean() {
@@ -779,7 +779,7 @@ public class PetBattle {
                         PetDamgeInfo damageInfo = makeDamage(petBattleInfo, nonPetBattleInfo, petSkillLv);
                         if (dotmana(petSkillLv)) {
                             if (isPetAttackMob()) {
-                                mpdelta = Math.round(Utilities.getValueFromPercent(mob.mp, ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) / 100f));
+                                mpdelta = Utilities.round(Utilities.GetValueFromPercent(mob.mp, ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) / 100f));
                                 if (mob.mp - mpdelta > 0) {
                                     mob.mp -= mpdelta;
                                 } else {
@@ -787,7 +787,7 @@ public class PetBattle {
                                     mob.mp = 0;
                                 }
                             } else {
-                                mpdelta = Math.round(Utilities.getValueFromPercent(mob.mp, ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) / 100f));
+                                mpdelta = Utilities.round(Utilities.GetValueFromPercent(mob.mp, ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) / 100f));
                                 if (nonPet.mp - mpdelta > 0) {
                                     nonPet.mp -= mpdelta;
                                 } else {
@@ -841,7 +841,7 @@ public class PetBattle {
 
     private bool randMiss(PetBattleInfo nonPetBattleInfo) {
         ItemInfo[] itemInfos = nonPetBattleInfo.getBuff();
-        return ItemInfo.getValueById(itemInfos, ItemInfo.Type.MISS_IN_2_TURN) > 0 && ItemInfo.getValueById(itemInfos, ItemInfo.Type.MISS_IN_2_TURN) / 100f > Utilities.nextFloatPer();
+        return ItemInfo.getValueById(itemInfos, ItemInfo.Type.MISS_IN_2_TURN) > 0 && ItemInfo.getValueById(itemInfos, ItemInfo.Type.MISS_IN_2_TURN) / 100f > Utilities.NextFloatPer();
     }
 
     private bool dotmana(PetSkillLv petSkillLv) {
@@ -859,11 +859,11 @@ public class PetBattle {
             for (PetSkillInfo petSkillInfo : petSkillLv.skillInfo) {
                 switch (petSkillInfo.id) {
                     case ItemInfo.Type.SKILL_BUFF_DAMGE:
-                        sum = Math.round(Utilities.getValueFromPercent(petSkillInfo.getPercent(), sum));
+                        sum = Utilities.round(Utilities.GetValueFromPercent(petSkillInfo.getPercent(), sum));
                         isPassiveSKill = false;
                         break;
                     case ItemInfo.Type.SKILL_SKIP_DEF:
-                        sum += Utilities.getValueFromPercent(petSkillInfo.getPercent(), sum);
+                        sum += Utilities.GetValueFromPercent(petSkillInfo.getPercent(), sum);
                         damgeInfo.setSkipDef(true);
                         isPassiveSKill = false;
                         break;
@@ -871,7 +871,7 @@ public class PetBattle {
                         trueDamge += petSkillInfo.value;
                         break;
                     case ItemInfo.Type.SKILL_MISS:
-                        bool isMiss = petSkillInfo.getPercent() > Utilities.nextFloatPer();
+                        bool isMiss = petSkillInfo.getPercent() > Utilities.NextFloatPer();
                         damgeInfo.setSkillMiss(isMiss);
                         break;
                 }
@@ -879,13 +879,13 @@ public class PetBattle {
                     break;
                 }
             }
-            damgeInfo.setHpRecovery((int) (damgeInfo.getHpRecovery() + Utilities.getValueFromPercent(sum, ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.RECOVERY_HP) / 100f)));
+            damgeInfo.setHpRecovery((int) (damgeInfo.getHpRecovery() + Utilities.GetValueFromPercent(sum, ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.RECOVERY_HP) / 100f)));
         }
         
         if (myPet != null) {
             ItemAttributeTemplate attributeTemplate = myPet.getAttributeTemplate();
             if (attributeTemplate != null) {
-                sum += Math.round(Utilities.getValueFromPercent(attributeTemplate.findValueById(ItemInfo.Type.SKILL_BUFF_DAMGE) / 100f, myPet.getAtk()));
+                sum += Utilities.round(Utilities.GetValueFromPercent(attributeTemplate.findValueById(ItemInfo.Type.SKILL_BUFF_DAMGE) / 100f, myPet.getAtk()));
             }
         }
 
@@ -895,7 +895,7 @@ public class PetBattle {
             }
             switch (itemInfo.id) {
                 case ItemInfo.Type.BUFF_DAMGE:
-                    sum += Utilities.getValueFromPercent(itemInfo.getPercent(), sum);
+                    sum += Utilities.GetValueFromPercent(itemInfo.getPercent(), sum);
                     break;
                 case ItemInfo.Type.BUFF_STR:
                     sum += itemInfo.value;
@@ -908,7 +908,7 @@ public class PetBattle {
             sum -= ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.DEF);
             if (ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.PHANDOAN_2_TURN) > 0) {
                 float damagePer = ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.PHANDOAN_2_TURN) / 100f;
-                int valueDg = Math.round(Utilities.getValueFromPercent(sum, damagePer));
+                int valueDg = Utilities.round(Utilities.GetValueFromPercent(sum, damagePer));
                 sum -= valueDg;
                 getNonUserPetBattleInfo().addBuff(new Buff(new ItemInfo[]{new ItemInfo(ItemInfo.Type.DAMAGE_PHANDOAN, valueDg)}, 2));
             }
@@ -939,23 +939,23 @@ public class PetBattle {
                 for (ItemInfo itemInfo : passiveBattleInfo.getBuff()) {
                     switch (itemInfo.id) {
                         case ItemInfo.Type.BUFF_DAMGE:
-                            sum += Utilities.getValueFromPercent(itemInfo.getPercent(), sum);
+                            sum += Utilities.GetValueFromPercent(itemInfo.getPercent(), sum);
                             break;
 
                     }
                 }
 
-                if (!(mob instanceof Boss)) {
+                if (!(mob is Boss)) {
                     if (ItemInfo.getValueById(activeBattleInfo.getBuff(), ItemInfo.Type.PHANDOAN_2_TURN) > 0) {
                         float damagePer = ItemInfo.getValueById(activeBattleInfo.getBuff(), ItemInfo.Type.PHANDOAN_2_TURN) / 100f;
-                        int valueDg = Math.round(Utilities.getValueFromPercent(sum, damagePer));
+                        int valueDg = Utilities.round(Utilities.GetValueFromPercent(sum, damagePer));
                         sum -= valueDg;
                         passiveBattleInfo.addBuff(new Buff(new ItemInfo[]{new ItemInfo(ItemInfo.Type.DAMAGE_PHANDOAN, valueDg)}, 2));
                     }
                 }
                 Pet pet = getNonPet();
                 int buffDef = ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.DEF);
-                if (!(mob instanceof Boss)) {
+                if (!(mob is Boss)) {
                     if (sum - (pet.getDef() + buffDef) < 0) {
                         sum = 1;
                     } else {
@@ -994,7 +994,7 @@ public class PetBattle {
                 applySkill(petSkillLv, petBattleInfo, nonPetBattleInfo);
                 PetDamgeInfo damageInfo = makeDamage(petBattleInfo, nonPetBattleInfo, petSkillLv);
                 if (dotmana(petSkillLv)) {
-                    mpdelta = Math.round(Utilities.getValueFromPercent(mob.mp, ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) / 100f));
+                    mpdelta = Utilities.round(Utilities.GetValueFromPercent(mob.mp, ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) / 100f));
                     if (activePet.mp - mpdelta > 0) {
                         activePet.mp -= mpdelta;
                     } else {
@@ -1040,7 +1040,7 @@ public class PetBattle {
     private void mobAttack()   {
         mobUseNormalAttack();
 //        if (this.mob.getMobLvInfo().getLvl() > 3) {
-//            bool isUseSkill = Utilities.nextFloatPer() <= 200f;
+//            bool isUseSkill = Utilities.NextFloatPer() <= 200f;
 //            if (isUseSkill) {
 //                ArrayList<PetSkill> listSkill = GopetManager.NCLASS_PETSKILL_HASH_MAP.get(this.mob.getPetTemplate().getNclass());
 //                if (listSkill != null) {
@@ -1097,8 +1097,8 @@ public class PetBattle {
                 case ItemInfo.Type.SELECT_DEF_IN_3_TURN:
                     if (!petAttackMob) {
                         Pet nonPet = getNonPet();
-                        petBattleInfo.addBuff(new Buff(new ItemInfo[]{new ItemInfo(ItemInfo.Type.DEF, (int) Utilities.getValueFromPercent(nonPet.def, i.getPercent()))}, 3));
-                        nonBattleInfo.addBuff(new Buff(new ItemInfo[]{new ItemInfo(ItemInfo.Type.DEF, -(int) Utilities.getValueFromPercent(nonPet.def, i.getPercent()))}, 3));
+                        petBattleInfo.addBuff(new Buff(new ItemInfo[]{new ItemInfo(ItemInfo.Type.DEF, (int) Utilities.GetValueFromPercent(nonPet.def, i.getPercent()))}, 3));
+                        nonBattleInfo.addBuff(new Buff(new ItemInfo[]{new ItemInfo(ItemInfo.Type.DEF, -(int) Utilities.GetValueFromPercent(nonPet.def, i.getPercent()))}, 3));
                     }
                     break;
                 case ItemInfo.Type.STUN:
@@ -1148,17 +1148,17 @@ public class PetBattle {
         if (damagePer > 0) {
             if (petAttackMob) {
                 if (pet != null) {
-                    int damage = (int) Utilities.getValueFromPercent(pet.getMaxHp(), damagePer);
+                    int damage = (int) Utilities.GetValueFromPercent(pet.getMaxHp(), damagePer);
                     activePet.subHp(damage);
                     turnEffects.add(new TurnEffect(TurnEffect.NONE, mob.getMobId(), PetSkill.TOXIC, -damage, 0));
                 } else {
-                    int damage = (int) Utilities.getValueFromPercent(mob.maxHp, damagePer);
+                    int damage = (int) Utilities.GetValueFromPercent(mob.maxHp, damagePer);
                     mob.addHp(damage);
                     turnEffects.add(new TurnEffect(TurnEffect.NONE, activePlayer.playerData.user_id, PetSkill.TOXIC, -damage, 0));
                 }
             } else {
                 if (pet != null) {
-                    int damage = (int) Utilities.getValueFromPercent(pet.getMaxHp(), damagePer);
+                    int damage = (int) Utilities.GetValueFromPercent(pet.getMaxHp(), damagePer);
                     getNonPet().subHp(damage);
                     turnEffects.add(new TurnEffect(TurnEffect.NONE, getFocus(), PetSkill.TOXIC, -damage, 0));
                 }
@@ -1204,10 +1204,10 @@ public class PetBattle {
         bool minus = Math.abs(p.lvl - mob.getMobLvInfo().getLvl()) >= 5;
         if (minus) {
 //            System.out.println("data.battle.PetBattle.genGemWhenMobDie()" + begin);
-            begin = (int) Utilities.getValueFromPercent(begin, Math.max(0, 100 - (Math.abs(p.lvl - mob.getMobLvInfo().getLvl()) * 3)));
+            begin = (int) Utilities.GetValueFromPercent(begin, Math.max(0, 100 - (Math.abs(p.lvl - mob.getMobLvInfo().getLvl()) * 3)));
 //            System.out.println("data.battle.PetBattle.genGemWhenMobDie()" + begin);
         }
-        begin = Math.max(0, (int) Utilities.getValueFromPercent(begin, 100 - Utilities.nextInt(-10, 10)));
+        begin = Math.max(0, (int) Utilities.GetValueFromPercent(begin, 100 - Utilities.nextInt(-10, 10)));
 //        System.out.println("data.battle.PetBattle.genGemWhenMobDie()" + begin);
         return begin;
     }
@@ -1217,18 +1217,18 @@ public class PetBattle {
         int deltaLvl = p.lvl - mob.getMobLvInfo().getLvl();
         if (deltaLvl >= 0) {
             if (deltaLvl <= 10) {
-                begin = (int) Math.max(0, exp + Utilities.getValueFromPercent(exp, deltaLvl * 2));
+                begin = (int) Math.max(0, exp + Utilities.GetValueFromPercent(exp, deltaLvl * 2));
             } else {
                 begin = 0;
             }
         } else {
             if (deltaLvl >= -10) {
-                begin = (int) Math.max(0, exp - Utilities.getValueFromPercent(exp, deltaLvl * 8));
+                begin = (int) Math.max(0, exp - Utilities.GetValueFromPercent(exp, deltaLvl * 8));
             } else {
                 begin = 0;
             }
         }
-        begin = Math.max(0, (int) Utilities.getValueFromPercent(begin, 100 - Utilities.nextInt(-10, 10)));
+        begin = Math.max(0, (int) Utilities.GetValueFromPercent(begin, 100 - Utilities.nextInt(-10, 10)));
         return begin;
     }
 }

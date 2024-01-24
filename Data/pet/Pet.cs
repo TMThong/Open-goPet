@@ -48,7 +48,7 @@ public class Pet : GameObject {
      * Hình xăm của pet chỉ thêm trong giao diện xăm hình
      */
  
-    public CopyOnWriteArrayList<PetTatto> tatto = new CopyOnWriteArrayList<>();
+    public CopyOnWriteArrayList<PetTatto> tatto =new ();
     /**
      * Các vật phẩm mà pet đã trang bị
      */
@@ -168,7 +168,7 @@ public class Pet : GameObject {
     }
 
     public int getAtk() {
-        return atk + Math.round(str / 2) + (tiemnang[0] / 2);
+        return atk + Utilities.round(str / 2) + (tiemnang[0] / 2);
     }
 
     public int getDef() {
@@ -345,7 +345,7 @@ public class Pet : GameObject {
 
     public String getDesc() {
         ArrayList<String> infoStrings = new();
-        infoStrings.add(Utilities.formatNumber(exp) + " exp ");
+        infoStrings.add(Utilities.FormatNumber(exp) + " exp ");
 
         if (getAtk() > 0) {
             infoStrings.add(getAtk() + " (atk) ");

@@ -37,23 +37,23 @@ public class TaskCalculator {
             return;
         }
 
-        for (Map.Entry<int, NpcTemplate> entry : GopetManager.npcTemplate.entrySet()) {
-            int key = entry.getKey();
-            NpcTemplate val = entry.getValue();
+        for (Map.Entry<int, NpcTemplate> entry : GopetManager.npcTemplate ) {
+            int key = entry.Key;
+            NpcTemplate val = entry.Value;
             ArrayList<TaskTemplate> taskFromNPC = GopetManager.taskTemplateByNpcId.get(key);
             if (taskFromNPC != null) {
                 for (TaskTemplate taskTemplate : taskFromNPC) {
-                    if (!playerData.wasTask.contains(taskTemplate.getTaskId()) && !playerData.tasking.contains(taskTemplate.getTaskId())) {
+                    if (!playerData.wasTask.Contains(taskTemplate.getTaskId()) && !playerData.tasking.Contains(taskTemplate.getTaskId())) {
                         bool flag = true;
                         for (int taskIdNeed : taskTemplate.getTaskNeed()) {
-                            if (!playerData.wasTask.contains(taskIdNeed)) {
+                            if (!playerData.wasTask.Contains(taskIdNeed)) {
                                 flag = false;
                                 break;
                             }
                         }
 
                         if (flag) {
-                            if (!this.cacheTask.containsKey(key)) {
+                            if (!this.cacheTask.ContainsKey(key)) {
                                 this.cacheTask.put(key, new());
                             }
                             this.cacheTask.get(key).add(taskTemplate);
@@ -326,7 +326,7 @@ public class TaskCalculator {
 
     public CopyOnWriteArrayList<TaskData> getTaskDatas() {
         if (this.player.playerData == null) {
-            return new CopyOnWriteArrayList<>();
+            returnnew ();
         }
         return this.player.playerData.task;
     }

@@ -47,4 +47,9 @@ public class ShopTemplate : DataVersion {
     public void nextArena() {
 
     }
+
+    public ArrayList<ShopTemplateItem> getShopTemplateItems()
+    {
+        return this.shopTemplateItems;
+    }
 }

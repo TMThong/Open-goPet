@@ -1,5 +1,6 @@
 
 using Gopet.Data.Collections;
+using Gopet.Util;
 
 public class ShopClan : ShopTemplate {
 
@@ -46,5 +47,10 @@ public class ShopClan : ShopTemplate {
             }
         }
         return null;
+    }
+
+    internal long GetTimeMillisRefresh()
+    {
+        return this.timeRefresh;
     }
 }

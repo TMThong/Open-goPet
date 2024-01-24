@@ -1,4 +1,6 @@
- 
+
+using Gopet.Util;
+
 public class ShopTemplateItem : DataVersion {
 
     public int shopId;
@@ -11,7 +13,7 @@ public class ShopTemplateItem : DataVersion {
     public String nameSpeceial, descriptionSpeceial;
     public bool needRemove = false;
     public int spceialType = -1;
-    public bool closeScreenAfterClick = false;
+    public bool CloseScreenAfterClick = false;
     public int clanLvl;
     public int perCount = 0;
     public const int TYPE_RESET_SHOP_ARENA = 0;
@@ -72,9 +74,9 @@ public class ShopTemplateItem : DataVersion {
         this.spceialType = spceialType;
     }
 
-    public void setCloseScreenAfterClick(bool closeScreenAfterClick)
+    public void setCloseScreenAfterClick(bool CloseScreenAfterClick)
     {
-        this.closeScreenAfterClick = closeScreenAfterClick;
+        this.CloseScreenAfterClick = CloseScreenAfterClick;
     }
 
     public void setClanLvl(int clanLvl)
@@ -158,7 +160,7 @@ public class ShopTemplateItem : DataVersion {
 
     public bool isCloseScreenAfterClick()
     {
-        return this.closeScreenAfterClick;
+        return this.CloseScreenAfterClick;
     }
 
     public int getClanLvl()
@@ -270,5 +272,8 @@ public class ShopTemplateItem : DataVersion {
         }
     }
 
-   
+    public void setSpceial(bool v)
+    {
+        this.isSpceial = v;
+    }
 }

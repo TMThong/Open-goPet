@@ -23,7 +23,7 @@ public class ItemInfo {
      * @return
      */
     public String getName() {
-        bool canFormat = GopetManager.itemInfoCanFormat.containsKey(id);
+        bool canFormat = GopetManager.itemInfoCanFormat.ContainsKey(id);
         if (canFormat) {
             if (GopetManager.itemInfoIsPercent.get(id)) {
                 return Utilities.Format(GopetManager.itemInfoName.get(id), value / 100f).replace('/', '%');

@@ -409,7 +409,7 @@ public class GopetManager {
             mobLvInfo.setExp(resultSet.getInt("exp"));
             hashMap.put(mobLvInfo.getLvl(), mobLvInfo);
         }
-        resultSet.close();
+        resultSet.Close();
     }
 
     public static void init()   {
@@ -417,7 +417,7 @@ public class GopetManager {
         while (resultSet.next()) {
             PetExp.put(resultSet.getInt("petLvl"), resultSet.getInt("exp"));
         }
-        resultSet.close();
+        resultSet.Close();
         readMobLvl("SELECT * FROM `gopet_mob`", MOBLVLINFO_HASH_MAP);
         readMobLvl("SELECT * FROM `mob_challenge`", MOBLVLINFO_CHALLENGE);
         resultSet = MYSQLManager.jquery("SELECT * FROM `gopet_pet`");
@@ -438,7 +438,7 @@ public class GopetManager {
             petTemplate.setEnable(resultSet.getsbyte("enable") == 1);
             if (petTemplate.isEnable()) {
                 petEnable.add(petTemplate);
-                if (!typePetTemplate.containsKey(petTemplate.getType())) {
+                if (!typePetTemplate.ContainsKey(petTemplate.getType())) {
                     typePetTemplate.put(petTemplate.getType(), new());
                 }
                 typePetTemplate.get(petTemplate.getType()).add(petTemplate);
@@ -447,7 +447,7 @@ public class GopetManager {
             PETTEMPLATE_HASH_MAP.put(petTemplate.getPetId(), petTemplate);
             PET_TEMPLATES.add(petTemplate);
         }
-        resultSet.close();
+        resultSet.Close();
         MySqlConnection webMySqlConnection = MYSQLManager.createWebMySqlConnection();
         resultSet = MYSQLManager.jquery("SELECT * FROM `exchange`", webMySqlConnection);
         while (resultSet.next()) {
@@ -459,19 +459,19 @@ public class GopetManager {
             MenuController.EXCHANGE_ITEM_INFOS.add(new ExchangeItemInfo(exchangeData));
         }
 
-        resultSet.close();
-        webMySqlConnection.close();
+        resultSet.Close();
+        webMySqlConnection.Close();
         resultSet = MYSQLManager.jquery("SELECT * FROM `iteminfo`");
         while (resultSet.next()) {
             int ID = resultSet.getInt("ID");
             String name = resultSet.getString("name");
             bool isPercent = resultSet.getInt("isPercent") != 0;
-            bool canFormat = name.contains("%s");
+            bool canFormat = name.Contains("%s");
             itemInfoName.put(ID, name);
             itemInfoIsPercent.put(ID, isPercent);
             itemInfoCanFormat.put(ID, canFormat);
         }
-        resultSet.close();
+        resultSet.Close();
 
         resultSet = MYSQLManager.jquery("SELECT * FROM `skill`");
         while (resultSet.next()) {
@@ -488,44 +488,44 @@ public class GopetManager {
                 petSkillLv.skillInfo = (PetSkillInfo[]) JsonManager.LoadFromJson(skillLvResultSet.getString("skillInfo"), PetSkillInfo[].class);
                 petSkill.skillLv.add(petSkillLv);
             }
-            skillLvResultSet.close();
+            skillLvResultSet.Close();
             PETSKILL_HASH_MAP.put(petSkill.skillID, petSkill);
-            if (!NCLASS_PETSKILL_HASH_MAP.containsKey(petSkill.nClass)) {
+            if (!NCLASS_PETSKILL_HASH_MAP.ContainsKey(petSkill.nClass)) {
                 NCLASS_PETSKILL_HASH_MAP.put(petSkill.nClass, new());
             }
             NCLASS_PETSKILL_HASH_MAP.get(petSkill.nClass).add(petSkill);
         }
-        resultSet.close();
+        resultSet.Close();
 
         HashMap<int, ArrayList<MobLvlMap>> mobLvlMap_ = new();
         resultSet = MYSQLManager.jquery("SELECT * FROM `gopet_map_moblvl`");
         while (resultSet.next()) {
             MobLvlMap mobLvlMap = new MobLvlMap(resultSet.getInt("mapId"), resultSet.getInt("lvlFrom"), resultSet.getInt("lvlTo"), resultSet.getInt("petId"));
-            if (!mobLvlMap_.containsKey(mobLvlMap.getMapId())) {
+            if (!mobLvlMap_.ContainsKey(mobLvlMap.getMapId())) {
                 mobLvlMap_.put(mobLvlMap.getMapId(), new());
             }
             mobLvlMap_.get(mobLvlMap.getMapId()).add(mobLvlMap);
         }
-        resultSet.close();
-        for (Map.Entry<int, ArrayList<MobLvlMap>> entry : mobLvlMap_.entrySet()) {
-            int key = entry.getKey();
-            ArrayList<MobLvlMap> val = entry.getValue();
+        resultSet.Close();
+        for (Map.Entry<int, ArrayList<MobLvlMap>> entry : mobLvlMap_ ) {
+            int key = entry.Key;
+            ArrayList<MobLvlMap> val = entry.Value;
             MOBLVL_MAP.put(key, val.toArray(new MobLvlMap[0]));
         }
         HashMap<int, ArrayList<MobLocation>> mobLoc = new();
         resultSet = MYSQLManager.jquery("SELECT * FROM `gopet_mob_location`");
         while (resultSet.next()) {
             MobLocation mobLocation1 = new MobLocation(resultSet.getInt("mapId"), resultSet.getInt("x"), resultSet.getInt("y"));
-            if (!mobLoc.containsKey(mobLocation1.getMapId())) {
+            if (!mobLoc.ContainsKey(mobLocation1.getMapId())) {
                 mobLoc.put(mobLocation1.getMapId(), new());
             }
             mobLoc.get(mobLocation1.getMapId()).add(mobLocation1);
         }
-        resultSet.close();
+        resultSet.Close();
 
-        for (Map.Entry<int, ArrayList<MobLocation>> entry : mobLoc.entrySet()) {
-            int key = entry.getKey();
-            ArrayList<MobLocation> val = entry.getValue();
+        for (Map.Entry<int, ArrayList<MobLocation>> entry : mobLoc ) {
+            int key = entry.Key;
+            ArrayList<MobLocation> val = entry.Value;
             mobLocation.put(key, val.toArray(new MobLocation[0]));
         }
 
@@ -544,7 +544,7 @@ public class GopetManager {
             npcTemp.setBounds((int[]) JsonManager.LoadFromJson(resultSet.getString("bounds"), int[].class));
             npcTemplate.put(npcTemp.getNpcId(), npcTemp);
         }
-        resultSet.close();
+        resultSet.Close();
         resultSet = MYSQLManager.jquery("SELECT * FROM `map` WHERE `map`.`enable` = true;");
         while (resultSet.next()) {
             MapTemplate mapTemp = new MapTemplate();
@@ -565,7 +565,7 @@ public class GopetManager {
             mapTemp.setBoss((int[]) JsonManager.LoadFromJson(resultSet.getString("boss"), int[].class));
             mapTemplate.put(mapTemp.getMapId(), mapTemp);
         }
-        resultSet.close();
+        resultSet.Close();
 
         resultSet = MYSQLManager.jquery("SELECT * FROM `tattoo`");
         while (resultSet.next()) {
@@ -581,7 +581,7 @@ public class GopetManager {
             petTattoTemplate.setPercent(resultSet.getFloat("percent"));
             tattos.put(petTattoTemplate.getTattooId(), petTattoTemplate);
         }
-        resultSet.close();
+        resultSet.Close();
 
         int idAssets = 1;
         resultSet = MYSQLManager.jquery("SELECT * FROM `item`");
@@ -626,7 +626,7 @@ public class GopetManager {
                     PetTemplate petTemplate = PETTEMPLATE_HASH_MAP.get(optionValue[0]);
                     if (petTemplate != null) {
                         int typePet = petTemplate.getType();
-                        if (!mergeItemPet.containsKey(typePet)) {
+                        if (!mergeItemPet.ContainsKey(typePet)) {
                             mergeItemPet.put(typePet, new());
                         }
                         mergeItemPet.get(typePet).add(itemTemp);
@@ -636,7 +636,7 @@ public class GopetManager {
                 int[] optionValue = itemTemp.getOptionValue();
                 if (optionValue.Length > 1) {
                     int typePet = itemTemp.getTypeTier();
-                    if (!mergeItemItem.containsKey(typePet)) {
+                    if (!mergeItemItem.ContainsKey(typePet)) {
                         mergeItemItem.put(typePet, new());
                     }
                     mergeItemItem.get(typePet).add(itemTemp);
@@ -647,7 +647,7 @@ public class GopetManager {
                 NonAdminItemList.add(itemTemp);
             }
         }
-        resultSet.close();
+        resultSet.Close();
 
         resultSet = MYSQLManager.jquery("SELECT * FROM `shop`");
         while (resultSet.next()) {
@@ -663,7 +663,7 @@ public class GopetManager {
             shopTemplate1.setPerCount(resultSet.getInt("perCount"));
             shopTemplate1.setSellItem(resultSet.getbool("isSellItem"));
             shopTemplate1.setPetId(resultSet.getInt("petId"));
-            if (shopTemplate.containsKey(shopId)) {
+            if (shopTemplate.ContainsKey(shopId)) {
                 shopTemplate.get(shopId).getShopTemplateItems().add(shopTemplate1);
             } else {
                 //throw new UnsupportedOperationException(" khong ho tro loai shop " + shopId);
@@ -678,12 +678,12 @@ public class GopetManager {
             shopTemplate1.setComment(resultSet.getString("comment"));
             shopTemplate1.setPercent(resultSet.getFloat("percent"));
             shopTemplate1.setOption((int[][]) JsonManager.LoadFromJson(resultSet.getString("optionValue"), int[][].class));
-            if (!shopClanByLvl.containsKey(shopTemplate1.getNeedShopClanLvl())) {
+            if (!shopClanByLvl.ContainsKey(shopTemplate1.getNeedShopClanLvl())) {
                 shopClanByLvl.put(shopTemplate1.getNeedShopClanLvl(), new());
             }
             shopClanByLvl.get(shopTemplate1.getNeedShopClanLvl()).add(shopTemplate1);
         }
-        resultSet.close();
+        resultSet.Close();
         resultSet = MYSQLManager.jquery("SELECT * FROM `drop_item`");
         while (resultSet.next()) {
             DropItem dropItem1 = new DropItem();
@@ -695,11 +695,11 @@ public class GopetManager {
             String lvlRange = resultSet.getString("lvlRange");
             if (!resultSet.wasNull()) {
                 dropItem1.setLvlRange((int[]) JsonManager.LoadFromJson(lvlRange, int[].class));
-                if (!mapHasDropItemLvlRange.contains(dropItem1.getMapId())) {
+                if (!mapHasDropItemLvlRange.Contains(dropItem1.getMapId())) {
                     mapHasDropItemLvlRange.add(dropItem1.getMapId());
                 }
             }
-            if (!dropItem.containsKey(dropItem1.getMapId())) {
+            if (!dropItem.ContainsKey(dropItem1.getMapId())) {
                 dropItem.put(dropItem1.getMapId(), new());
             }
 
@@ -708,7 +708,7 @@ public class GopetManager {
             }
             dropItem.get(dropItem1.getMapId()).add(dropItem1);
         }
-        resultSet.close();
+        resultSet.Close();
 
         resultSet = MYSQLManager.jquery("SELECT * FROM `attributes` WHERE `enable` = TRUE;");
         while (resultSet.next()) {
@@ -720,7 +720,7 @@ public class GopetManager {
             ITEM_ATTRIBUTE_TEMPLATES.add(attributeTemplate);
             ITEM_ATTRIBUTE_TEMPLATE_HASH_MAP.put(attributeTemplate.getAttrId(), attributeTemplate);
         }
-        resultSet.close();
+        resultSet.Close();
 
         resultSet = MYSQLManager.jquery("SELECT * FROM `tier_item`");
         while (resultSet.next()) {
@@ -731,7 +731,7 @@ public class GopetManager {
             tierItem1.setPercent(resultSet.getFloat("percent"));
             tierItem.put(tierItem1.getItemTemplateIdTier1(), tierItem1);
         }
-        resultSet.close();
+        resultSet.Close();
 
         resultSet = MYSQLManager.jquery("SELECT * FROM `pet_tier`");
         while (resultSet.next()) {
@@ -742,7 +742,7 @@ public class GopetManager {
             petTier1.setPetTemplateIdNeed(resultSet.getInt("petTemplateIdNeed"));
             petTier.put(petTier1.getPetTemplateId1(), petTier1);
         }
-        resultSet.close();
+        resultSet.Close();
 
         resultSet = MYSQLManager.jquery("SELECT * FROM `boss`");
         while (resultSet.next()) {
@@ -758,11 +758,11 @@ public class GopetManager {
             bossTemplate.setGift((int[][]) JsonManager.LoadFromJson(resultSet.getString("gift"), int[][].class));
             boss.put(bossTemplate.getBossId(), bossTemplate);
             if (bossTemplate.getPetTemplate() == null) {
-                resultSet.close();
-                throw new NullPointerException("Bị rổng do id pet template không tồn tại");
+                resultSet.Close();
+                throw new NullReferenceException("Bị rổng do id pet template không tồn tại");
             }
         }
-        resultSet.close();
+        resultSet.Close();
 
         resultSet = MYSQLManager.jquery("SELECT * FROM `shoparena` WHERE `shoparena`.`enable` = 1");
         while (resultSet.next()) {
@@ -773,7 +773,7 @@ public class GopetManager {
             shopArenaTemplate.setPercent(resultSet.getFloat("percent"));
             SHOP_ARENA_TEMPLATE.add(shopArenaTemplate);
         }
-        resultSet.close();
+        resultSet.Close();
 
         resultSet = MYSQLManager.jquery("SELECT * FROM `clan_template` ORDER BY `clan_template`.`clanLvl` ASC");
         while (resultSet.next()) {
@@ -786,7 +786,7 @@ public class GopetManager {
             clanTemplate.setPermission((int[]) JsonManager.LoadFromJson(resultSet.getString("permission"), int[].class));
             clanTemp.put(clanTemplate.getLvl(), clanTemplate);
         }
-        resultSet.close();
+        resultSet.Close();
 
         resultSet = MYSQLManager.jquery("SELECT * FROM `task`");
         while (resultSet.next()) {
@@ -802,18 +802,18 @@ public class GopetManager {
             taskTemp.setTaskNeed((int[]) JsonManager.LoadFromJson(resultSet.getString("taskNeed"), int[].class));
             taskTemplate.put(taskTemp.getTaskId(), taskTemp);
             taskTemplateList.add(taskTemp);
-            if (!taskTemplateByType.containsKey(taskTemp.getType())) {
+            if (!taskTemplateByType.ContainsKey(taskTemp.getType())) {
                 taskTemplateByType.put(taskTemp.getType(), new());
             }
             taskTemplateByType.get(taskTemp.getType()).add(taskTemp);
 
-            if (!taskTemplateByNpcId.containsKey(taskTemp.getFromNpc())) {
+            if (!taskTemplateByNpcId.ContainsKey(taskTemp.getFromNpc())) {
                 taskTemplateByNpcId.put(taskTemp.getFromNpc(), new());
             }
 
             taskTemplateByNpcId.get(taskTemp.getFromNpc()).add(taskTemp);
         }
-        resultSet.close();
+        resultSet.Close();
 
         resultSet = MYSQLManager.jquery("SELECT * FROM `clan_buff_template`");
         while (resultSet.next()) {
@@ -829,7 +829,7 @@ public class GopetManager {
             CLAN_BUFF_TEMPLATES.add(clanBuffTemplate);
             CLANBUFF_HASH_MAP.put(clanBuffTemplate.getBuffId(), clanBuffTemplate);
         }
-        resultSet.close();
+        resultSet.Close();
 
         resultSet = MYSQLManager.jquery("SELECT * FROM `clan_market_house`");
         while (resultSet.next()) {
@@ -840,7 +840,7 @@ public class GopetManager {
             clanHouseTemplate.setNeedClanLvl(resultSet.getInt("needClanLvl"));
             clanMarketHouseTemp.put(clanHouseTemplate.getLvl(), clanHouseTemplate);
         }
-        resultSet.close();
+        resultSet.Close();
 
         resultSet = MYSQLManager.jquery("SELECT * FROM `clan_skill_house`");
         while (resultSet.next()) {
@@ -850,15 +850,15 @@ public class GopetManager {
             clanHouseTemplate.setGrowthPointNeed(resultSet.getInt("growthPoint"));
             clanSkillHouseTemp.put(clanHouseTemplate.getLvl(), clanHouseTemplate);
         }
-        resultSet.close();
+        resultSet.Close();
 
         CHANGE_ITEM_DATA = (int[][]) JsonManager.LoadFromJson("[[4,74,5000,1],[4,71,5500,1],[4,75,4500,1],[4,76,2000,1],[4,77,1000,1],[5,1,5000,1]]", int[][].class);
 
-        for (Map.Entry<int, TierItem> entry : tierItem.entrySet()) {
+        for (Map.Entry<int, TierItem> entry : tierItem ) {
 
-            TierItem val = entry.getValue();
+            TierItem val = entry.Value;
 
-            if (tierItemHashMap.containsKey(val.getItemTemplateIdTier1()) || tierItemHashMap.containsKey(val.getItemTemplateIdTier2())) {
+            if (tierItemHashMap.ContainsKey(val.getItemTemplateIdTier1()) || tierItemHashMap.ContainsKey(val.getItemTemplateIdTier2())) {
                 continue;
             }
 
@@ -877,9 +877,9 @@ public class GopetManager {
         ArrayList<int> list = new();
         list.add(tInfo.getItemTemplateIdTier2());
 
-        for (Map.Entry<int, TierItem> entry : tierItem.entrySet()) {
+        for (Map.Entry<int, TierItem> entry : tierItem ) {
 
-            TierItem val = entry.getValue();
+            TierItem val = entry.Value;
 
             if (val.getItemTemplateIdTier1() == tInfo.getItemTemplateIdTier2()) {
                 list.AddRange(findListTierId(val));
@@ -905,7 +905,7 @@ public class GopetManager {
                 kiosk.setKioskItem(sellItems);
             }
         }
-        resultSet.close();
+        resultSet.Close();
         MYSQLManager.updateSql("DELETE FROM `market`");
     }
 
@@ -918,6 +918,6 @@ public class GopetManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        MySqlConnection.close();
+        MySqlConnection.Close();
     }
 }

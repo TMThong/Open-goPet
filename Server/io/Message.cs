@@ -118,10 +118,10 @@ public class Message
 
     }
 
-    public void putLong(long value)
+    public void putlong(long value)
     {
 
-        this.writer().writeLong(value);
+        this.writer().writelong(value);
 
     }
 
@@ -131,12 +131,12 @@ public class Message
         {
             if (this.dis != null)
             {
-                this.dis.close();
+                this.dis.Close();
             }
 
             if (this.dos != null)
             {
-                this.dos.close();
+                this.dos.Close();
             }
         }
         catch (IOException var2)
@@ -169,9 +169,9 @@ public class Message
         return reader().readUTF();
     }
 
-    public long readLong()
+    public long readlong()
     {
-        return reader().readLong();
+        return reader().readlong();
     }
 
 
@@ -183,7 +183,7 @@ public class Message
         return reader().readInt();
     }
 
-    public void close()
+    public void Close()
     {
         cleanup();
     }

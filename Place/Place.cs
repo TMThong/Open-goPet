@@ -18,38 +18,38 @@ public abstract class Place {
 
     public abstract void add(Player player)  ;
 
-    public void remove(Player player)   {
+    public virtual void remove(Player player)   {
         players.remove(player);
         player.setPlace(null);
         sendRemove(player);
         numPlayer--;
         PetBattle petBattle = player.controller.getPetBattle();
         if (petBattle != null) {
-            petBattle.close(player);
+            petBattle.Close(player);
         }
     }
 
-    public bool canAdd(Player player)   {
+    public virtual bool canAdd(Player player)   {
         return numPlayer + 1 < maxPlayer;
     }
 
-    public void update()   {
-        for (Player player : players) {
+    public virtual void update()   {
+        foreach (Player player in players) {
             player.update();
         }
     }
 
     public void sendMessage(Message ms)   {
-        for (Player player : players) {
+        foreach (Player player in players) {
             player.session.sendMessage(ms);
         }
     }
 
-    public void loadInfo(Player player)   {
+    public virtual void loadInfo(Player player)   {
 
     }
 
-    public void sendMove(int channelID, int userID, sbyte lastDir, short[][] points)   {
+    public virtual void sendMove(int channelID, int userID, sbyte lastDir, short[][] points)   {
         Message ms = new Message((sbyte) 108);
         ms.putsbyte(9);
         ms.putsbyte(5);
@@ -57,7 +57,7 @@ public abstract class Place {
         ms.putInt(userID);
         ms.putsbyte(lastDir);
         ms.putInt(points.Length);
-        for (short[] point : points) {
+        foreach (short[] point in points) {
             ms.putShort(point[0]);
             ms.putShort(point[1]);
         }
@@ -65,11 +65,11 @@ public abstract class Place {
         sendMessage(ms);
     }
 
-    public void sendNewPlayer(Player player)   {
+    public virtual void sendNewPlayer(Player player)   {
 
     }
 
-    public void sendRemove(Player player)   {
+    public virtual void sendRemove(Player player)   {
         Message ms = new Message((sbyte) 108);
         ms.putsbyte(9);
         ms.putsbyte(4);
@@ -79,7 +79,7 @@ public abstract class Place {
         sendMessage(ms);
     }
 
-    public void chat(Player player, String text)   {
+    public virtual void chat(Player player, String text)   {
         Message ms = new Message((sbyte) 108);
         ms.putsbyte(9);
         ms.putsbyte(6);
@@ -91,7 +91,7 @@ public abstract class Place {
         sendMessage(ms);
     }
 
-    public void chat(int user_id, String name, String text)   {
+    public virtual void chat(int user_id, String name, String text)   {
         Message ms = new Message((sbyte) 108);
         ms.putsbyte(9);
         ms.putsbyte(6);
@@ -103,11 +103,18 @@ public abstract class Place {
         sendMessage(ms);
     }
 
-    public bool needRemove() {
+    public virtual bool needRemove() {
         return false;
     }
 
-    public void removeAllPlayer()   {
+    public static Message messagePetSerive(sbyte subCmd)
+    {
+        Message message = new Message(GopetCMD.PET_SERVICE);
+        message.putsbyte(subCmd);
+        return message;
+    }
+
+    public virtual void removeAllPlayer()   {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

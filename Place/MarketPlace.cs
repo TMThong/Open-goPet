@@ -1,20 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package place;
+ 
+public class MarketPlace : GopetPlace {
 
-import data.map.GopetMap;
-import data.map.Kiosk;
-import manager.GopetManager;
-
-/**
- *
- * @author MINH THONG
- */
-public class MarketPlace extends GopetPlace {
-
-    public static Kiosk[] kiosks = new Kiosk[]{
+    public static readonly Kiosk[] kiosks = new Kiosk[]{
         new Kiosk(GopetManager.KIOSK_HAT),
         new Kiosk(GopetManager.KIOSK_WEAPON),
         new Kiosk(GopetManager.KIOSK_AMOUR),
@@ -23,8 +10,9 @@ public class MarketPlace extends GopetPlace {
         new Kiosk(GopetManager.KIOSK_OTHER)
     };
 
-    public MarketPlace(GopetMap m, int ID)   {
-        base(m, ID);
+    public MarketPlace(GopetMap m, int ID)  : base(m, ID)
+    {
+        
         if (m.mapID != 22) {
             throw new UnsupportedOperationException("Map này méo phải map chợ trời");
         }
@@ -32,7 +20,7 @@ public class MarketPlace extends GopetPlace {
     }
 
      
-    public void update()   {
+    public override void update()   {
         base.update(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
         for (int i = 0; i < kiosks.Length; i++) {
             Kiosk kiosk = kiosks[i];
@@ -40,9 +28,9 @@ public class MarketPlace extends GopetPlace {
         }
     }
 
-    public static Kiosk getKiosk(sbyte type) {
-        for (Kiosk kiosk : kiosks) {
-            if (kiosk.getKioskType() == type) {
+    public Kiosk getKiosk(sbyte type) {
+        foreach (Kiosk kiosk in kiosks) {
+            if (kiosk.kioskType == type) {
                 return kiosk;
             }
         }

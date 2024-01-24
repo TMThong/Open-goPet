@@ -1,6 +1,12 @@
- 
 
-public class UserData {
+
+using Gopet.Data.user;
+using Gopet.Util;
+using MySql.Data.MySqlClient;
+
+
+public class UserData
+{
 
     public int user_id;
     public String username, password, phone, email, banReason, ipv4Create;
@@ -12,53 +18,74 @@ public class UserData {
     public const sbyte BAN_INFINITE = 2;
     public const sbyte ROLE_NON_ACTIVE = 0;
 
-    public void ban(sbyte typeBan, String reason, long timeBan)   {
-        MySqlConnection MySqlConnection = MYSQLManager.createWebMySqlConnection();
-        try {
-            MYSQLManager.updateSql(Utilities.Format("UPDATE `user` SET `user`.`isBaned` = %s , `user`.`banReason` = '%s', `user`.`banTime` = %s WHERE user_id = %s;", typeBan, reason, timeBan, user_id), MySqlConnection);
-        }  ly {
-            MySqlConnection.close();
+    public void ban(sbyte typeBan, String reason, long timeBan)
+    {
+        MySqlConnection conn = MYSQLManager.createWebMySqlConnection();
+        try
+        {
+            MYSQLManager.updateSql(Utilities.Format("UPDATE `user` SET `user`.`isBaned` = %s , `user`.`banReason` = '%s', `user`.`banTime` = %s WHERE user_id = %s;", typeBan, reason, timeBan, user_id), conn);
+        }
+        finally
+        {
+            conn.Close();
         }
     }
 
-    public static void banBySQL(sbyte typeBan, String reason, long timeBan, int user_id)   {
-        MySqlConnection MySqlConnection = MYSQLManager.createWebMySqlConnection();
-        try {
-            MYSQLManager.updateSql(Utilities.Format("UPDATE `user` SET `user`.`isBaned` = %s , `user`.`banReason` = '%s', `user`.`banTime` = %s WHERE user_id = %s;", typeBan, reason, timeBan, user_id), MySqlConnection);
-        }  ly {
-            MySqlConnection.close();
+    public static void banBySQL(sbyte typeBan, String reason, long timeBan, int user_id)
+    {
+        MySqlConnection conn = MYSQLManager.createWebMySqlConnection();
+        try
+        {
+            MYSQLManager.updateSql(Utilities.Format("UPDATE `user` SET `user`.`isBaned` = %s , `user`.`banReason` = '%s', `user`.`banTime` = %s WHERE user_id = %s;", typeBan, reason, timeBan, user_id), conn);
+        }
+        finally
+        {
+            conn.Close();
         }
     }
 
-    public int getCoin()   {
+    public int getCoin()
+    {
         MySqlConnection webMySqlConnection = null;
-        try {
+        try
+        {
             webMySqlConnection = MYSQLManager.createWebMySqlConnection();
             ResultSet resultSet = MYSQLManager.jquery(Utilities.Format("SELECT   `coin` FROM `user` WHERE `user`.`user_id` = %s;", user_id), webMySqlConnection);
-            if (resultSet.next()) {
+            if (resultSet.next())
+            {
                 int coin = resultSet.getInt("coin");
-                resultSet.close();
-                webMySqlConnection.close();
+                resultSet.Close();
+                webMySqlConnection.Close();
                 return coin;
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
-        }  ly {
-            webMySqlConnection.close();
+        }
+        finally
+        {
+            webMySqlConnection.Close();
         }
         return 0;
     }
 
-    public void mineCoin(int coin, int myCOin)   {
+    public void mineCoin(int coin, int myCOin)
+    {
         MySqlConnection webMySqlConnection = null;
-        try {
+        try
+        {
             webMySqlConnection = MYSQLManager.createWebMySqlConnection();
-            MYSQLManager.updateSql(Utilities.Format("INSERT INTO `dongtien`(`username`, `sotientruoc`, `sotienthaydoi`, `sotiensau`, `thoigian`, `noidung`) VALUES ('%s', %s, %s, %s, '%s' , '%s')", username, myCOin, coin, myCOin - coin,  Utilities.toDateString(new Date()), Utilities.Format("Đổi gold trên game với giá %svnđ", Utilities.formatNumber(coin))), webMySqlConnection);
+            MYSQLManager.updateSql(Utilities.Format("INSERT INTO `dongtien`(`username`, `sotientruoc`, `sotienthaydoi`, `sotiensau`, `thoigian`, `noidung`) VALUES ('%s', %s, %s, %s, '%s' , '%s')", username, myCOin, coin, myCOin - coin, Utilities.ToDateString(Utilities.GetCurrentDate()), Utilities.Format("Đổi gold trên game với giá %svnđ", Utilities.FormatNumber(coin))), webMySqlConnection);
             MYSQLManager.updateSql(Utilities.Format("UPDATE `user` set coin = coin - %s where user_id = %s", coin, this.user_id), webMySqlConnection);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
-        }  ly {
-            webMySqlConnection.close();
+        }
+        finally
+        {
+            webMySqlConnection.Close();
         }
     }
 }

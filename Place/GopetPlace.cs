@@ -1,7 +1,8 @@
 
 
 using Gopet.Data.Collections;
- 
+using Gopet.Util;
+
 public class GopetPlace : Place {
 
     public   CopyOnWriteArrayList<Mob> mobs = new  ();
@@ -14,7 +15,7 @@ public class GopetPlace : Place {
     public GopetPlace(GopetMap m, int ID)  : base(m, ID)
     {
        
-        if (GopetManager.mobLocation.containsKey(m.mapID) && GopetManager.MOBLVL_MAP.containsKey(m.mapID)) {
+        if (GopetManager.mobLocation.ContainsKey(m.mapID) && GopetManager.MOBLVL_MAP.ContainsKey(m.mapID)) {
             createNewMob(GopetManager.mobLocation.get(map.mapID));
         }
     }
@@ -24,7 +25,7 @@ public class GopetPlace : Place {
         HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Bạn đã vào khu %s map %s", zoneID, map.mapTemplate.getMapName())));
         PetBattle petBattle = player.controller.getPetBattle();
         if (petBattle != null) {
-            petBattle.close(player);
+            petBattle.Close(player);
         }
         Place place = player.getPlace();
         if (place != null) {
@@ -49,7 +50,7 @@ public class GopetPlace : Place {
     public override void remove(Player player)   {
         PetBattle petBattle = player.controller.getPetBattle();
         if (petBattle != null) {
-            petBattle.close(player);
+            petBattle.Close(player);
         }
         base.remove(player); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
@@ -80,7 +81,7 @@ public class GopetPlace : Place {
     }
 
     public Mob getMob(int mobId)   {
-        for (Mob mob : mobs) {
+        foreach (Mob mob in mobs) {
             if (mob.getMobId() == mobId) {
                 return mob;
             }
@@ -89,7 +90,7 @@ public class GopetPlace : Place {
     }
 
     public Player getPlayer(int user_id)   {
-        for (Player player : players) {
+        foreach (Player player in players) {
             if (player.user.user_id == user_id) {
                 return player;
             }
@@ -102,7 +103,7 @@ public class GopetPlace : Place {
         Message message = new Message(GopetCMD.PET_SERVICE);
         message.putsbyte(GopetCMD.SEND_LIST_MOB_ZONE);
         message.putInt(gopetMobs.Count);
-        for (Mob mob : gopetMobs) {
+        foreach (Mob mob in gopetMobs) {
             message.putInt(mob.getMobId());
             message.putUTF(mob.getPetTemplate().getFrameImg());
             message.putUTF(mob.getPetTemplate().getName());
@@ -120,7 +121,7 @@ public class GopetPlace : Place {
         Message message = new Message(GopetCMD.PET_SERVICE);
         message.putsbyte(GopetCMD.SEND_LIST_MOB_ZONE);
         message.putInt(gopetMobs.Count);
-        for (Mob mob : gopetMobs) {
+        foreach (Mob mob in gopetMobs) {
             message.putInt(mob.getMobId());
             message.putUTF(mob.getPetTemplate().getFrameImg());
             message.putUTF(mob.getPetTemplate().getName());
@@ -137,7 +138,7 @@ public class GopetPlace : Place {
         Message message = new Message(GopetCMD.PET_SERVICE);
         message.putsbyte(GopetCMD.SEND_LIST_MOB_ZONE);
         message.putInt(newMobs.Count);
-        for (Mob mob : newMobs) {
+        foreach (Mob mob in newMobs) {
             message.putInt(mob.getMobId());
             message.putUTF(mob.getPetTemplate().getFrameImg());
             message.putUTF(mob.getPetTemplate().getName());
@@ -152,18 +153,18 @@ public class GopetPlace : Place {
 
     public void sendListPet(Player player)   {
         HashMap<Player, Pet> hashMap = new();
-        for (Player player1 : players) {
+        foreach (Player player1 in players) {
             if (player1.playerData.petSelected != null) {
                 hashMap.put(player1, player1.playerData.petSelected);
             }
         }
-        if (!hashMap.isEmpty()) {
+        if (hashMap.Count != 0) {
             Message message = new Message(GopetCMD.PET_SERVICE);
             message.putsbyte(GopetCMD.SEND_LIST_PET_ZONE);
             message.putsbyte(hashMap.Count);
-            for (Map.Entry<Player, Pet> entry : hashMap.entrySet()) {
-                Player player1 = entry.getKey();
-                Pet petSelected = entry.getValue();
+            foreach (var entry in hashMap) {
+                Player player1 = entry.Key;
+                Pet petSelected = entry.Value;
                 message.putInt(player1.user.user_id);
                 message.putInt(petSelected.petIdTemplate);
                 message.putUTF(petSelected.getPetTemplate().getFrameImg());
@@ -173,7 +174,7 @@ public class GopetPlace : Place {
             message.cleanup();
             sendMessage(message);
 
-            if (hashMap.containsKey(player)) {
+            if (hashMap.ContainsKey(player)) {
                 player.controller.sendMyPetInfo();
             }
         }
@@ -181,7 +182,7 @@ public class GopetPlace : Place {
 
     private void sendGameObj(Player player)   {
         Message ms = new Message(GopetCMD.GAME_OBJECT);
-        for (int npcId : map.mapTemplate.getNpc()) {
+        foreach (int npcId in map.mapTemplate.getNpc()) {
             NpcTemplate npcTemplate = GopetManager.npcTemplate.get(npcId);
             if (npcTemplate != null) {
                 ms.putsbyte(0);
@@ -197,7 +198,7 @@ public class GopetPlace : Place {
                 ms.putInt(6);
                 String[] chat = npcTemplate.getChat();
                 ms.putInt(chat.Length);
-                for (String CHAT_String : chat) {
+                foreach (String CHAT_String in chat) {
                     ms.putUTF(CHAT_String);
                 }
                 ms.putUTF(npcTemplate.getName());
@@ -252,7 +253,7 @@ public class GopetPlace : Place {
         message.putUTF(text);
         message.cleanup();
         sendMessage(message);
-//        if (text.equals(  "j")) {
+//        if (text.Equals(  "j")) {
 //            MYSQLManager.updateSql(Utilities.Format(  "INSERT INTO `gopet_mob_location`(`mapID`, `x`, `y`) VALUES ('%s','%s','%s')", map.mapID, player.playerData.x, player.playerData.y));
 //        }
     }
@@ -303,7 +304,7 @@ public class GopetPlace : Place {
         message.putInt(player.playerData.x);
         message.putInt(player.playerData.y);
 
-        for (Player player1 : players) {
+        foreach (Player player1 in players) {
             if (player1 != player) {
                 message.putInt(player1.user.user_id);
                 message.putUTF(player1.playerData.name);
@@ -324,7 +325,7 @@ public class GopetPlace : Place {
     public void startFightMob(int mobId, Player player)   {
         if (Utilities.CurrentTimeMillis - player.controller.getLastTimeKillMob() < 4000) {
             player.user.ban(UserData.BAN_TIME, "Dùng phiên bản speed để farm quái (thuật toán ver2)!\n Nếu muốn kháng cáo vui lòng quay video lại", Utilities.CurrentTimeMillis + 60000L * 5);
-            player.session.close();
+            player.session.Close();
             return;
         }
         Mob mob = getMob(mobId);
@@ -332,7 +333,7 @@ public class GopetPlace : Place {
             if (player.playerData.petSelected != null) {
                 if (player.playerData.petSelected.hp > 0) {
                     if (mob.getPetBattle() == null && player.controller.getPetBattle() == null) {
-                        if (mob instanceof Boss && !(this instanceof ChallengePlace)) {
+                        if (mob is Boss && !(this is ChallengePlace)) {
                             if (player.playerData.star - 1 >= 0) {
                                 player.playerData.star--;
                                 player.controller.getTaskCalculator().onAttackBoss((Boss) mob);
@@ -391,18 +392,18 @@ public class GopetPlace : Place {
     public void update()   {
         base.update(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
 
-        for (Mob mob : mobs) {
-            if (mob instanceof Boss) {
+        foreach (Mob mob in mobs) {
+            if (mob is Boss) {
                 Boss b = (Boss) mob;
                 if (b.isTimeOut() && b.getPetBattle() == null) {
-                    if (Utilities.CurrentTimeMillis > b.getTimeoutMilis()) {
+                    if (Utilities.CurrentTimeMillis > b.GetTimeMillisoutMilis()) {
                         this.mobDie(mob);
                     }
                 }
             }
         }
 
-        for (PetBattle petBattle : petBattles) {
+        foreach (PetBattle petBattle in petBattles) {
             if (petBattle != null) {
                 petBattle.update();
                 if (petBattle.hasWinner()) {
@@ -416,19 +417,19 @@ public class GopetPlace : Place {
 
         ArrayList<MobLocation> mobLocations_newMob = new();
 
-        for (Map.Entry<MobLocation, Long> entry : newMob.entrySet()) {
-            MobLocation location = entry.getKey();
-            Long timeNewMob = entry.getValue();
+        foreach (var entry in newMob ) {
+            MobLocation location = entry.Key;
+            long timeNewMob = entry.Value;
             if (timeNewMob < Utilities.CurrentTimeMillis) {
                 mobLocations_newMob.add(location);
             }
         }
 
-        for (MobLocation mobLocation : mobLocations_newMob) {
+        foreach (MobLocation mobLocation in mobLocations_newMob) {
             newMob.remove(mobLocation);
         }
 
-        createNewMob(mobLocations_newMob.toArray(new MobLocation[0]));
+        createNewMob(mobLocations_newMob.ToArray());
     }
 
     public   void addPetBattle(PetBattle petBattle) {
@@ -441,11 +442,11 @@ public class GopetPlace : Place {
         if (mobLocations.Length > 0 && mobLvlMaps.Length > 0) {
             ArrayList<Mob> nGopetMobs = new();
             int index = -1;
-            for (MobLocation mobLocation : mobLocations) {
+            foreach (MobLocation mobLocation in mobLocations) {
                 index++;
                 if (this.map.mapTemplate.getBoss().Length > 0) {
                     if (numMobDie >= numMobDieNeed) {
-                        Boss boss = new Boss(Utilities.randomArray(this.map.mapTemplate.getBoss()), mobLocation);
+                        Boss boss = new Boss(Utilities.RandomArray(this.map.mapTemplate.getBoss()), mobLocation);
                         boss.setTimeOut(true);
                         boss.setTimeoutMilis(Utilities.CurrentTimeMillis + GopetManager.TIME_BOSS_DISPOINTED);
 
@@ -459,8 +460,8 @@ public class GopetPlace : Place {
                 }
                 long deltaTime = Utilities.CurrentTimeMillis + 3000;
                 while (deltaTime > Utilities.CurrentTimeMillis) {
-                    MobLvlMap mobLvlMap = Utilities.randomArray(mobLvlMaps);
-                    if (GopetManager.PETTEMPLATE_HASH_MAP.containsKey(mobLvlMap.getPetId())) {
+                    MobLvlMap mobLvlMap = Utilities.RandomArray(mobLvlMaps);
+                    if (GopetManager.PETTEMPLATE_HASH_MAP.ContainsKey(mobLvlMap.getPetId())) {
                         PetTemplate petTemplate = GopetManager.PETTEMPLATE_HASH_MAP.get(mobLvlMap.getPetId());
                         Mob m = new Mob(petTemplate, this, mobLvlMap, mobLocation);
 
@@ -476,7 +477,7 @@ public class GopetPlace : Place {
     }
 
     private void sendPetBattleList(Player player)   {
-        for (PetBattle petBattle : petBattles) {
+        foreach (PetBattle petBattle in petBattles) {
             petBattle.sendBattleInfo(player);
         }
     }
@@ -491,7 +492,7 @@ public class GopetPlace : Place {
     private void sendWing(Player player)   {
         CopyOnWriteArrayList<Player> currentPlayers = (CopyOnWriteArrayList<Player>) players.clone();
         HashMap<int, Item> wingPlayer = new();
-        for (Player currentPlayer : currentPlayers) {
+        foreach (Player currentPlayer in currentPlayers) {
             Item wingItem = currentPlayer.playerData.wingItem;
             if (wingItem != null) {
                 wingPlayer.put(currentPlayer.user.user_id, wingItem);
@@ -500,9 +501,9 @@ public class GopetPlace : Place {
         Message m = messagePetSerive(GopetCMD.WING);
         m.putsbyte(3);
         m.putInt(wingPlayer.Count);
-        for (Map.Entry<int, Item> entry : wingPlayer.entrySet()) {
-            int key = entry.getKey();
-            Item val = entry.getValue();
+        foreach (var entry in wingPlayer) {
+            int key = entry.Key;
+            Item val = entry.Value;
             m.putInt(key);
             m.putUTF(val.getTemp().getFrameImgPath());
             m.putsbyte(val.getTemp().getOptionValue()[0]);
@@ -539,7 +540,7 @@ public class GopetPlace : Place {
     private void sendSkin(Player player)   {
         CopyOnWriteArrayList<Player> currentPlayers = (CopyOnWriteArrayList<Player>) players.clone();
         HashMap<int, Item> skinPlayer = new();
-        for (Player currentPlayer : currentPlayers) {
+        foreach (Player currentPlayer in currentPlayers) {
             Item itemSkin = currentPlayer.playerData.skinItem;
             if (itemSkin != null) {
                 skinPlayer.put(currentPlayer.user.user_id, itemSkin);
@@ -547,9 +548,9 @@ public class GopetPlace : Place {
         }
         Message m = messagePetSerive(GopetCMD.SEND_SKIN);
         m.putInt(skinPlayer.Count);
-        for (Map.Entry<int, Item> entry : skinPlayer.entrySet()) {
-            int key = entry.getKey();
-            Item val = entry.getValue();
+        foreach (var entry in skinPlayer ) {
+            int key = entry.Key;
+            Item val = entry.Value;
             m.putInt(key);
             m.putUTF(val.getTemp().getFrameImgPath());
         }
@@ -574,8 +575,8 @@ public class GopetPlace : Place {
     }
 
     public void sendMessage(Message message, ArrayList<Player> listNoneSend) {
-        for (Player player : players) {
-            if (!listNoneSend.contains(player)) {
+        foreach (Player player in players) {
+            if (!listNoneSend.Contains(player)) {
                 player.session.sendMessage(message);
             }
         }
@@ -587,14 +588,14 @@ public class GopetPlace : Place {
             Message m = GameController.clanMessage(GopetCMD.GUILD_NAME_IN_PLACE);
             m.putInt(1);
             m.putInt(clanMember.user_id);
-            m.putUTF(clanMember.getClan().getName().toUpperCase());
+            m.putUTF(clanMember.getClan().getName().ToUpper());
             m.cleanup();
             sendMessage(m);
         }
 
         if (isAddToplace) {
             ArrayList<ClanMember> clanMembers = new();
-            for (Player player1 : players) {
+            foreach (Player player1 in players) {
                 ClanMember clanMember1 = player1.controller.getClan();
                 if (clanMember1 != null) {
                     clanMembers.add(clanMember1);
@@ -603,9 +604,9 @@ public class GopetPlace : Place {
 
             Message m = GameController.clanMessage(GopetCMD.GUILD_NAME_IN_PLACE);
             m.putInt(clanMembers.Count);
-            for (ClanMember clanMember1 : clanMembers) {
+            foreach (ClanMember clanMember1 in clanMembers) {
                 m.putInt(clanMember1.user_id);
-                m.putUTF(clanMember1.getClan().getName().toUpperCase());
+                m.putUTF(clanMember1.getClan().getName().ToUpper());
             }
             m.cleanup();
             player.session.sendMessage(m);

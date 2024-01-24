@@ -25,7 +25,7 @@ namespace Gopet.Data.Collections
             base.Add(item);
         }
 
-        public bool contains(T item)
+        public bool Contains(T item)
         {
             return base.Contains(item);
         }
@@ -36,5 +36,15 @@ namespace Gopet.Data.Collections
         }
 
         public T get(int index) => base[index];
+
+        public void remove(T itemId)
+        {
+            base.Remove(itemId);
+        }
+
+        public void remove(Object itemId)
+        {
+            base.Remove((T)itemId);
+        }
     }
 }

@@ -1,7 +1,7 @@
  
 using Gopet.Data.Collections;
- 
-
+using Gopet.Data.user;
+using Gopet.Util;
 
 public class Top
 {
@@ -48,7 +48,7 @@ public class Top
                 {
                     MYSQLManager.updateSql(Utilities.Format("INSERT INTO `top_data`(`user_id`, `topID`, `timeBeginTop`, `timeReceiveTop`) VALUES (%s, '%s', %s, %s)", topD.id, top_id, Utilities.CurrentTimeMillis, 0));
                 }
-                resultSet.close();
+                resultSet.Close();
                 MYSQLManager.updateSql(Utilities.Format("DELETE FROM `top_data` WHERE user_id != %s && timeReceiveTop < %s && topID = '%s'", topD.id, Utilities.CurrentTimeMillis, top_id));
             }
         }

@@ -24,12 +24,12 @@ public class ShopArena : ShopTemplate {
         this.timeGem = Utilities.CurrentTimeMillis;
         this.shopTemplateItems.Clear();
         int numSlot = GopetManager.MAX_SLOT_SHOP_ARENA + 1;
-        int priceReset = (int) (numResetFree > 0 ? 0 : Math.round( Math.pow(GopetManager.PRICE_RESET_SHOP_ARENA, numReset - GopetManager.DEFAULT_FREE_RESET_ARENA_SHOP + 2)));
+        int priceReset = (int) (numResetFree > 0 ? 0 : Utilities.round( Math.pow(GopetManager.PRICE_RESET_SHOP_ARENA, numReset - GopetManager.DEFAULT_FREE_RESET_ARENA_SHOP + 2)));
         ShopTemplateItem resetShopArenaItem = new ShopTemplateItem();
         resetShopArenaItem.setSpceialType(ShopTemplateItem.TYPE_RESET_SHOP_ARENA);
         resetShopArenaItem.setSpceial(true);
         resetShopArenaItem.setNameSpeceial("Reset vật phẩm shop");
-        resetShopArenaItem.setDescriptionSpeceial(Utilities.Format("Dùng %s (vang) để đổi các vật phẩm khác", Utilities.formatNumber(priceReset)));
+        resetShopArenaItem.setDescriptionSpeceial(Utilities.Format("Dùng %s (vang) để đổi các vật phẩm khác", Utilities.FormatNumber(priceReset)));
         resetShopArenaItem.setPrice(new int[]{priceReset});
         resetShopArenaItem.setMoneyType(new sbyte[]{GopetManager.MONEY_TYPE_GOLD});
         this.shopTemplateItems.add(resetShopArenaItem);
@@ -37,7 +37,7 @@ public class ShopArena : ShopTemplate {
         while (timeGen > Utilities.CurrentTimeMillis) {
             if (this.shopTemplateItems.Count < numSlot) {
                 ShopArenaTemplate shopArenaTemplate = GopetManager.SHOP_ARENA_TEMPLATE.get(Utilities.nextInt(GopetManager.SHOP_ARENA_TEMPLATE.Count));
-                if (shopArenaTemplate.getPercent() > Utilities.nextFloatPer()) {
+                if (shopArenaTemplate.getPercent() > Utilities.NextFloatPer()) {
                     this.shopTemplateItems.add(shopArenaTemplate.next());
                 }
             } else {
@@ -45,5 +45,10 @@ public class ShopArena : ShopTemplate {
             }
         }
         this.numReset++;
+    }
+
+    public int getNumReset()
+    {
+        return this.numReset;
     }
 }

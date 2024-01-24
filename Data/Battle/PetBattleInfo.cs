@@ -94,7 +94,7 @@ public class PetBattleInfo {
     }
 
     public bool isCoolDown(int skillId) {
-        return skill_cooldown.containsKey(skillId);
+        return skill_cooldown.ContainsKey(skillId);
     }
 
     public void addSkillCoolDown(int skillId, int turn) {

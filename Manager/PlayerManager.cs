@@ -37,8 +37,8 @@ public class PlayerManager {
 
     }
 
-    public static long getTimeWaitLogin(int ID)   {
-        Long time = waitLogin.get(ID);
+    public static long GetTimeMillisWaitLogin(int ID)   {
+        long time = waitLogin.get(ID);
         if (time == null) {
             return 0;
         } else if (Utilities.CurrentTimeMillis - time >= 0) {
@@ -50,7 +50,7 @@ public class PlayerManager {
     }
 
     public static void sendMessage(Message ms)   {
-        for (Player player : players) {
+        foreach (Player player in players) {
             player.session.sendMessage(ms);
         }
     }

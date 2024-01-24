@@ -1,5 +1,8 @@
 
 using Gopet.Data.Collections;
+using Gopet.Data.user;
+using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
 
 public class PlayerData
 {
@@ -22,14 +25,14 @@ public class PlayerData
     public sbyte waypointIndex = -1;
     public long deltaTimeQuestion = Utilities.CurrentTimeMillis;
     public sbyte questIndex = 1;
-    public Date loginDate;
+    public DateTime loginDateTime;
     public int star = 0;
     public Item skinItem;
     public Item wingItem;
     public bool isOnSky = false;
     public BuffExp buffExp = new BuffExp();
     public int pkPoint = 0;
-    public Date pkPointTime;
+    public DateTime pkPointTime;
     public GopetCaptcha captcha;
     public bool isAdmin = false;
     public ShopArena shopArena;
@@ -49,165 +52,142 @@ public class PlayerData
         playerData.charID = result.getInt("ID");
         playerData.gender = (sbyte)result.getInt("gender");
         playerData.name = result.getString("name");
-        playerData.loginDate = result.getDate("loginDate");
+        playerData.loginDateTime = result.getDateTime("loginDateTime");
         playerData.coin = result.getBigDecimal("coin").longValue();
         playerData.gold = result.getBigDecimal("gold").longValue();
         playerData.star = result.getInt("star");
         playerData.isOnSky = result.getsbyte("isOnSky") == 1;
         playerData.pkPoint = result.getInt("pkPoint");
-        playerData.pkPointTime = result.getDate("pkPointTime");
+        playerData.pkPointTime = result.getDateTime("pkPointTime");
         playerData.isAdmin = result.getsbyte("isAdmin") == 1;
         playerData.clanId = result.getInt("clanId");
         playerData.avatarPath = result.getString("avatarPath");
         playerData.spendGold = result.getBigDecimal("spendGold").longValue();
         String friendJson = result.getString("friends");
-        if (!result.wasNull())
+        if (!string.IsNullOrEmpty(friendJson))
         {
-            Type arrayType = new TypeToken<ArrayList<int>>()
-            {
-            }.getType();
-            playerData.friends = (ArrayList<int>)JsonManager.LoadFromJson(friendJson, arrayType);
+            playerData.friends = JsonConvert.DeserializeObject<ArrayList<int>>(friendJson);
         }
 
         String items = result.getString("items");
-        if (!result.wasNull())
+        if (!string.IsNullOrEmpty(items))
         {
-            Type arrayType = new TypeToken<HashMap<sbyte, CopyOnWriteArrayList<Item>>>()
-            {
-            }.getType();
-            playerData.items = (HashMap<sbyte, CopyOnWriteArrayList<Item>>)JsonManager.LoadFromJson(items, arrayType);
+
+            playerData.items = JsonConvert.DeserializeObject<HashMap<sbyte, CopyOnWriteArrayList<Item>>>(items);
         }
 
         String favouriteList = result.getString("favouriteList");
-        if (!result.wasNull())
+        if (!string.IsNullOrEmpty(favouriteList))
         {
-            Type arrayType = new TypeToken<ArrayList<int>>()
-            {
-            }.getType();
-            playerData.favouriteList = (ArrayList<int>)JsonManager.LoadFromJson(favouriteList, arrayType);
+
+            playerData.favouriteList = JsonConvert.DeserializeObject<ArrayList<int>>(items);
         }
 
         playerData.isFirstFree = result.getsbyte("isFirstFree") == 1;
 
         String petsString = result.getString("pets");
-        if (!result.wasNull())
+        if (!string.IsNullOrEmpty(petsString))
         {
-            Type arrayType = new TypeToken<CopyOnWriteArrayList<Pet>>()
-            {
-            }.getType();
-            playerData.pets = (CopyOnWriteArrayList<Pet>)JsonManager.LoadFromJson(petsString, arrayType);
+            playerData.pets = JsonConvert.DeserializeObject<CopyOnWriteArrayList<Pet>>(petsString);
         }
         String petSelectedString = result.getString("petSelected");
-        if (!result.wasNull())
+        if (!string.IsNullOrEmpty(petSelectedString))
         {
-            Type arrayType = new TypeToken<Pet>()
-            {
-            }.getType();
-            playerData.petSelected = (Pet)JsonManager.LoadFromJson(petSelectedString, arrayType);
+            playerData.petSelected = JsonConvert.DeserializeObject<Pet>(petSelectedString);
         }
         String skinString = result.getString("skin");
-        if (!result.wasNull())
+        if (!string.IsNullOrEmpty(skinString))
         {
-            Type arrayType = new TypeToken<Item>()
-            {
-            }.getType();
-            playerData.skinItem = (Item)JsonManager.LoadFromJson(skinString, arrayType);
+
+            playerData.skinItem = JsonConvert.DeserializeObject<Item>(skinString);
         }
         String wingString = result.getString("wing");
-        if (!result.wasNull())
+        if (!string.IsNullOrEmpty(wingString))
         {
-            Type arrayType = new TypeToken<Item>()
-            {
-            }.getType();
-            playerData.wingItem = (Item)JsonManager.LoadFromJson(wingString, arrayType);
+
+            playerData.wingItem = JsonConvert.DeserializeObject<Item>(wingString);
         }
 
         String buffExpStr = result.getString("buffExp");
-        if (!result.wasNull())
+        if (!string.IsNullOrEmpty(buffExpStr))
         {
-            playerData.buffExp = (BuffExp)JsonManager.LoadFromJson(buffExpStr, BuffExp.class);
+            playerData.buffExp = JsonConvert.DeserializeObject<BuffExp>(buffExpStr);
             playerData.buffExp.loadCurrentTime();
         }
 
-String captchaStr = result.getString("captcha");
-if (!result.wasNull())
-{
-    playerData.captcha = (GopetCaptcha)JsonManager.LoadFromJson(captchaStr, GopetCaptcha.class);
+        String captchaStr = result.getString("captcha");
+        if (!string.IsNullOrEmpty(captchaStr))
+        {
+            playerData.captcha = JsonConvert.DeserializeObject<GopetCaptcha>(captchaStr);
         }
 
         String shopArenaStr = result.getString("shopArena");
-if (!result.wasNull())
-{
-    playerData.shopArena = (ShopArena)JsonManager.LoadFromJson(shopArenaStr, ShopArena.class);
+        if (!string.IsNullOrEmpty(shopArenaStr))
+        {
+            playerData.shopArena = JsonConvert.DeserializeObject<ShopArena>(shopArenaStr);
         }
 
         String taskStr = result.getString("task");
-if (!result.wasNull())
-{
-    Type arrayType = new TypeToken<CopyOnWriteArrayList<TaskData>>()
-    {
-    }.getType();
-    playerData.task = (CopyOnWriteArrayList<TaskData>)JsonManager.LoadFromJson(taskStr, arrayType);
-}
+        if (!string.IsNullOrEmpty(taskStr))
+        {
 
-String taskingStr = result.getString("tasking");
-if (!result.wasNull())
-{
-    Type arrayType = new TypeToken<CopyOnWriteArrayList<int>>()
-    {
-    }.getType();
-    playerData.tasking = (CopyOnWriteArrayList<int>)JsonManager.LoadFromJson(taskingStr, arrayType);
-}
+            playerData.task = JsonConvert.DeserializeObject<CopyOnWriteArrayList<TaskData>>(taskStr);
+        }
 
-String wasTaskStr = result.getString("wasTask");
-if (!result.wasNull())
-{
-    Type arrayType = new TypeToken<CopyOnWriteArrayList<int>>()
-    {
-    }.getType();
-    playerData.wasTask = (CopyOnWriteArrayList<int>)JsonManager.LoadFromJson(wasTaskStr, arrayType);
-}
-return playerData;
+        String taskingStr = result.getString("tasking");
+        if (!string.IsNullOrEmpty(taskingStr))
+        {
+
+            playerData.tasking = JsonConvert.DeserializeObject<CopyOnWriteArrayList<int>>(taskingStr);
+        }
+
+        String wasTaskStr = result.getString("wasTask");
+        if (!string.IsNullOrEmpty(wasTaskStr))
+        {
+
+            playerData.wasTask = JsonConvert.DeserializeObject<CopyOnWriteArrayList<int>>(wasTaskStr);
+        }
+        return playerData;
     }
 
     public static void create(int user_id, String name, sbyte gender)
-{
-    MySqlConnection MySqlConnection = MYSQLManager.create();
-    MYSQLManager.updateSql(
-            Utilities.Format(
-                    "INSERT INTO `player` (`ID`, `user_id`, `name`, `gender` , `items`) VALUES (NULL, '%s', '%s', '%s' , NULL);",
-                    user_id, name, gender), MySqlConnection);
-    MySqlConnection.close();
-}
+    {
+        MySqlConnection conn = MYSQLManager.create();
+        MYSQLManager.updateSql(
+                Utilities.Format(
+                        "INSERT INTO `player` (`ID`, `user_id`, `name`, `gender` , `items`) VALUES (NULL, '%s', '%s', '%s' , NULL);",
+                        user_id, name, gender), conn);
+        conn.Close();
+    }
 
-public void save()
-{
-    MySqlConnection MySqlConnection = MYSQLManager.create();
-    MYSQLManager.updateSql(Utilities.Format("update player set  " + getGopetSQLString() + "   coin = %s , gold = %s  ,  friends = '%s'   ,    items = '%s',   favouriteList = '%s'  where ID = "
-            + charID,
-            coin,
-            gold,
-            JsonManager.ToJson(friends),
-            JsonManager.ToJson(items),
-            JsonManager.ToJson(favouriteList)
-    ), MySqlConnection);
-    MySqlConnection.close();
-}
+    public void save()
+    {
+        MySqlConnection conn = MYSQLManager.create();
+        MYSQLManager.updateSql(Utilities.Format("upDateTime player set  " + getGopetSQLString() + "   coin = %s , gold = %s  ,  friends = '%s'   ,    items = '%s',   favouriteList = '%s'  where ID = "
+                + charID,
+                coin,
+                gold,
+                JsonManager.ToJson(friends),
+                JsonManager.ToJson(items),
+                JsonManager.ToJson(favouriteList)
+        ), conn);
+        conn.Close();
+    }
 
-public String getGopetSQLString()
-{
-    String[] lines = new String[]{
+    public String getGopetSQLString()
+    {
+        String[] lines = new String[]{
             "pets = '" + JsonManager.ToJson(pets) + "'",
             "petSelected = '" + JsonManager.ToJson(petSelected) + "'",
             "isFirstFree = " + (isFirstFree ? "1" : "0"),
-            "loginDate = '" + Utilities.toDateString(loginDate) + "'",
+            "loginDateTime = '" + Utilities.ToDateString(loginDateTime) + "'",
             "star = " + star,
             "skin = '" + JsonManager.ToJson(skinItem) + "'",
             "wing = '" + JsonManager.ToJson(wingItem) + "'",
             "isOnSky = " + (isOnSky ? 1 : 0),
             "buffExp = '" + JsonManager.ToJson(buffExp) + "'",
             "pkPoint = " + pkPoint,
-            "pkPointTime = '" + Utilities.toDateString(pkPointTime) + "'",
+            "pkPointTime = '" + Utilities.ToDateString(pkPointTime) + "'",
             "captcha ='" + JsonManager.ToJson(captcha) + "'",
             "shopArena = '" + JsonManager.ToJson(shopArena) + "'",
             "clanId = " + clanId,
@@ -217,96 +197,86 @@ public String getGopetSQLString()
             "wasTask = '" + JsonManager.ToJson(wasTask) + "'",
             "spendGold = " + spendGold
         };
-    String str = String.Join(",", lines) + " ,";
-    return str;
-}
-
-
-public CopyOnWriteArrayList<Item> getInventoryOrCreate(sbyte type)
-{
-    if (items.containsKey(type))
-    {
-        return items.get(type);
+        String str = String.Join(",", lines) + " ,";
+        return str;
     }
-    else
-    {
-        CopyOnWriteArrayList<Item> list = new CopyOnWriteArrayList<>();
-        items.put(type, list);
-        return list;
-    }
-}
 
-public void addItem(sbyte type, Item item)
-{
-    CopyOnWriteArrayList<Item> list = getInventoryOrCreate(type);
-    list.add(item);
-    while (true)
+
+    public CopyOnWriteArrayList<Item> getInventoryOrCreate(sbyte type)
     {
-        item.itemId = Utilities.nextInt(10, int.MaxValue - 2);
-        bool flag = true;
-        for (Item item1 : getInventoryOrCreate(type)) {
-    if (item1 != item)
-    {
-        if (item1.itemId == item.itemId)
+        if (items.ContainsKey(type))
         {
-            flag = false;
-        }
-    }
-}
-if (flag)
-{
-    break;
-}
-        }
-        list.sort(new Comparator<Item>() {
-             
-            public int compare(Item obj1, Item obj2)
-{
-    return obj1.itemId - obj2.itemId;
-}
-        });
-    }
-
-    public void removeItem(sbyte type, Item item)
-{
-    getInventoryOrCreate(type).remove(item);
-}
-
-public void addPet(Pet pet, Player player)
-{
-    pets.add(pet);
-    bool flagId = false;
-    while (true)
-    {
-        if (pet.petId > 0 && !flagId)
-        {
-            flagId = true;
+            return items.get(type);
         }
         else
         {
-            pet.petId = Utilities.nextInt(10, int.MaxValue - 2);
-        }
-        bool flag = true;
-        for (Pet item1 : pets) {
-    if (item1 != pet)
-    {
-        if (item1.petId == pet.petId)
-        {
-            flag = false;
+            CopyOnWriteArrayList<Item> list = new();
+            items.put(type, list);
+            return list;
         }
     }
-}
-if (flag)
-{
-    break;
-}
+
+    public void addItem(sbyte type, Item item)
+    {
+        CopyOnWriteArrayList<Item> list = getInventoryOrCreate(type);
+        list.add(item);
+        while (true)
+        {
+            item.itemId = Utilities.nextInt(10, int.MaxValue - 2);
+            bool flag = true;
+            foreach (Item item1 in getInventoryOrCreate(type))
+            {
+                if (item1 != item)
+                {
+                    if (item1.itemId == item.itemId)
+                    {
+                        flag = false;
+                    }
+                }
+            }
+            if (flag)
+            {
+                break;
+            }
         }
-        pets.sort(new Comparator<Pet>() {
-             
-            public int compare(Pet obj1, Pet obj2)
-{
-    return obj1.petId - obj2.petId;
-}
-        });
+        list.Sort(new InventoryItemComparer());
+    }
+
+    public void removeItem(sbyte type, Item item)
+    {
+        getInventoryOrCreate(type).remove(item);
+    }
+
+    public void addPet(Pet pet, Player player)
+    {
+        pets.add(pet);
+        bool flagId = false;
+        while (true)
+        {
+            if (pet.petId > 0 && !flagId)
+            {
+                flagId = true;
+            }
+            else
+            {
+                pet.petId = Utilities.nextInt(10, int.MaxValue - 2);
+            }
+            bool flag = true;
+            foreach (Pet item1 in pets)
+            {
+                if (item1 != pet)
+                {
+                    if (item1.petId == pet.petId)
+                    {
+                        flag = false;
+                    }
+                }
+            }
+            if (flag)
+            {
+                break;
+            }
+        }
+        pets.Sort(new InventoryPetComparer());
     }
 }

@@ -96,7 +96,7 @@ namespace Gopet.IO
             }
         }
 
-        public void writeLong(long value)
+        public void writelong(long value)
         {
             this.checkLenght(8);
             for (int i = 7; i >= 0; i--)
@@ -203,7 +203,7 @@ namespace Gopet.IO
             this.buffer = null;
         }
 
-        public void close()
+        public void Close()
         {
             this.buffer = null;
         }

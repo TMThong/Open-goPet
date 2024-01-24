@@ -1,5 +1,6 @@
 
 using Gopet.Data.Collections;
+using Gopet.Util;
 
 public class ClanMember : DataVersion {
     public String avatarPath;
@@ -52,5 +53,10 @@ public class ClanMember : DataVersion {
             return "npcs/gopet.png";
         }
         return avatarPath;
+    }
+
+    internal Clan getClan()
+    {
+        return clan;
     }
 }

@@ -4,7 +4,7 @@ using Gopet.Data.user;
 
 public class ClanManager {
 
-    public static CopyOnWriteArrayList<Clan> clans = new CopyOnWriteArrayList<>();
+    public static CopyOnWriteArrayList<Clan> clans =new ();
     public static ConcurrentHashMap<int, Clan> clanHashMap = new ConcurrentHashMap<>();
     public static ConcurrentHashMap<String, Clan> clanHashMapName = new ConcurrentHashMap<>();
 

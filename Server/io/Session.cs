@@ -52,7 +52,7 @@ public class Session {
             readThread.IsBackground = true;
             readThread.Start();
         } catch (Exception e) {
-            close();
+            Close();
         }
     }
 
@@ -105,7 +105,7 @@ public class Session {
 
     public static int socketCount = 0;
 
-    public void close() {
+    public void Close() {
         ThreadPool.QueueUserWorkItem(Exit);
     }
 

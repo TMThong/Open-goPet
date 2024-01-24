@@ -1,11 +1,15 @@
- 
+
+using Gopet.Data.user;
+using Gopet.Util;
+using MySql.Data.MySqlClient;
+
 public class History {
 
     public const int KILL_MOB = 1;
 
     private Object obj;
     private String log;
-    private Date date;
+    private DateTime DateTime;
     private long currentTime;
     private Player player;
     private int user_id;
@@ -13,14 +17,14 @@ public class History {
 
     public History(Player player) {
         currentTime = Utilities.CurrentTimeMillis;
-        date = new Date(currentTime);
+        DateTime = new DateTime(currentTime);
         this.player = player;
         setUser_id(player.user.user_id);
     }
 
     public History(int user_id) {
         currentTime = Utilities.CurrentTimeMillis;
-        date = new Date(currentTime);
+        DateTime = new DateTime(currentTime);
         setUser_id(user_id);
     }
 
@@ -30,10 +34,10 @@ public class History {
                 ResultSet resultSet = MYSQLManager.jquery(Utilities.Format("Select * from player where user_id = %s", this.user_id), MySqlConnection);
                 if (resultSet.next()) {
                     String charname = resultSet.getString("name");
-                    resultSet.close();
+                    resultSet.Close();
                     return charname;
                 }
-                resultSet.close();
+                resultSet.Close();
             } catch (Exception e) {
             }
         } else {
@@ -78,12 +82,12 @@ public class History {
         return this;
     }
 
-    public Date getDate() {
-        return date;
+    public DateTime getDate() {
+        return DateTime;
     }
 
-    public History setDate(Date date) {
-        this.date = date;
+    public History setDate(DateTime DateTime) {
+        this.DateTime = DateTime;
         return this;
     }
 
@@ -129,4 +133,6 @@ public class History {
     public int getSpceialType() {
         return spceialType;
     }
+
+ 
 }

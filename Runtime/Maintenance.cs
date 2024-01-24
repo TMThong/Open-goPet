@@ -1,4 +1,6 @@
- 
+
+using Gopet.Util;
+
 public class Maintenance : IRuntime {
 
     private long beginMaintenance;
@@ -31,7 +33,7 @@ public class Maintenance : IRuntime {
                                 getRuntime().
                                 exec(new String[]{"cmd.exe", "/c", "start", batchFilePath});
                     }
-                    System.exit(0);
+                   
                 }
             }
         }

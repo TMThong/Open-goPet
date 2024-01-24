@@ -34,7 +34,7 @@ public class MsgReader   {
                 if (this.session.messageHandler != null) {
                     this.session.messageHandler.onDisconnected();
                 }
-                this.session.close();
+                this.session.Close();
             }
             return;
         }

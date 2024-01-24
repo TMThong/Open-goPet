@@ -1,37 +1,52 @@
- 
-public class TopGem : Top {
+
+using Gopet.Data.user;
+using Gopet.Util;
+
+public class TopGem : Top
+{
 
     public static readonly TopGem instance = new TopGem();
 
     public TopGem() : base("top_gem")
     {
-        
+
         base.name = "TOP Phú Hộ";
         base.desc = "";
     }
 
-    
-    public override void update() {
-        try {
+
+    public override void update()
+    {
+        try
+        {
 
             lastDatas.Clear();
             lastDatas.AddRange(datas);
             datas.Clear();
-            try (ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `player` WHERE coin > 0 && isAdmin = 0 ORDER BY `player`.`coin` DESC LIMIT 10")) {
+            try
+            {
+                ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `player` WHERE coin > 0 && isAdmin = 0 ORDER BY `player`.`coin` DESC LIMIT 10");
                 int index = 1;
-                while (resultSet.next()) {
+                while (resultSet.next())
+                {
                     TopData topData = new TopData();
                     topData.id = resultSet.getInt("user_id");
                     topData.name = resultSet.getString("name");
                     topData.imgPath = resultSet.getString("avatarPath");
                     topData.title = topData.name;
-                    topData.desc = Utilities.Format("Hạng %s : đang có %s (ngoc)", index, Utilities.formatNumber(resultSet.getBigDecimal("coin").longValue()));
+                    topData.desc = Utilities.Format("Hạng %s : đang có %s (ngoc)", index, Utilities.FormatNumber(resultSet.getBigDecimal("coin").longValue()));
                     datas.add(topData);
                     index++;
                 }
             }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
             updateSQLBXH();
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }

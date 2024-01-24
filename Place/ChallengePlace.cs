@@ -1,4 +1,6 @@
- 
+
+using Gopet.Util;
+
 public class ChallengePlace : GopetPlace {
 
     public long placeTime = Utilities.CurrentTimeMillis;
@@ -32,7 +34,7 @@ public class ChallengePlace : GopetPlace {
      
     public void add(Player player)   {
         base.add(player); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-        player.controller.sendPlaceTime(Math.round(placeTime - Utilities.CurrentTimeMillis) / 1000);
+        player.controller.sendPlaceTime(Utilities.round(placeTime - Utilities.CurrentTimeMillis) / 1000);
         player.controller.showBigTextEff("PHÒNG CHỜ");
     }
 
@@ -67,7 +69,7 @@ public class ChallengePlace : GopetPlace {
 
      
     public void removeAllPlayer()   {
-        for (Player player : players) {
+        foreach (Player player in players) {
             player.controller.LoadMap();
         }
     }
@@ -76,12 +78,12 @@ public class ChallengePlace : GopetPlace {
         turn++;
         isWaitForNewTurn = false;
         if (turn <= MAX_TURN) {
-            PetTemplate[] templates = GopetManager.petEnable.toArray(new PetTemplate[0]);
+            PetTemplate[] templates = GopetManager.petEnable.ToArray();
             bool isBossTurn = turn % 5 == 0;
             if (!isBossTurn) {
                 for (int i = 0; i < getNumMob(); i++) {
                     int[] XY = MOB_XY[i];
-                    PetTemplate petTemplate = Utilities.randomArray(templates);
+                    PetTemplate petTemplate = Utilities.RandomArray(templates);
                     MobLocation mobLocation = new MobLocation(this.map.mapID, XY[0], XY[1]);
                     MobLvlMap mobLvlMap = new MobLvlMap(map.mapID, turn, turn, petTemplate.getPetId());
                     MobLvInfo mobLvInfo = GopetManager.MOBLVLINFO_CHALLENGE.get(turn);
@@ -101,7 +103,7 @@ public class ChallengePlace : GopetPlace {
                 }
             }
 
-            for (Player player : players) {
+            foreach (Player player in players) {
                 player.controller.getTaskCalculator().onNextChellengePlace(this.turn);
             }
             placeTime = Utilities.CurrentTimeMillis + TIME_ATTACK;
@@ -134,8 +136,8 @@ public class ChallengePlace : GopetPlace {
     }
 
     public void sendTimePlace()   {
-        Message message = messagePetSerive(GopetCMD.TIME_PLACE);
-        message.putInt(Math.round(placeTime - Utilities.CurrentTimeMillis) / 1000);
+        Message message = GopetPlace.messagePetSerive(GopetCMD.TIME_PLACE);
+        message.putInt(Utilities.round(placeTime - Utilities.CurrentTimeMillis) / 1000);
         message.cleanup();
         sendMessage(message);
     }

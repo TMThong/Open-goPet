@@ -10,7 +10,7 @@ public class InputReader
     public const sbyte FIELD_INT = 2;
     public const sbyte FIELD_FLOAT = 3;
     public const sbyte FIELD_DOBUBLE = 4;
-    public const sbyte FIELD_LONG = 5;
+    public const sbyte FIELD_long = 5;
     public const sbyte FIELD_BIGINT = 6;
 
     private sbyte[] inputType;
@@ -48,7 +48,7 @@ public class InputReader
                 case FIELD_DOBUBLE:
                     listField.put(i, double.Parse(strings[i]));
                     break;
-                case FIELD_LONG:
+                case FIELD_long:
                     listField.put(i, double.Parse(strings[i]));
                     break;
                 case FIELD_BIGINT:
@@ -60,7 +60,7 @@ public class InputReader
 
     public Object readObject(int index)
     {
-        if (listField.containsKey(index))
+        if (listField.ContainsKey(index))
         {
             return listField.get(index);
         }
@@ -77,7 +77,7 @@ public class InputReader
         return (sbyte)readObject(index);
     }
 
-    public long readLong(int index)
+    public long readlong(int index)
     {
         return (long)readObject(index);
     }

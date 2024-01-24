@@ -1,4 +1,6 @@
 
+using Gopet.Util;
+
 public class ClanBuff : DataVersion
 {
 
@@ -35,7 +37,7 @@ public class ClanBuff : DataVersion
 
     public static String getDesc(int value, int buffId)
     {
-        return Utilities.Format(GopetManager.CLANBUFF_HASH_MAP.get(buffId).getDesc(), value / 100f).replace('/', '%');
+        return Utilities.Format(GopetManager.CLANBUFF_HASH_MAP.get(buffId).getDesc(), value / 100f).Replace('/', '%');
     }
 
     public String getName()
@@ -45,6 +47,34 @@ public class ClanBuff : DataVersion
 
     public static String getName(int value, int buffId)
     {
-        return Utilities.Format(GopetManager.CLANBUFF_HASH_MAP.get(buffId).getName(), value / 100f).replace('/', '%');
+        return Utilities.Format(GopetManager.CLANBUFF_HASH_MAP.get(buffId).getName(), value / 100f).Replace('/', '%');
     }
+
+    public void setBuffId(int buffId)
+    {
+        this.buffId = buffId;
+    }
+
+    public void setValue(int value)
+    {
+        this.value = value;
+    }
+
+    public void setTimeEndBuff(long timeEndBuff)
+    {
+        this.timeEndBuff = timeEndBuff;
+    }
+
+    public int getBuffId()
+    {
+        return this.buffId;
+    }
+
+ 
+
+    public long GetTimeMillisEndBuff()
+    {
+        return this.timeEndBuff;
+    }
+
 }

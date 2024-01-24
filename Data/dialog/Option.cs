@@ -21,4 +21,35 @@ public class Option {
         this.optionText = optionText;
         this.optionStatus = CAN_SELECT;
     }
+
+    public void setOptionId(int optionId)
+    {
+        this.optionId = optionId;
+    }
+
+    public void setOptionText(String optionText)
+    {
+        this.optionText = optionText;
+    }
+
+    public void setOptionStatus(sbyte optionStatus)
+    {
+        this.optionStatus = optionStatus;
+    }
+
+    public int getOptionId()
+    {
+        return this.optionId;
+    }
+
+    public String getOptionText()
+    {
+        return this.optionText;
+    }
+
+    public sbyte getOptionStatus()
+    {
+        return this.optionStatus;
+    }
+
 }

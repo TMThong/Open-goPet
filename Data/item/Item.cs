@@ -77,8 +77,8 @@ public class Item : DataVersion {
 
     public int getDef() {
         int value = def;
-        int info = value + Math.round((((value * 4 + 50) / 100) * 5) / 2) * lvl;
-        return info + Math.round(Utilities.getValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_DEF)));
+        int info = value + Utilities.round((((value * 4 + 50) / 100) * 5) / 2) * lvl;
+        return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_DEF)));
     }
 
     public void setDef(int def) {
@@ -87,8 +87,8 @@ public class Item : DataVersion {
 
     public int getAtk() {
         int value = atk;
-        int info = value + Math.round((((value * 4 + 50) / 100) * 5) / 2) * lvl;
-        return info + Math.round(Utilities.getValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_ATK)));
+        int info = value + Utilities.round((((value * 4 + 50) / 100) * 5) / 2) * lvl;
+        return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_ATK)));
     }
 
     public void setAtk(int atk) {
@@ -97,8 +97,8 @@ public class Item : DataVersion {
 
     public int getHp() {
         int value = hp;
-        int info = value + Math.round((((value * 4 + 50) / 100) * 5) / 2) * lvl;
-        return info + Math.round(Utilities.getValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_HP)));
+        int info = value + Utilities.round((((value * 4 + 50) / 100) * 5) / 2) * lvl;
+        return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_HP)));
     }
 
     public void setHp(int hp) {
@@ -107,8 +107,8 @@ public class Item : DataVersion {
 
     public int getMp() {
         int value = mp;
-        int info = value + Math.round((((value * 4 + 50) / 100) * 5) / 2) * lvl;
-        return info + Math.round(Utilities.getValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_MP)));
+        int info = value + Utilities.round((((value * 4 + 50) / 100) * 5) / 2) * lvl;
+        return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_MP)));
     }
 
     public void setMp(int mp) {
@@ -116,7 +116,7 @@ public class Item : DataVersion {
     }
 
     public static CopyOnWriteArrayList<Item> search(int type, CopyOnWriteArrayList<Item> listNeedSearchItems) {
-        CopyOnWriteArrayList<Item> arrayList = new CopyOnWriteArrayList<>();
+        CopyOnWriteArrayList<Item> arrayList =new ();
         for (Item item : listNeedSearchItems) {
             if (item.getTemp().getType() == type) {
                 arrayList.add(item);
@@ -126,9 +126,9 @@ public class Item : DataVersion {
     }
 
     public static CopyOnWriteArrayList<Item> search(ArrayList<int> types, CopyOnWriteArrayList<Item> listNeedSearchItems) {
-        CopyOnWriteArrayList<Item> arrayList = new CopyOnWriteArrayList<>();
+        CopyOnWriteArrayList<Item> arrayList =new ();
         for (Item item : listNeedSearchItems) {
-            if (types.contains(item.getTemp().getType())) {
+            if (types.Contains(item.getTemp().getType())) {
                 arrayList.add(item);
             }
         }
@@ -136,7 +136,7 @@ public class Item : DataVersion {
     }
 
     public String getName() {
-        if (getTemp().isStackable()) {
+        if (getTemp().isStackable) {
             return getTemp().getName() + " x" + count;
         }
         return getTemp().getName();

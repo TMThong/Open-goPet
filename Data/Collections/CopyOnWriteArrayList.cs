@@ -1,11 +1,14 @@
-﻿using System;
+﻿using Org.BouncyCastle.Pqc.Crypto.Lms;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Gopet.Data.Collections
 {
@@ -123,6 +126,61 @@ namespace Gopet.Data.Collections
             {
                 this.values = this.values.AddRange(datas);
             }
+        }
+
+        public void Sort(IComparer<T>? comparer)
+        {
+            lock (this)
+            {
+                this.values = this.values.Sort(comparer);
+            }
+        }
+
+        public void add(int index, T item)
+        {
+            lock (this)
+            {
+                this.values = this.values.Insert(index, item);
+            }
+        }
+
+        public void Add(int index, T item)
+        {
+            lock (this)
+            {
+                this.values = this.values.Insert(index, item);
+            }
+        }
+
+        public CopyOnWriteArrayList<T> clone()
+        {
+            return new CopyOnWriteArrayList<T>(this.values.ToArray());
+        }
+
+        public int indexOf(T data)
+        {
+            return this.values.IndexOf(data);
+        }
+
+        public void set(int indexSlot, T data)
+        {
+            lock (this)
+            {
+                this.values = this.values.SetItem(indexSlot, data);
+            }
+        }
+
+        public void remove(int index)
+        {
+            lock (this)
+            {
+                this.values = this.values.RemoveAt(index);
+            }
+        }
+
+        public void addIfAbsent(T data)
+        {
+            if(!this.values.Contains(data)) Add(data);
         }
     }
 }

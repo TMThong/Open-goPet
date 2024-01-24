@@ -1,51 +1,66 @@
- 
 
-public class Boss : Mob {
+
+public class Boss : Mob
+{
 
     private BossTemplate bossTemplate;
-     
+
     private bool isTimeOut = false;
-     
+
     private long timeoutMilis = 0L;
 
-    public Boss(int bossTemplateId, MobLocation mobLocation) {
+    public Boss(int bossTemplateId, MobLocation mobLocation)
+    {
         this.bossTemplate = GopetManager.boss.get(bossTemplateId);
         this.setPetTemplate(bossTemplate.getPetTemplate());
         this.setMobLocation(mobLocation);
-        this.setDef(bossTemplate.getDef());
-        this.setMobLvInfo(new MobLvInfo() {
-             
-            public int getLvl() {
-                return bossTemplate.getLvl();
-            }
-
-             
-            public int getHp() {
-                return bossTemplate.getHp();
-            }
-
-             
-            public int getExp() {
-                return 0;
-            }
-
-             
-            public int getStrength() {
-                return bossTemplate.getAtk();
-            }
-        });
+        this.def = bossTemplate.def;
+        this.setMobLvInfo(new MobLvInfoImp(bossTemplate));
         this.initMob();
     }
 
-     
-    public  void initMob() {
+    sealed class MobLvInfoImp : MobLvInfo
+    {
+        public MobLvInfoImp(BossTemplate bossTemplate)
+        {
+            this.bossTemplate = bossTemplate;
+        }
+
+        public BossTemplate bossTemplate { get; }
+
+        public override int getLvl()
+        {
+            return bossTemplate.getLvl();
+        }
+
+
+        public override int getHp()
+        {
+            return bossTemplate.hp;
+        }
+
+
+        public override int getExp()
+        {
+            return 0;
+        }
+
+
+        public override int getStrength()
+        {
+            return bossTemplate.atk;
+        }
+    }
+    public void initMob()
+    {
         base.initMob(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
         this.mp = 500 + (this.mobLvInfo.getLvl() * 100);
         this.maxMp = 500 + (this.mobLvInfo.getLvl() * 100);
     }
 
-     
-    public String getName() {
+
+    public String getName()
+    {
         return bossTemplate.getName();
     }
 }

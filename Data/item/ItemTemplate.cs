@@ -1,4 +1,6 @@
- 
+
+using Gopet.Util;
+
 public class ItemTemplate {
 
     private int itemId;
@@ -17,7 +19,7 @@ public class ItemTemplate {
     private int type;
     private int[] option = new int[0];
     private int[] optionValue = new int[0];
-    private bool isStackable;
+    public bool isStackable;
     private String frameImgPath;
     private String iconPath;
     public sbyte gender;
@@ -329,4 +331,6 @@ public class ItemTemplate {
                 return description;
         }
     }
+
+     
 }
