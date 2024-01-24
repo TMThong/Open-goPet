@@ -1,8 +1,13 @@
 
 using Gopet.App;
-using Gopet.Data.Clan;
+using Gopet.Battle;
+using Gopet.Data.GopetClan;
 using Gopet.Data.Collections;
-using Gopet.Data.user;
+using Gopet.Data.Dialog;
+using Gopet.Data.GopetItem;
+using Gopet.Data.Map;
+using Gopet.Data.User;
+using Gopet.IO;
 using Gopet.Util;
 using MySql.Data.MySqlClient;
 using static MenuController;
@@ -638,7 +643,7 @@ public class GameController
             try
             {
                 player.user.password = newPass;
-                MYSQLManager.updateSql(Utilities.Format("update user set password = '%s' where user_id = %s", newPass, player.user.user_id), MySqlConnection);
+                MYSQLManager.updateSql(Utilities.Format("update User set password = '%s' where user_id = %s", newPass, player.user.user_id), MySqlConnection);
                 player.okDialog("Đổi mật khẩu thành công, vui lòng nhớ kỷ thông tin");
                 HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Đổi mật khẩu từ %s thành %s", oldPass, newPass)));
             }

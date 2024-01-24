@@ -1,55 +1,61 @@
- 
-public class Option {
-
-    public const sbyte CAN_SELECT = 1;
-    public const sbyte CANT_SELECT = 0;
-    private int optionId;
-    private String optionText;
-    private sbyte optionStatus;
-
-    public Option() {
-    }
-
-    public Option(int optionId, String optionText, int optionStatus) {
-        this.optionId = optionId;
-        this.optionText = optionText;
-        this.optionStatus = (sbyte) optionStatus;
-    }
-
-    public Option(int optionId, String optionText) {
-        this.optionId = optionId;
-        this.optionText = optionText;
-        this.optionStatus = CAN_SELECT;
-    }
-
-    public void setOptionId(int optionId)
+namespace Gopet.Data.Dialog
+{
+    public class Option
     {
-        this.optionId = optionId;
-    }
 
-    public void setOptionText(String optionText)
-    {
-        this.optionText = optionText;
-    }
+        public const sbyte CAN_SELECT = 1;
+        public const sbyte CANT_SELECT = 0;
+        private int optionId;
+        private string optionText;
+        private sbyte optionStatus;
 
-    public void setOptionStatus(sbyte optionStatus)
-    {
-        this.optionStatus = optionStatus;
-    }
+        public Option()
+        {
+        }
 
-    public int getOptionId()
-    {
-        return this.optionId;
-    }
+        public Option(int optionId, string optionText, int optionStatus)
+        {
+            this.optionId = optionId;
+            this.optionText = optionText;
+            this.optionStatus = (sbyte)optionStatus;
+        }
 
-    public String getOptionText()
-    {
-        return this.optionText;
-    }
+        public Option(int optionId, string optionText)
+        {
+            this.optionId = optionId;
+            this.optionText = optionText;
+            optionStatus = CAN_SELECT;
+        }
 
-    public sbyte getOptionStatus()
-    {
-        return this.optionStatus;
-    }
+        public void setOptionId(int optionId)
+        {
+            this.optionId = optionId;
+        }
 
+        public void setOptionText(string optionText)
+        {
+            this.optionText = optionText;
+        }
+
+        public void setOptionStatus(sbyte optionStatus)
+        {
+            this.optionStatus = optionStatus;
+        }
+
+        public int getOptionId()
+        {
+            return optionId;
+        }
+
+        public string getOptionText()
+        {
+            return optionText;
+        }
+
+        public sbyte getOptionStatus()
+        {
+            return optionStatus;
+        }
+
+    }
 }

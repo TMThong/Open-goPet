@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Gopet.Data.GopetItem;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gopet.Data.user
+namespace Gopet.Data.User
 {
     internal class InventoryItemComparer : IComparer<Item>
     {

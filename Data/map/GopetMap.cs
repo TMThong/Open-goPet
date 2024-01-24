@@ -1,97 +1,123 @@
-
-
 using Gopet.Data.Collections;
 using Gopet.Util;
 
-public class GopetMap   {
-
-    public int mapID;
-    public int numPlace = 0;
-    public MapTemplate mapTemplate;
-    public CopyOnWriteArrayList<Place> places = new CopyOnWriteArrayList<Place>();
-    public bool isRunning = false;
-    public Thread MyThread;
-    public GopetMap(int mapId_, bool canUpdate, MapTemplate mapTemplate) {
-         
-        mapID = mapId_;
-        this.mapTemplate = mapTemplate;
-        createZoneDefault();
-        MyThread = new Thread(run)
-        {
-            Name = Utilities.Format("Thread of map %s and mapId = %s", mapTemplate.getMapName(), mapId_),
-            IsBackground = true,
-        };
- 
-        if (canUpdate) {
-            start();
-        }
-    }
-
-    private void start()
+namespace Gopet.Data.Map
+{
+    public class GopetMap
     {
-         MyThread.Start();
-    }
 
-    public virtual void createZoneDefault() {
-        for (int i = 0; i < 10; i++) {
-            try {
-                addPlace(new GopetPlace(this, i));
-            } catch (Exception ex) {
-                ex.printStackTrace();
+        public int mapID;
+        public int numPlace = 0;
+        public MapTemplate mapTemplate;
+        public CopyOnWriteArrayList<Place> places = new CopyOnWriteArrayList<Place>();
+        public bool isRunning = false;
+        public Thread MyThread;
+        public GopetMap(int mapId_, bool canUpdate, MapTemplate mapTemplate)
+        {
+
+            mapID = mapId_;
+            this.mapTemplate = mapTemplate;
+            createZoneDefault();
+            MyThread = new Thread(run)
+            {
+                Name = Utilities.Format("Thread of map %s and mapId = %s", mapTemplate.getMapName(), mapId_),
+                IsBackground = true,
+            };
+
+            if (canUpdate)
+            {
+                start();
             }
         }
-    }
 
-     
-    public void run() {
-        isRunning = true;
-        while (isRunning) {
-            try {
-                long lastTime = Utilities.CurrentTimeMillis;
-                update();
-                if (Utilities.CurrentTimeMillis - lastTime < 500) {
-                    Thread.Sleep(500);
+        private void start()
+        {
+            MyThread.Start();
+        }
+
+        public virtual void createZoneDefault()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                try
+                {
+                    addPlace(new GopetPlace(this, i));
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-         
-    }
-
-    public virtual void update()   {
-        foreach (Place place in places) {
-            try {
-                place.update();
-                if (place.needRemove()) {
-                    place.removeAllPlayer();
-                    places.remove(place);
+                catch (Exception ex)
+                {
+                    ex.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
-    }
 
-    public virtual void addPlace(Place place) {
-        places.add(place);
-        numPlace++;
-    }
 
-    public virtual void removePlace(Place place) {
-        places.remove(place);
-        numPlace--;
-    }
+        public void run()
+        {
+            isRunning = true;
+            while (isRunning)
+            {
+                try
+                {
+                    long lastTime = Utilities.CurrentTimeMillis;
+                    update();
+                    if (Utilities.CurrentTimeMillis - lastTime < 500)
+                    {
+                        Thread.Sleep(500);
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
 
-    public virtual void addRandom(Player player)   {
-        foreach (Place place in places) {
-            if (place.canAdd(player) && place.numPlayer < place.maxPlayer / 2) {
-                place.add(player);
-                return;
+        }
+
+        public virtual void update()
+        {
+            foreach (Place place in places)
+            {
+                try
+                {
+                    place.update();
+                    if (place.needRemove())
+                    {
+                        place.removeAllPlayer();
+                        places.remove(place);
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
-        Place place_L = new GopetPlace(this, places.Count);
-        place_L.add(player);
-        addPlace(place_L);
+
+        public virtual void addPlace(Place place)
+        {
+            places.add(place);
+            numPlace++;
+        }
+
+        public virtual void removePlace(Place place)
+        {
+            places.remove(place);
+            numPlace--;
+        }
+
+        public virtual void addRandom(Player player)
+        {
+            foreach (Place place in places)
+            {
+                if (place.canAdd(player) && place.numPlayer < place.maxPlayer / 2)
+                {
+                    place.add(player);
+                    return;
+                }
+            }
+            Place place_L = new GopetPlace(this, places.Count);
+            place_L.add(player);
+            addPlace(place_L);
+        }
     }
 }

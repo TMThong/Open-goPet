@@ -1,10 +1,16 @@
 
+using Dapper;
+using Gopet.Data.GopetClan;
 using Gopet.Data.Collections;
-using Gopet.Data.user;
+using Gopet.Data.GopetItem;
+using Gopet.Data.Map;
+using Gopet.Data.Mob;
+using Gopet.Data.User;
 using Gopet.Util;
 using MySql.Data.MySqlClient;
 using Mysqlx.Expr;
 using Newtonsoft.Json;
+using Gopet.Data.Dialog;
 
 public class GopetManager
 {
@@ -403,21 +409,30 @@ public class GopetManager
 
     public static void readMobLvl(String cmd, HashMap<int, MobLvInfo> hashMap)
     {
-        ResultSet resultSet = MYSQLManager.jquery(cmd);
-        while (resultSet.next())
+        using(var conn = MYSQLManager.create())
         {
-            MobLvInfo mobLvInfo = new MobLvInfo();
-            mobLvInfo.setLvl(resultSet.getInt("lvl"));
-            mobLvInfo.setHp(resultSet.getInt("hp"));
-            mobLvInfo.setStrength(resultSet.getInt("strength"));
-            mobLvInfo.setExp(resultSet.getInt("exp"));
-            hashMap.put(mobLvInfo.getLvl(), mobLvInfo);
+            IEnumerable<MobLvInfo> data = conn.Query<MobLvInfo>(cmd);
+            foreach (var mobLvInfo in data)
+            {
+                hashMap.put(mobLvInfo.getLvl(), mobLvInfo);
+            }
         }
-        resultSet.Close();
     }
 
     public static void init()
     {
+
+        using(var conn = MYSQLManager.create())
+        {
+
+        }
+
+        using (var connWeb = MYSQLManager.createWebMySqlConnection())
+        {
+            EXCHANGE_DATAS.AddRange(connWeb.Query<ExchangeData>("SELECT * FROM `exchange`"));
+            EXCHANGE_DATAS.ForEach(exchangeData => MenuController.EXCHANGE_ITEM_INFOS.add(new ExchangeItemInfo(exchangeData)));
+        }
+
         ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `petexp`");
         while (resultSet.next())
         {
@@ -457,20 +472,6 @@ public class GopetManager
             PET_TEMPLATES.add(petTemplate);
         }
         resultSet.Close();
-        MySqlConnection webMySqlConnection = MYSQLManager.createWebMySqlConnection();
-        resultSet = MYSQLManager.jquery("SELECT * FROM `exchange`", webMySqlConnection);
-        while (resultSet.next())
-        {
-            ExchangeData exchangeData = new ExchangeData();
-            exchangeData.setId(resultSet.getInt("id"));
-            exchangeData.setGold(resultSet.getInt("gold"));
-            exchangeData.setAmount(resultSet.getInt("amount"));
-            EXCHANGE_DATAS.add(exchangeData);
-            MenuController.EXCHANGE_ITEM_INFOS.add(new ExchangeItemInfo(exchangeData));
-        }
-
-        resultSet.Close();
-        webMySqlConnection.Close();
         resultSet = MYSQLManager.jquery("SELECT * FROM `iteminfo`");
         while (resultSet.next())
         {

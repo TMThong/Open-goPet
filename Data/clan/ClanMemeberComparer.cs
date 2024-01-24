@@ -1,4 +1,6 @@
 ﻿
+using Gopet.Data.GopetClan;
+
 sealed class ClanMemeberComparer : IComparer<ClanMember>
 {
     public int Compare(ClanMember? o1, ClanMember? o2)

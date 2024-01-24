@@ -1,7 +1,7 @@
 
-using Gopet.Data.Clan;
+using Gopet.Data.GopetClan;
 using Gopet.Data.Collections;
-using Gopet.Data.user;
+using Gopet.Data.User;
 using Newtonsoft.Json;
 
 public class ClanManager
@@ -30,7 +30,7 @@ public class ClanManager
 
     public static void init()
     {
-        ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `clan`");
+        ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `GopetClan`");
         while (resultSet.next())
         {
             Clan clan = new Clan(resultSet.getInt("clanId"));

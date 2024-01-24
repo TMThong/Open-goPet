@@ -1,6 +1,9 @@
- 
-public class ItemOptionDescription {
-    private bool isPercent;
-    private String description;
-    private int optionId;
+namespace Gopet.Data.GopetItem
+{
+    public class ItemOptionDescription
+    {
+        private bool isPercent;
+        private string description;
+        private int optionId;
+    }
 }

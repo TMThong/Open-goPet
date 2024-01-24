@@ -1,5 +1,5 @@
 
-using Gopet.Data.user;
+using Gopet.Data.User;
 using Gopet.Util;
 
 public class TopLVLClan : Top {
@@ -20,7 +20,7 @@ public class TopLVLClan : Top {
             lastDatas.AddRange(datas);
             datas.Clear();
             try   {
-                ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `clan` ORDER BY `lvl` DESC LIMIT 10;");
+                ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `GopetClan` ORDER BY `lvl` DESC LIMIT 10;");
                 int index = 1;
                 while (resultSet.next()) {
                     TopData topData = new TopData();

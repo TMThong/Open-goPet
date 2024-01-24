@@ -1,47 +1,50 @@
- 
-public class ClanHouseTemplate {
-    private int lvl;
-    private int fundNeed;
-    private int growthPointNeed;
-    private int needClanLvl = 0;
-    public void setLvl(int lvl)
+namespace Gopet.Data.GopetClan
+{
+    public class ClanHouseTemplate
     {
-        this.lvl = lvl;
-    }
+        private int lvl;
+        private int fundNeed;
+        private int growthPointNeed;
+        private int needClanLvl = 0;
+        public void setLvl(int lvl)
+        {
+            this.lvl = lvl;
+        }
 
-    public void setFundNeed(int fundNeed)
-    {
-        this.fundNeed = fundNeed;
-    }
+        public void setFundNeed(int fundNeed)
+        {
+            this.fundNeed = fundNeed;
+        }
 
-    public void setGrowthPointNeed(int growthPointNeed)
-    {
-        this.growthPointNeed = growthPointNeed;
-    }
+        public void setGrowthPointNeed(int growthPointNeed)
+        {
+            this.growthPointNeed = growthPointNeed;
+        }
 
-    public void setNeedClanLvl(int needClanLvl)
-    {
-        this.needClanLvl = needClanLvl;
-    }
+        public void setNeedClanLvl(int needClanLvl)
+        {
+            this.needClanLvl = needClanLvl;
+        }
 
-    public int getLvl()
-    {
-        return this.lvl;
-    }
+        public int getLvl()
+        {
+            return lvl;
+        }
 
-    public int getFundNeed()
-    {
-        return this.fundNeed;
-    }
+        public int getFundNeed()
+        {
+            return fundNeed;
+        }
 
-    public int getGrowthPointNeed()
-    {
-        return this.growthPointNeed;
-    }
+        public int getGrowthPointNeed()
+        {
+            return growthPointNeed;
+        }
 
-    public int getNeedClanLvl()
-    {
-        return this.needClanLvl;
-    }
+        public int getNeedClanLvl()
+        {
+            return needClanLvl;
+        }
 
+    }
 }

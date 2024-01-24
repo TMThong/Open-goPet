@@ -1,5 +1,6 @@
 
 using Gopet.Data.Collections;
+using Gopet.Data.GopetItem;
 
 public class PetSkill {
 

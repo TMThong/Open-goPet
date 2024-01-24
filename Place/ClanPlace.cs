@@ -1,4 +1,6 @@
- 
+
+using Gopet.Data.Map;
+
 public class ClanPlace : GopetPlace {
 
     public ClanPlace(GopetMap m, int ID) : base(m, ID)

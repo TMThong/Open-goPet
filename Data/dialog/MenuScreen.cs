@@ -1,56 +1,70 @@
-
 using Gopet.Data.Collections;
 
-public class MenuScreen {
+namespace Gopet.Data.Dialog
+{
+    public class MenuScreen
+    {
 
-    protected int menuId;
-    protected ArrayList<MenuItemInfo> menuItemInfos = new ArrayList<MenuItemInfo>();
-    private String title;
-    private sbyte type = 0;
+        protected int menuId;
+        protected ArrayList<MenuItemInfo> menuItemInfos = new ArrayList<MenuItemInfo>();
+        private string title;
+        private sbyte type = 0;
 
-    public MenuScreen(int menuId, String title) {
-        this.menuId = menuId;
-        this.title = title;
-    }
+        public MenuScreen(int menuId, string title)
+        {
+            this.menuId = menuId;
+            this.title = title;
+        }
 
-    public int getMenuId() {
-        return menuId;
-    }
+        public int getMenuId()
+        {
+            return menuId;
+        }
 
-    public void setMenuId(int menuId) {
-        this.menuId = menuId;
-    }
+        public void setMenuId(int menuId)
+        {
+            this.menuId = menuId;
+        }
 
-    public ArrayList<MenuItemInfo> getMenuItemInfos() {
-        return menuItemInfos;
-    }
+        public ArrayList<MenuItemInfo> getMenuItemInfos()
+        {
+            return menuItemInfos;
+        }
 
-    public void setMenuItemInfos(ArrayList<MenuItemInfo> menuItemInfos) {
-        this.menuItemInfos = menuItemInfos;
-    }
+        public void setMenuItemInfos(ArrayList<MenuItemInfo> menuItemInfos)
+        {
+            this.menuItemInfos = menuItemInfos;
+        }
 
-    public String getTitle() {
-        return title;
-    }
+        public string getTitle()
+        {
+            return title;
+        }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+        public void setTitle(string title)
+        {
+            this.title = title;
+        }
 
-    public sbyte getType() {
-        return type;
-    }
+        public sbyte getType()
+        {
+            return type;
+        }
 
-    public void setType(sbyte type) {
-        this.type = type;
-    }
+        public void setType(sbyte type)
+        {
+            this.type = type;
+        }
 
-    public void show(Player player)   {
-        GameController gopetHandler = (GameController) player.controller;
-        gopetHandler.showMenuItem(menuId, type, title, menuItemInfos);
-    }
+        public void show(Player player)
+        {
+            GameController gopetHandler = player.controller;
+            gopetHandler.showMenuItem(menuId, type, title, menuItemInfos);
+        }
 
-    public void select(Player player, int index)   {
-        
+        public void select(Player player, int index)
+        {
+
+        }
     }
 }

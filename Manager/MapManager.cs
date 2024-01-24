@@ -1,6 +1,7 @@
 
 
 using Gopet.Data.Collections;
+using Gopet.Data.Map;
 
 public class MapManager
 {

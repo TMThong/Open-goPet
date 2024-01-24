@@ -1,6 +1,6 @@
 
 
-using Gopet.Data.user;
+using Gopet.Data.User;
 using Gopet.Util;
 using MySql.Data.MySqlClient;
 
@@ -23,7 +23,7 @@ public class UserData
         MySqlConnection conn = MYSQLManager.createWebMySqlConnection();
         try
         {
-            MYSQLManager.updateSql(Utilities.Format("UPDATE `user` SET `user`.`isBaned` = %s , `user`.`banReason` = '%s', `user`.`banTime` = %s WHERE user_id = %s;", typeBan, reason, timeBan, user_id), conn);
+            MYSQLManager.updateSql(Utilities.Format("UPDATE `User` SET `User`.`isBaned` = %s , `User`.`banReason` = '%s', `User`.`banTime` = %s WHERE user_id = %s;", typeBan, reason, timeBan, user_id), conn);
         }
         finally
         {
@@ -36,7 +36,7 @@ public class UserData
         MySqlConnection conn = MYSQLManager.createWebMySqlConnection();
         try
         {
-            MYSQLManager.updateSql(Utilities.Format("UPDATE `user` SET `user`.`isBaned` = %s , `user`.`banReason` = '%s', `user`.`banTime` = %s WHERE user_id = %s;", typeBan, reason, timeBan, user_id), conn);
+            MYSQLManager.updateSql(Utilities.Format("UPDATE `User` SET `User`.`isBaned` = %s , `User`.`banReason` = '%s', `User`.`banTime` = %s WHERE user_id = %s;", typeBan, reason, timeBan, user_id), conn);
         }
         finally
         {
@@ -50,7 +50,7 @@ public class UserData
         try
         {
             webMySqlConnection = MYSQLManager.createWebMySqlConnection();
-            ResultSet resultSet = MYSQLManager.jquery(Utilities.Format("SELECT   `coin` FROM `user` WHERE `user`.`user_id` = %s;", user_id), webMySqlConnection);
+            ResultSet resultSet = MYSQLManager.jquery(Utilities.Format("SELECT   `coin` FROM `User` WHERE `User`.`user_id` = %s;", user_id), webMySqlConnection);
             if (resultSet.next())
             {
                 int coin = resultSet.getInt("coin");
@@ -77,7 +77,7 @@ public class UserData
         {
             webMySqlConnection = MYSQLManager.createWebMySqlConnection();
             MYSQLManager.updateSql(Utilities.Format("INSERT INTO `dongtien`(`username`, `sotientruoc`, `sotienthaydoi`, `sotiensau`, `thoigian`, `noidung`) VALUES ('%s', %s, %s, %s, '%s' , '%s')", username, myCOin, coin, myCOin - coin, Utilities.ToDateString(Utilities.GetCurrentDate()), Utilities.Format("Đổi gold trên game với giá %svnđ", Utilities.FormatNumber(coin))), webMySqlConnection);
-            MYSQLManager.updateSql(Utilities.Format("UPDATE `user` set coin = coin - %s where user_id = %s", coin, this.user_id), webMySqlConnection);
+            MYSQLManager.updateSql(Utilities.Format("UPDATE `User` set coin = coin - %s where user_id = %s", coin, this.user_id), webMySqlConnection);
         }
         catch (Exception e)
         {

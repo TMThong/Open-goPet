@@ -1,6 +1,6 @@
 
 
-using Gopet.Data.user;
+using Gopet.Data.User;
 using MySql.Data.MySqlClient;
 
 public class MYSQLManager

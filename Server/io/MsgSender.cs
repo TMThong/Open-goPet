@@ -1,94 +1,92 @@
-
-
-using Gopet.IO;
-
-public class MsgSender
+namespace Gopet.IO
 {
-
-    protected Session session;
-    protected List<Message> sendingMessage = new();
-
-    public MsgSender(Session session)
+    public class MsgSender
     {
-        this.session = session;
-    }
 
-    public void addMessage(Message message)
-    {
-        lock (this.sendingMessage)
+        protected Session session;
+        protected List<Message> sendingMessage = new();
+
+        public MsgSender(Session session)
         {
-            this.sendingMessage.Add(message);
-            Monitor.PulseAll(this.sendingMessage);
+            this.session = session;
         }
-    }
 
-
-    public void run()
-    {
-        while (true)
+        public void addMessage(Message message)
         {
-            try
+            lock (sendingMessage)
             {
-                if (this.session.isConnected())
-                {
-                    lock (this.sendingMessage)
-                    {
-                        while (this.sendingMessage.Count != 0)
-                        {
-                            if (this.session.isConnected())
-                            {
-                                Message m = this.sendingMessage[0];
-                                this.sendingMessage.RemoveAt(0);
-                                this.doSendMessage(m);
-                            }
-                        }
+                sendingMessage.Add(message);
+                Monitor.PulseAll(sendingMessage);
+            }
+        }
 
-                        Monitor.Wait(this.sendingMessage);
-                        continue;
+
+        public void run()
+        {
+            while (true)
+            {
+                try
+                {
+                    if (session.isConnected())
+                    {
+                        lock (sendingMessage)
+                        {
+                            while (sendingMessage.Count != 0)
+                            {
+                                if (session.isConnected())
+                                {
+                                    Message m = sendingMessage[0];
+                                    sendingMessage.RemoveAt(0);
+                                    doSendMessage(m);
+                                }
+                            }
+
+                            Monitor.Wait(sendingMessage);
+                            continue;
+                        }
                     }
                 }
+                catch (Exception var6)
+                {
+                }
+
+                return;
             }
-            catch (Exception var6)
+        }
+
+        public void doSendMessage(Message m)
+        {
+            sbyte[] data = m.getBuffer();
+            Session var10000;
+            if (data != null)
             {
+                if (m.isEncrypted)
+                {
+                    data = session.tea.encrypt(data);
+                }
+
+                session.dos.WriteInt(data.Length + 1);
+                session.dos.Write(((sbyte)(m.isEncrypted ? 1 : 0)).toByte());
+                session.dos.Write(data);
+                var10000 = session;
+                var10000.sendsbyteCount += data.Length;
             }
-
-            return;
-        }
-    }
-
-    public void doSendMessage(Message m)
-    {
-        sbyte[] data = m.getBuffer();
-        Session var10000;
-        if (data != null)
-        {
-            if (m.isEncrypted)
+            else
             {
-                data = this.session.tea.encrypt(data);
+                session.dos.WriteInt(0);
             }
-
-            this.session.dos.WriteInt(data.Length + 1);
-            this.session.dos.Write(((sbyte)(m.isEncrypted ? 1 : 0)).toByte());
-            this.session.dos.Write(data);
-            var10000 = this.session;
-            var10000.sendsbyteCount += data.Length;
+            var10000 = session;
+            var10000.sendsbyteCount += 4;
+            session.dos.Flush();
         }
-        else
-        {
-            this.session.dos.WriteInt(0);
-        }
-        Console.WriteLine("data length " + data.Length);
-        var10000 = this.session;
-        var10000.sendsbyteCount += 4;
-        this.session.dos.Flush();
-    }
 
-    public void stop()
-    {
-        lock (this.sendingMessage)
+        public void stop()
         {
-            this.sendingMessage.Clear();
-            Monitor.PulseAll(this.sendingMessage);
+            lock (sendingMessage)
+            {
+                sendingMessage.Clear();
+                Monitor.PulseAll(sendingMessage);
+            }
         }
     }
 }

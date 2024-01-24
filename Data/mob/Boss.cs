@@ -1,71 +1,72 @@
-
-
-public class Boss : Mob
+namespace Gopet.Data.Mob
 {
-
-    private BossTemplate bossTemplate;
-
-    public bool isTimeOut = false;
-
-    public long timeoutMilis = 0L;
-
-    public Boss(int bossTemplateId, MobLocation mobLocation)
+    public class Boss : Mob
     {
-        this.bossTemplate = GopetManager.boss.get(bossTemplateId);
-        this.setPetTemplate(bossTemplate.getPetTemplate());
-        this.setMobLocation(mobLocation);
-        this.def = bossTemplate.def;
-        this.setMobLvInfo(new MobLvInfoImp(bossTemplate));
-        this.initMob();
-    }
 
-    sealed class MobLvInfoImp : MobLvInfo
-    {
-        public MobLvInfoImp(BossTemplate bossTemplate)
+        private BossTemplate bossTemplate;
+
+        public bool isTimeOut = false;
+
+        public long timeoutMilis = 0L;
+
+        public Boss(int bossTemplateId, MobLocation mobLocation)
         {
-            this.bossTemplate = bossTemplate;
+            bossTemplate = GopetManager.boss.get(bossTemplateId);
+            this.setPetTemplate(bossTemplate.getPetTemplate());
+            this.setMobLocation(mobLocation);
+            this.def = bossTemplate.def;
+            this.setMobLvInfo(new MobLvInfoImp(bossTemplate));
+            initMob();
         }
 
-        public BossTemplate bossTemplate { get; }
-
-        public override int getLvl()
+        sealed class MobLvInfoImp : MobLvInfo
         {
-            return bossTemplate.getLvl();
+            public MobLvInfoImp(BossTemplate bossTemplate)
+            {
+                this.bossTemplate = bossTemplate;
+            }
+
+            public BossTemplate bossTemplate { get; }
+
+            public override int getLvl()
+            {
+                return bossTemplate.getLvl();
+            }
+
+
+            public override int getHp()
+            {
+                return bossTemplate.hp;
+            }
+
+
+            public override int getExp()
+            {
+                return 0;
+            }
+
+
+            public override int getStrength()
+            {
+                return bossTemplate.atk;
+            }
+        }
+        public void initMob()
+        {
+            base.initMob(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+            this.mp = 500 + this.mobLvInfo.getLvl() * 100;
+            this.maxMp = 500 + this.mobLvInfo.getLvl() * 100;
         }
 
 
-        public override int getHp()
+        public string getName()
         {
-            return bossTemplate.hp;
+            return bossTemplate.getName();
         }
 
-
-        public override int getExp()
+        internal BossTemplate getBossTemplate()
         {
-            return 0;
+            return bossTemplate;
         }
-
-
-        public override int getStrength()
-        {
-            return bossTemplate.atk;
-        }
-    }
-    public void initMob()
-    {
-        base.initMob(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-        this.mp = 500 + (this.mobLvInfo.getLvl() * 100);
-        this.maxMp = 500 + (this.mobLvInfo.getLvl() * 100);
-    }
-
-
-    public String getName()
-    {
-        return bossTemplate.getName();
-    }
-
-    internal BossTemplate getBossTemplate()
-    {
-        return this.bossTemplate;
     }
 }

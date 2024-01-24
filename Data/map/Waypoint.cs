@@ -1,47 +1,49 @@
-
 using System.Diagnostics;
 
-[DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-public class Waypoint
+namespace Gopet.Data.Map
 {
-
-    public int x;
-    public int y;
-    public String name;
-
-
-    public void setX(int x)
+    [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
+    public class Waypoint
     {
-        this.x = x;
-    }
 
-    public void setY(int y)
-    {
-        this.y = y;
-    }
+        public int x;
+        public int y;
+        public string name;
 
-    public void setName(String name)
-    {
-        this.name = name;
-    }
 
-    public int getX()
-    {
-        return this.x;
-    }
+        public void setX(int x)
+        {
+            this.x = x;
+        }
 
-    public int getY()
-    {
-        return this.y;
-    }
+        public void setY(int y)
+        {
+            this.y = y;
+        }
 
-    public String getName()
-    {
-        return this.name;
-    }
+        public void setName(string name)
+        {
+            this.name = name;
+        }
 
-    private string GetDebuggerDisplay()
-    {
-        return ToString();
+        public int getX()
+        {
+            return x;
+        }
+
+        public int getY()
+        {
+            return y;
+        }
+
+        public string getName()
+        {
+            return name;
+        }
+
+        private string GetDebuggerDisplay()
+        {
+            return ToString();
+        }
     }
 }

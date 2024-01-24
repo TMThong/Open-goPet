@@ -1,4 +1,6 @@
- 
+
+
+using Gopet.IO;
 
 public interface IHandleMessage {
 

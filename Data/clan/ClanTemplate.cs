@@ -1,71 +1,73 @@
-
- 
-public class ClanTemplate {
-    private int maxMember;
-    private int tiemnangPoint;
-    private long fundNeed;
-    private long growthPointNeed;
-    private int[] permission;
-    private int lvl;
-
-    public void setMaxMember(int maxMember)
+namespace Gopet.Data.GopetClan
+{
+    public class ClanTemplate
     {
-        this.maxMember = maxMember;
-    }
+        private int maxMember;
+        private int tiemnangPoint;
+        private long fundNeed;
+        private long growthPointNeed;
+        private int[] permission;
+        private int lvl;
 
-    public void setTiemnangPoint(int tiemnangPoint)
-    {
-        this.tiemnangPoint = tiemnangPoint;
-    }
+        public void setMaxMember(int maxMember)
+        {
+            this.maxMember = maxMember;
+        }
 
-    public void setFundNeed(long fundNeed)
-    {
-        this.fundNeed = fundNeed;
-    }
+        public void setTiemnangPoint(int tiemnangPoint)
+        {
+            this.tiemnangPoint = tiemnangPoint;
+        }
 
-    public void setGrowthPointNeed(long growthPointNeed)
-    {
-        this.growthPointNeed = growthPointNeed;
-    }
+        public void setFundNeed(long fundNeed)
+        {
+            this.fundNeed = fundNeed;
+        }
 
-    public void setPermission(int[] permission)
-    {
-        this.permission = permission;
-    }
+        public void setGrowthPointNeed(long growthPointNeed)
+        {
+            this.growthPointNeed = growthPointNeed;
+        }
 
-    public void setLvl(int lvl)
-    {
-        this.lvl = lvl;
-    }
+        public void setPermission(int[] permission)
+        {
+            this.permission = permission;
+        }
 
-    public int getMaxMember()
-    {
-        return this.maxMember;
-    }
+        public void setLvl(int lvl)
+        {
+            this.lvl = lvl;
+        }
 
-    public int getTiemnangPoint()
-    {
-        return this.tiemnangPoint;
-    }
+        public int getMaxMember()
+        {
+            return maxMember;
+        }
 
-    public long getFundNeed()
-    {
-        return this.fundNeed;
-    }
+        public int getTiemnangPoint()
+        {
+            return tiemnangPoint;
+        }
 
-    public long getGrowthPointNeed()
-    {
-        return this.growthPointNeed;
-    }
+        public long getFundNeed()
+        {
+            return fundNeed;
+        }
 
-    public int[] getPermission()
-    {
-        return this.permission;
-    }
+        public long getGrowthPointNeed()
+        {
+            return growthPointNeed;
+        }
 
-    public int getLvl()
-    {
-        return this.lvl;
-    }
+        public int[] getPermission()
+        {
+            return permission;
+        }
 
+        public int getLvl()
+        {
+            return lvl;
+        }
+
+    }
 }

@@ -1,190 +1,190 @@
-
-using Gopet.IO;
-
-public class Message
+namespace Gopet.IO
 {
-
-    public sbyte id;
-
-    private DataOutputStream dos;
-    private DataInputStream dis;
-    public bool isEncrypted;
-    public static bool isiWin = false;
-
-    public Message(int command) : this(command, false)
+    public class Message
     {
 
-    }
+        public sbyte id;
 
-    public Message(int command, bool isEncrypted)
-    {
-        this.isEncrypted = false;
-        this.id = (sbyte)(command & 0xFF);
-        this.isEncrypted = isEncrypted;
-    }
+        private DataOutputStream dos;
+        private DataInputStream dis;
+        public bool isEncrypted;
+        public static bool isiWin = false;
 
-    public Message(sbyte[] data)
-    {
-        this.isEncrypted = false;
-        sbyte[] msgData = new sbyte[data.Length - 1];
-        Buffer.BlockCopy(data, 1, msgData, 0, msgData.Length);
-        this.id = data[0];
-        this.dis = new DataInputStream(msgData);
-    }
-
-    public sbyte[] getBuffer()
-    {
-        if (this.dos == null)
+        public Message(int command) : this(command, false)
         {
-            return new sbyte[] { (sbyte)this.id };
+
         }
-        else
+
+        public Message(int command, bool isEncrypted)
         {
-            sbyte[] data = this.dos.getData();
-            sbyte[] buffer;
-            if (isiWin)
+            this.isEncrypted = false;
+            id = (sbyte)(command & 0xFF);
+            this.isEncrypted = isEncrypted;
+        }
+
+        public Message(sbyte[] data)
+        {
+            isEncrypted = false;
+            sbyte[] msgData = new sbyte[data.Length - 1];
+            Buffer.BlockCopy(data, 1, msgData, 0, msgData.Length);
+            id = data[0];
+            dis = new DataInputStream(msgData);
+        }
+
+        public sbyte[] getBuffer()
+        {
+            if (dos == null)
             {
-                buffer = new sbyte[data.Length + 3];
-                buffer[0] = 40;
-                buffer[1] = (sbyte)(this.id >>> 8 & 255);
-                buffer[2] = (sbyte)(this.id >>> 0 & 255);
-                Buffer.BlockCopy(data, 0, buffer, 3, data.Length);
-                return buffer;
+                return new sbyte[] { id };
             }
             else
             {
-                buffer = new sbyte[data.Length + 1];
-                buffer[0] = (sbyte)this.id;
-                Buffer.BlockCopy(data, 0, buffer, 1, data.Length);
-                return buffer;
+                sbyte[] data = dos.getData();
+                sbyte[] buffer;
+                if (isiWin)
+                {
+                    buffer = new sbyte[data.Length + 3];
+                    buffer[0] = 40;
+                    buffer[1] = (sbyte)(id >>> 8 & 255);
+                    buffer[2] = (sbyte)(id >>> 0 & 255);
+                    Buffer.BlockCopy(data, 0, buffer, 3, data.Length);
+                    return buffer;
+                }
+                else
+                {
+                    buffer = new sbyte[data.Length + 1];
+                    buffer[0] = id;
+                    Buffer.BlockCopy(data, 0, buffer, 1, data.Length);
+                    return buffer;
+                }
             }
         }
-    }
 
-    public DataInputStream reader()
-    {
-        return this.dis;
-    }
-
-    public DataOutputStream writer()
-    {
-        if (this.dos == null)
+        public DataInputStream reader()
         {
-            this.dos = new DataOutputStream();
+            return dis;
         }
 
-        return this.dos;
-    }
-
-    public void putsbyte(int value)
-    {
-
-        this.writer().writeByte(value);
-
-    }
-
-    public void putString(string text)
-    {
-
-        this.writer().writeUTF(text);
-
-    }
-
-    public void putUTF(string text)
-    {
-
-        this.writer().writeUTF(text);
-
-    }
-
-    public void putInt(int value)
-    {
-
-        this.writer().writeInt(value);
-
-    }
-
-    public void putbool(bool value)
-    {
-
-        this.writer().writeBool(value);
-
-    }
-
-    public void putShort(int value)
-    {
-
-        this.writer().writeShort(value);
-
-    }
-
-    public void putlong(long value)
-    {
-
-        this.writer().writeLong(value);
-
-    }
-
-    public void cleanup()
-    {
-        try
+        public DataOutputStream writer()
         {
-            if (this.dis != null)
+            if (dos == null)
             {
-                this.dis.Close();
+                dos = new DataOutputStream();
             }
 
-            if (this.dos != null)
-            {
-                this.dos.Close();
-            }
+            return dos;
         }
-        catch (IOException var2)
+
+        public void putsbyte(int value)
         {
+
+            writer().writeByte(value);
+
         }
-    }
 
-    public sbyte readsbyte()
-    {
-        return reader().readsbyte();
-    }
+        public void putString(string text)
+        {
 
-    public short readShort()
-    {
-        return reader().readShort();
-    }
+            writer().writeUTF(text);
 
-    public int readUnsignedsbyte()
-    {
-        return reader().readUnsignedByte();
-    }
+        }
 
-    public int readUnsignedShort()
-    {
-        return reader().readUnsignedShort();
-    }
+        public void putUTF(string text)
+        {
 
-    public String readUTF()
-    {
-        return reader().readUTF();
-    }
+            writer().writeUTF(text);
 
-    public long readlong()
-    {
-        return reader().readlong();
-    }
+        }
+
+        public void putInt(int value)
+        {
+
+            writer().writeInt(value);
+
+        }
+
+        public void putbool(bool value)
+        {
+
+            writer().writeBool(value);
+
+        }
+
+        public void putShort(int value)
+        {
+
+            writer().writeShort(value);
+
+        }
+
+        public void putlong(long value)
+        {
+
+            writer().writeLong(value);
+
+        }
+
+        public void cleanup()
+        {
+            try
+            {
+                if (dis != null)
+                {
+                    dis.Close();
+                }
+
+                if (dos != null)
+                {
+                    dos.Close();
+                }
+            }
+            catch (IOException var2)
+            {
+            }
+        }
+
+        public sbyte readsbyte()
+        {
+            return reader().readsbyte();
+        }
+
+        public short readShort()
+        {
+            return reader().readShort();
+        }
+
+        public int readUnsignedsbyte()
+        {
+            return reader().readUnsignedByte();
+        }
+
+        public int readUnsignedShort()
+        {
+            return reader().readUnsignedShort();
+        }
+
+        public string readUTF()
+        {
+            return reader().readUTF();
+        }
+
+        public long readlong()
+        {
+            return reader().readlong();
+        }
 
 
 
 
 
-    public int readInt()
-    {
-        return reader().readInt();
-    }
+        public int readInt()
+        {
+            return reader().readInt();
+        }
 
-    public void Close()
-    {
-        cleanup();
+        public void Close()
+        {
+            cleanup();
+        }
     }
 }

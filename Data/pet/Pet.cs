@@ -1,5 +1,6 @@
 
 using Gopet.Data.Collections;
+using Gopet.Data.GopetItem;
 using Gopet.Util;
 
 public class Pet : GameObject

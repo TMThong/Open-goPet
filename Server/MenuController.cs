@@ -1,7 +1,12 @@
 
-using Gopet.Data.Clan;
+using Gopet.Battle;
+using Gopet.Data.GopetClan;
 using Gopet.Data.Collections;
-using Gopet.Data.user;
+using Gopet.Data.Dialog;
+using Gopet.Data.GopetItem;
+using Gopet.Data.Map;
+using Gopet.Data.User;
+using Gopet.IO;
 using Gopet.Util;
 using MySql.Data.MySqlClient;
 
@@ -3639,7 +3644,7 @@ public class MenuController
                                 {
                                     user_id = resultSet.getInt("user_id");
                                     resultSet.Close();
-                                    MYSQLManager.updateSql("Update `user` set isBenned = 0 where user_id = " + user_id, MySqlConnectionWeb);
+                                    MYSQLManager.updateSql("Update `User` set isBenned = 0 where user_id = " + user_id, MySqlConnectionWeb);
                                 }
                                 else
                                 {

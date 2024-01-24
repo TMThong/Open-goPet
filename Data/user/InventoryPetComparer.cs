@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gopet.Data.user
+namespace Gopet.Data.User
 {
     internal class InventoryPetComparer : IComparer<Pet>
     {

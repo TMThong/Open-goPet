@@ -1,4 +1,6 @@
- 
+
+using Gopet.Data.Dialog;
+
 public class PetMenuItemInfo : MenuItemInfo {
 
     private PetTemplate petTemplate;

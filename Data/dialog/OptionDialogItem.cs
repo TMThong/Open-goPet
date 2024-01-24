@@ -1,18 +1,22 @@
- 
-public class OptionDialogItem {
-  
-     
-    public String name = "";
-    public String iconImgPath;
-    public bool enable = true;
-    public String urlForDownload = "";
-    
-   
-    public String desc = "";
-    public String subIconImgPath = "";
+namespace Gopet.Data.Dialog
+{
+    public class OptionDialogItem
+    {
 
-    public virtual void doSelect(Player player)   {
-        
+
+        public string name = "";
+        public string iconImgPath;
+        public bool enable = true;
+        public string urlForDownload = "";
+
+
+        public string desc = "";
+        public string subIconImgPath = "";
+
+        public virtual void doSelect(Player player)
+        {
+
+        }
+
     }
-    
 }

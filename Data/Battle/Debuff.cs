@@ -1,14 +1,18 @@
+using Gopet.Data.GopetItem;
 
-public class Debuff : Buff
+namespace Gopet.Battle
 {
-
-    public Debuff()
-    {
-    }
-
-    public Debuff(ItemInfo[] infos, int turn) : base(infos, turn)
+    public class Debuff : Buff
     {
 
-    }
+        public Debuff()
+        {
+        }
 
+        public Debuff(ItemInfo[] infos, int turn) : base(infos, turn)
+        {
+
+        }
+
+    }
 }

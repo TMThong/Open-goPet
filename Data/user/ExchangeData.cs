@@ -1,9 +1,9 @@
 [Serializable]
 public class ExchangeData
 {
-    int id; 
-    int amount; 
-    int gold;
+    public int id;
+    public int amount;
+    public int gold;
     public void setId(int id)
     {
         this.id = id;

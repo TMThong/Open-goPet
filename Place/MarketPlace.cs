@@ -1,4 +1,6 @@
- 
+
+using Gopet.Data.Map;
+
 public class MarketPlace : GopetPlace {
 
     public static readonly Kiosk[] kiosks = new Kiosk[]{

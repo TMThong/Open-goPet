@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gopet.Data.clan
+namespace Gopet.Data.GopetClan
 {
     internal sealed class ClanRequestJoinComparer : IComparer<ClanRequestJoin>
     {

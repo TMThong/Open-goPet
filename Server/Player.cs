@@ -1,7 +1,9 @@
 
 
 using Gopet.Data.Collections;
-using Gopet.Data.user;
+using Gopet.Data.GopetItem;
+using Gopet.Data.User;
+using Gopet.IO;
 using Gopet.Util;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
@@ -53,7 +55,9 @@ public class Player : IHandleMessage
 
     public void onMessage(Message ms)
     {
+#if DEBUG
         Console.WriteLine("PLAYER:  " + ms.id);
+#endif
         try
         {
             if (!session.clientOK && ms.id != GopetCMD.CLIENT_INFO)
@@ -177,7 +181,7 @@ public class Player : IHandleMessage
             MySqlConnection MySqlConnection = MYSQLManager.createWebMySqlConnection();
             try
             {
-                MYSQLManager.updateSql(Utilities.Format("update user set password = '%s' where user_id = %s", newPass, user.user_id), MySqlConnection);
+                MYSQLManager.updateSql(Utilities.Format("update User set password = '%s' where user_id = %s", newPass, user.user_id), MySqlConnection);
                 Message m = new Message(GopetCMD.CHANGE_PASSWORD);
                 m.putUTF("Đổi mật khẩu thành công, vui lòng nhớ kỷ thông tin");
                 m.writer().flush();
@@ -252,7 +256,7 @@ public class Player : IHandleMessage
         ResultSet result
                 = MYSQLManager.jquery(
                         Utilities.Format(
-                                "SELECT * FROM `user` where username = '%s' && password = '%s'",
+                                "SELECT * FROM `User` where username = '%s' && password = '%s'",
                                 username, password), conn);
         if (result.next())
         {
@@ -299,7 +303,7 @@ public class Player : IHandleMessage
                         else
                         {
                             user.isBanned = UserData.BAN_NONE;
-                            MYSQLManager.updateSql(Utilities.Format("update user set isBaned = DEFAULT where user_id = %s", user.user_id), conn);
+                            MYSQLManager.updateSql(Utilities.Format("update User set isBaned = DEFAULT where user_id = %s", user.user_id), conn);
                         }
                         break;
                     }

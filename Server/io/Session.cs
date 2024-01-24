@@ -72,7 +72,6 @@ public class Session
         byte[] keys = new byte[9];
         dis.Read(keys, 0, 9);
         long key = readKey(keys.sbytes());
-        Console.WriteLine("KEY:" + key);
         tea = new TEA(key);
     }
 

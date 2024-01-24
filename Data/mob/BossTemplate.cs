@@ -1,72 +1,74 @@
-
-public class BossTemplate : GameObject
+namespace Gopet.Data.Mob
 {
-
-    private int bossId;
-    private String name;
-    private int[][] gift;
-    private sbyte typeBoss;
-    private PetTemplate petTemplate;
-    private int lvl;
-
-    public void setBossId(int bossId)
+    public class BossTemplate : GameObject
     {
-        this.bossId = bossId;
-    }
 
-    public void setName(String name)
-    {
-        this.name = name;
-    }
+        private int bossId;
+        private string name;
+        private int[][] gift;
+        private sbyte typeBoss;
+        private PetTemplate petTemplate;
+        private int lvl;
 
-    public void setGift(int[][] gift)
-    {
-        this.gift = gift;
-    }
+        public void setBossId(int bossId)
+        {
+            this.bossId = bossId;
+        }
 
-    public void setTypeBoss(sbyte typeBoss)
-    {
-        this.typeBoss = typeBoss;
-    }
+        public void setName(string name)
+        {
+            this.name = name;
+        }
 
-    public void setPetTemplate(PetTemplate petTemplate)
-    {
-        this.petTemplate = petTemplate;
-    }
+        public void setGift(int[][] gift)
+        {
+            this.gift = gift;
+        }
 
-    public void setLvl(int lvl)
-    {
-        this.lvl = lvl;
-    }
+        public void setTypeBoss(sbyte typeBoss)
+        {
+            this.typeBoss = typeBoss;
+        }
 
-    public int getBossId()
-    {
-        return this.bossId;
-    }
+        public void setPetTemplate(PetTemplate petTemplate)
+        {
+            this.petTemplate = petTemplate;
+        }
 
-    public String getName()
-    {
-        return this.name;
-    }
+        public void setLvl(int lvl)
+        {
+            this.lvl = lvl;
+        }
 
-    public int[][] getGift()
-    {
-        return this.gift;
-    }
+        public int getBossId()
+        {
+            return bossId;
+        }
 
-    public sbyte getTypeBoss()
-    {
-        return this.typeBoss;
-    }
+        public string getName()
+        {
+            return name;
+        }
 
-    public PetTemplate getPetTemplate()
-    {
-        return this.petTemplate;
-    }
+        public int[][] getGift()
+        {
+            return gift;
+        }
 
-    public int getLvl()
-    {
-        return this.lvl;
-    }
+        public sbyte getTypeBoss()
+        {
+            return typeBoss;
+        }
 
+        public PetTemplate getPetTemplate()
+        {
+            return petTemplate;
+        }
+
+        public int getLvl()
+        {
+            return lvl;
+        }
+
+    }
 }

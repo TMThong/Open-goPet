@@ -1,6 +1,7 @@
 
 using Gopet.Data.Collections;
-using Gopet.Data.user;
+using Gopet.Data.GopetItem;
+using Gopet.Data.User;
 using Gopet.Util;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;

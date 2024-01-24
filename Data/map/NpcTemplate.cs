@@ -1,123 +1,126 @@
-
 using System.Diagnostics;
 
-[Serializable]
-[DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-public class NpcTemplate {
-    public int npcId;
-    public sbyte type;
-    public String name;
-    public String[] optionName;
-    public String[] chat;
-    public int[] optionId;
-    public String imgPath;
-    public int x;
-    public int y;
-    public int[] bounds;
-
-    public void setNpcId(int npcId)
+namespace Gopet.Data.Map
+{
+    [Serializable]
+    [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
+    public class NpcTemplate
     {
-        this.npcId = npcId;
-    }
+        public int npcId;
+        public sbyte type;
+        public string name;
+        public string[] optionName;
+        public string[] chat;
+        public int[] optionId;
+        public string imgPath;
+        public int x;
+        public int y;
+        public int[] bounds;
 
-    public void setType(sbyte type)
-    {
-        this.type = type;
-    }
+        public void setNpcId(int npcId)
+        {
+            this.npcId = npcId;
+        }
 
-    public void setName(String name)
-    {
-        this.name = name;
-    }
+        public void setType(sbyte type)
+        {
+            this.type = type;
+        }
 
-    public void setOptionName(String[] optionName)
-    {
-        this.optionName = optionName;
-    }
+        public void setName(string name)
+        {
+            this.name = name;
+        }
 
-    public void setChat(String[] chat)
-    {
-        this.chat = chat;
-    }
+        public void setOptionName(string[] optionName)
+        {
+            this.optionName = optionName;
+        }
 
-    public void setOptionId(int[] optionId)
-    {
-        this.optionId = optionId;
-    }
+        public void setChat(string[] chat)
+        {
+            this.chat = chat;
+        }
 
-    public void setImgPath(String imgPath)
-    {
-        this.imgPath = imgPath;
-    }
+        public void setOptionId(int[] optionId)
+        {
+            this.optionId = optionId;
+        }
 
-    public void setX(int x)
-    {
-        this.x = x;
-    }
+        public void setImgPath(string imgPath)
+        {
+            this.imgPath = imgPath;
+        }
 
-    public void setY(int y)
-    {
-        this.y = y;
-    }
+        public void setX(int x)
+        {
+            this.x = x;
+        }
 
-    public void setBounds(int[] bounds)
-    {
-        this.bounds = bounds;
-    }
+        public void setY(int y)
+        {
+            this.y = y;
+        }
 
-    public int getNpcId()
-    {
-        return this.npcId;
-    }
+        public void setBounds(int[] bounds)
+        {
+            this.bounds = bounds;
+        }
 
-    public sbyte getType()
-    {
-        return this.type;
-    }
+        public int getNpcId()
+        {
+            return npcId;
+        }
 
-    public String getName()
-    {
-        return this.name;
-    }
+        public sbyte getType()
+        {
+            return type;
+        }
 
-    public String[] getOptionName()
-    {
-        return this.optionName;
-    }
+        public string getName()
+        {
+            return name;
+        }
 
-    public String[] getChat()
-    {
-        return this.chat;
-    }
+        public string[] getOptionName()
+        {
+            return optionName;
+        }
 
-    public int[] getOptionId()
-    {
-        return this.optionId;
-    }
+        public string[] getChat()
+        {
+            return chat;
+        }
 
-    public String getImgPath()
-    {
-        return this.imgPath;
-    }
+        public int[] getOptionId()
+        {
+            return optionId;
+        }
 
-    public int getX()
-    {
-        return this.x;
-    }
+        public string getImgPath()
+        {
+            return imgPath;
+        }
 
-    public int getY()
-    {
-        return this.y;
-    }
+        public int getX()
+        {
+            return x;
+        }
 
-    public int[] getBounds()
-    {
-        return this.bounds;
-    }
+        public int getY()
+        {
+            return y;
+        }
+
+        public int[] getBounds()
+        {
+            return bounds;
+        }
 
 
-    private string GetDebuggerDisplay()
-    {
-        return ToString();
+        private string GetDebuggerDisplay()
+        {
+            return ToString();
+        }
     }
 }

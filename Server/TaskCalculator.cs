@@ -1,5 +1,8 @@
 
 using Gopet.Data.Collections;
+using Gopet.Data.GopetItem;
+using Gopet.Data.Map;
+using Gopet.Data.Mob;
 using Gopet.Util;
 
 public class TaskCalculator

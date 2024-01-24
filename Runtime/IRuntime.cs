@@ -1,5 +1,6 @@
- 
 
-public interface IRuntime {
-  void update()   ;
+
+public interface IRuntime
+{
+    void update();
 }

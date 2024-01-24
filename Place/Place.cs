@@ -1,6 +1,9 @@
 
 
+using Gopet.Battle;
 using Gopet.Data.Collections;
+using Gopet.Data.Map;
+using Gopet.IO;
 
 public abstract class Place {
 

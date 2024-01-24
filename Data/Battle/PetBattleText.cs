@@ -1,7 +1,11 @@
- 
-public class PetBattleText : Popup {
+namespace Gopet.Battle
+{
+    public class PetBattleText : Popup
+    {
 
-    public PetBattleText(String text) : base (text) {
-         
+        public PetBattleText(string text) : base(text)
+        {
+
+        }
     }
 }

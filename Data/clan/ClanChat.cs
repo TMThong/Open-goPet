@@ -1,22 +1,24 @@
-
-public class ClanChat
+namespace Gopet.Data.GopetClan
 {
-    private String who;
-    private String text;
-
-    public ClanChat(String who, String text)
+    public class ClanChat
     {
-        this.who = who;
-        this.text = text;
-    }
-    public String getWho()
-    {
-        return this.who;
-    }
+        private string who;
+        private string text;
 
-    public String getText()
-    {
-        return this.text;
-    }
+        public ClanChat(string who, string text)
+        {
+            this.who = who;
+            this.text = text;
+        }
+        public string getWho()
+        {
+            return who;
+        }
 
+        public string getText()
+        {
+            return text;
+        }
+
+    }
 }

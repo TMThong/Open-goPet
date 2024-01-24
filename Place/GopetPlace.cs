@@ -1,6 +1,12 @@
 
 
+using Gopet.Battle;
+using Gopet.Data.GopetClan;
 using Gopet.Data.Collections;
+using Gopet.Data.GopetItem;
+using Gopet.Data.Map;
+using Gopet.Data.Mob;
+using Gopet.IO;
 using Gopet.Util;
 
 public class GopetPlace : Place {

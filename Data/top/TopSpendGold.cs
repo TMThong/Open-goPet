@@ -1,5 +1,5 @@
 
-using Gopet.Data.user;
+using Gopet.Data.User;
 using Gopet.Util;
 
 public class TopSpendGold : Top

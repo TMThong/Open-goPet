@@ -1,14 +1,16 @@
 
 using Gopet.Data.Collections;
 using Gopet.Util;
-public class RuntimeServer   {
+public class RuntimeServer
+{
 
-    public ArrayList<IRuntime> runtimes = new  ();
+    public ArrayList<IRuntime> runtimes = new();
     public static int MINUTE = 1000 * 60;
     public static bool isRunning = true;
     public static RuntimeServer instance = new RuntimeServer();
     public Thread MyThread;
-    public RuntimeServer() {
+    public RuntimeServer()
+    {
         MyThread = new Thread(run);
         MyThread.IsBackground = true;
         MyThread.Name = "Runtime Server Thread";
@@ -18,22 +20,32 @@ public class RuntimeServer   {
     {
         this.MyThread.Start();
     }
-    
-    public void run() {
-        try {
-            while (isRunning) {
+
+    public void run()
+    {
+        try
+        {
+            while (isRunning)
+            {
                 update();
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
 
-    public void update()   {
-        foreach (IRuntime r in runtimes) {
-            try {
+    public void update()
+    {
+        foreach (IRuntime r in runtimes)
+        {
+            try
+            {
                 r.update();
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 e.printStackTrace();
             }
         }

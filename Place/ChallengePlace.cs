@@ -1,4 +1,7 @@
 
+using Gopet.Data.Map;
+using Gopet.Data.Mob;
+using Gopet.IO;
 using Gopet.Util;
 
 public class ChallengePlace : GopetPlace {

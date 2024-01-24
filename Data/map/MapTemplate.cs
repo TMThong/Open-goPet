@@ -1,60 +1,62 @@
-
-public class MapTemplate
+namespace Gopet.Data.Map
 {
-    public int mapId;
-    public String mapName;
-    public int[] npc;
-    public Waypoint[] waypoints;
-    public int[] boss;
-
-    public void setMapId(int mapId)
+    public class MapTemplate
     {
-        this.mapId = mapId;
-    }
+        public int mapId;
+        public string mapName;
+        public int[] npc;
+        public Waypoint[] waypoints;
+        public int[] boss;
 
-    public void setMapName(String mapName)
-    {
-        this.mapName = mapName;
-    }
+        public void setMapId(int mapId)
+        {
+            this.mapId = mapId;
+        }
 
-    public void setNpc(int[] npc)
-    {
-        this.npc = npc;
-    }
+        public void setMapName(string mapName)
+        {
+            this.mapName = mapName;
+        }
 
-    public void setWaypoints(Waypoint[] waypoints)
-    {
-        this.waypoints = waypoints;
-    }
+        public void setNpc(int[] npc)
+        {
+            this.npc = npc;
+        }
 
-    public void setBoss(int[] boss)
-    {
-        this.boss = boss;
-    }
+        public void setWaypoints(Waypoint[] waypoints)
+        {
+            this.waypoints = waypoints;
+        }
 
-    public int getMapId()
-    {
-        return this.mapId;
-    }
+        public void setBoss(int[] boss)
+        {
+            this.boss = boss;
+        }
 
-    public String getMapName()
-    {
-        return this.mapName;
-    }
+        public int getMapId()
+        {
+            return mapId;
+        }
 
-    public int[] getNpc()
-    {
-        return this.npc;
-    }
+        public string getMapName()
+        {
+            return mapName;
+        }
 
-    public Waypoint[] getWaypoints()
-    {
-        return this.waypoints;
-    }
+        public int[] getNpc()
+        {
+            return npc;
+        }
 
-    public int[] getBoss()
-    {
-        return this.boss;
-    }
+        public Waypoint[] getWaypoints()
+        {
+            return waypoints;
+        }
 
+        public int[] getBoss()
+        {
+            return boss;
+        }
+
+    }
 }

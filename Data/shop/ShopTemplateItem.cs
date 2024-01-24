@@ -1,4 +1,5 @@
 
+using Gopet.Data.GopetItem;
 using Gopet.Util;
 
 public class ShopTemplateItem : DataVersion {
