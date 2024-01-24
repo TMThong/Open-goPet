@@ -1,4 +1,5 @@
 
+using Gopet.Data.Clan;
 using Gopet.Data.Collections;
 using Gopet.Util;
 

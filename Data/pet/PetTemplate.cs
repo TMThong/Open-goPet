@@ -1,4 +1,6 @@
 
+using Gopet.Util;
+
 public class PetTemplate
 {
 

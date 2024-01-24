@@ -37,13 +37,13 @@ public class MsgSender
                         {
                             if (this.session.isConnected())
                             {
-                                Message m = (Message)this.sendingMessage[0];
+                                Message m = this.sendingMessage[0];
                                 this.sendingMessage.RemoveAt(0);
                                 this.doSendMessage(m);
                             }
                         }
 
-                        Monitor.Enter(sendingMessage);
+                        Monitor.Wait(this.sendingMessage);
                         continue;
                     }
                 }
@@ -67,17 +67,17 @@ public class MsgSender
                 data = this.session.tea.encrypt(data);
             }
 
-            this.session.dos.Write(data.Length + 1);
-            this.session.dos.Write((sbyte)(m.isEncrypted ? 1 : 0));
-            this.session.dos.Write(data.bytes());
+            this.session.dos.WriteInt(data.Length + 1);
+            this.session.dos.Write(((sbyte)(m.isEncrypted ? 1 : 0)).toByte());
+            this.session.dos.Write(data);
             var10000 = this.session;
             var10000.sendsbyteCount += data.Length;
         }
         else
         {
-            this.session.dos.Write(0);
+            this.session.dos.WriteInt(0);
         }
-
+        Console.WriteLine("data length " + data.Length);
         var10000 = this.session;
         var10000.sendsbyteCount += 4;
         this.session.dos.Flush();

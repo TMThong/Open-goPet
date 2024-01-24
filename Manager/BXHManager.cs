@@ -16,7 +16,7 @@ public class BXHManager
         BXHThread.Name = "BXH Thread";
     }
 
-    public void strat()
+    public void start()
     {
         BXHThread.Start();
     }

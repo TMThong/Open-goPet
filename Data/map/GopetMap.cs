@@ -1,6 +1,7 @@
 
 
 using Gopet.Data.Collections;
+using Gopet.Util;
 
 public class GopetMap   {
 
@@ -89,8 +90,8 @@ public class GopetMap   {
                 return;
             }
         }
-        Place place = new GopetPlace(this, places.Count);
-        place.add(player);
-        addPlace(place);
+        Place place_L = new GopetPlace(this, places.Count);
+        place_L.add(player);
+        addPlace(place_L);
     }
 }

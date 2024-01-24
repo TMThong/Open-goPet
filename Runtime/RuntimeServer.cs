@@ -1,6 +1,6 @@
 
 using Gopet.Data.Collections;
-
+using Gopet.Util;
 public class RuntimeServer   {
 
     public ArrayList<IRuntime> runtimes = new  ();
@@ -14,6 +14,10 @@ public class RuntimeServer   {
         MyThread.Name = "Runtime Server Thread";
     }
 
+    public void start()
+    {
+        this.MyThread.Start();
+    }
     
     public void run() {
         try {

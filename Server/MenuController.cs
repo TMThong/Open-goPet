@@ -1,4 +1,5 @@
 
+using Gopet.Data.Clan;
 using Gopet.Data.Collections;
 using Gopet.Data.user;
 using Gopet.Util;
@@ -784,22 +785,22 @@ public class MenuController
                     switch (menuId)
                     {
                         case MENU_KIOSK_HAT:
-                            kiosk = marketPlace.getKiosk(GopetManager.KIOSK_HAT);
+                            kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_HAT);
                             break;
                         case MENU_KIOSK_WEAPON:
-                            kiosk = marketPlace.getKiosk(GopetManager.KIOSK_WEAPON);
+                            kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_WEAPON);
                             break;
                         case MENU_KIOSK_AMOUR:
-                            kiosk = marketPlace.getKiosk(GopetManager.KIOSK_AMOUR);
+                            kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_AMOUR);
                             break;
                         case MENU_KIOSK_GEM:
-                            kiosk = marketPlace.getKiosk(GopetManager.KIOSK_GEM);
+                            kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_GEM);
                             break;
                         case MENU_KIOSK_PET:
-                            kiosk = marketPlace.getKiosk(GopetManager.KIOSK_PET);
+                            kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_PET);
                             break;
                         case MENU_KIOSK_OHTER:
-                            kiosk = marketPlace.getKiosk(GopetManager.KIOSK_OTHER);
+                            kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_OTHER);
                             break;
                         default:
                             {
@@ -949,8 +950,8 @@ public class MenuController
                     }
 
                     Pet p = player.getPet();
-                    GopetPlace place = (GopetPlace)player.getPlace();
-                    if (place == null)
+                    GopetPlace place_Lc = (GopetPlace)player.getPlace();
+                    if (place_Lc == null)
                     {
                         return;
                     }
@@ -979,7 +980,7 @@ public class MenuController
                                 {
                                     player.playerData.skinItem = null;
                                     player.addItemToInventory(it);
-                                    place.sendMySkin(player);
+                                    place_Lc.sendMySkin(player);
                                     if (p != null)
                                     {
                                         p.applyInfo(player);
@@ -1001,7 +1002,7 @@ public class MenuController
                                 {
                                     player.playerData.wingItem = null;
                                     player.addItemToInventory(it);
-                                    place.sendUnEquipWing(player);
+                                    place_Lc.sendUnEquipWing(player);
                                     if (p != null)
                                     {
                                         p.applyInfo(player);
@@ -1638,7 +1639,7 @@ public class MenuController
                                     if (pet.skill[skillIndex][1] < 8)
                                     {
                                         player.controller.objectPerformed.put(OBJKEY_ITEM_UP_SKILL, itemSelect);
-                                        showYNDialog(DIALOG_UP_SKILL, Utilities.Format("Bạn có chắc muốn nâng cấp kỹ năng %s lên cấp %s \n với tỉ lệ (%s/) + %s/ bằng %s/ không?", petSkill.name, pet.skill[skillIndex][1] + 1, GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]], itemSelect.getTemp().getOptionValue()[0], GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]] + itemSelect.getTemp().getOptionValue()[0]).replace("/", "%"), player);
+                                        showYNDialog(DIALOG_UP_SKILL, Utilities.Format("Bạn có chắc muốn nâng cấp kỹ năng %s lên cấp %s \n với tỉ lệ (%s/) + %s/ bằng %s/ không?", petSkill.name, pet.skill[skillIndex][1] + 1, GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]], itemSelect.getTemp().getOptionValue()[0], GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]] + itemSelect.getTemp().getOptionValue()[0]).Replace("/", "%"), player);
                                     }
                                     else
                                     {
@@ -1737,7 +1738,7 @@ public class MenuController
                                     buffExp.set_buffPercent(itemSelect.getTemp().getOptionValue()[0]);
                                 }
                                 player.playerData.buffExp.addTime(GopetManager.TIME_BUFF_EXP);
-                                player.okDialog(Utilities.Format("Bạn đang được buff %s/ kinh nghiệm trong %s phút!", buffExp.getPercent(), Utilities.round(buffExp.getBuffExpTime() / 1000 / 60)).replace("/", "%"));
+                                player.okDialog(Utilities.Format("Bạn đang được buff %s/ kinh nghiệm trong %s phút!", buffExp.getPercent(), Utilities.round(buffExp.getBuffExpTime() / 1000 / 60)).Replace("/", "%"));
                                 break;
                             }
 
@@ -1842,23 +1843,24 @@ public class MenuController
                 switch (menuId)
                 {
                     case MENU_KIOSK_HAT:
-                        kiosk = marketPlace.getKiosk(GopetManager.KIOSK_HAT);
+                        kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_HAT);
                         break;
 
                     case MENU_KIOSK_GEM:
-                        kiosk = marketPlace.getKiosk(GopetManager.KIOSK_GEM);
+                        kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_GEM);
                         break;
                     case MENU_KIOSK_WEAPON:
-                        kiosk = marketPlace.getKiosk(GopetManager.KIOSK_WEAPON);
+                        kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_WEAPON);
                         break;
                     case MENU_KIOSK_AMOUR:
-                        kiosk = marketPlace.getKiosk(GopetManager.KIOSK_AMOUR);
+                        kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_AMOUR);
                         break;
                     case MENU_KIOSK_OHTER:
-                        kiosk = marketPlace.getKiosk(GopetManager.KIOSK_OTHER);
+                        kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_OTHER);
                         break;
                     case MENU_KIOSK_PET:
-                        kiosk = marketPlace.getKiosk(GopetManager.KIOSK_PET);
+                        kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_PET);
+                        kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_PET);
                         break;
                 }
                 kiosk.buy(index, player);
@@ -1950,7 +1952,8 @@ public class MenuController
                                             {
                                                 e.printStackTrace();
                                             }
-                                            ly {
+                                            finally
+                                            {
                                                 MySqlConnection.Close();
                                             }
                                         }
@@ -2079,7 +2082,7 @@ public class MenuController
                             txtInfo.add(petBattleText.getText());
                         }
 
-                        player.okDialog(Utilities.Format("Chúc mừng bạn nhận được: %s", String.Join(",", txtInfo.toArray(new String[0]))));
+                        player.okDialog(Utilities.Format("Chúc mừng bạn nhận được: %s", String.Join(",", txtInfo.ToArray())));
                     }
                     else
                     {
@@ -2223,6 +2226,7 @@ public class MenuController
                     player.redDialog("KHONG TON TAI MENU NAY");
                     Thread.Sleep(1000);
                 }
+                break;
         }
     }
 
@@ -2263,10 +2267,10 @@ public class MenuController
     private static PetSkill[] getPetSkills(Player player)
     {
         ArrayList<PetSkill> petSkills = GopetManager.NCLASS_PETSKILL_HASH_MAP.get(player.playerData.petSelected.getPetTemplate().getNclass());
-        return petSkills.toArray(new PetSkill[0]);
+        return petSkills.ToArray();
     }
 
-    static void selectNpcOption(int option, Player player)
+    public static void selectNpcOption(int option, Player player)
     {
         switch (option)
         {
@@ -2343,7 +2347,12 @@ public class MenuController
                 sendMenu(MENU_KIOSK_OHTER, player); break;
             case OP_SHOP_THUONG_NHAN_AND_XOA_XAM:
                 sendMenu(SHOP_THUONG_NHAN, player); break;
-            case OP_OWNER_KIOSK_HAT, OP_OWNER_KIOSK_WEAPON, OP_OWNER_KIOSK_AMOUR, OP_OWNER_KIOSK_GEM, OP_OWNER_KIOSK_PET, OP_OWNER_KIOSK_OHTER:
+            case OP_OWNER_KIOSK_OHTER:
+            case OP_OWNER_KIOSK_PET:
+            case OP_OWNER_KIOSK_GEM:
+            case OP_OWNER_KIOSK_AMOUR:
+            case OP_OWNER_KIOSK_WEAPON:
+            case OP_OWNER_KIOSK_HAT:
                 {
                     sbyte typeKiosk = 0;
                     switch (option)
@@ -2363,6 +2372,7 @@ public class MenuController
                     }
                     player.controller.showKiosk(typeKiosk);
                 }
+                break;
             case OP_REVIVAL_PET_AFTER_PK:
                 {
                     Pet pet = player.getPet();
@@ -3020,9 +3030,9 @@ public class MenuController
                                     case 1:
                                         if (clanMember.duty == Clan.TYPE_LEADER)
                                         {
-                                            if (clan.checkDuty(clan.TYPE_DEPUTY_LEADER))
+                                            if (clan.checkDuty(Clan.TYPE_DEPUTY_LEADER))
                                             {
-                                                memberSelect.duty = clan.TYPE_DEPUTY_LEADER;
+                                                memberSelect.duty = Clan.TYPE_DEPUTY_LEADER;
                                                 player.okDialog("Phong chức thành công");
                                                 Player onPlayer = PlayerManager.get(memberSelect.name);
                                                 if (onPlayer != null)
@@ -3044,9 +3054,9 @@ public class MenuController
                                     case 2:
                                         if (clanMember.duty == Clan.TYPE_LEADER || clanMember.duty == Clan.TYPE_DEPUTY_LEADER)
                                         {
-                                            if (clan.checkDuty(clan.TYPE_SENIOR))
+                                            if (clan.checkDuty(Clan.TYPE_SENIOR))
                                             {
-                                                memberSelect.duty = clan.TYPE_SENIOR;
+                                                memberSelect.duty = Clan.TYPE_SENIOR;
                                                 player.okDialog("Phong chức thành công");
                                                 Player onPlayer = PlayerManager.get(memberSelect.name);
                                                 if (onPlayer != null)
@@ -3067,7 +3077,7 @@ public class MenuController
                                     case 3:
                                         if (clanMember.duty == Clan.TYPE_LEADER || clanMember.duty == Clan.TYPE_DEPUTY_LEADER)
                                         {
-                                            memberSelect.duty = clan.TYPE_NORMAL;
+                                            memberSelect.duty = Clan.TYPE_NORMAL;
                                             player.okDialog("Phong chức thành công");
                                             Player onPlayer = PlayerManager.get(memberSelect.name);
                                             if (onPlayer != null)
@@ -3315,7 +3325,7 @@ public class MenuController
                         {
                             case MENU_KIOSK_PET_SELECT:
                                 player.playerData.pets.remove(pet);
-                                marketPlace.getKiosk(GopetManager.KIOSK_PET).addKioskItem(pet, priceItem, player);
+                                MarketPlace.getKiosk(GopetManager.KIOSK_PET).addKioskItem(pet, priceItem, player);
                                 player.controller.showKiosk(GopetManager.KIOSK_PET);
                                 break;
                             case MENU_KIOSK_HAT_SELECT:
@@ -3327,23 +3337,23 @@ public class MenuController
                                 switch (menuKioskId)
                                 {
                                     case MENU_KIOSK_HAT_SELECT:
-                                        marketPlace.getKiosk(GopetManager.KIOSK_HAT).addKioskItem(item, priceItem, player);
+                                        MarketPlace.getKiosk(GopetManager.KIOSK_HAT).addKioskItem(item, priceItem, player);
                                         player.controller.showKiosk(GopetManager.KIOSK_HAT);
                                         break;
                                     case MENU_KIOSK_GEM_SELECT:
-                                        marketPlace.getKiosk(GopetManager.KIOSK_GEM).addKioskItem(item, priceItem, player);
+                                        MarketPlace.getKiosk(GopetManager.KIOSK_GEM).addKioskItem(item, priceItem, player);
                                         player.controller.showKiosk(GopetManager.KIOSK_GEM);
                                         break;
                                     case MENU_KIOSK_WEAPON_SELECT:
-                                        marketPlace.getKiosk(GopetManager.KIOSK_WEAPON).addKioskItem(item, priceItem, player);
+                                        MarketPlace.getKiosk(GopetManager.KIOSK_WEAPON).addKioskItem(item, priceItem, player);
                                         player.controller.showKiosk(GopetManager.KIOSK_WEAPON);
                                         break;
                                     case MENU_KIOSK_AMOUR_SELECT:
-                                        marketPlace.getKiosk(GopetManager.KIOSK_AMOUR).addKioskItem(item, priceItem, player);
+                                        MarketPlace.getKiosk(GopetManager.KIOSK_AMOUR).addKioskItem(item, priceItem, player);
                                         player.controller.showKiosk(GopetManager.KIOSK_AMOUR);
                                         break;
                                     case MENU_KIOSK_PET_SELECT:
-                                        marketPlace.getKiosk(GopetManager.KIOSK_PET).addKioskItem(pet, priceItem, player);
+                                        MarketPlace.getKiosk(GopetManager.KIOSK_PET).addKioskItem(pet, priceItem, player);
                                         player.controller.showKiosk(GopetManager.KIOSK_PET);
                                         break;
                                     case MENU_KIOSK_OHTER_SELECT:
@@ -3351,7 +3361,7 @@ public class MenuController
                                         {
                                             Item itemCopy = new Item(item.itemTemplateId);
                                             itemCopy.count = count;
-                                            marketPlace.getKiosk(GopetManager.KIOSK_OTHER).addKioskItem(itemCopy, priceItem, player);
+                                            MarketPlace.getKiosk(GopetManager.KIOSK_OTHER).addKioskItem(itemCopy, priceItem, player);
                                             player.controller.showKiosk(GopetManager.KIOSK_OTHER);
                                             player.controller.subCountItem(item, count, GopetManager.NORMAL_INVENTORY);
                                         }
@@ -3451,7 +3461,8 @@ public class MenuController
                                 {
                                     e.printStackTrace();
                                 }
-                                finally {
+                                finally
+                                {
                                     MYSQLManager.updateSql(Utilities.Format("DO RELEASE_LOCK('gift_code_lock_%s');", code), MySqlConnection);
                                     MySqlConnection.Close();
                                 }
@@ -3576,7 +3587,7 @@ public class MenuController
                     {
                         if (player.checkIsAdmin())
                         {
-                             
+
                         }
                     }
                     break;

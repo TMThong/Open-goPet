@@ -1,4 +1,4 @@
- 
+using Gopet.Util;
 public class MarketMap : GopetMap {
 
     public MarketMap(int mapId_, bool canUpdate, MapTemplate mapTemplate) : base (mapId_, canUpdate, mapTemplate)

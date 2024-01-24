@@ -220,7 +220,7 @@ namespace Gopet.IO
             this.buffer = null;
         }
 
-        public void Close()
+        public void close()
         {
             this.buffer = null;
         }

@@ -28,7 +28,7 @@ public class MarketPlace : GopetPlace {
         }
     }
 
-    public Kiosk getKiosk(sbyte type) {
+    public static Kiosk getKiosk(sbyte type) {
         foreach (Kiosk kiosk in kiosks) {
             if (kiosk.kioskType == type) {
                 return kiosk;

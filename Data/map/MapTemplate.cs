@@ -1,11 +1,11 @@
 
 public class MapTemplate
 {
-    private int mapId;
-    private String mapName;
-    private int[] npc;
-    private Waypoint[] waypoints;
-    private int[] boss;
+    public int mapId;
+    public String mapName;
+    public int[] npc;
+    public Waypoint[] waypoints;
+    public int[] boss;
 
     public void setMapId(int mapId)
     {

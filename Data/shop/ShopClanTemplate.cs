@@ -1,5 +1,6 @@
 
 using Gopet.Data.Collections;
+using Gopet.Util;
 
 public class ShopClanTemplate {
 
@@ -19,6 +20,57 @@ public class ShopClanTemplate {
      *
      * @return
      */
+
+    public void setId(int Id)
+    {
+        this.Id = Id;
+    }
+
+    public void setOption(int[][] option)
+    {
+        this.option = option;
+    }
+
+    public void setComment(String comment)
+    {
+        this.comment = comment;
+    }
+
+    public void setPercent(float percent)
+    {
+        this.percent = percent;
+    }
+
+    public void setNeedShopClanLvl(int needShopClanLvl)
+    {
+        this.needShopClanLvl = needShopClanLvl;
+    }
+
+    public int getId()
+    {
+        return this.Id;
+    }
+
+    public int[][] getOption()
+    {
+        return this.option;
+    }
+
+    public String getComment()
+    {
+        return this.comment;
+    }
+
+    public float getPercent()
+    {
+        return this.percent;
+    }
+
+    public int getNeedShopClanLvl()
+    {
+        return this.needShopClanLvl;
+    }
+
     public ArrayList<ShopTemplateItem> next() {
         ArrayList<ShopTemplateItem> shopTemplateItems = new ArrayList<ShopTemplateItem>();
         for (int i = 0; i < option.Length; i++) {

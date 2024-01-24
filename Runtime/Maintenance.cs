@@ -1,4 +1,5 @@
 
+using Gopet.App;
 using Gopet.Util;
 
 public class Maintenance : IRuntime {
@@ -29,9 +30,9 @@ public class Maintenance : IRuntime {
                     if (needRestart) {
                         Main.server.stopServer();
                         String batchFilePath = PlatformHelper.currentDirectory() + "/run.bat";
-                        Runtime.
+                        /*Runtime.
                                 getRuntime().
-                                exec(new String[]{"cmd.exe", "/c", "start", batchFilePath});
+                                exec(new String[]{"cmd.exe", "/c", "start", batchFilePath});*/
                     }
                    
                 }

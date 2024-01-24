@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gopet.IO;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -18,7 +19,8 @@ namespace Gopet.IO
 
         public void writeSByte(int value)
         {
-            this.writeSByte((sbyte)value);
+            this.checkLenght(0);
+            this.buffer[this.posWrite++] = (sbyte)(value & 0xFF);
         }
 
         public void writeSByteUncheck(sbyte value)
@@ -96,7 +98,7 @@ namespace Gopet.IO
             }
         }
 
-        public void writelong(long value)
+        public void writeLong(long value)
         {
             this.checkLenght(8);
             for (int i = 7; i >= 0; i--)
@@ -128,16 +130,7 @@ namespace Gopet.IO
 
         public void writeUTF(string value)
         {
-            Encoding unicode = Encoding.Unicode;
-            Encoding encoding = Encoding.GetEncoding(65001);
-            byte[] bytes = unicode.GetBytes(value);
-            byte[] array = Encoding.Convert(unicode, encoding, bytes);
-            this.writeShort((short)array.Length);
-            this.checkLenght(array.Length);
-            foreach (sbyte value2 in array)
-            {
-                this.writeSByteUncheck(value2);
-            }
+            writeString(value);
         }
 
         public void write(sbyte value)
@@ -179,9 +172,9 @@ namespace Gopet.IO
             }
         }
 
-         
 
-        
+
+
 
         public byte convertSbyteToByte(sbyte var)
         {
@@ -193,22 +186,22 @@ namespace Gopet.IO
             byte[] array = new byte[var.Length];
             for (int i = 0; i < var.Length; i++)
             {
-                array[i] =  var[i].toByte();
+                array[i] = var[i].toByte();
             }
             return array;
         }
 
         public void Close()
         {
-            this.buffer = null;
+
         }
 
-        public void Close()
+        public void close()
         {
-            this.buffer = null;
+
         }
 
-        public void flush()
+        internal void flush()
         {
 
         }

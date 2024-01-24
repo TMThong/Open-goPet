@@ -1,5 +1,6 @@
- 
-public class ItemGem : DataVersion  {
+
+public class ItemGem : DataVersion
+{
 
     private int element;
     private String name;
@@ -7,10 +8,12 @@ public class ItemGem : DataVersion  {
     private int[] optionValue;
     private int lvl = 0;
     private int itemTemplateId;
-    private long timeUnequip = -1;
+    public long timeUnequip = -1;
 
-    public String getElementIcon() {
-        switch (element) {
+    public String getElementIcon()
+    {
+        switch (element)
+        {
             case GopetManager.FIRE_ELEMENT:
                 return "(fire)";
             case GopetManager.WATER_ELEMENT:
@@ -27,5 +30,79 @@ public class ItemGem : DataVersion  {
                 return "(dark)";
         }
         return "";
+
+
     }
+    public void setElement(int element)
+    {
+        this.element = element;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public void setOption(int[] option)
+    {
+        this.option = option;
+    }
+
+    public void setOptionValue(int[] optionValue)
+    {
+        this.optionValue = optionValue;
+    }
+
+    public void setLvl(int lvl)
+    {
+        this.lvl = lvl;
+    }
+
+    public void setItemTemplateId(int itemTemplateId)
+    {
+        this.itemTemplateId = itemTemplateId;
+    }
+
+    public void setTimeUnequip(long timeUnequip)
+    {
+        this.timeUnequip = timeUnequip;
+    }
+
+    public int getElement()
+    {
+        return this.element;
+    }
+
+    public String getName()
+    {
+        return this.name;
+    }
+
+    public int[] getOption()
+    {
+        return this.option;
+    }
+
+    public int[] getOptionValue()
+    {
+        return this.optionValue;
+    }
+
+    public int getLvl()
+    {
+        return this.lvl;
+    }
+
+    public int getItemTemplateId()
+    {
+        return this.itemTemplateId;
+    }
+
+    public long getTimeUnequip()
+    {
+        return this.timeUnequip;
+    }
+
+
+
 }

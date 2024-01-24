@@ -53,7 +53,7 @@ public class Player : IHandleMessage
 
     public void onMessage(Message ms)
     {
-        //        System.err.println(ms.id);
+        Console.WriteLine("PLAYER:  " + ms.id);
         try
         {
             if (!session.clientOK && ms.id != GopetCMD.CLIENT_INFO)
@@ -65,18 +65,20 @@ public class Player : IHandleMessage
             switch (ms.id)
             {
                 case GopetCMD.CLIENT_INFO:
-                    {
-                        CLIENT_TYPE = ms.reader().readsbyte();
-                        PROVIDER = ms.reader().readInt();
-                        ApplicationVersion = ms.reader().readUTF();
-                        info = ms.reader().readUTF();
-                        displayWidth = ms.reader().readInt();
-                        displayHeight = ms.reader().readInt();
-                        language = ms.reader().readUTF();
-                        Refcode = ms.reader().readUTF();
-                        session.setClientOK(true);
-                        break;
-                    }
+
+                    CLIENT_TYPE = ms.reader().readsbyte();
+                    PROVIDER = ms.reader().readInt();
+                    ApplicationVersion = ms.reader().readUTF();
+                    info = ms.reader().readUTF();
+                    displayWidth = ms.reader().readInt();
+                    displayHeight = ms.reader().readInt();
+                    language = ms.reader().readUTF();
+                    Refcode = ms.reader().readUTF();
+                    Console.WriteLine("BEGIN CLIENT INFO");
+                    session.setClientOK(true);
+                    Console.WriteLine("CLIENT INFO");
+                    break;
+
                 case GopetCMD.LOGIN:
                     {
                         login(ms.reader().readUTF(), ms.reader().readUTF(), ms.reader().readUTF());
@@ -99,13 +101,7 @@ public class Player : IHandleMessage
         catch (Exception e)
         {
             e.printStackTrace();
-            try
-            {
-                Thread.Sleep(1000);
-            }
-            catch (Exception ex)
-            {
-            }
+            Thread.Sleep(1000);
         }
     }
 

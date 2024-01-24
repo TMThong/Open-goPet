@@ -1,4 +1,6 @@
 
+using Gopet.App;
+using Gopet.Data.Clan;
 using Gopet.Data.Collections;
 using Gopet.Data.user;
 using Gopet.Util;
@@ -1064,7 +1066,7 @@ public class GameController
     {
 
         var serverDate = Utilities.GetCurrentDate();
-        if (player.playerData.loginDate.Day != serverDate.Day || player.playerData.loginDate.getMonth() != serverDate.getMonth() || player.playerData.loginDate.getYear() != serverDate.getYear())
+        if (player.playerData.loginDate.Day != serverDate.Day || player.playerData.loginDate.Month != serverDate.Month || player.playerData.loginDate.Year != serverDate.Year)
         {
             this.player.playerData.star = GopetManager.DAILY_STAR;
         }
@@ -1334,8 +1336,8 @@ public class GameController
             message.putbool(hasGem);
             if (hasGem)
             {
-                message.putlong(item.gemInfo.GetTimeMillisUnequip());
-                message.putInt(Utilities.round((item.gemInfo.GetTimeMillisUnequip() - Utilities.CurrentTimeMillis) / 1000L));
+                message.putlong(item.gemInfo.timeUnequip);
+                message.putInt(Utilities.round((item.gemInfo.timeUnequip - Utilities.CurrentTimeMillis) / 1000L));
             }
         }
         else
@@ -1344,8 +1346,8 @@ public class GameController
             message.putbool(hasGem);
             if (hasGem)
             {
-                message.putlong(item.gemInfo.GetTimeMillisUnequip());
-                message.putInt(Utilities.round((item.gemInfo.GetTimeMillisUnequip() - Utilities.CurrentTimeMillis) / 1000L));
+                message.putlong(item.gemInfo.timeUnequip);
+                message.putInt(Utilities.round((item.gemInfo.timeUnequip - Utilities.CurrentTimeMillis) / 1000L));
             }
             else
             {
@@ -1520,19 +1522,19 @@ public class GameController
                     }
                     if (item.petEuipId <= 0)
                     {
-                        for (Iterator<int> iterator = pet.equip.iterator(); iterator.hasNext();)
+                        foreach (var next in pet.equip.ToArray())
                         {
-                            int next = iterator.next();
+
                             Item it = selectItemEquipByItemId(next);
                             if (it == null)
                             {
-                                iterator.remove();
+                                pet.equip.remove(next);
                                 continue;
                             }
                             if (it.getTemp().getType() == item.getTemp().getType())
                             {
                                 it.petEuipId = -1;
-                                iterator.remove();
+                                pet.equip.remove(next);
                                 break;
                             }
                         }
@@ -2026,7 +2028,7 @@ public class GameController
     {
         objectPerformed.put(MenuController.OBJKEY_TYPE_SHOW_KIOSK, typeKiosk);
         MarketPlace marketPlace = (MarketPlace)player.getPlace();
-        Kiosk kiosk = marketPlace.getKiosk(typeKiosk);
+        Kiosk kiosk = MarketPlace.getKiosk(typeKiosk);
         SellItem sellItem = kiosk.getItemByUserId(player.user.user_id);
         Message m = messagePetSerive(GopetCMD.KIOSK);
         m.putsbyte(typeKiosk);
@@ -2047,7 +2049,7 @@ public class GameController
     {
         sbyte typeKiosk = (sbyte)objectPerformed.get(MenuController.OBJKEY_TYPE_SHOW_KIOSK);
         MarketPlace marketPlace = (MarketPlace)player.getPlace();
-        Kiosk kiosk = marketPlace.getKiosk(typeKiosk);
+        Kiosk kiosk = MarketPlace.getKiosk(typeKiosk);
         SellItem sellItem = kiosk.searchItem(itemId);
         if (sellItem != null)
         {
@@ -2094,10 +2096,10 @@ public class GameController
                 player.playerData.skinItem = null;
             }
         }
-        for (Map.Entry<sbyte, CopyOnWriteArrayList<Item>> entry : player.playerData.items )
+        foreach (var entry in player.playerData.items)
         {
             CopyOnWriteArrayList<Item> val = entry.Value;
-            for (Item item : val)
+            foreach (Item item in val)
             {
                 skinItem = item;
                 if (skinItem != null)
@@ -2396,7 +2398,7 @@ public class GameController
                 {
                     destStr = "\n Nếu thất bại trang bị của bạn sẽ mất";
                 }
-                MenuController.showYNDialog(MenuController.DIALOG_ENCHANT, Utilities.Format("Bạn có chắc muốn cường hóa %s với tỉ lệ (%s /) + %s/ với giá %s (ngoc) không?", itemEuip.getTemp().getName(), isGem ? GopetManager.PERCENT_OF_ENCHANT_GEM[itemEuip.lvl] : GopetManager.DISPLAY_PERCENT_ENCHANT[itemEuip.lvl], materialCrystal.getTemp().getOptionValue()[0], GopetManager.PRICE_ENCHANT[itemEuip.lvl]).replace('/', '%') + dropStr + destStr, player);
+                MenuController.showYNDialog(MenuController.DIALOG_ENCHANT, Utilities.Format("Bạn có chắc muốn cường hóa %s với tỉ lệ (%s /) + %s/ với giá %s (ngoc) không?", itemEuip.getTemp().getName(), isGem ? GopetManager.PERCENT_OF_ENCHANT_GEM[itemEuip.lvl] : GopetManager.DISPLAY_PERCENT_ENCHANT[itemEuip.lvl], materialCrystal.getTemp().getOptionValue()[0], GopetManager.PRICE_ENCHANT[itemEuip.lvl]).Replace('/', '%') + dropStr + destStr, player);
             }
         }
         else
@@ -3199,7 +3201,7 @@ public class GameController
                                 if (nextBool)
                                 {
                                     ArrayList<ItemTemplate> itemTemplate = GopetManager.mergeItemPet.get(typeItem);
-                                    ItemTemplate itemTemplateCreate = Utilities.randomArray(itemTemplate.toArray(new ItemTemplate[0]));
+                                    ItemTemplate itemTemplateCreate = Utilities.RandomArray(itemTemplate.ToArray());
                                     Item item = new Item(itemTemplateCreate.getItemId());
                                     item.count = 1;
                                     player.addItemToInventory(item);
@@ -3248,7 +3250,7 @@ public class GameController
                                 }
                                 else
                                 {
-                                    System.err.println("KHONG TIM THAY MANH ITEM TYPE = " + typePart);
+                                    //System.err.println("KHONG TIM THAY MANH ITEM TYPE = " + typePart);
                                 }
                             }
                         }
@@ -3311,7 +3313,7 @@ public class GameController
         CopyOnWriteArrayList<Item> items = player.playerData.getInventoryOrCreate(GopetManager.GEM_INVENTORY);
         Message m = messagePetSerive(GopetCMD.SHOW_GEM_INVENTORY);
         m.putInt(items.Count);
-        for (Item item : items)
+        foreach (Item item in items)
         {
             m.putInt(item.itemId);
             m.putInt(item.getTemp().getIconId());
@@ -3444,7 +3446,7 @@ public class GameController
             }
             else
             {
-                if (item.gemInfo.GetTimeMillisUnequip() > 0)
+                if (item.gemInfo.timeUnequip > 0)
                 {
                     player.redDialog("Vật phẩm đang tháo");
                 }
@@ -3467,9 +3469,9 @@ public class GameController
         {
             if (item.gemInfo != null)
             {
-                if (item.gemInfo.GetTimeMillisUnequip() > 0)
+                if (item.gemInfo.timeUnequip > 0)
                 {
-                    if (item.gemInfo.GetTimeMillisUnequip() < Utilities.CurrentTimeMillis)
+                    if (item.gemInfo.timeUnequip < Utilities.CurrentTimeMillis)
                     {
                         ItemGem itemGem = item.gemInfo;
                         item.gemInfo = null;
@@ -3536,7 +3538,7 @@ public class GameController
         m.putsbyte(0);
         m.putsbyte(0);
         m.putInt(ClanManager.clans.Count);
-        for (Clan clan : ClanManager.clans)
+        foreach (Clan clan in ClanManager.clans)
         {
             m.putInt(clan.getClanId());
             m.putInt(-1);

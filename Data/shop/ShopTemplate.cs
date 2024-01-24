@@ -52,4 +52,9 @@ public class ShopTemplate : DataVersion {
     {
         return this.shopTemplateItems;
     }
+
+    public string getName()
+    {
+        return this.name;
+    }
 }

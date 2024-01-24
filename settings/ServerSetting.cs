@@ -1,12 +1,13 @@
- 
-public class ServerSetting : Settings {
+
+public class ServerSetting : Settings
+{
 
     public static readonly ServerSetting instance = new ServerSetting();
 
     public int portGopetServer { get; protected set; }
     public int portHttpServer { get; protected set; }
     public String webDomainName { get; protected set; }
-    public bool initLog { get; protected set; } 
+    public bool initLog { get; protected set; }
     public String outputFileName { get; protected set; }
     public String errorFileName { get; protected set; }
     public int hourMaintenance { get; protected set; }
@@ -17,14 +18,16 @@ public class ServerSetting : Settings {
     public String messageWhenLogin { get; protected set; }
     public String apiKey { get; protected set; }
 
-    public ServerSetting() {
-        
-            load(new SettingsFile("server.json"));
-        
+    public ServerSetting()
+    {
+
+        load(new SettingsFile("server.json"));
+
     }
 
-    
-    public void load(SettingsFile settingsFile) {
+
+    public void load(SettingsFile settingsFile)
+    {
         portGopetServer = settingsFile.Data.portGopetServer;
         portHttpServer = settingsFile.Data.portHttpServer;
         webDomainName = settingsFile.Data.webDomainName;
@@ -40,8 +43,9 @@ public class ServerSetting : Settings {
         apiKey = settingsFile.Data.apiKey;
     }
 
-    
-    public String toString() {
+
+    public String toString()
+    {
         return "ServerSetting{" + "portGopetServer=" + portGopetServer + ", portHttpServer=" + portHttpServer + ", webDomainName=" + webDomainName + ", initLog=" + initLog + ", outputFileName=" + outputFileName + ", errorFileName=" + errorFileName + ", hourMaintenance=" + hourMaintenance + ", minMaintenance=" + minMaintenance + ", isOnlyAdminLogin=" + isOnlyAdminLogin + ", isServerTest=" + isServerTest + ", isShowMessageWhenLogin=" + isShowMessageWhenLogin + ", messageWhenLogin=" + messageWhenLogin + ", apiKey=" + apiKey + '}';
     }
 }

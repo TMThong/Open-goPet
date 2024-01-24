@@ -242,7 +242,7 @@ namespace Gopet.Util
                 text = text.Insert(indexOf, "{" + num + "}");
                 num++;
             }
-            return Utilities.Format(text, objects);
+            return string.Format(text, objects);
         }
 
         public static void printStackTrace(this Exception e)
@@ -252,7 +252,7 @@ namespace Gopet.Util
 
         public static int round(float value)
         {
-            return (int)Utilities.round(value);
+            return (int)Math.Round(value);
         }
     }
 }

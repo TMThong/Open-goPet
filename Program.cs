@@ -4,7 +4,8 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            Gopet.App.Main.StartServer(args);
+            Console.ReadLine();
         }
     }
 }

@@ -62,6 +62,16 @@ namespace Gopet.IO
             writer.Flush();
         }
 
+        public static void WriteInt(this BinaryWriter writer, int value)
+        {
+            sbyte[] buffer = new sbyte[4];
+            buffer[0] = (sbyte)((value >> 24) & 0xFF);
+            buffer[1] = (sbyte)((value >> 16) & 0xFF);
+            buffer[2] = (sbyte)((value >> 8) & 0xFF);
+            buffer[3] = (sbyte)((value) & 0xFF);
+            writer.Write(buffer);
+        }
+
         public static int ReadJavaInt(this BinaryReader reader)
         {
             int ch1 = reader.ReadByte();

@@ -1,4 +1,6 @@
- 
+
+using Gopet.Util;
+
 public class BuffExp : DataVersion {
 
      
@@ -44,4 +46,45 @@ public class BuffExp : DataVersion {
             }
         }
     }
+
+    public void setBuffExpTime(long buffExpTime)
+    {
+        this.buffExpTime = buffExpTime;
+    }
+
+    public void setItemTemplateIdBuff(int itemTemplateIdBuff)
+    {
+        this.itemTemplateIdBuff = itemTemplateIdBuff;
+    }
+
+    public void set_buffPercent(float _buffPercent)
+    {
+        this._buffPercent = _buffPercent;
+    }
+
+    public void setCurrentTime(long currentTime)
+    {
+        this.currentTime = currentTime;
+    }
+
+    public long getBuffExpTime()
+    {
+        return this.buffExpTime;
+    }
+
+    public int getItemTemplateIdBuff()
+    {
+        return this.itemTemplateIdBuff;
+    }
+
+    public float get_buffPercent()
+    {
+        return this._buffPercent;
+    }
+
+    public long getCurrentTime()
+    {
+        return this.currentTime;
+    }
+
 }

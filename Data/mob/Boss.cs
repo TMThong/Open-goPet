@@ -5,9 +5,9 @@ public class Boss : Mob
 
     private BossTemplate bossTemplate;
 
-    private bool isTimeOut = false;
+    public bool isTimeOut = false;
 
-    private long timeoutMilis = 0L;
+    public long timeoutMilis = 0L;
 
     public Boss(int bossTemplateId, MobLocation mobLocation)
     {
@@ -62,5 +62,10 @@ public class Boss : Mob
     public String getName()
     {
         return bossTemplate.getName();
+    }
+
+    internal BossTemplate getBossTemplate()
+    {
+        return this.bossTemplate;
     }
 }

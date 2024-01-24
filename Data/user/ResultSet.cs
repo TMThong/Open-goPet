@@ -26,7 +26,14 @@ namespace Gopet.Data.user
 
         public int getInt(string columnName)
         {
-            return this.SqlDataReader.GetInt32(columnName);
+            try
+            {
+                return this.SqlDataReader.GetInt32(columnName);
+            }
+            catch
+            {
+                return 0;
+            }
         }
 
         public long getlong(string columnName)
@@ -46,12 +53,19 @@ namespace Gopet.Data.user
 
         public sbyte getByte(string columnName)
         {
-            return this.SqlDataReader.GetSByte(columnName);
+            return (sbyte)(this.SqlDataReader.GetInt32(columnName));
         }
 
         public string getString(string columnName)
         {
-            return this.SqlDataReader.GetString(columnName);
+            try
+            {
+                return this.SqlDataReader.GetString(columnName);
+            }
+            catch
+            {
+                return "";
+            }
         }
 
         public BigInt getBigDecimal(string columnName)
@@ -65,12 +79,12 @@ namespace Gopet.Data.user
             this.Command.Dispose();
         }
 
-        internal int getsbyte(string v)
+        internal sbyte getsbyte(string v)
         {
-            throw new NotImplementedException();
+            return getByte(v);
         }
 
-        
+
 
         public DateTime getDateTime(string columnName)
         {
@@ -80,6 +94,20 @@ namespace Gopet.Data.user
         public bool getbool(string columnName)
         {
             return this.SqlDataReader.GetBoolean(columnName);
+        }
+
+        internal long getlongExpire(string expire)
+        {
+            try
+            {
+                object o = this.SqlDataReader[expire];
+                if (o != null)
+                {
+                    return (long)o;
+                }
+            }
+            catch { }
+            return -1;
         }
 
         public class BigInt

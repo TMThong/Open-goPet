@@ -8,9 +8,9 @@ public class ChallengeMap : GopetMap {
 
      
     public override void addRandom(Player player)   {
-         foreach (Place place in places) {
-            if (place.canAdd(player)) {
-                place.add(player);
+         foreach (Place place_lc in places) {
+            if (place_lc.canAdd(player)) {
+                place_lc.add(player);
                 return;
             }
         }

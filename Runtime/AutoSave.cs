@@ -1,4 +1,7 @@
- 
+
+
+using Gopet.Data.Clan;
+using Gopet.Util;
 
 public class AutoSave : IRuntime {
 

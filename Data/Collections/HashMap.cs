@@ -47,7 +47,7 @@ namespace Gopet.Data.Collections
 
         public void put(TKey key, Tvalue value)
         {
-            base.Add(key, value);
+            base[key] = value;
         }
 
         public bool ContainsKey(TKey key)

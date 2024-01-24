@@ -1,10 +1,12 @@
- 
-public class ClanPotentialSkill {
+
+public class ClanPotentialSkill
+{
 
     private int buffId;
     private int point;
-    
-    public  void addPoint(int skillpoint) {
+
+    public void addPoint(int skillpoint)
+    {
         point += skillpoint;
     }
 
@@ -28,9 +30,5 @@ public class ClanPotentialSkill {
         return this.point;
     }
 
-    public final void addPoint(int skillpoint)
-    {
-        this.point += skillpoint;
-    }
 
 }

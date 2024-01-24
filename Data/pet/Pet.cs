@@ -1,68 +1,71 @@
 
 using Gopet.Data.Collections;
+using Gopet.Util;
 
-public class Pet : GameObject {
+public class Pet : GameObject
+{
 
-    
+
     public int petIdTemplate;
-    
+
     public bool petDieByPK = false;
-     
+
     public int petId;
     public int star = 0;
-     
+
     public int lvl = 1;
-     
+
     public long exp = 0;
 
-     
+
     public String name = null;
     public int str, agi, _int;
 
     /**
      * Điểm tiềm năng
      */
-     
+
     public int tiemnang_point = 0;
 
     /**
      * Điểm kỹ năng , dùng để học kỹ năng
      */
-    
+
     public int skillPoint = 0;
 
     /**
      * Dữ liệu về skill skill[*][0] là skillId skill[*][1] là cấp của kỹ năng
      */
-     
-    public int[][] skill = new int[0][0];
+
+    public int[][] skill = new int[0][];
 
     /**
      * Này là điểm tiềm năng Dùng trong luyện chỉ số Giúp tăng chỉ số
      * str,agi,int tiemnang[0] là str tiemnang[1] là agi tiemnang[2] là int
      */
-     
-    public int[] tiemnang = new int[]{0, 0, 0};
+
+    public int[] tiemnang = new int[] { 0, 0, 0 };
 
     /**
      * Hình xăm của pet chỉ thêm trong giao diện xăm hình
      */
- 
-    public CopyOnWriteArrayList<PetTatto> tatto =new ();
+
+    public CopyOnWriteArrayList<PetTatto> tatto = new();
     /**
      * Các vật phẩm mà pet đã trang bị
      */
-     
+
     public ArrayList<int> equip = new();
-     
+
     public bool isUpTier = false;
-     
+
     public int pointTiemNangLvl = 3;
 
-    
+
     public bool wasSell = false;
 
-    public Pet(int petIdTemplate) {
+    public Pet(int petIdTemplate)
+    {
         this.petIdTemplate = petIdTemplate;
         maxHp = getPetTemplate().getHp();
         hp = maxHp;
@@ -73,85 +76,112 @@ public class Pet : GameObject {
         _int = getPetTemplate().getInt();
     }
 
-    public PetTemplate getPetTemplate() {
+    public PetTemplate getPetTemplate()
+    {
         return GopetManager.PETTEMPLATE_HASH_MAP.get(petIdTemplate);
     }
 
-    public int getPetIdTemplate() {
+    public int getPetIdTemplate()
+    {
         return petIdTemplate;
     }
 
-    public int getAgi() {
+    public int getAgi()
+    {
         return agi + tiemnang[1];
     }
 
-    public int getInt() {
+    public int getInt()
+    {
         return _int + tiemnang[2];
     }
 
-    public int getStr() {
+    public int getStr()
+    {
         return str + tiemnang[0];
     }
 
-    public void addExp(int exp) {
+    public void addExp(int exp)
+    {
         this.exp += exp;
     }
 
-    public void addHp(int i) {
-        if (hp + i > maxHp) {
+    public void addHp(int i)
+    {
+        if (hp + i > maxHp)
+        {
             hp = maxHp;
-        } else {
+        }
+        else
+        {
             hp += i;
         }
     }
 
-    public void subHp(int i) {
-        if (hp - i <= 0) {
+    public void subHp(int i)
+    {
+        if (hp - i <= 0)
+        {
             hp = 0;
-        } else {
+        }
+        else
+        {
             hp -= i;
         }
     }
 
-    public void addMp(int i) {
-        if (mp + i > maxMp) {
+    public void addMp(int i)
+    {
+        if (mp + i > maxMp)
+        {
             mp = maxMp;
-        } else {
+        }
+        else
+        {
             mp += i;
         }
     }
 
-    public void addSkill(int skill, int skillLv) {
+    public void addSkill(int skill, int skillLv)
+    {
         int[][] oldSkillList = this.skill;
-        this.skill = new int[oldSkillList.Length + 1][2];
-        for (int i = 0; i < oldSkillList.Length; i++) {
-            int[] is = oldSkillList[i];
-            this.skill[i] = is;
+        this.skill = new int[oldSkillList.Length + 1][];
+        this.skill[oldSkillList.Length - 1] = new int[2];
+        for (int i = 0; i < oldSkillList.Length; i++)
+        {
+            int[] is_ = oldSkillList[i];
+            this.skill[i] = is_;
         }
-        this.skill[oldSkillList.Length] = new int[]{skill, skillLv};
+        this.skill[oldSkillList.Length] = new int[] { skill, skillLv };
     }
 
-    public PetSkill[] getSkills() {
+    public PetSkill[] getSkills()
+    {
         PetSkill[] petSkills = new PetSkill[skill.Length];
-        for (int i = 0; i < skill.Length; i++) {
+        for (int i = 0; i < skill.Length; i++)
+        {
             int[] skillInfo = skill[i];
             petSkills[i] = GopetManager.PETSKILL_HASH_MAP.get(skillInfo[0]);
         }
         return petSkills;
     }
 
-    public void lvlUP() {
+    public void lvlUP()
+    {
         this.lvl++;
 
         this.tiemnang_point += pointTiemNangLvl;
 
-        if (this.lvl == 3 || this.lvl == 5 || this.lvl == 10) {
+        if (this.lvl == 3 || this.lvl == 5 || this.lvl == 10)
+        {
             this.skillPoint++;
         }
     }
 
-    public sbyte getNClassIcon() {
-        switch (getPetTemplate().getNclass()) {
+    public sbyte getNClassIcon()
+    {
+        switch (getPetTemplate().getNclass())
+        {
             case GopetManager.Fighter:
             case GopetManager.Archer:
                 return 0;
@@ -167,28 +197,35 @@ public class Pet : GameObject {
         return 99;
     }
 
-    public int getAtk() {
+    public int getAtk()
+    {
         return atk + Utilities.round(str / 2) + (tiemnang[0] / 2);
     }
 
-    public int getDef() {
+    public int getDef()
+    {
         return def + tiemnang[1];
     }
 
-    public String getNameWithoutStar() {
-        if (name != null) {
+    public String getNameWithoutStar()
+    {
+        if (name != null)
+        {
             return name;
         }
         return getPetTemplate().getName();
     }
 
-    public String getNameWithStar() {
+    public String getNameWithStar()
+    {
         String name = getNameWithoutStar() + " ";
-        for (int i = 0; i < star; i++) {
+        for (int i = 0; i < star; i++)
+        {
             name += "(sao)";
         }
 
-        for (int i = 0; i < 5 - star; i++) {
+        for (int i = 0; i < 5 - star; i++)
+        {
             name += "(saoden)";
         }
         return name;
@@ -200,12 +237,15 @@ public class Pet : GameObject {
      * @param item Trang bị dành cho pet
      * @return nếu không phải sẽ trả lại kết quá sai
      */
-    public static bool canEuip(Item item) {
-        if (item == null) {
+    public static bool canEuip(Item item)
+    {
+        if (item == null)
+        {
             return false;
         }
         ItemTemplate itemTemplate = item.getTemp();
-        switch (itemTemplate.getType()) {
+        switch (itemTemplate.getType())
+        {
             case GopetManager.PET_EQUIP_ARMOUR:
             case GopetManager.PET_EQUIP_GLOVE:
             case GopetManager.PET_EQUIP_HAT:
@@ -219,30 +259,33 @@ public class Pet : GameObject {
     /**
      * Áp dụng chỉ số sao khi mặc đồ hoặc thay đổi
      */
-    public void applyInfo(Player player)   {
-        updateAttr(player);
+    public void applyInfo(Player player)
+    {
         this.atk = 0;
         this.def = 0;
-//        this.maxHp = 0;   
-//        this.maxMp = 0;
+        //        this.maxHp = 0;   
+        //        this.maxMp = 0;
         this.maxHp = getPetTemplate().getHp() + (tiemnang[2] * 10);
         this.maxMp = getPetTemplate().getMp() + (tiemnang[2] * 10);
-        for (Iterator<int> iterator = equip.iterator(); iterator.hasNext();) {
-            int next = iterator.next();
+        foreach (var next in equip.ToArray())
+        {
             Item it = player.controller.selectItemEquipByItemId(next);
-            if (it == null) {
-                iterator.remove();
+            if (it == null)
+            {
+                equip.remove(next);
                 continue;
             }
-            if (it.petEuipId != petId) {
-                iterator.remove();
+            if (it.petEuipId != petId)
+            {
+                equip.remove(next);
                 it.petEuipId = -1;
                 player.Popup(Utilities.Format("Hệ thống tự gỡ vật phẩm do phiên bản trước có lỗi, vui lòng đeo %s lại", it.getTemp().getName()));
                 continue;
             }
 
-            if (this.getAgi() < it.getTemp().getRequireAgi() || this.getStr() < it.getTemp().getRequireStr() || this.getInt() < it.getTemp().getRequireInt()) {
-                iterator.remove();
+            if (this.getAgi() < it.getTemp().getRequireAgi() || this.getStr() < it.getTemp().getRequireStr() || this.getInt() < it.getTemp().getRequireInt())
+            {
+                equip.remove(next);
                 it.petEuipId = -1;
                 player.Popup(Utilities.Format("Pet của bạn đã tự tháo trang bị %s do pet cảm thấy khó chịu vì không đủ chỉ số", it.getTemp().getName()));
                 continue;
@@ -254,7 +297,8 @@ public class Pet : GameObject {
             this.maxMp += it.getMp();
         }
 
-        for (PetTatto petTatto : tatto) {
+        foreach (PetTatto petTatto in tatto)
+        {
             this.atk += petTatto.getAtk();
             this.def += petTatto.getDef();
             this.maxHp += petTatto.getHp();
@@ -263,14 +307,17 @@ public class Pet : GameObject {
 
         ArrayList<Item> otherItems = new();
         Item skinItem = player.playerData.skinItem;
-        if (skinItem != null) {
+        if (skinItem != null)
+        {
             otherItems.add(skinItem);
         }
         Item wingItem = player.playerData.wingItem;
-        if (wingItem != null) {
+        if (wingItem != null)
+        {
             otherItems.add(wingItem);
         }
-        for (Item it : otherItems) {
+        foreach (Item it in otherItems)
+        {
             this.atk += it.getAtk();
             this.def += it.getDef();
             this.maxHp += it.getHp();
@@ -278,93 +325,123 @@ public class Pet : GameObject {
         }
         player.controller.checkExpire();
         player.controller.sendMyPetInfo();
-         
+
     }
 
-     
 
-    public int getSkillIndex(int skillId) {
-        for (int i = 0; i < skill.Length; i++) {
+
+    public int getSkillIndex(int skillId)
+    {
+        for (int i = 0; i < skill.Length; i++)
+        {
             int[] is2 = skill[i];
-            if (is2[0] == skillId) {
+            if (is2[0] == skillId)
+            {
                 return i;
             }
         }
         return -1;
     }
 
-    public void subExpPK(long expSub) {
-        if (this.exp - expSub > GopetManager.MIN_PET_EXP_PK) {
+    public void subExpPK(long expSub)
+    {
+        if (this.exp - expSub > GopetManager.MIN_PET_EXP_PK)
+        {
             this.exp -= expSub;
-        } else {
+        }
+        else
+        {
             this.exp = GopetManager.MIN_PET_EXP_PK;
         }
     }
 
-    public PetTatto selectTattoById(int tattooId)   {
+    public PetTatto selectTattoById(int tattooId)
+    {
         int left = 0;
         int right = tatto.Count - 1;
-        while (left <= right) {
+        while (left <= right)
+        {
             int mid = left + (right - left) / 2;
             PetTatto midTattoo = tatto.get(mid);
-            if (midTattoo.tattoId == tattooId) {
+            if (midTattoo.tattoId == tattooId)
+            {
                 return midTattoo;
             }
-            if (midTattoo.tattoId < tattooId) {
+            if (midTattoo.tattoId < tattooId)
+            {
                 left = mid + 1;
-            } else {
+            }
+            else
+            {
                 right = mid - 1;
             }
         }
         return null;
     }
 
-    public void addTatto(PetTatto petTatto) {
+    sealed class PetTattoComparer : IComparer<PetTatto>
+    {
+        public int Compare(PetTatto? obj1, PetTatto? obj2)
+        {
+            return obj1.tattoId - obj2.tattoId;
+        }
+    }
+
+
+    public void addTatto(PetTatto petTatto)
+    {
         tatto.add(petTatto);
-        while (true) {
+        while (true)
+        {
             petTatto.tattoId = Utilities.nextInt(1, int.MaxValue - 2);
             bool flag = true;
-            for (PetTatto item1 : tatto) {
-                if (item1 != petTatto) {
-                    if (item1.tattoId == petTatto.tattoId) {
+            foreach (PetTatto item1 in tatto)
+            {
+                if (item1 != petTatto)
+                {
+                    if (item1.tattoId == petTatto.tattoId)
+                    {
                         flag = false;
                     }
                 }
             }
-            if (flag) {
+            if (flag)
+            {
                 break;
             }
         }
-        tatto.sort(new Comparator<PetTatto>() {
-             
-            public int compare(PetTatto obj1, PetTatto obj2) {
-                return obj1.tattoId - obj2.tattoId;
-            }
-        });
+        tatto.Sort(new PetTattoComparer());
     }
 
-    public String getDesc() {
+    public String getDesc()
+    {
         ArrayList<String> infoStrings = new();
         infoStrings.add(Utilities.FormatNumber(exp) + " exp ");
 
-        if (getAtk() > 0) {
+        if (getAtk() > 0)
+        {
             infoStrings.add(getAtk() + " (atk) ");
         }
-        if (getDef() > 0) {
+        if (getDef() > 0)
+        {
             infoStrings.add(getDef() + " (def) ");
         }
-        if (getHp() > 0) {
+        if (getHp() > 0)
+        {
             infoStrings.add(getHp() + " (hp) ");
         }
-        if (getMp() > 0) {
+        if (getMp() > 0)
+        {
             infoStrings.add(getMp() + " (mp) ");
         }
 
         ArrayList<String> tattooStrings = new();
 
         bool flag = false;
-        for (PetTatto petTatto : tatto) {
-            if (!flag) {
+        foreach (PetTatto petTatto in tatto)
+        {
+            if (!flag)
+            {
                 tattooStrings.add(". Xăm: " + petTatto.getName());
                 flag = true;
                 continue;
@@ -376,5 +453,5 @@ public class Pet : GameObject {
         return desc + Utilities.Format("  lvl: %s , ", lvl) + String.Join(" , ", infoStrings) + String.Join(" , ", tattooStrings);
     }
 
-     
+
 }

@@ -4,7 +4,7 @@ using Gopet.IO;
 public class Message
 {
 
-    public int id;
+    public sbyte id;
 
     private DataOutputStream dos;
     private DataInputStream dis;
@@ -19,7 +19,7 @@ public class Message
     public Message(int command, bool isEncrypted)
     {
         this.isEncrypted = false;
-        this.id = command;
+        this.id = (sbyte)(command & 0xFF);
         this.isEncrypted = isEncrypted;
     }
 
@@ -121,7 +121,7 @@ public class Message
     public void putlong(long value)
     {
 
-        this.writer().writelong(value);
+        this.writer().writeLong(value);
 
     }
 

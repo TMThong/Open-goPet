@@ -1,13 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package data.mob;
-
-/**
- *
- * @author MINH THONG
- */
+ 
 public class MobLvInfo {
 
     private int lvl , hp, strength, exp;

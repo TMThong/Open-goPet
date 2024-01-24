@@ -1,6 +1,7 @@
 
 using Gopet.Data.Collections;
 using Gopet.Data.user;
+using Gopet.Util;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 
@@ -25,7 +26,7 @@ public class PlayerData
     public sbyte waypointIndex = -1;
     public long deltaTimeQuestion = Utilities.CurrentTimeMillis;
     public sbyte questIndex = 1;
-    public DateTime loginDateTime;
+    public DateTime loginDate;
     public int star = 0;
     public Item skinItem;
     public Item wingItem;
@@ -52,7 +53,7 @@ public class PlayerData
         playerData.charID = result.getInt("ID");
         playerData.gender = (sbyte)result.getInt("gender");
         playerData.name = result.getString("name");
-        playerData.loginDateTime = result.getDateTime("loginDateTime");
+        playerData.loginDate = result.getDateTime("loginDate");
         playerData.coin = result.getBigDecimal("coin").longValue();
         playerData.gold = result.getBigDecimal("gold").longValue();
         playerData.star = result.getInt("star");
@@ -80,7 +81,7 @@ public class PlayerData
         if (!string.IsNullOrEmpty(favouriteList))
         {
 
-            playerData.favouriteList = JsonConvert.DeserializeObject<ArrayList<int>>(items);
+            playerData.favouriteList = JsonConvert.DeserializeObject<ArrayList<int>>(favouriteList);
         }
 
         playerData.isFirstFree = result.getsbyte("isFirstFree") == 1;
@@ -180,7 +181,7 @@ public class PlayerData
             "pets = '" + JsonManager.ToJson(pets) + "'",
             "petSelected = '" + JsonManager.ToJson(petSelected) + "'",
             "isFirstFree = " + (isFirstFree ? "1" : "0"),
-            "loginDateTime = '" + Utilities.ToDateString(loginDateTime) + "'",
+            "loginDate = '" + Utilities.ToDateString(loginDate) + "'",
             "star = " + star,
             "skin = '" + JsonManager.ToJson(skinItem) + "'",
             "wing = '" + JsonManager.ToJson(wingItem) + "'",

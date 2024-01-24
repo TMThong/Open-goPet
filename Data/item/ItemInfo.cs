@@ -1,4 +1,6 @@
- 
+
+using Gopet.Util;
+
 public class ItemInfo {
 
     public int id, value;
@@ -26,9 +28,9 @@ public class ItemInfo {
         bool canFormat = GopetManager.itemInfoCanFormat.ContainsKey(id);
         if (canFormat) {
             if (GopetManager.itemInfoIsPercent.get(id)) {
-                return Utilities.Format(GopetManager.itemInfoName.get(id), value / 100f).replace('/', '%');
+                return Utilities.Format(GopetManager.itemInfoName.get(id), value / 100f).Replace('/', '%');
             }
-            return Utilities.Format(GopetManager.itemInfoName.get(id), value).replace('/', '%');
+            return Utilities.Format(GopetManager.itemInfoName.get(id), value).Replace('/', '%');
         }
         return GopetManager.itemInfoName.get(id);
     }

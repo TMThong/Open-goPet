@@ -1,6 +1,7 @@
 
 
 using Gopet.Data.Collections;
+using Gopet.Util;
 
 public class Item : DataVersion {
     
@@ -8,7 +9,7 @@ public class Item : DataVersion {
      
     public int itemTemplateId = -1;
    
-    public String itemUID = Utilities.getUID();
+    public String itemUID = Utilities.GetUID();
     
     public int count = 0;
    
@@ -58,11 +59,11 @@ public class Item : DataVersion {
 
                
 
-                return Utilities.Format("+%s (atk) +%s (def) +%s (hp) +%s (mp)", itemTemplate.getAtk(), itemTemplate.getDef(), itemTemplate.getHp(), itemTemplate.getMp()) + " (HSD: " + Utilities.dateFormatVI.format(expire) + " )";
+                return Utilities.Format("+%s (atk) +%s (def) +%s (hp) +%s (mp)", itemTemplate.getAtk(), itemTemplate.getDef(), itemTemplate.getHp(), itemTemplate.getMp()) + " (HSD: " + Utilities.ToDateString(Utilities.GetDate(expire)) + " )";
             case GopetManager.WING_ITEM:
                 String strExpire = "";
                 if (expire > 0) {
-                    strExpire = " (HSD: " + Utilities.dateFormatVI.format(expire) + " )";
+                    strExpire = " (HSD: " + Utilities.GetFormatNumber(expire) + " )";
                 } else {
                     strExpire = "Hạn sử dụng đến : vĩnh viễn .";
                 }
@@ -70,7 +71,7 @@ public class Item : DataVersion {
         }
 
         if (expire > 0) {
-            return getTemp().getDescription() + " (HSD: " + Utilities.dateFormatVI.format(expire) + " )";
+            return getTemp().getDescription() + " (HSD: " + Utilities.GetFormatNumber(expire) + " )";
         }
         return getTemp().getDescription();
     }
@@ -117,7 +118,7 @@ public class Item : DataVersion {
 
     public static CopyOnWriteArrayList<Item> search(int type, CopyOnWriteArrayList<Item> listNeedSearchItems) {
         CopyOnWriteArrayList<Item> arrayList =new ();
-        for (Item item : listNeedSearchItems) {
+        foreach (Item item in listNeedSearchItems) {
             if (item.getTemp().getType() == type) {
                 arrayList.add(item);
             }
@@ -127,7 +128,7 @@ public class Item : DataVersion {
 
     public static CopyOnWriteArrayList<Item> search(ArrayList<int> types, CopyOnWriteArrayList<Item> listNeedSearchItems) {
         CopyOnWriteArrayList<Item> arrayList =new ();
-        for (Item item : listNeedSearchItems) {
+        foreach (Item item in listNeedSearchItems) {
             if (types.Contains(item.getTemp().getType())) {
                 arrayList.add(item);
             }
@@ -167,16 +168,16 @@ public class Item : DataVersion {
                     float info = gemOptionValue[i];
                     switch (j) {
                         case ItemInfo.OptionType.PERCENT_HP:
-                            infoStrings.add(Utilities.Format("Tăng %s/ ", info).replace('/', '%') + " (hp) ");
+                            infoStrings.add(Utilities.Format("Tăng %s/ ", info).Replace('/', '%') + " (hp) ");
                             break;
                         case ItemInfo.OptionType.PERCENT_MP:
-                            infoStrings.add(Utilities.Format("Tăng %s/ ", info).replace('/', '%') + " (mp) ");
+                            infoStrings.add(Utilities.Format("Tăng %s/ ", info).Replace('/', '%') + " (mp) ");
                             break;
                         case ItemInfo.OptionType.PERCENT_ATK:
-                            infoStrings.add(Utilities.Format("Tăng %s/ ", info).replace('/', '%') + " (atk) ");
+                            infoStrings.add(Utilities.Format("Tăng %s/ ", info).Replace('/', '%') + " (atk) ");
                             break;
                         case ItemInfo.OptionType.PERCENT_DEF:
-                            infoStrings.add(Utilities.Format("Tăng %s/ ", info).replace('/', '%') + " (def) ");
+                            infoStrings.add(Utilities.Format("Tăng %s/ ", info).Replace('/', '%') + " (def) ");
                             break;
                     }
                 }
@@ -185,7 +186,7 @@ public class Item : DataVersion {
         }
 
         if (getTemp().getNClass() >= 0) {
-            if (!getTemp().isOnSky()) {
+            if (!getTemp().isOnSky) {
                 switch (getTemp().getNClass()) {
                     case GopetManager.Fighter:
                         infoStrings.add(" Dành cho chiến binh");

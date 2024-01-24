@@ -1,4 +1,6 @@
 
+using Gopet.Data.Clan;
+using Gopet.Util;
 public class ClanMap : GopetMap {
     public ClanMap(int mapId_, bool canUpdate, MapTemplate mapTemplate) : base(mapId_, canUpdate, mapTemplate)
     {

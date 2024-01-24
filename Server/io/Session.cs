@@ -1,9 +1,11 @@
 
 
 using Gopet.IO;
+using Gopet.Util;
 using System.Net.Sockets;
 
-public class Session {
+public class Session
+{
     public IHandleMessage messageHandler;
     public BinaryWriter dos;
     public BinaryReader dis;
@@ -19,26 +21,32 @@ public class Session {
     public bool clientOK = false;
     public long msgCount = 0;
 
-    public Session(Socket socket) {
+    public Session(Socket socket)
+    {
         sc = socket;
     }
 
-    public void setClientOK(bool ok)   {
-        Message ms = new Message((sbyte) -36);
+    public void setClientOK(bool ok)
+    {
+        Message ms = new Message((sbyte)-36);
         ms.writer().writeSByte(ok ? 1 : 0);
         ms.writer().flush();
         sendMessage(ms);
         clientOK = true;
     }
 
-    public bool isConnected() {
+    public bool isConnected()
+    {
         return this.isSocketConnected;
     }
 
-    
-    public void run() {
-        try {
+
+    public void run()
+    {
+        try
+        {
             isSocketConnected = true;
+            this.messageHandler = new Player(this);
             NetworkStream networkStream = new NetworkStream(sc);
             dis = new BinaryReader(networkStream);
             dos = new BinaryWriter(networkStream);
@@ -51,19 +59,25 @@ public class Session {
             Thread readThread = new Thread(this.reader.run);
             readThread.IsBackground = true;
             readThread.Start();
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
             Close();
         }
     }
 
-    public void readKey()   {
+    public void readKey()
+    {
         byte[] keys = new byte[9];
         dis.Read(keys, 0, 9);
         long key = readKey(keys.sbytes());
+        Console.WriteLine("KEY:" + key);
         tea = new TEA(key);
     }
 
-    private long readKey(sbyte[] var10000) {
+    private long readKey(sbyte[] var10000)
+    {
         long time = 0;
         time ^= var10000[1] & 255;
         time <<= 8;
@@ -83,29 +97,35 @@ public class Session {
         return time;
     }
 
-    public void setHandler(IHandleMessage messageHandler) {
+    public void setHandler(IHandleMessage messageHandler)
+    {
         this.messageHandler = messageHandler;
     }
 
-    public void setSender(MsgSender s) {
+    public void setSender(MsgSender s)
+    {
         this.sender = s;
     }
 
-    public void setReader(MsgReader r) {
+    public void setReader(MsgReader r)
+    {
         this.reader = r;
     }
 
-    protected void setKey(long key) {
+    protected void setKey(long key)
+    {
         this.tea = new TEA(key);
     }
 
-    public void sendMessage(Message message) {
+    public void sendMessage(Message message)
+    {
         this.sender.addMessage(message);
     }
 
     public static int socketCount = 0;
 
-    public void Close() {
+    public void Close()
+    {
         ThreadPool.QueueUserWorkItem(Exit);
     }
 

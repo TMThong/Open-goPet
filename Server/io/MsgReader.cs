@@ -2,36 +2,47 @@
 
 using Gopet.IO;
 
-public class MsgReader   {
+public class MsgReader
+{
 
     protected Session session;
     private long idleTime = 0L;
 
-    public MsgReader(Session session) {
+    public MsgReader(Session session)
+    {
         this.session = session;
     }
 
- 
 
-    
-    public void run() {
-        while (true) {
-            try {
-                if (this.session.isConnected()) {
+
+
+    public void run()
+    {
+        while (true)
+        {
+            try
+            {
+                if (this.session.isConnected())
+                {
                     Message message = this.readMessage();
-                    if (message != null) {
-                         
+                    if (message != null)
+                    {
+                        Console.WriteLine("MSG " + message.id);
                         this.session.messageHandler.onMessage(message);
                         this.session.msgCount++;
                         Thread.Sleep(10);
                         continue;
                     }
                 }
-            } catch (Exception var5) {
+            }
+            catch (Exception var5)
+            {
             }
 
-            if (this.session.isConnected()) {
-                if (this.session.messageHandler != null) {
+            if (this.session.isConnected())
+            {
+                if (this.session.messageHandler != null)
+                {
                     this.session.messageHandler.onDisconnected();
                 }
                 this.session.Close();
@@ -40,32 +51,46 @@ public class MsgReader   {
         }
     }
 
-    private Message readMessage()   {
+    private Message readMessage()
+    {
         int Length = 0;
         int hi = this.session.dis.ReadJavaInt();
-        if (hi == -1) {
+        Console.WriteLine("LEnght " + hi);
+        
+        if (hi == -1)
+        {
             return null;
-        } else {
+        }
+        else
+        {
             Length = hi - 1;
-            sbyte isEncrypted =  this.session.dis.ReadSByte();
+            sbyte isEncrypted = this.session.dis.ReadSByte();
             byte[] data = new byte[Length];
             int len = 0;
             int sbyteRead = 0;
 
-            while (len != -1 && sbyteRead < Length) {
+            while (len != -1 && sbyteRead < Length)
+            {
                 len = this.session.dis.Read(data, sbyteRead, Length - sbyteRead);
-                if (len > 0) {
+                if (len > 0)
+                {
                     sbyteRead += len;
                 }
             }
 
-            if (Length == 0) {
+            if (Length == 0)
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 Message msg;
-                if (isEncrypted == 1) {
+                if (isEncrypted == 1)
+                {
                     msg = new Message(this.session.tea.decrypt(data.sbytes()));
-                } else {
+                }
+                else
+                {
                     msg = new Message(data.sbytes());
                 }
                 Session var10000 = this.session;

@@ -24,7 +24,7 @@ public class ItemTemplate {
     private String iconPath;
     public sbyte gender;
     public long expire;
-    private bool isOnSky;
+    public bool isOnSky;
     private bool canTrade;
     private sbyte NClass;
     private int iconId;

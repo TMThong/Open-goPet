@@ -170,7 +170,7 @@ namespace Gopet.Data.Collections
             }
         }
 
-        public void remove(int index)
+        public void removeAt(int index)
         {
             lock (this)
             {

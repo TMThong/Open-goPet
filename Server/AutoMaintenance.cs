@@ -1,36 +1,49 @@
- 
-public class AutoMaintenance {
 
-    private Timer timer = new Timer();
+using Gopet.Util;
 
-    public AutoMaintenance() {
+public class AutoMaintenance
+{
+    private Timer timer;
 
+    public AutoMaintenance()
+    {
+        timer = new Timer(MaintenanceTaskCallback);
     }
 
-    public void start(int hourMaintenance, int minMaintenance) {
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTimeInMillis(Utilities.CurrentTimeMillis);
-        calendar.add(Calendar.HOUR_OF_DAY, -calendar.get(Calendar.HOUR_OF_DAY) + hourMaintenance);
-        calendar.add(Calendar.MINUTE, -calendar.get(Calendar.MINUTE) + minMaintenance);
-        calendar.add(Calendar.SECOND, -calendar.get(Calendar.SECOND));
-        if (calendar.GetTimeMillisInMillis() - Utilities.CurrentTimeMillis <= 0) {
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
+    public void Start(int hourMaintenance, int minMaintenance)
+    {
+        DateTime currentTime = DateTime.Now;
+        DateTime maintenanceTime = new DateTime(
+            currentTime.Year,
+            currentTime.Month,
+            currentTime.Day,
+            hourMaintenance,
+            minMaintenance,
+            0
+        );
+
+        if (maintenanceTime <= currentTime)
+        {
+            maintenanceTime = maintenanceTime.AddDays(1);
         }
-        System.out.println("Thời gian bảo trì định kỳ : " + new Date(calendar.GetTimeMillisInMillis()).toString());
-        timer.schedule(new MaintenanceTask(), calendar.GetTimeMillisInMillis() - Utilities.CurrentTimeMillis);
+
+        Console.WriteLine($"Thời gian bảo trì định kỳ: {maintenanceTime}");
+
+        int delayMilliseconds = (int)(maintenanceTime - currentTime).TotalMilliseconds;
+        timer.Change(delayMilliseconds, Timeout.Infinite);
     }
 
-    class MaintenanceTask extends TimerTask {
-
-         
-        public void run() {
-            try {
-                Maintenance.gI().setNeedRestart(true);
-                Maintenance.gI().setNeedExit(true);
-                Maintenance.gI().setMaintenanceTime(15);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    private void MaintenanceTaskCallback(object state)
+    {
+        try
+        {
+            Maintenance.gI().setNeedRestart(true);
+            Maintenance.gI().setNeedExit(true);
+            Maintenance.gI().setMaintenanceTime(15);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 }

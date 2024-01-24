@@ -1,7 +1,9 @@
 
 using Gopet.Data.Collections;
+using Gopet.Util;
 
-public class TaskCalculator {
+public class TaskCalculator
+{
 
     public const int TASK_TYPE_MAIN = 0;
     public const int TASK_TYPE_LOOP = 1;
@@ -26,34 +28,45 @@ public class TaskCalculator {
 
     private HashMap<int, ArrayList<TaskTemplate>> cacheTask = new();
 
-    public TaskCalculator(Player player) {
+    public TaskCalculator(Player player)
+    {
         this.player = player;
     }
 
-    public void update() {
+    public void update()
+    {
         this.cacheTask.Clear();
         PlayerData playerData = player.playerData;
-        if (playerData == null) {
+        if (playerData == null)
+        {
             return;
         }
 
-        for (Map.Entry<int, NpcTemplate> entry : GopetManager.npcTemplate ) {
+        foreach (var entry in GopetManager.npcTemplate)
+        {
             int key = entry.Key;
             NpcTemplate val = entry.Value;
             ArrayList<TaskTemplate> taskFromNPC = GopetManager.taskTemplateByNpcId.get(key);
-            if (taskFromNPC != null) {
-                for (TaskTemplate taskTemplate : taskFromNPC) {
-                    if (!playerData.wasTask.Contains(taskTemplate.getTaskId()) && !playerData.tasking.Contains(taskTemplate.getTaskId())) {
+            if (taskFromNPC != null)
+            {
+                foreach (TaskTemplate taskTemplate in taskFromNPC)
+                {
+                    if (!playerData.wasTask.Contains(taskTemplate.getTaskId()) && !playerData.tasking.Contains(taskTemplate.getTaskId()))
+                    {
                         bool flag = true;
-                        for (int taskIdNeed : taskTemplate.getTaskNeed()) {
-                            if (!playerData.wasTask.Contains(taskIdNeed)) {
+                        foreach (int taskIdNeed in taskTemplate.getTaskNeed())
+                        {
+                            if (!playerData.wasTask.Contains(taskIdNeed))
+                            {
                                 flag = false;
                                 break;
                             }
                         }
 
-                        if (flag) {
-                            if (!this.cacheTask.ContainsKey(key)) {
+                        if (flag)
+                        {
+                            if (!this.cacheTask.ContainsKey(key))
+                            {
                                 this.cacheTask.put(key, new());
                             }
                             this.cacheTask.get(key).add(taskTemplate);
@@ -64,23 +77,29 @@ public class TaskCalculator {
         }
     }
 
-    public ArrayList<TaskTemplate> getTaskTemplate(int npcId) {
+    public ArrayList<TaskTemplate> getTaskTemplate(int npcId)
+    {
         ArrayList<TaskTemplate> taskTemplates = this.cacheTask.get(npcId);
-        if (taskTemplates == null) {
+        if (taskTemplates == null)
+        {
             return new();
         }
         return taskTemplates;
     }
 
-    public static String getTaskText(int[] task, int[][] taskInfo, long timeTask) {
-        if (task == null) {
+    public static String getTaskText(int[] task, int[][] taskInfo, long timeTask)
+    {
+        if (task == null)
+        {
             task = new int[taskInfo.Length];
             Array.Fill(task, 0);
         }
         ArrayList<String> taskText = new();
-        for (int i = 0; i < taskInfo.Length; i++) {
+        for (int i = 0; i < taskInfo.Length; i++)
+        {
             int[] taskI = taskInfo[i];
-            switch (taskI[0]) {
+            switch (taskI[0])
+            {
                 case REQUEST_KILL_MOB:
                     taskText.add(Utilities.Format("Tiêu diệt %s %s / %s", GopetManager.PETTEMPLATE_HASH_MAP.get(taskI[2]).getName(), task[i], taskI[1]));
                     break;
@@ -128,98 +147,125 @@ public class TaskCalculator {
         return "\n  ---- Yêu cầu ----\n" + String.Join("\n", taskText);
     }
 
-    public void onTaskUpdate(TaskData taskData, int taskRequestType, params object[] dObjects) {
-        for (int i = 0; i < taskData.taskInfo.Length; i++) {
-            if (taskData.task[i] < taskData.taskInfo[i][1] && taskData.taskInfo[i][0] == taskRequestType) {
-                switch (taskRequestType) {
-                    case REQUEST_KILL_MOB: {
-                        int mobId = (int) dObjects[0];
-                        if (taskData.taskInfo[i][2] == mobId) {
-                            taskData.task[i]++;
+    public void onTaskUpdate(TaskData taskData, int taskRequestType, params object[] dObjects)
+    {
+        for (int i = 0; i < taskData.taskInfo.Length; i++)
+        {
+            if (taskData.task[i] < taskData.taskInfo[i][1] && taskData.taskInfo[i][0] == taskRequestType)
+            {
+                switch (taskRequestType)
+                {
+                    case REQUEST_KILL_MOB:
+                        {
+                            int mobId = (int)dObjects[0];
+                            if (taskData.taskInfo[i][2] == mobId)
+                            {
+                                taskData.task[i]++;
+                            }
                         }
-                    }
-                    break;
+                        break;
 
-                    case REQUEST_PET_LVL: {
-                        Pet pet = (Pet) dObjects[0];
-                        if (taskData.task[i] < pet.lvl) {
-                            taskData.task[i] = pet.lvl;
+                    case REQUEST_PET_LVL:
+                        {
+                            Pet pet = (Pet)dObjects[0];
+                            if (taskData.task[i] < pet.lvl)
+                            {
+                                taskData.task[i] = pet.lvl;
+                            }
                         }
-                    }
-                    break;
+                        break;
 
                     case REQUEST_BUY_RANDOM_WEAPON:
                     case REQUEST_LEARN_SKILL_PET:
                         taskData.task[i]++;
                         break;
 
-                    case REQUEST_UP_SKILL_PET: {
-                        int skillLv = (int) dObjects[0];
-                        if (skillLv >= taskData.taskInfo[i][2]) {
-                            taskData.task[i]++;
-                        }
-                    }
-                    break;
-
-                    case REQUEST_KILL_BOSS: {
-                        Boss boss = (Boss) dObjects[0];
-                        if (taskData.taskInfo[i][2] == boss.getBossTemplate().getBossId()) {
-                            taskData.task[i]++;
-                        }
-                    }
-                    break;
-
-                    case REQUEST_UP_TIER_ITEM: {
-                        int tier = (int) dObjects[0];
-                        if (tier >= taskData.taskInfo[i][2]) {
-                            taskData.task[i]++;
-                        }
-                    }
-                    break;
-
-                    case REQUEST_ENCHANT_ITEM: {
-                        int lvl = (int) dObjects[0];
-                        if (lvl >= taskData.taskInfo[i][2]) {
-                            taskData.task[i]++;
-                        }
-                    }
-                    break;
-
-                    case REQUEST_NEED_TASK: {
-                        int taskId = (int) dObjects[0];
-                        if (taskData.taskInfo[i][2] == taskId) {
-                            taskData.task[i]++;
-                        }
-                    }
-                    break;
-
-                    case REQUEST_ATTACK_BOSS: {
-                        Boss boss = (Boss) dObjects[0];
-                        if (taskData.taskInfo[i][2] == boss.getBossTemplate().getBossId()) {
-                            taskData.task[i]++;
-                        }
-                    }
-                    break;
-
-                    case REQUEST_ITEM: {
-                        Item item = (Item) dObjects[0];
-                        if (taskData.taskInfo[i][2] == item.itemTemplateId) {
-                            if (taskData.task[i] < item.count) {
-                                taskData.task[i] = taskData.taskInfo[i][1];
-                            } else {
-                                taskData.task[i] = item.count;
+                    case REQUEST_UP_SKILL_PET:
+                        {
+                            int skillLv = (int)dObjects[0];
+                            if (skillLv >= taskData.taskInfo[i][2])
+                            {
+                                taskData.task[i]++;
                             }
                         }
-                    }
-                    break;
+                        break;
 
-                    case REQUEST_CHALLENGE_PLACE: {
-                        int turn = (int) dObjects[0];
-                        if (turn > taskData.task[i]) {
-                            taskData.task[i] = turn;
+                    case REQUEST_KILL_BOSS:
+                        {
+                            Boss boss = (Boss)dObjects[0];
+                            if (taskData.taskInfo[i][2] == boss.getBossTemplate().getBossId())
+                            {
+                                taskData.task[i]++;
+                            }
                         }
-                    }
-                    break;
+                        break;
+
+                    case REQUEST_UP_TIER_ITEM:
+                        {
+                            int tier = (int)dObjects[0];
+                            if (tier >= taskData.taskInfo[i][2])
+                            {
+                                taskData.task[i]++;
+                            }
+                        }
+                        break;
+
+                    case REQUEST_ENCHANT_ITEM:
+                        {
+                            int lvl = (int)dObjects[0];
+                            if (lvl >= taskData.taskInfo[i][2])
+                            {
+                                taskData.task[i]++;
+                            }
+                        }
+                        break;
+
+                    case REQUEST_NEED_TASK:
+                        {
+                            int taskId = (int)dObjects[0];
+                            if (taskData.taskInfo[i][2] == taskId)
+                            {
+                                taskData.task[i]++;
+                            }
+                        }
+                        break;
+
+                    case REQUEST_ATTACK_BOSS:
+                        {
+                            Boss boss = (Boss)dObjects[0];
+                            if (taskData.taskInfo[i][2] == boss.getBossTemplate().getBossId())
+                            {
+                                taskData.task[i]++;
+                            }
+                        }
+                        break;
+
+                    case REQUEST_ITEM:
+                        {
+                            Item item = (Item)dObjects[0];
+                            if (taskData.taskInfo[i][2] == item.itemTemplateId)
+                            {
+                                if (taskData.task[i] < item.count)
+                                {
+                                    taskData.task[i] = taskData.taskInfo[i][1];
+                                }
+                                else
+                                {
+                                    taskData.task[i] = item.count;
+                                }
+                            }
+                        }
+                        break;
+
+                    case REQUEST_CHALLENGE_PLACE:
+                        {
+                            int turn = (int)dObjects[0];
+                            if (turn > taskData.task[i])
+                            {
+                                taskData.task[i] = turn;
+                            }
+                        }
+                        break;
 
                     case REQUEST_UP_TIER_PET:
                         taskData.task[i]++;
@@ -229,137 +275,175 @@ public class TaskCalculator {
         }
     }
 
-    public void onAllTaskUpdate(int taskRequestType, Object... dObjects) {
-        for (TaskData taskData : getTaskDatas()) {
+    public void onAllTaskUpdate(int taskRequestType, params object[] dObjects)
+    {
+        foreach (TaskData taskData in getTaskDatas())
+        {
             this.onTaskUpdate(taskData, taskRequestType, dObjects);
         }
     }
 
-    public void onUpTierPet() {
+    public void onUpTierPet()
+    {
         this.onAllTaskUpdate(REQUEST_UP_TIER_PET);
     }
 
-    public void onItemNeed(Item item) {
+    public void onItemNeed(Item item)
+    {
         this.onAllTaskUpdate(REQUEST_ITEM, item);
     }
 
-    public void onAttackBoss(Boss boss) {
+    public void onAttackBoss(Boss boss)
+    {
         this.onAllTaskUpdate(REQUEST_ATTACK_BOSS, boss);
     }
 
-    public void onItemEnchant(Item item) {
-        if (!item.wasSell) {
+    public void onItemEnchant(Item item)
+    {
+        if (!item.wasSell)
+        {
             this.onAllTaskUpdate(REQUEST_ENCHANT_ITEM, item.lvl);
         }
     }
 
-    public void onUpTierItem(int tier) {
+    public void onUpTierItem(int tier)
+    {
         this.onAllTaskUpdate(REQUEST_UP_TIER_ITEM, tier);
     }
 
-    public void onKillBoss(Boss boss) {
+    public void onKillBoss(Boss boss)
+    {
         this.onAllTaskUpdate(REQUEST_KILL_BOSS, boss);
     }
 
-    public void onUpdateSkillPet(Pet pet, int skillLv) {
-        if (pet == null) {
+    public void onUpdateSkillPet(Pet pet, int skillLv)
+    {
+        if (pet == null)
+        {
             return;
         }
-        if (!pet.wasSell) {
+        if (!pet.wasSell)
+        {
             this.onAllTaskUpdate(REQUEST_UP_SKILL_PET, skillLv);
         }
     }
 
-    public void onBuyRandomWeapon() {
+    public void onBuyRandomWeapon()
+    {
         this.onAllTaskUpdate(REQUEST_BUY_RANDOM_WEAPON);
     }
 
-    public void onLearnSkillPet() {
+    public void onLearnSkillPet()
+    {
         this.onAllTaskUpdate(REQUEST_LEARN_SKILL_PET);
     }
 
-    public void onPetUpLevel(Pet pet) {
-        if (pet == null) {
+    public void onPetUpLevel(Pet pet)
+    {
+        if (pet == null)
+        {
             return;
         }
-        if (!pet.wasSell) {
+        if (!pet.wasSell)
+        {
             this.onAllTaskUpdate(REQUEST_PET_LVL, pet);
         }
     }
 
-    private void updatePetLvlViaAll() {
-        for (Pet pet : player.playerData.pets) {
+    private void updatePetLvlViaAll()
+    {
+        foreach (Pet pet in player.playerData.pets)
+        {
             onPetUpLevel(pet);
         }
 
-        for (Item item : player.playerData.getInventoryOrCreate(GopetManager.NORMAL_INVENTORY)) {
+        foreach (Item item in player.playerData.getInventoryOrCreate(GopetManager.NORMAL_INVENTORY))
+        {
             this.onItemNeed(item);
         }
 
         onPetUpLevel(player.playerData.petSelected);
     }
 
-    public void onNextChellengePlace(int turn) {
+    public void onNextChellengePlace(int turn)
+    {
         this.onAllTaskUpdate(REQUEST_CHALLENGE_PLACE, turn);
     }
 
-    public void onKillMob(int mobId)   {
+    public void onKillMob(int mobId)
+    {
         this.onAllTaskUpdate(REQUEST_KILL_MOB, mobId);
     }
 
-    public void onTaskSucces(TaskData taskData)   {
-        switch (taskData.getTemplate().getType()) {
+    public void onTaskSucces(TaskData taskData)
+    {
+        switch (taskData.getTemplate().getType())
+        {
             case TASK_TYPE_MAIN:
                 player.playerData.wasTask.add(taskData.taskTemplateId);
                 break;
         }
         getTaskDatas().remove(taskData);
-        player.playerData.tasking.remove((Object) taskData.taskTemplateId);
+        player.playerData.tasking.remove(taskData.taskTemplateId);
         ArrayList<Popup> list = player.controller.onReiceiveGift(taskData.gift);
         ArrayList<String> txtInfo = new();
-        for (Popup petBattleText : list) {
+        foreach (Popup petBattleText in list)
+        {
             txtInfo.add(petBattleText.getText());
         }
-        player.okDialog(Utilities.Format("Chức mừng bạn hoàn thành nhiệm vụ %s nhận được :\n%s", taskData.getTemplate().getName(), String.Join(",", txtInfo)));
+        player.okDialog(Utilities.Format("Chức mừng bạn hoàn thành nhiệm vụ %s nhận được in\n%s", taskData.getTemplate().getName(), String.Join(",", txtInfo)));
         this.onAllTaskUpdate(REQUEST_NEED_TASK, taskData.taskTemplateId);
     }
 
-    public CopyOnWriteArrayList<TaskData> getTaskDatas() {
-        if (this.player.playerData == null) {
-            returnnew ();
+    public CopyOnWriteArrayList<TaskData> getTaskDatas()
+    {
+        if (this.player.playerData == null)
+        {
+            return new();
         }
         return this.player.playerData.task;
     }
 
-    public void onUpdateTask(TaskData taskData) {
-        for (Pet pet : player.playerData.pets) {
-            if (!pet.wasSell) {
+    public void onUpdateTask(TaskData taskData)
+    {
+        foreach (Pet pet in player.playerData.pets)
+        {
+            if (!pet.wasSell)
+            {
                 this.onTaskUpdate(taskData, REQUEST_PET_LVL, pet);
-                if (pet.skill.Length > 0) {
+                if (pet.skill.Length > 0)
+                {
                     this.onTaskUpdate(taskData, REQUEST_LEARN_SKILL_PET);
                 }
             }
         }
 
         Pet currentPet = player.getPet();
-        if (currentPet != null) {
-            if (!currentPet.wasSell) {
+        if (currentPet != null)
+        {
+            if (!currentPet.wasSell)
+            {
                 this.onTaskUpdate(taskData, REQUEST_PET_LVL, currentPet);
-               if (currentPet.skill.Length > 0) {
+                if (currentPet.skill.Length > 0)
+                {
                     this.onTaskUpdate(taskData, REQUEST_LEARN_SKILL_PET);
                 }
             }
         }
 
-        for (int int : player.playerData.wasTask) {
-            this.onTaskUpdate(taskData, REQUEST_NEED_TASK, int);
+        foreach (int id in player.playerData.wasTask)
+        {
+            this.onTaskUpdate(taskData, REQUEST_NEED_TASK, id);
         }
     }
 
-    public bool taskSuccess(TaskData taskData) {
-        for (int i = 0; i < taskData.taskInfo.Length; i++) {
+    public bool taskSuccess(TaskData taskData)
+    {
+        for (int i = 0; i < taskData.taskInfo.Length; i++)
+        {
             int[] taskI = taskData.taskInfo[i];
-            if (taskI[1] > taskData.task[i]) {
+            if (taskI[1] > taskData.task[i])
+            {
                 return false;
             }
         }

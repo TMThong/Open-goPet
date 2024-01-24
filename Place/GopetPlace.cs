@@ -389,14 +389,14 @@ public class GopetPlace : Place {
     }
 
      
-    public void update()   {
+    public override void update()   {
         base.update(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
 
         foreach (Mob mob in mobs) {
             if (mob is Boss) {
                 Boss b = (Boss) mob;
-                if (b.isTimeOut() && b.getPetBattle() == null) {
-                    if (Utilities.CurrentTimeMillis > b.GetTimeMillisoutMilis()) {
+                if (b.isTimeOut && b.getPetBattle() == null) {
+                    if (Utilities.CurrentTimeMillis > b.timeoutMilis) {
                         this.mobDie(mob);
                     }
                 }
@@ -447,8 +447,8 @@ public class GopetPlace : Place {
                 if (this.map.mapTemplate.getBoss().Length > 0) {
                     if (numMobDie >= numMobDieNeed) {
                         Boss boss = new Boss(Utilities.RandomArray(this.map.mapTemplate.getBoss()), mobLocation);
-                        boss.setTimeOut(true);
-                        boss.setTimeoutMilis(Utilities.CurrentTimeMillis + GopetManager.TIME_BOSS_DISPOINTED);
+                        boss.isTimeOut = true;
+                        boss.timeoutMilis = Utilities.CurrentTimeMillis + GopetManager.TIME_BOSS_DISPOINTED;
 
                         addNewMob(boss);
                         nGopetMobs.add(boss);
