@@ -8,11 +8,7 @@ public class PlatformHelper
 
     public static String currentDirectory()
     {
-        if (isPC)
-        {
-            return Directory.GetCurrentDirectory();
-        }
-        return "";//android.os.Environment.getExternalStorageDirectory() + "";
+        return Directory.GetCurrentDirectory();
     }
 
     public static String assetsPath;
@@ -20,15 +16,7 @@ public class PlatformHelper
 
     static void init()
     {
-        dirPath = currentDirectory();
-        if (isPC)
-        {
-            assetsPath = dirPath + "/assets/";
-        }
-        else
-        {
-            assetsPath = dirPath + "/JavaNIDE/GoFarmServer/app/src/assets/";
-        }
+        assetsPath = currentDirectory() + "/assets/";
     }
 
     public static sbyte[] loadAssets(String path)

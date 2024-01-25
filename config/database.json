@@ -1,12 +1,12 @@
 {
   "host": "127.0.0.1",
   "port": 3306,
-  "database": "gopet",
+  "database": "gopettu",
   "username": "root",
   "password": "",
   "host_web": "127.0.0.1",
   "port_web": 3306,
-  "database_web": "gopet_web",
+  "database_web": "gopettu_web",
   "username_web": "root",
   "password_web": ""
 }

@@ -11,6 +11,7 @@ using MySql.Data.MySqlClient;
 using Mysqlx.Expr;
 using Newtonsoft.Json;
 using Gopet.Data.Dialog;
+using Org.BouncyCastle.Asn1.Crmf;
 
 public class GopetManager
 {
@@ -256,7 +257,7 @@ public class GopetManager
 
     public static ArrayList<ItemTemplate> NonAdminItemList = new();
 
- 
+
     /**
      * Id các map được dịch chuyển
      */
@@ -409,7 +410,7 @@ public class GopetManager
 
     public static void readMobLvl(String cmd, HashMap<int, MobLvInfo> hashMap)
     {
-        using(var conn = MYSQLManager.create())
+        using (var conn = MYSQLManager.create())
         {
             IEnumerable<MobLvInfo> data = conn.Query<MobLvInfo>(cmd);
             foreach (var mobLvInfo in data)
@@ -422,15 +423,26 @@ public class GopetManager
     public static void init()
     {
 
-        using(var conn = MYSQLManager.create())
+        using (var conn = MYSQLManager.create())
         {
-
+            PET_TEMPLATES.AddRange(conn.Query<PetTemplate>("SELECT * FROM `gopet_pet`"));
+            PET_TEMPLATES.ForEach(petTemplate =>
+            {
+                petEnable.add(petTemplate);
+                if (!typePetTemplate.ContainsKey(petTemplate.getType()))
+                {
+                    typePetTemplate.put(petTemplate.getType(), new());
+                }
+                typePetTemplate.get(petTemplate.getType()).add(petTemplate);
+                PETTEMPLATE_HASH_MAP.put(petTemplate.getPetId(), petTemplate);
+            });
         }
 
         using (var connWeb = MYSQLManager.createWebMySqlConnection())
         {
             EXCHANGE_DATAS.AddRange(connWeb.Query<ExchangeData>("SELECT * FROM `exchange`"));
             EXCHANGE_DATAS.ForEach(exchangeData => MenuController.EXCHANGE_ITEM_INFOS.add(new ExchangeItemInfo(exchangeData)));
+
         }
 
         ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `petexp`");
@@ -441,37 +453,6 @@ public class GopetManager
         resultSet.Close();
         readMobLvl("SELECT * FROM `gopet_mob`", MOBLVLINFO_HASH_MAP);
         readMobLvl("SELECT * FROM `mob_challenge`", MOBLVLINFO_CHALLENGE);
-        resultSet = MYSQLManager.jquery("SELECT * FROM `gopet_pet`");
-        while (resultSet.next())
-        {
-            PetTemplate petTemplate = new PetTemplate();
-            petTemplate.setPetId(resultSet.getInt("petId"));
-            petTemplate.setName(resultSet.getString("name"));
-            petTemplate.setIcon(resultSet.getString("icon"));
-            petTemplate.setFrameImg(resultSet.getString("frameImg"));
-            petTemplate.setHp(resultSet.getInt("hp"));
-            petTemplate.setMp(resultSet.getInt("mp"));
-            petTemplate.setStr(resultSet.getInt("str"));
-            petTemplate.setInt(resultSet.getInt("_int"));
-            petTemplate.setAgi(resultSet.getInt("agi"));
-            petTemplate.setType(resultSet.getsbyte("type"));
-            petTemplate.setElement(resultSet.getsbyte("element"));
-            petTemplate.setNclass(resultSet.getsbyte("nClass"));
-            petTemplate.setEnable(resultSet.getsbyte("enable") == 1);
-            if (petTemplate.isEnable())
-            {
-                petEnable.add(petTemplate);
-                if (!typePetTemplate.ContainsKey(petTemplate.getType()))
-                {
-                    typePetTemplate.put(petTemplate.getType(), new());
-                }
-                typePetTemplate.get(petTemplate.getType()).add(petTemplate);
-            }
-
-            PETTEMPLATE_HASH_MAP.put(petTemplate.getPetId(), petTemplate);
-            PET_TEMPLATES.add(petTemplate);
-        }
-        resultSet.Close();
         resultSet = MYSQLManager.jquery("SELECT * FROM `iteminfo`");
         while (resultSet.next())
         {

@@ -498,16 +498,16 @@ namespace Gopet.Data.GopetClan
         public void create()
         {
             MySqlConnection connection = MYSQLManager.create();
-            MYSQLManager.updateSql(Utilities.Format("INSERT INTO `GopetClan`(`clanId`, `name`, `lvl`, `curMember`, `maxMember`, `leaderId`, `members`, `fund`, `growthPoint`, `skillHouseLvl`, `baseMarketLvl`) "
+            MYSQLManager.updateSql(Utilities.Format("INSERT INTO `clan`(`clanId`, `name`, `lvl`, `curMember`, `maxMember`, `leaderId`, `members`, `fund`, `growthPoint`, `skillHouseLvl`, `baseMarketLvl`) "
                     + "VALUES (NULL,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')", name, lvl, curMember, maxMember, leaderId, JsonManager.ToJson(members), fund, growthPoint, skillHouseLvl, baseMarketLvl), connection);
-            ResultSet resultSet = MYSQLManager.jquery(Utilities.Format("SELECT * FROM `GopetClan` WHERE leaderId = %s", leaderId), connection);
+            ResultSet resultSet = MYSQLManager.jquery(Utilities.Format("SELECT * FROM `clan` WHERE leaderId = %s", leaderId), connection);
             if (resultSet.next())
             {
                 setClanId(resultSet.getInt("clanId"));
             }
             else
             {
-                throw new NullReferenceException("Không tìm thấy GopetClan có người lãnh đạo này");
+                throw new NullReferenceException("Không tìm thấy clan có người lãnh đạo này");
             }
             resultSet.Close();
             connection.Close();
@@ -516,7 +516,7 @@ namespace Gopet.Data.GopetClan
         public void save()
         {
             MySqlConnection MySqlConnection = MYSQLManager.create();
-            MYSQLManager.updateSql(Utilities.Format("UPDATE `GopetClan` set `lvl` = %s , `curMember` = %s , `maxMember` =%s , `leaderId` =%s , `members` = '%s' , `fund` =%s, `growthPoint` =%s , `skillHouseLvl` = %s , `baseMarketLvl` =%s , `joinRequest` = '%s' WHERE `clanId` =%s", lvl, curMember, maxMember, leaderId, JsonManager.ToJson(members), fund, growthPoint, skillHouseLvl, baseMarketLvl, JsonManager.ToJson(requestJoin), this.clanId), MySqlConnection);
+            MYSQLManager.updateSql(Utilities.Format("UPDATE `clan` set `lvl` = %s , `curMember` = %s , `maxMember` =%s , `leaderId` =%s , `members` = '%s' , `fund` =%s, `growthPoint` =%s , `skillHouseLvl` = %s , `baseMarketLvl` =%s , `joinRequest` = '%s' WHERE `clanId` =%s", lvl, curMember, maxMember, leaderId, JsonManager.ToJson(members), fund, growthPoint, skillHouseLvl, baseMarketLvl, JsonManager.ToJson(requestJoin), this.clanId), MySqlConnection);
             MySqlConnection.Close();
         }
 

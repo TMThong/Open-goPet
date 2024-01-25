@@ -1,6 +1,5 @@
 
 using Gopet.Data.Collections;
-using Gopet.IO;
 using Gopet.Util;
 
 public class PlayerManager {

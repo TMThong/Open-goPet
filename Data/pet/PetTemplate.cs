@@ -4,10 +4,9 @@ using Gopet.Util;
 public class PetTemplate
 {
 
-    private int petId, hp, mp, str, _int, agi;
-    private sbyte type, nclass, element;
-    private String name, icon, frameImg;
-    private bool enable;
+    public int petId, hp, mp, str, _int, agi;
+    public sbyte type, nclass, element;
+    public string name, icon, frameImg;
 
     public void setPetId(int petId)
     {
@@ -69,10 +68,6 @@ public class PetTemplate
         this.frameImg = frameImg;
     }
 
-    public void setEnable(bool enable)
-    {
-        this.enable = enable;
-    }
 
     public int getPetId()
     {
@@ -134,10 +129,7 @@ public class PetTemplate
         return this.frameImg;
     }
 
-    public bool isEnable()
-    {
-        return this.enable;
-    }
+
 
     public void setInt(int i)
     {

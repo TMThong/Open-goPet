@@ -165,7 +165,7 @@ public class PlayerData
     public void save()
     {
         MySqlConnection conn = MYSQLManager.create();
-        MYSQLManager.updateSql(Utilities.Format("upDateTime player set  " + getGopetSQLString() + "   coin = %s , gold = %s  ,  friends = '%s'   ,    items = '%s',   favouriteList = '%s'  where ID = "
+        MYSQLManager.updateSql(string.Format("update player set  " + getGopetSQLString() + "   coin = {0} , gold = {1}  ,  friends = '{2}'   ,    items = '{3}',   favouriteList = '{4}'  where ID = "
                 + charID,
                 coin,
                 gold,

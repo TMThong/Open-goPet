@@ -11,7 +11,7 @@ namespace Gopet.Data.Map
 
         public override void addPlace(Place place)
         {
-            throw new UnsupportedOperationException("Place dua vao GopetClan");
+            throw new UnsupportedOperationException("Place dua vao clan");
         }
 
 

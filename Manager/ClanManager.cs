@@ -30,7 +30,7 @@ public class ClanManager
 
     public static void init()
     {
-        ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `GopetClan`");
+        ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `clan`");
         while (resultSet.next())
         {
             Clan clan = new Clan(resultSet.getInt("clanId"));

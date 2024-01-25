@@ -156,7 +156,7 @@ namespace Gopet.IO
         {
             if (this.posWrite <= 0)
             {
-                return null;
+                return new sbyte[0];
             }
             sbyte[] array = new sbyte[this.posWrite];
             for (int i = 0; i < this.posWrite; i++)
