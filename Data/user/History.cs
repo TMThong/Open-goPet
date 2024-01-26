@@ -41,6 +41,7 @@ public class History {
             } catch (Exception e) {
             }
         } else {
+            if (this.player.playerData == null) return "Chưa tạo nhân vật";
             return this.player.playerData.name;
         }
         return "Chưa tạo nhân vật";

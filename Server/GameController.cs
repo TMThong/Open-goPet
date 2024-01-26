@@ -572,7 +572,7 @@ public class GameController
             try
             {
                 int idAsset = int.Parse(path);
-                path = GopetManager.itemAssetsIcon.get(idAsset);
+                path = GopetManager.itemAssetsIcon[idAsset];
             }
             catch (Exception e)
             {
@@ -875,7 +875,7 @@ public class GameController
             try
             {
                 int idAsset = int.Parse(path);
-                path = GopetManager.itemAssetsIcon.get(idAsset);
+                path = GopetManager.itemAssetsIcon[idAsset];
             }
             catch (Exception e)
             {
@@ -2093,12 +2093,12 @@ public class GameController
 
     public void checkExpire()
     {
-        Item skinItem = player.playerData.skinItem;
+        Item skinItem = player.playerData.skin;
         if (skinItem != null)
         {
             if (skinItem.expire < Utilities.CurrentTimeMillis)
             {
-                player.playerData.skinItem = null;
+                player.playerData.skin = null;
             }
         }
         foreach (var entry in player.playerData.items)
@@ -3195,29 +3195,7 @@ public class GameController
                     }
                     break;
 
-                case GopetManager.GIFT_ITEM_MERGE_PET:
-                    {
-                        if (!flagDrop)
-                        {
-                            int typeItem = giftInfo[1];
-                            for (int j = 0; j < giftInfo[3]; j++)
-                            {
-                                bool nextBool = Utilities.NextFloatPer() < giftInfo[2] / 100f;
-                                if (nextBool)
-                                {
-                                    ArrayList<ItemTemplate> itemTemplate = GopetManager.mergeItemPet.get(typeItem);
-                                    ItemTemplate itemTemplateCreate = Utilities.RandomArray(itemTemplate.ToArray());
-                                    Item item = new Item(itemTemplateCreate.getItemId());
-                                    item.count = 1;
-                                    player.addItemToInventory(item);
-                                    popups.add(new Popup(item.getName()));
-                                    flagDrop = true;
-                                }
-                            }
-                        }
-                    }
-                    break;
-
+ 
                 case GopetManager.GIFT_ITEM_PERCENT_NO_DROP_MORE:
                     {
                         if (!flagDrop)
@@ -3236,32 +3214,7 @@ public class GameController
                     }
                     break;
 
-                case GopetManager.GIFT_ITEM_MERGE_ITEM:
-                    {
-                        if (!flagDrop)
-                        {
-                            int typePart = giftInfo[1];
-                            bool nextBool = Utilities.NextFloatPer() < giftInfo[2] / 100f;
-                            if (nextBool)
-                            {
-                                ArrayList<ItemTemplate> partItem = GopetManager.mergeItemItem.get(typePart);
-                                if (partItem != null)
-                                {
-                                    Item item = new Item(partItem.get(Utilities.nextInt(partItem.Count)).getItemId());
-                                    item.count = giftInfo[3];
-                                    player.addItemToInventory(item);
-                                    popups.add(new Popup(item.getName()));
-                                    flagDrop = true;
-                                }
-                                else
-                                {
-                                    //System.err.println("KHONG TIM THAY MANH ITEM TYPE = " + typePart);
-                                }
-                            }
-                        }
-                    }
-                    break;
-
+                
                 case GopetManager.GIFT_EXP:
                     {
                         Pet myPet = player.getPet();
@@ -3831,7 +3784,7 @@ public class GameController
     {
         if (player.playerData != null)
         {
-            Item skin = player.playerData.skinItem;
+            Item skin = player.playerData.skin;
             if (skin != null)
             {
                 player.playerData.avatarPath = skin.getTemp().getIconPath();

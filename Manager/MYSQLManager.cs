@@ -50,10 +50,19 @@ public class MYSQLManager
 
     public static MySqlConnection create()
     {
-        string connStr = $"SERVER={MysqlSetting.SINGLETON.INSTANCE.host};DATABASE={MysqlSetting.SINGLETON.INSTANCE.database};UID={MysqlSetting.SINGLETON.INSTANCE.username};PASSWORD={MysqlSetting.SINGLETON.INSTANCE.password};CharSet=utf8;";
-        var conn = new MySqlConnection(connStr);
+
+        var conn = new MySqlConnection(GameSQLInfoStr);
         conn.Open();
         return conn;
+    }
+
+
+    public static string GameSQLInfoStr
+    {
+        get
+        {
+            return $"SERVER={MysqlSetting.SINGLETON.INSTANCE.host};DATABASE={MysqlSetting.SINGLETON.INSTANCE.database};UID={MysqlSetting.SINGLETON.INSTANCE.username};PASSWORD={MysqlSetting.SINGLETON.INSTANCE.password};CharSet=utf8;";
+        }
     }
 
     public static MySqlConnection createWebMySqlConnection()

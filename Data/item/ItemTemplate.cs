@@ -1,3 +1,4 @@
+
 using Gopet.Util;
 
 namespace Gopet.Data.GopetItem
@@ -5,33 +6,35 @@ namespace Gopet.Data.GopetItem
     public class ItemTemplate
     {
 
-        private int itemId;
-        private string name;
-        private string description;
-        private int _int;
-        private int agi;
-        private int str;
-        private int def;
-        private int atk;
-        private int hp;
-        private int mp;
-        private int requireStr;
-        private int requireAgi;
-        private int requireInt;
-        private int type;
-        private int[] option = new int[0];
-        private int[] optionValue = new int[0];
+        public int itemId;
+        public string name;
+        public string description;
+        public int requireStr;
+        public int requireAgi;
+        public int requireInt;
+        public int type;
+       
+        public int[] option = new int[0];
+       
+        public int[] optionValue = new int[0];
+       
+        public int[] hpRange;
+       
+        public int[] mpRange;
+       
+        public int[] atkRange;
+       
+        public int[] defRange;
         public bool isStackable;
-        private string frameImgPath;
-        private string iconPath;
+        public string frameImgPath;
+        public string iconPath;
         public sbyte gender;
         public long expire;
         public bool isOnSky;
-        private bool canTrade;
-        private sbyte NClass;
-        private int iconId;
-        private sbyte element;
-        private int typeTier;
+        public bool canTrade;
+        public sbyte petNClass;
+        public int iconId;
+        public sbyte element;
 
         public void setItemId(int itemId)
         {
@@ -48,40 +51,7 @@ namespace Gopet.Data.GopetItem
             this.description = description;
         }
 
-        public void set_int(int _int)
-        {
-            this._int = _int;
-        }
 
-        public void setAgi(int agi)
-        {
-            this.agi = agi;
-        }
-
-        public void setStr(int str)
-        {
-            this.str = str;
-        }
-
-        public void setDef(int def)
-        {
-            this.def = def;
-        }
-
-        public void setAtk(int atk)
-        {
-            this.atk = atk;
-        }
-
-        public void setHp(int hp)
-        {
-            this.hp = hp;
-        }
-
-        public void setMp(int mp)
-        {
-            this.mp = mp;
-        }
 
         public void setRequireStr(int requireStr)
         {
@@ -143,7 +113,7 @@ namespace Gopet.Data.GopetItem
 
         public void setNClass(sbyte NClass)
         {
-            this.NClass = NClass;
+            this.petNClass = NClass;
         }
 
         public void setIconId(int iconId)
@@ -156,10 +126,7 @@ namespace Gopet.Data.GopetItem
             this.element = element;
         }
 
-        public void setTypeTier(int typeTier)
-        {
-            this.typeTier = typeTier;
-        }
+ 
 
         public int getItemId()
         {
@@ -176,40 +143,6 @@ namespace Gopet.Data.GopetItem
             return description;
         }
 
-        public int get_int()
-        {
-            return _int;
-        }
-
-        public int getAgi()
-        {
-            return agi;
-        }
-
-        public int getStr()
-        {
-            return str;
-        }
-
-        public int getDef()
-        {
-            return def;
-        }
-
-        public int getAtk()
-        {
-            return atk;
-        }
-
-        public int getHp()
-        {
-            return hp;
-        }
-
-        public int getMp()
-        {
-            return mp;
-        }
 
         public int getRequireStr()
         {
@@ -272,7 +205,7 @@ namespace Gopet.Data.GopetItem
 
         public sbyte getNClass()
         {
-            return NClass;
+            return petNClass;
         }
 
         public int getIconId()
@@ -283,11 +216,6 @@ namespace Gopet.Data.GopetItem
         public sbyte getElement()
         {
             return element;
-        }
-
-        public int getTypeTier()
-        {
-            return typeTier;
         }
 
 
@@ -301,7 +229,7 @@ namespace Gopet.Data.GopetItem
                 case GopetManager.PET_EQUIP_SHOE:
                 case GopetManager.PET_EQUIP_WEAPON:
                 case GopetManager.PET_EQUIP_HAT:
-                    return Utilities.Format("%s chỉ số (%s(atk) %s(def) %s(hp) %s(mp)) Yêu cầu (%s(str) %s(int) %s(agi))", name, atk, def, hp, mp, requireStr, requireInt, requireAgi);
+                //return Utilities.Format("%s chỉ số (%s(atk) %s(def) %s(hp) %s(mp)) Yêu cầu (%s(str) %s(int) %s(agi))", name, atk, def, hp, mp, requireStr, requireInt, requireAgi);
                 default:
                     return name;
             }
@@ -345,5 +273,35 @@ namespace Gopet.Data.GopetItem
         }
 
 
+        public string getRange(string icon, int[] range)
+        {
+            if (range == null) return "";
+
+            if (range.Length == 0) return string.Empty;
+
+            if (range.Length == 1) return range[0].ToString() + " (atk) ";
+
+            return string.Format("[{0}({2})-{1}({2})]", range[0], range[1], icon);
+        }
+
+        internal string getAtk()
+        {
+            return getRange("atk", this.atkRange);
+        }
+
+        internal object getDef()
+        {
+            return getRange("def", this.defRange);
+        }
+
+        internal object getHp()
+        {
+            return getRange("hp", this.hpRange);
+        }
+
+        internal object getMp()
+        {
+            return getRange("mp", this.mpRange);
+        }
     }
 }

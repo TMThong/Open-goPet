@@ -1,4 +1,5 @@
 
+using Dapper;
 using Gopet.Data.Collections;
 using Gopet.Data.GopetItem;
 using Gopet.Data.User;
@@ -8,38 +9,42 @@ using Newtonsoft.Json;
 
 public class PlayerData
 {
-    public sbyte gender = 3;
-    public String name;
-    public long gold, coin, spendGold;
-    public int charID, user_id;
-    public ArrayList<int> friends = new ArrayList<int>();
-    public ArrayList<int> favouriteList = new ArrayList<int>();
-    public HashMap<sbyte, CopyOnWriteArrayList<Item>> items = new();
-    public CopyOnWriteArrayList<Pet> pets = new();
-    public CopyOnWriteArrayList<int> tasking = new();
-    public CopyOnWriteArrayList<TaskData> task = new();
-    public CopyOnWriteArrayList<int> wasTask = new();
-    public Pet petSelected;
-    public bool isFirstFree = false;
+    public sbyte gender { get; set; } = 3;
+    public String name { get; set; }
+    public long gold { get; set; }
+    public long coin { get; set; }
+    public long spendGold { get; set; }
+    public int ID { get; set; }
+    
+    public int user_id { get; set; }
+    public ArrayList<int>? friends { get; set; } = new ArrayList<int>();
+    public ArrayList<int>? favouriteList { get; set; } = new ArrayList<int>();
+    public HashMap<sbyte, CopyOnWriteArrayList<Item>>? items { get; set; } = new();
+    public CopyOnWriteArrayList<Pet>? pets { get; set; } = new();
+    public CopyOnWriteArrayList<int>? tasking { get; set; } = new();
+    public CopyOnWriteArrayList<TaskData>? task { get; set; } = new();
+    public CopyOnWriteArrayList<int>? wasTask { get; set; } = new();
+    public Pet petSelected { get; set; }
+    public bool isFirstFree { get; set; } = false;
     public int x, y;
     public sbyte speed = 4;
     public sbyte faceDir = 3;
     public sbyte waypointIndex = -1;
-    public long deltaTimeQuestion = Utilities.CurrentTimeMillis;
-    public sbyte questIndex = 1;
-    public DateTime loginDate;
-    public int star = 0;
-    public Item skinItem;
-    public Item wingItem;
-    public bool isOnSky = false;
-    public BuffExp buffExp = new BuffExp();
-    public int pkPoint = 0;
-    public DateTime pkPointTime;
-    public GopetCaptcha captcha;
-    public bool isAdmin = false;
-    public ShopArena shopArena;
-    public int clanId;
-    public String avatarPath;
+    public long deltaTimeQuestion { get; set; } = Utilities.CurrentTimeMillis;
+    public sbyte questIndex { get; set; } = 1;
+    public DateTime loginDate { get; set; }
+    public int star { get; set; } = 0;
+    public Item? skin { get; set; }
+    public Item? wing { get; set; }
+    public bool isOnSky { get; set; } = false;
+    public BuffExp? buffExp { get; set; } = new BuffExp();
+    public int pkPoint { get; set; } = 0;
+    public DateTime pkPointTime { get; set; }
+    public GopetCaptcha? captcha { get; set; }
+    public bool isAdmin { get; set; } = false;
+    public ShopArena? shopArena { get; set; }
+    public int clanId { get; set; }
+    public String avatarPath { get; set; }
 
     public PlayerData()
     {
@@ -47,162 +52,55 @@ public class PlayerData
         y = 24 * 4;
     }
 
-    public static PlayerData read(ResultSet result)
-    {
-        PlayerData playerData = new PlayerData();
-        playerData.user_id = result.getInt("user_id");
-        playerData.charID = result.getInt("ID");
-        playerData.gender = (sbyte)result.getInt("gender");
-        playerData.name = result.getString("name");
-        playerData.loginDate = result.getDateTime("loginDate");
-        playerData.coin = result.getBigDecimal("coin").longValue();
-        playerData.gold = result.getBigDecimal("gold").longValue();
-        playerData.star = result.getInt("star");
-        playerData.isOnSky = result.getsbyte("isOnSky") == 1;
-        playerData.pkPoint = result.getInt("pkPoint");
-        playerData.pkPointTime = result.getDateTime("pkPointTime");
-        playerData.isAdmin = result.getsbyte("isAdmin") == 1;
-        playerData.clanId = result.getInt("clanId");
-        playerData.avatarPath = result.getString("avatarPath");
-        playerData.spendGold = result.getBigDecimal("spendGold").longValue();
-        String friendJson = result.getString("friends");
-        if (!string.IsNullOrEmpty(friendJson))
-        {
-            playerData.friends = JsonConvert.DeserializeObject<ArrayList<int>>(friendJson);
-        }
-
-        String items = result.getString("items");
-        if (!string.IsNullOrEmpty(items))
-        {
-
-            playerData.items = JsonConvert.DeserializeObject<HashMap<sbyte, CopyOnWriteArrayList<Item>>>(items);
-        }
-
-        String favouriteList = result.getString("favouriteList");
-        if (!string.IsNullOrEmpty(favouriteList))
-        {
-
-            playerData.favouriteList = JsonConvert.DeserializeObject<ArrayList<int>>(favouriteList);
-        }
-
-        playerData.isFirstFree = result.getsbyte("isFirstFree") == 1;
-
-        String petsString = result.getString("pets");
-        if (!string.IsNullOrEmpty(petsString))
-        {
-            playerData.pets = JsonConvert.DeserializeObject<CopyOnWriteArrayList<Pet>>(petsString);
-        }
-        String petSelectedString = result.getString("petSelected");
-        if (!string.IsNullOrEmpty(petSelectedString))
-        {
-            playerData.petSelected = JsonConvert.DeserializeObject<Pet>(petSelectedString);
-        }
-        String skinString = result.getString("skin");
-        if (!string.IsNullOrEmpty(skinString))
-        {
-
-            playerData.skinItem = JsonConvert.DeserializeObject<Item>(skinString);
-        }
-        String wingString = result.getString("wing");
-        if (!string.IsNullOrEmpty(wingString))
-        {
-
-            playerData.wingItem = JsonConvert.DeserializeObject<Item>(wingString);
-        }
-
-        String buffExpStr = result.getString("buffExp");
-        if (!string.IsNullOrEmpty(buffExpStr))
-        {
-            playerData.buffExp = JsonConvert.DeserializeObject<BuffExp>(buffExpStr);
-            playerData.buffExp.loadCurrentTime();
-        }
-
-        String captchaStr = result.getString("captcha");
-        if (!string.IsNullOrEmpty(captchaStr))
-        {
-            playerData.captcha = JsonConvert.DeserializeObject<GopetCaptcha>(captchaStr);
-        }
-
-        String shopArenaStr = result.getString("shopArena");
-        if (!string.IsNullOrEmpty(shopArenaStr))
-        {
-            playerData.shopArena = JsonConvert.DeserializeObject<ShopArena>(shopArenaStr);
-        }
-
-        String taskStr = result.getString("task");
-        if (!string.IsNullOrEmpty(taskStr))
-        {
-
-            playerData.task = JsonConvert.DeserializeObject<CopyOnWriteArrayList<TaskData>>(taskStr);
-        }
-
-        String taskingStr = result.getString("tasking");
-        if (!string.IsNullOrEmpty(taskingStr))
-        {
-
-            playerData.tasking = JsonConvert.DeserializeObject<CopyOnWriteArrayList<int>>(taskingStr);
-        }
-
-        String wasTaskStr = result.getString("wasTask");
-        if (!string.IsNullOrEmpty(wasTaskStr))
-        {
-
-            playerData.wasTask = JsonConvert.DeserializeObject<CopyOnWriteArrayList<int>>(wasTaskStr);
-        }
-        return playerData;
-    }
 
     public static void create(int user_id, String name, sbyte gender)
     {
-        MySqlConnection conn = MYSQLManager.create();
-        MYSQLManager.updateSql(
-                Utilities.Format(
-                        "INSERT INTO `player` (`ID`, `user_id`, `name`, `gender` , `items`) VALUES (NULL, '%s', '%s', '%s' , NULL);",
-                        user_id, name, gender), conn);
-        conn.Close();
+        using (MySqlConnection conn = MYSQLManager.create())
+        {
+            conn.Execute("INSERT INTO `player` (`ID`, `user_id`, `name`, `gender` , `items`) VALUES (NULL, @user_id, @name, @gender , NULL);", new
+            {
+                user_id,
+                name,
+                gender
+            });
+        }
     }
 
     public void save()
     {
-        MySqlConnection conn = MYSQLManager.create();
-        MYSQLManager.updateSql(string.Format("update player set  " + getGopetSQLString() + "   coin = {0} , gold = {1}  ,  friends = '{2}'   ,    items = '{3}',   favouriteList = '{4}'  where ID = "
-                + charID,
-                coin,
-                gold,
-                JsonManager.ToJson(friends),
-                JsonManager.ToJson(items),
-                JsonManager.ToJson(favouriteList)
-        ), conn);
-        conn.Close();
+        saveStatic(this);
     }
 
-    public String getGopetSQLString()
+    public static void saveStatic(PlayerData playerData)
     {
-        String[] lines = new String[]{
-            "pets = '" + JsonManager.ToJson(pets) + "'",
-            "petSelected = '" + JsonManager.ToJson(petSelected) + "'",
-            "isFirstFree = " + (isFirstFree ? "1" : "0"),
-            "loginDate = '" + Utilities.ToDateString(loginDate) + "'",
-            "star = " + star,
-            "skin = '" + JsonManager.ToJson(skinItem) + "'",
-            "wing = '" + JsonManager.ToJson(wingItem) + "'",
-            "isOnSky = " + (isOnSky ? 1 : 0),
-            "buffExp = '" + JsonManager.ToJson(buffExp) + "'",
-            "pkPoint = " + pkPoint,
-            "pkPointTime = '" + Utilities.ToDateString(pkPointTime) + "'",
-            "captcha ='" + JsonManager.ToJson(captcha) + "'",
-            "shopArena = '" + JsonManager.ToJson(shopArena) + "'",
-            "clanId = " + clanId,
-            "task = '" + JsonManager.ToJson(task) + "'",
-            "tasking ='" + JsonManager.ToJson(tasking) + "'",
-            "avatarPath = '" + avatarPath + "'",
-            "wasTask = '" + JsonManager.ToJson(wasTask) + "'",
-            "spendGold = " + spendGold
-        };
-        String str = String.Join(",", lines) + " ,";
-        return str;
+        using (var conn = MYSQLManager.create())
+        {
+            conn.Execute(@"Update `player` SET pets = @pets,
+                            petSelected = @petSelected,
+                            isFirstFree = @isFirstFree,
+                            loginDate = @loginDate,
+                            star = @star,
+                            skin = @skin,
+                            wing = @wing,
+                            isOnSky = @isOnSky,  
+                            buffExp = @buffExp,
+                            pkPoint = @pkPoint, 
+                            pkPointTime = @pkPointTime,
+                            captcha = @captcha, 
+                            shopArena = @shopArena, 
+                            clanId = @clanId,
+                            task = @task,
+                            tasking = @tasking,
+                            avatarPath = @avatarPath,
+                            wasTask = @wasTask,
+                            spendGold = @spendGold,
+                            coin = @coin,
+                            gold = @gold,
+                            friends = @friends,
+                            items = @items ,
+                            favouriteList = @favouriteList    WHERE ID = @ID", playerData);
+        }
     }
-
 
     public CopyOnWriteArrayList<Item> getInventoryOrCreate(sbyte type)
     {

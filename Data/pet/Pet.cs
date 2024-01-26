@@ -307,12 +307,12 @@ public class Pet : GameObject
         }
 
         ArrayList<Item> otherItems = new();
-        Item skinItem = player.playerData.skinItem;
+        Item skinItem = player.playerData.skin;
         if (skinItem != null)
         {
             otherItems.add(skinItem);
         }
-        Item wingItem = player.playerData.wingItem;
+        Item wingItem = player.playerData.wing;
         if (wingItem != null)
         {
             otherItems.add(wingItem);

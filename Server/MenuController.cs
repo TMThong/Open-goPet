@@ -980,10 +980,10 @@ public class MenuController
                             break;
                         case MENU_UNEQUIP_SKIN:
                             {
-                                Item it = player.playerData.skinItem;
+                                Item it = player.playerData.skin;
                                 if (it != null)
                                 {
-                                    player.playerData.skinItem = null;
+                                    player.playerData.skin = null;
                                     player.addItemToInventory(it);
                                     place_Lc.sendMySkin(player);
                                     if (p != null)
@@ -1002,10 +1002,10 @@ public class MenuController
 
                         case MENU_UNEQUIP_WING:
                             {
-                                Item it = player.playerData.wingItem;
+                                Item it = player.playerData.wing;
                                 if (it != null)
                                 {
-                                    player.playerData.wingItem = null;
+                                    player.playerData.wing = null;
                                     player.addItemToInventory(it);
                                     place_Lc.sendUnEquipWing(player);
                                     if (p != null)
@@ -1302,13 +1302,13 @@ public class MenuController
                 if (index >= 0 && index < listSkinItems.Count)
                 {
                     Item skinItem = listSkinItems.get(index);
-                    Item oldSkinItem = player.playerData.skinItem;
+                    Item oldSkinItem = player.playerData.skin;
                     if (oldSkinItem != null)
                     {
                         listSkinItems.add(oldSkinItem);
                     }
                     listSkinItems.remove(skinItem);
-                    player.playerData.skinItem = skinItem;
+                    player.playerData.skin = skinItem;
                     Pet p = player.getPet();
                     if (p != null)
                     {
@@ -1327,13 +1327,13 @@ public class MenuController
                 if (index >= 0 && index < listWingItems.Count)
                 {
                     Item wingItem = listWingItems.get(index);
-                    Item oldWingItem = player.playerData.wingItem;
+                    Item oldWingItem = player.playerData.wing;
                     if (oldWingItem != null)
                     {
                         listWingItems.add(oldWingItem);
                     }
                     listWingItems.remove(wingItem);
-                    player.playerData.wingItem = wingItem;
+                    player.playerData.wing = wingItem;
                     Pet p = player.getPet();
                     if (p != null)
                     {
@@ -2863,7 +2863,7 @@ public class MenuController
         {
             case GopetManager.SKIN_INVENTORY:
                 {
-                    Item it = player.playerData.skinItem;
+                    Item it = player.playerData.skin;
                     if (it != null)
                     {
                         i = -1;
@@ -2874,7 +2874,7 @@ public class MenuController
 
             case GopetManager.WING_INVENTORY:
                 {
-                    Item it = player.playerData.wingItem;
+                    Item it = player.playerData.wing;
                     if (it != null)
                     {
                         i = -1;

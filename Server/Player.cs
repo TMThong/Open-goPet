@@ -1,5 +1,6 @@
 
 
+using Dapper;
 using Gopet.Data.Collections;
 using Gopet.Data.GopetItem;
 using Gopet.Data.User;
@@ -105,7 +106,11 @@ public class Player : IHandleMessage
         catch (Exception e)
         {
             e.printStackTrace();
-            Thread.Sleep(1000);
+#if DEBUG
+            throw e;
+#elif !DEBUG
+Thread.Sleep(1000);
+#endif
         }
     }
 
@@ -333,30 +338,7 @@ public class Player : IHandleMessage
             MySqlConnection MySqlConnectionPlayer = MYSQLManager.create();
             try
             {
-                ResultSet result2 = MYSQLManager.jquery(
-                        Utilities.Format("SELECT * FROM `player` where user_id = %s", user.user_id), MySqlConnectionPlayer);
-                if (result2.next())
-                {
-                    try
-                    {
-                        playerData = PlayerData.read(result2);
-                        PlayerManager.put(this);
-                        Pet p = getPet();
-                        if (p != null)
-                        {
-                            p.applyInfo(this);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                        redDialog("Đăng nhập xảy ra lỗi");
-                        Thread.Sleep(100);
-                        session.Close();
-                        return;
-                    }
-                }
-                result2.Close();
+                playerData = MySqlConnectionPlayer.QuerySingle<PlayerData>("SELECT * FROM `player` where user_id = " + user.user_id);
             }
             catch (Exception e)
             {

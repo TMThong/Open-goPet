@@ -499,7 +499,7 @@ public class GopetPlace : Place {
         CopyOnWriteArrayList<Player> currentPlayers = (CopyOnWriteArrayList<Player>) players.clone();
         HashMap<int, Item> wingPlayer = new();
         foreach (Player currentPlayer in currentPlayers) {
-            Item wingItem = currentPlayer.playerData.wingItem;
+            Item wingItem = currentPlayer.playerData.wing;
             if (wingItem != null) {
                 wingPlayer.put(currentPlayer.user.user_id, wingItem);
             }
@@ -519,7 +519,7 @@ public class GopetPlace : Place {
     }
 
     public void sendMyWing(Player player)   {
-        Item wingItem = player.playerData.wingItem;
+        Item wingItem = player.playerData.wing;
         if (wingItem != null) {
             Message m = messagePetSerive(GopetCMD.WING);
             m.putsbyte(3);
@@ -547,7 +547,7 @@ public class GopetPlace : Place {
         CopyOnWriteArrayList<Player> currentPlayers = (CopyOnWriteArrayList<Player>) players.clone();
         HashMap<int, Item> skinPlayer = new();
         foreach (Player currentPlayer in currentPlayers) {
-            Item itemSkin = currentPlayer.playerData.skinItem;
+            Item itemSkin = currentPlayer.playerData.skin;
             if (itemSkin != null) {
                 skinPlayer.put(currentPlayer.user.user_id, itemSkin);
             }
@@ -569,7 +569,7 @@ public class GopetPlace : Place {
         Message m = messagePetSerive(GopetCMD.SEND_SKIN);
         m.putInt(1);
         m.putInt(player.user.user_id);
-        Item itemSkin = player.playerData.skinItem;
+        Item itemSkin = player.playerData.skin;
         if (itemSkin != null) {
             m.putUTF(itemSkin.getTemp().getFrameImgPath());
         } else {

@@ -1,5 +1,6 @@
 
 using Gopet.Util;
+using System.Diagnostics;
 
 public class PetTemplate
 {
@@ -145,5 +146,4 @@ public class PetTemplate
     {
         return Utilities.Format("(str) %s (int) %s (agi) %s", getStr(), getInt(), getAgi());
     }
-
 }

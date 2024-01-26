@@ -12,6 +12,7 @@ using Mysqlx.Expr;
 using Newtonsoft.Json;
 using Gopet.Data.Dialog;
 using Org.BouncyCastle.Asn1.Crmf;
+using Gopet.Adapter;
 
 public class GopetManager
 {
@@ -218,15 +219,10 @@ public class GopetManager
 
     public static HashMap<int, BossTemplate> boss = new();
 
-    public static HashMap<int, ArrayList<ItemTemplate>> mergeItemPet = new();
-
-    public static HashMap<int, ArrayList<ItemTemplate>> mergeItemItem = new();
 
     public static ArrayList<int> mapHasDropItemLvlRange = new();
 
     public static ArrayList<PetTemplate> petEnable = new();
-
-    public static HashMap<int, String> itemAssetsIcon = new();
 
     public static ArrayList<ShopArenaTemplate> SHOP_ARENA_TEMPLATE = new();
 
@@ -256,6 +252,11 @@ public class GopetManager
     public static ArrayList<ExchangeData> EXCHANGE_DATAS = new();
 
     public static ArrayList<ItemTemplate> NonAdminItemList = new();
+
+
+    public static readonly List<ItemTemplate> itemTemplates = new ArrayList<ItemTemplate>();
+
+    public static readonly Dictionary<int, string> itemAssetsIcon = new();
 
 
     /**
@@ -367,9 +368,9 @@ public class GopetManager
     public const long PRICE_REVIVAL_PET_FATER_PK = 5000;
     public const float BET_PRICE_PLAYER_CHALLENGE = 10f;
     public const int LVL_PET_PASSIVE_REQUIER_UP_TIER = 10;
-    public const int SILVER_BAR_ID = 270;
-    public const int GOLD_BAR_ID = 271;
-    public const int BLOOD_GEM_ID = 273;
+    public const int SILVER_BAR_ID = 184;
+    public const int GOLD_BAR_ID = 185;
+    public const int BLOOD_GEM_ID = 186;
     public static int[] ID_BOSS_CHALLENGE = new int[] { 11, 12, 13, 14, 15 };
 
     public static int[] LVL_REQUIRE_PET_TATTO = new int[] { 3, 5, 10, 15, 20, 25, 30, 35 };
@@ -398,6 +399,17 @@ public class GopetManager
 
     static GopetManager()
     {
+        SqlMapper.AddTypeHandler(new JsonAdapter<int[]>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<ArrayList<int>>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<HashMap<sbyte, CopyOnWriteArrayList<Item>>>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<Pet>>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<int>>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<TaskData>>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<Pet>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<Item>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<BuffExp>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<GopetCaptcha>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<ShopArena>());
         shopTemplate.put(MenuController.SHOP_ARMOUR, new ShopTemplate(MenuController.SHOP_ARMOUR));
         shopTemplate.put(MenuController.SHOP_SKIN, new ShopTemplate(MenuController.SHOP_SKIN));
         shopTemplate.put(MenuController.SHOP_HAT, new ShopTemplate(MenuController.SHOP_HAT));
@@ -435,6 +447,20 @@ public class GopetManager
                 }
                 typePetTemplate.get(petTemplate.getType()).add(petTemplate);
                 PETTEMPLATE_HASH_MAP.put(petTemplate.getPetId(), petTemplate);
+            });
+
+            itemTemplates.AddRange(conn.Query<ItemTemplate>("SELECT * FROM `item`"));
+            int assetsId = 1;
+            itemTemplates.ForEach(itemTemp =>
+            {
+                itemTemp.setIconId(assetsId);
+                itemAssetsIcon[assetsId] = itemTemp.getIconPath();
+                itemTemplate.put(itemTemp.getItemId(), itemTemp);
+                if (itemTemp.getType() != ITEM_ADMIN)
+                {
+                    NonAdminItemList.add(itemTemp);
+                }
+                assetsId++;
             });
         }
 
@@ -586,79 +612,6 @@ public class GopetManager
             petTattoTemplate.setMp(resultSet.getInt("mp"));
             petTattoTemplate.setPercent(resultSet.getFloat("percent"));
             tattos.put(petTattoTemplate.getTattooId(), petTattoTemplate);
-        }
-        resultSet.Close();
-
-        int idAssets = 1;
-        resultSet = MYSQLManager.jquery("SELECT * FROM `item`");
-        while (resultSet.next())
-        {
-            idAssets++;
-            ItemTemplate itemTemp = new ItemTemplate();
-            itemTemp.setItemId(resultSet.getInt("itemId"));
-            itemTemp.setName(resultSet.getString("name"));
-            itemTemp.setDescription(resultSet.getString("description"));
-            itemTemp.setType(resultSet.getInt("type"));
-            itemTemp.set_int(resultSet.getInt("_int"));
-            itemTemp.setAgi(resultSet.getInt("agi"));
-            itemTemp.setStr(resultSet.getInt("str"));
-            itemTemp.setDef(resultSet.getInt("def"));
-            itemTemp.setAtk(resultSet.getInt("atk"));
-            itemTemp.setHp(resultSet.getInt("hp"));
-            itemTemp.setMp(resultSet.getInt("mp"));
-            itemTemp.setRequireAgi(resultSet.getInt("requireAgi"));
-            itemTemp.setRequireInt(resultSet.getInt("requireInt"));
-            itemTemp.setRequireStr(resultSet.getInt("requireStr"));
-            itemTemp.isStackable = resultSet.getsbyte("isStackable") == 1;
-            itemTemp.setCanTrade(resultSet.getsbyte("canTrade") == 1);
-            itemTemp.setOption(JsonConvert.DeserializeObject<int[]>(resultSet.getString("itemOption")));
-            itemTemp.setOptionValue(JsonConvert.DeserializeObject<int[]>(resultSet.getString("itemOptionValue")));
-            itemTemp.setGender(resultSet.getsbyte("gender"));
-            itemTemp.setFrameImgPath(resultSet.getString("frameImgPath"));
-            itemTemp.setIconPath(resultSet.getString("iconPath"));
-            itemTemp.isOnSky = resultSet.getsbyte("isOnSky") == 1;
-            itemTemp.setNClass(resultSet.getsbyte("petNClass"));
-            itemTemp.setElement(resultSet.getsbyte("element"));
-            itemTemp.setTypeTier(resultSet.getInt("tierType"));
-            itemTemp.setIconId(idAssets);
-            itemAssetsIcon.put(idAssets, itemTemp.getIconPath());
-            itemTemp.setExpire(resultSet.getlongExpire("expire"));
-            itemTemplate.put(itemTemp.getItemId(), itemTemp);
-            if (itemTemp.getType() == ITEM_PART_PET)
-            {
-                int[] optionValue = itemTemp.getOptionValue();
-                if (optionValue.Length > 1)
-                {
-                    PetTemplate petTemplate = PETTEMPLATE_HASH_MAP.get(optionValue[0]);
-                    if (petTemplate != null)
-                    {
-                        int typePet = petTemplate.getType();
-                        if (!mergeItemPet.ContainsKey(typePet))
-                        {
-                            mergeItemPet.put(typePet, new());
-                        }
-                        mergeItemPet.get(typePet).add(itemTemp);
-                    }
-                }
-            }
-            else if (itemTemp.getType() == ITEM_PART_ITEM)
-            {
-                int[] optionValue = itemTemp.getOptionValue();
-                if (optionValue.Length > 1)
-                {
-                    int typePet = itemTemp.getTypeTier();
-                    if (!mergeItemItem.ContainsKey(typePet))
-                    {
-                        mergeItemItem.put(typePet, new());
-                    }
-                    mergeItemItem.get(typePet).add(itemTemp);
-                }
-            }
-
-            if (itemTemp.getType() != ITEM_ADMIN)
-            {
-                NonAdminItemList.add(itemTemp);
-            }
         }
         resultSet.Close();
 
@@ -943,6 +896,41 @@ public class GopetManager
         MYSQLManager.updateSql("DELETE FROM `market`");
     }
 
+
+    public static string GetElementDisplay(sbyte typeE)
+    {
+        switch (typeE)
+        {
+            case FIRE_ELEMENT: return "(fire)";
+            case WATER_ELEMENT: return "(water)";
+            case LIGHT_ELEMENT: return "(light)";
+            case DARK_ELEMENT: return "(dark)";
+            case TREE_ELEMENT: return "(tree)";
+            case ROCK_ELEMENT: return "(rock)";
+            case THUNDER_ELEMENT: return "(thunder)";
+        }
+
+        return string.Empty;
+    }
+
+    public static string GetClassDisplay(sbyte nclass)
+    {
+        switch (nclass)
+        {
+            case Assassin: return "Sát thủ";
+            case Wizard: return "Pháp sư";
+            case Fighter: return "Chiến binh";
+            case Demon: return "Thiên binh";
+            case Angel: return "Thiên sứ";
+            case Archer: return "Thiên binh";
+        }
+        return string.Empty;
+    }
+
+    public static string GetElementDisplay(sbyte typeE, sbyte nClass)
+    {
+        return string.Concat(GetClassDisplay(nClass), " ", GetElementDisplay(typeE));
+    }
     public static void saveMarket()
     {
         MySqlConnection MySqlConnection = MYSQLManager.create();

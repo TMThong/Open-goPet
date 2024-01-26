@@ -40,14 +40,11 @@ namespace Gopet.Data.GopetItem
 
         public Item(int itemTemplateId)
         {
-            this.itemTemplateId = itemTemplateId;
-            setHp(getTemp().getHp());
-            setMp(getTemp().getMp());
-            setAtk(getTemp().getAtk());
-            setDef(getTemp().getDef());
+           /* this.itemTemplateId = itemTemplateId;
+            
             option = getTemp().getOption();
             optionValue = getTemp().getOptionValue();
-            ItemTemplate itemTemplate = getTemp();
+            ItemTemplate itemTemplate = getTemp();*/
         }
 
         public ItemTemplate getTemp()

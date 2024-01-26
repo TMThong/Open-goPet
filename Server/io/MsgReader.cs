@@ -28,13 +28,13 @@ namespace Gopet.IO
                             Console.WriteLine("MSG " + message.id);
                             session.messageHandler.onMessage(message);
                             session.msgCount++;
-                            Thread.Sleep(10);
                             continue;
                         }
                     }
                 }
                 catch (Exception var5)
                 {
+
                 }
 
                 if (session.isConnected())

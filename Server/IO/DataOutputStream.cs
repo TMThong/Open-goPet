@@ -9,23 +9,29 @@ using System.Threading.Tasks;
 
 namespace Gopet.IO
 {
-    public class DataOutputStream
+    public class DataOutputStream<T> where T : Stream
     {
+
+        public T BaseStream { get; }
+
+        public DataOutputStream(T baseStream)
+        {
+            BaseStream = baseStream;
+        }
+
         public void writeSByte(sbyte value)
         {
-            this.checkLenght(0);
-            this.buffer[this.posWrite++] = value;
+            BaseStream.WriteByte(value.toByte());
         }
 
         public void writeSByte(int value)
         {
-            this.checkLenght(0);
-            this.buffer[this.posWrite++] = (sbyte)(value & 0xFF);
+            BaseStream.WriteByte((byte)(value & 0xFF));
         }
 
         public void writeSByteUncheck(sbyte value)
         {
-            this.buffer[this.posWrite++] = value;
+            BaseStream.WriteByte(value.toByte());
         }
 
         public void writeByte(sbyte value)
@@ -152,33 +158,10 @@ namespace Gopet.IO
             this.writeSByte(value);
         }
 
-        public sbyte[] getData()
-        {
-            if (this.posWrite <= 0)
-            {
-                return new sbyte[0];
-            }
-            sbyte[] array = new sbyte[this.posWrite];
-            for (int i = 0; i < this.posWrite; i++)
-            {
-                array[i] = this.buffer[i];
-            }
-            return array;
-        }
 
         public void checkLenght(int ltemp)
         {
-            if (this.posWrite + ltemp > this.lenght)
-            {
-                sbyte[] array = new sbyte[this.lenght + 1024 + ltemp];
-                for (int i = 0; i < this.lenght; i++)
-                {
-                    array[i] = this.buffer[i];
-                }
-                this.buffer = null;
-                this.buffer = array;
-                this.lenght += 1024 + ltemp;
-            }
+
         }
 
 
@@ -215,10 +198,7 @@ namespace Gopet.IO
 
         }
 
-        public sbyte[] buffer = new sbyte[2048];
-
         private int posWrite;
 
-        private int lenght = 2048;
     }
 }

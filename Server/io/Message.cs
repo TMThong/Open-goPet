@@ -6,7 +6,7 @@ public class Message
 
     public sbyte id;
 
-    private DataOutputStream dos;
+    private DataOutputStream<MemoryStream> dos;
     private DataInputStream dis;
     public bool isEncrypted;
     public static bool isiWin = false;
@@ -40,7 +40,7 @@ public class Message
         }
         else
         {
-            sbyte[] data = this.dos.getData();
+            sbyte[] data = this.dos.BaseStream.ToArray().sbytes();
             sbyte[] buffer;
             if (isiWin)
             {
@@ -66,11 +66,11 @@ public class Message
         return this.dis;
     }
 
-    public DataOutputStream writer()
+    public DataOutputStream<MemoryStream> writer()
     {
         if (this.dos == null)
         {
-            this.dos = new DataOutputStream();
+            this.dos = new DataOutputStream<MemoryStream>(new MemoryStream());
         }
 
         return this.dos;

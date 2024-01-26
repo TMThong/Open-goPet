@@ -2,7 +2,8 @@
 using Gopet.Data.GopetItem;
 using Gopet.Util;
 
-public class ShopTemplateItem : DataVersion {
+public class ShopTemplateItem : DataVersion
+{
 
     public int shopId;
     public int itemTempalteId;
@@ -53,7 +54,7 @@ public class ShopTemplateItem : DataVersion {
         this.inventoryType = inventoryType;
     }
 
-    
+
 
     public void setNameSpeceial(String nameSpeceial)
     {
@@ -105,7 +106,7 @@ public class ShopTemplateItem : DataVersion {
         this.petId = petId;
     }
 
-     
+
 
     public int getShopId()
     {
@@ -137,7 +138,7 @@ public class ShopTemplateItem : DataVersion {
         return this.inventoryType;
     }
 
-    
+
 
     public String getNameSpeceial()
     {
@@ -189,87 +190,113 @@ public class ShopTemplateItem : DataVersion {
         return this.petId;
     }
 
-     
- 
 
-    public ItemTemplate getItemTemplate() {
+
+
+    public ItemTemplate getItemTemplate()
+    {
         return GopetManager.itemTemplate.get(itemTempalteId);
     }
 
-    public PetTemplate getPetTemplate() {
+    public PetTemplate getPetTemplate()
+    {
         return GopetManager.PETTEMPLATE_HASH_MAP.get(petId);
     }
 
-    public String getIconPath() {
-        if (isSellItem) {
+    public String getIconPath()
+    {
+        if (isSellItem)
+        {
             return getItemTemplate().getIconPath();
         }
 
         return getPetTemplate().getIcon();
     }
 
-    public String getDesc(Player player) {
-        if (isSpceial) {
+    public String getDesc(Player player)
+    {
+        if (isSpceial)
+        {
             return descriptionSpeceial;
         }
 
-        if (!isSellItem) {
+        if (!isSellItem)
+        {
             PetTemplate petTemplate = getPetTemplate();
-            return Utilities.Format("( + %s (str) , + %s (agi) , + %s (int) , + %s (hp) , + %s (mp))", petTemplate.getStr(), petTemplate.getAgi(), petTemplate.getInt(), petTemplate.getHp(), petTemplate.getMp());
+            if (petTemplate == null)
+            {
+                throw new NullReferenceException("pet null");
+            }
+            return Utilities.Format($"Hệ: {GopetManager.GetElementDisplay(petTemplate.element, petTemplate.nclass)}. Mô tả:   " + " + %s (str) , + %s (agi) , + %s (int) , + %s (hp) , + %s (mp)", petTemplate.getStr(), petTemplate.getAgi(), petTemplate.getInt(), petTemplate.getHp(), petTemplate.getMp());
         }
 
         ItemTemplate itemTemplate = getItemTemplate();
 
-        if (itemTemplate.getType() == GopetManager.PET_EQUIP_ARMOUR || itemTemplate.getType() == GopetManager.PET_EQUIP_GLOVE || itemTemplate.getType() == GopetManager.PET_EQUIP_HAT || itemTemplate.getType() == GopetManager.PET_EQUIP_SHOE || itemTemplate.getType() == GopetManager.PET_EQUIP_WEAPON) {
+        if (itemTemplate.getType() == GopetManager.PET_EQUIP_ARMOUR || itemTemplate.getType() == GopetManager.PET_EQUIP_GLOVE || itemTemplate.getType() == GopetManager.PET_EQUIP_HAT || itemTemplate.getType() == GopetManager.PET_EQUIP_SHOE || itemTemplate.getType() == GopetManager.PET_EQUIP_WEAPON)
+        {
             return itemTemplate.getDescription() + Utilities.Format("( + %s (atk) , + %s (def) , + %s (hp) , + %s (mp))", itemTemplate.getAtk(), itemTemplate.getDef(), itemTemplate.getHp(), itemTemplate.getMp());
         }
 
-        if (itemTemplate.getType() == GopetManager.SKIN_ITEM) {
+        if (itemTemplate.getType() == GopetManager.SKIN_ITEM)
+        {
             return Utilities.Format("+%s (atk) +%s (def) +%s (hp) +%s (mp)", itemTemplate.getAtk(), itemTemplate.getDef(), itemTemplate.getHp(), itemTemplate.getMp());
         }
         return itemTemplate.getDescription();
     }
 
-    public String getName() {
-        if (isSpceial) {
+    public String getName()
+    {
+        if (isSpceial)
+        {
             return nameSpeceial;
         }
 
-        if (!isSellItem) {
+        if (!isSellItem)
+        {
             return getPetTemplate().getName();
         }
         ItemTemplate itemTemplate = getItemTemplate();
 
-        if (itemTemplate.getType() == GopetManager.PET_EQUIP_ARMOUR || itemTemplate.getType() == GopetManager.PET_EQUIP_GLOVE || itemTemplate.getType() == GopetManager.PET_EQUIP_HAT || itemTemplate.getType() == GopetManager.PET_EQUIP_SHOE || itemTemplate.getType() == GopetManager.PET_EQUIP_WEAPON) {
+        if (itemTemplate.getType() == GopetManager.PET_EQUIP_ARMOUR || itemTemplate.getType() == GopetManager.PET_EQUIP_GLOVE || itemTemplate.getType() == GopetManager.PET_EQUIP_HAT || itemTemplate.getType() == GopetManager.PET_EQUIP_SHOE || itemTemplate.getType() == GopetManager.PET_EQUIP_WEAPON)
+        {
             return itemTemplate.getName() + Utilities.Format("(Yêu cầu   %s (str) ,  %s (agi) ,  %s (int))", itemTemplate.getRequireStr(), itemTemplate.getRequireAgi(), itemTemplate.getRequireInt());
         }
 
-        if (count > 1 && shopId != MenuController.SHOP_CLAN) {
+        if (count > 1 && shopId != MenuController.SHOP_CLAN)
+        {
             return itemTemplate.getName() + "  x" + count;
-        } else if (count > 1 && shopId == MenuController.SHOP_CLAN) {
+        }
+        else if (count > 1 && shopId == MenuController.SHOP_CLAN)
+        {
             return itemTemplate.getName() + " còn x" + (count - perCount);
         }
         return itemTemplate.getName();
     }
 
-    public void execute(Player player)   {
-        switch (spceialType) {
-            case TYPE_RESET_SHOP_ARENA: {
-                if (player.playerData.shopArena != null) {
-                    if (player.playerData.shopArena.getNumReset() + 1 >= GopetManager.MAX_RESET_SHOP_ARENA) {
-                        player.redDialog("Reset đạt số lần tối đa trong hôm nay");
-                        return;
-                    }
+    public void execute(Player player)
+    {
+        switch (spceialType)
+        {
+            case TYPE_RESET_SHOP_ARENA:
+                {
+                    if (player.playerData.shopArena != null)
+                    {
+                        if (player.playerData.shopArena.getNumReset() + 1 >= GopetManager.MAX_RESET_SHOP_ARENA)
+                        {
+                            player.redDialog("Reset đạt số lần tối đa trong hôm nay");
+                            return;
+                        }
 
-                    if (player.playerData.shopArena.numResetFree > 0) {
-                        player.playerData.shopArena.numResetFree--;
+                        if (player.playerData.shopArena.numResetFree > 0)
+                        {
+                            player.playerData.shopArena.numResetFree--;
+                        }
+                        player.playerData.shopArena.nextArena();
+                        MenuController.sendMenu(MenuController.SHOP_ARENA, player);
+                        player.okDialog("Reset thành công");
                     }
-                    player.playerData.shopArena.nextArena();
-                    MenuController.sendMenu(MenuController.SHOP_ARENA, player);
-                    player.okDialog("Reset thành công");
                 }
-            }
-            break;
+                break;
         }
     }
 
