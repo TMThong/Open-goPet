@@ -5,7 +5,7 @@ using System.Diagnostics;
 public class PetTemplate
 {
 
-    public int petId, hp, mp, str, _int, agi;
+    public int petId, str, _int, agi;
     public sbyte type, nclass, element;
     public string name, icon, frameImg;
 
@@ -14,15 +14,6 @@ public class PetTemplate
         this.petId = petId;
     }
 
-    public void setHp(int hp)
-    {
-        this.hp = hp;
-    }
-
-    public void setMp(int mp)
-    {
-        this.mp = mp;
-    }
 
     public void setStr(int str)
     {
@@ -75,15 +66,7 @@ public class PetTemplate
         return this.petId;
     }
 
-    public int getHp()
-    {
-        return this.hp;
-    }
 
-    public int getMp()
-    {
-        return this.mp;
-    }
 
     public int getStr()
     {
@@ -145,5 +128,15 @@ public class PetTemplate
     public String getDesc()
     {
         return Utilities.Format("(str) %s (int) %s (agi) %s", getStr(), getInt(), getAgi());
+    }
+
+    public int getHp()
+    {
+        return 1 * 3 + str * 4 + 20;
+    }
+
+    public int getMp()
+    {
+        return 1 * 2 + agi * 5 + 20;
     }
 }

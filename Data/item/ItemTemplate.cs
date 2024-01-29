@@ -5,7 +5,6 @@ namespace Gopet.Data.GopetItem
 {
     public class ItemTemplate
     {
-
         public int itemId;
         public string name;
         public string description;
@@ -14,9 +13,9 @@ namespace Gopet.Data.GopetItem
         public int requireInt;
         public int type;
        
-        public int[] option = new int[0];
+        public int[] itemOption = new int[0];
        
-        public int[] optionValue = new int[0];
+        public int[] itemOptionValue = new int[0];
        
         public int[] hpRange;
        
@@ -75,12 +74,12 @@ namespace Gopet.Data.GopetItem
 
         public void setOption(int[] option)
         {
-            this.option = option;
+            this.itemOption = option;
         }
 
         public void setOptionValue(int[] optionValue)
         {
-            this.optionValue = optionValue;
+            this.itemOptionValue = optionValue;
         }
 
 
@@ -166,12 +165,12 @@ namespace Gopet.Data.GopetItem
 
         public int[] getOption()
         {
-            return option;
+            return itemOption;
         }
 
         public int[] getOptionValue()
         {
-            return optionValue;
+            return itemOptionValue;
         }
 
 
@@ -241,10 +240,10 @@ namespace Gopet.Data.GopetItem
             {
                 case GopetManager.ITEM_PART_PET:
                     {
-                        if (optionValue.Length >= 2)
+                        if (itemOptionValue.Length >= 2)
                         {
-                            int petId = optionValue[0];
-                            int count = optionValue[1];
+                            int petId = itemOptionValue[0];
+                            int count = itemOptionValue[1];
                             PetTemplate petTemplate = GopetManager.PETTEMPLATE_HASH_MAP.get(petId);
                             if (petTemplate != null)
                             {
@@ -255,10 +254,10 @@ namespace Gopet.Data.GopetItem
                     }
                 case GopetManager.ITEM_PART_ITEM:
                     {
-                        if (optionValue.Length >= 2)
+                        if (itemOptionValue.Length >= 2)
                         {
-                            int itemidTemp = optionValue[0];
-                            int count = optionValue[1];
+                            int itemidTemp = itemOptionValue[0];
+                            int count = itemOptionValue[1];
                             ItemTemplate itemTemplate = GopetManager.itemTemplate.get(itemidTemp);
                             if (itemTemplate != null)
                             {

@@ -38,6 +38,9 @@ public class ShopTemplate : DataVersion {
             case MenuController.SHOP_CLAN:
                 name = "Cửa hàng bang hội";
                 break;
+            case MenuController.SHOP_ENERGY:
+                name = "Cửa hàng năng lượng";
+                break;
             default:
                 name = "Error shop type " + type;
                 break;

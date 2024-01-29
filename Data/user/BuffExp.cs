@@ -4,13 +4,13 @@ using Gopet.Util;
 public class BuffExp : DataVersion {
 
      
-    private long buffExpTime = -1;
-     
-    private int itemTemplateIdBuff = -1;
-    
-    private float _buffPercent = 0f;
-    
-    private long currentTime = Utilities.CurrentTimeMillis;
+    public long buffExpTime = -1;
+
+    public int itemTemplateIdBuff = -1;
+
+    public float _buffPercent = 0f;
+
+    public long currentTime = Utilities.CurrentTimeMillis;
 
     public BuffExp() {
 

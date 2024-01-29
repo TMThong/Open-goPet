@@ -87,6 +87,14 @@ public class Pet : GameObject
         return petIdTemplate;
     }
 
+    public PetTemplate Template
+    {
+        get
+        {
+            return GopetManager.PETTEMPLATE_HASH_MAP[this.petIdTemplate];
+        }
+    }
+
     public int getAgi()
     {
         return agi + tiemnang[1];
@@ -200,12 +208,25 @@ public class Pet : GameObject
 
     public int getAtk()
     {
+        switch (Template.nclass)
+        {
+            case GopetManager.Archer:
+            case GopetManager.Fighter:
+                return atk + (getStr() / 3) + 5;
+            case GopetManager.Demon:
+            case GopetManager.Assassin:
+                return atk + (getAgi() / 3) + 5;
+            case GopetManager.Angel:
+            case GopetManager.Wizard:
+                return atk + (getInt() / 3) + 5;
+        }
+
         return atk + Utilities.round(str / 2) + (tiemnang[0] / 2);
     }
 
     public int getDef()
     {
-        return def + tiemnang[1];
+        return def + getAgi() / 3;
     }
 
     public String getNameWithoutStar()
@@ -257,6 +278,31 @@ public class Pet : GameObject
         return false;
     }
 
+    public int getHpViaPrice()
+    {
+        return lvl * 3 + getStr() * 4 + 20;
+    }
+
+    public int getMpViaPrice()
+    {
+        return lvl * 3 + getInt() * 5 + 20;
+    }
+    public virtual float SkipPercent
+    {
+        get
+        {
+            return 15 + getAgi() / 1000;
+        }
+    }
+
+    public virtual float AccuracyPercent
+    {
+        get
+        {
+            return 100 + getAgi() / 1000;
+        }
+    }
+
     /**
      * Áp dụng chỉ số sao khi mặc đồ hoặc thay đổi
      */
@@ -266,8 +312,8 @@ public class Pet : GameObject
         this.def = 0;
         //        this.maxHp = 0;   
         //        this.maxMp = 0;
-        this.maxHp = getPetTemplate().getHp() + (tiemnang[2] * 10);
-        this.maxMp = getPetTemplate().getMp() + (tiemnang[2] * 10);
+        this.maxHp = getHpViaPrice();
+        this.maxMp = getMpViaPrice();
         foreach (var next in equip.ToArray())
         {
             Item it = player.controller.selectItemEquipByItemId(next);

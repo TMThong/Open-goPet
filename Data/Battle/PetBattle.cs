@@ -35,21 +35,11 @@ namespace Gopet.Battle
             setPetAttackMob(false);
             setDelaTimeTurn(Utilities.CurrentTimeMillis + GopetManager.TimeNextTurn);
             setActiveBattleInfo(new PetBattleInfo(activePlayer));
-            setPassiveBattleInfo(new PetBattleInfo(passivePlayer));
-            if (isActiveTurn)
-            {
-                if (isKhacChe(activePet.getPetTemplate().getElement(), passivePet.getPetTemplate().getElement()))
-                {
-                    getPassiveBattleInfo().addBuff(new Debuff(new ItemInfo[] { new ItemInfo(10, -3000) }, 1));
-                }
-            }
-            else
-            {
-                if (isKhacChe(passivePet.getPetTemplate().getElement(), activePet.getPetTemplate().getElement()))
-                {
-                    getActiveBattleInfo().addBuff(new Debuff(new ItemInfo[] { new ItemInfo(10, -3000) }, 1));
-                }
-            }
+            PassiveBattleInfo = new PetBattleInfo(passivePlayer);
+
+            getActiveBattleInfo().addBuff(new Debuff(new ItemInfo[] { new ItemInfo(10, Utilities.round(GopetManager.MitigatePetData[activePet.Template.element][passivePet.Template.element] * 100)) }, int.MaxValue));
+            PassiveBattleInfo.addBuff(new Debuff(new ItemInfo[] { new ItemInfo(10, Utilities.round(GopetManager.MitigatePetData[passivePet.Template.element][activePet.Template.element] * 100)) }, int.MaxValue));
+
         }
 
         public PetBattle(Mob mob, GopetPlace place, Player activePlayer)
@@ -62,10 +52,9 @@ namespace Gopet.Battle
             setDelaTimeTurn(Utilities.CurrentTimeMillis + GopetManager.TimeNextTurn);
             setIsActiveTurn(false);
             setActiveBattleInfo(new PetBattleInfo(activePlayer));
-            if (isKhacChe(mob.getPetTemplate().getElement(), activePet.getPetTemplate().getElement()))
-            {
-                getActiveBattleInfo().addBuff(new Debuff(new ItemInfo[] { new ItemInfo(10, -3000) }, 1));
-            }
+            getActiveBattleInfo().addBuff(new Debuff(new ItemInfo[] { new ItemInfo(10, Utilities.round(GopetManager.MitigatePetData[activePet.Template.element][mob.Template.element] * 100)) }, int.MaxValue));
+            PassiveBattleInfo.addBuff(new Debuff(new ItemInfo[] { new ItemInfo(10, Utilities.round(GopetManager.MitigatePetData[mob.Template.element][activePet.Template.element] * 100)) }, int.MaxValue));
+
             timeCheckplayer = Utilities.CurrentTimeMillis + 7000L;
         }
 
@@ -104,15 +93,19 @@ namespace Gopet.Battle
             this.activeBattleInfo = activeBattleInfo;
         }
 
-        public PetBattleInfo getPassiveBattleInfo()
+        public PetBattleInfo PassiveBattleInfo
         {
-            return passiveBattleInfo;
+            get
+            {
+                return passiveBattleInfo;
+            }
+            set
+            {
+                passiveBattleInfo = value;
+            }
         }
 
-        public void setPassiveBattleInfo(PetBattleInfo passiveBattleInfo)
-        {
-            this.passiveBattleInfo = passiveBattleInfo;
-        }
+
 
         public bool isIsActiveTurn()
         {
@@ -226,7 +219,7 @@ namespace Gopet.Battle
                 if (!isMiss)
                 {
                     PetDamgeInfo damge = makeDamage(getUserPetBattleInfo(), getNonUserPetBattleInfo(), null);
-                    if (isCrit())
+                    if (isCrit(getPet()))
                     {
                         damge.setDamge(damge.getDamge() * 2);
                         turnEffects.add(new TurnEffect(TurnEffect.SKILL_CRIT, getFocus(), TurnEffect.SKILL_CRIT, -damge.getDamge(), 0));
@@ -380,38 +373,40 @@ namespace Gopet.Battle
             return petAttackMob ? !isActiveTurn ? activePet : null : !isActiveTurn ? activePet : passivePet;
         }
 
-        /**
-         * hàm kiểm tra có khắc chế không
-         *
-         * @param elementActive hệ của pet chủ động
-         * @param elementPassive hệ của pet bị động
-         * @return có hay không khắc chế
-         */
-        public static bool isKhacChe(sbyte elementActive, sbyte elementPassive)
+        public static bool isCrit(Mob mob)
         {
-            switch (elementActive)
+
+            switch (mob.Template.nclass)
             {
-                case GopetManager.THUNDER_ELEMENT:
-                    return elementPassive == GopetManager.TREE_ELEMENT;
-                case GopetManager.TREE_ELEMENT:
-                    return elementPassive == GopetManager.WATER_ELEMENT;
-                case GopetManager.WATER_ELEMENT:
-                    return elementPassive == GopetManager.FIRE_ELEMENT;
-                case GopetManager.FIRE_ELEMENT:
-                    return elementPassive == GopetManager.ROCK_ELEMENT;
-                case GopetManager.ROCK_ELEMENT:
-                    return elementPassive == GopetManager.THUNDER_ELEMENT;
-                case GopetManager.LIGHT_ELEMENT:
-                    return elementPassive == GopetManager.DARK_ELEMENT;
-                case GopetManager.DARK_ELEMENT:
-                    return elementPassive == GopetManager.LIGHT_ELEMENT;
+                case GopetManager.Archer:
+                case GopetManager.Fighter:
+                    return Utilities.NextFloatPer() < (mob.Template.str + mob.Template.agi * 2) / 4000 + (4 / 100);
+                case GopetManager.Demon:
+                case GopetManager.Assassin:
+                    return Utilities.NextFloatPer() < (mob.Template._int + mob.Template.agi * 2) / 4000 + (4 / 100);
+                case GopetManager.Angel:
+                case GopetManager.Wizard:
+                    return Utilities.NextFloatPer() < (mob.Template.agi * 2) / 2200 + (4 / 100);
             }
+
             return false;
         }
 
-        public static bool isCrit()
+        public static bool isCrit(Pet pet)
         {
-            return Utilities.NextFloatPer() > Utilities.nextInt(100 - 40, 100 - 30);
+            switch (pet.Template.nclass)
+            {
+                case GopetManager.Archer:
+                case GopetManager.Fighter:
+                    return Utilities.NextFloatPer() < (pet.getStr() + pet.getAgi() * 2) / 4000 + (4 / 100);
+                case GopetManager.Demon:
+                case GopetManager.Assassin:
+                    return Utilities.NextFloatPer() < (pet.getInt() + pet.getAgi() * 2) / 4000 + (4 / 100);
+                case GopetManager.Angel:
+                case GopetManager.Wizard:
+                    return Utilities.NextFloatPer() < (pet.getAgi() * 2) / 2200 + (4 / 100);
+            }
+            return false;
         }
 
         public void sendBattleInfo(Player playerInZone)
@@ -640,7 +635,7 @@ namespace Gopet.Battle
             }
             else
             {
-                getPassiveBattleInfo().nextTurn();
+                PassiveBattleInfo.nextTurn();
             }
 
             if (petAttackMob)
@@ -1138,7 +1133,7 @@ namespace Gopet.Battle
 
                 if (!isMiss)
                 {
-                    bool crit = isCrit();
+                    bool crit = isCrit(mob);
                     if (crit)
                     {
                         sum *= 2;

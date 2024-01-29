@@ -17,13 +17,13 @@ public class PlayerData
     public int ID { get; set; }
     
     public int user_id { get; set; }
-    public ArrayList<int>? friends { get; set; } = new ArrayList<int>();
-    public ArrayList<int>? favouriteList { get; set; } = new ArrayList<int>();
-    public HashMap<sbyte, CopyOnWriteArrayList<Item>>? items { get; set; } = new();
-    public CopyOnWriteArrayList<Pet>? pets { get; set; } = new();
-    public CopyOnWriteArrayList<int>? tasking { get; set; } = new();
-    public CopyOnWriteArrayList<TaskData>? task { get; set; } = new();
-    public CopyOnWriteArrayList<int>? wasTask { get; set; } = new();
+    public ArrayList<int> friends { get; set; } = new ArrayList<int>();
+    public ArrayList<int> favouriteList { get; set; } = new ArrayList<int>();
+    public HashMap<sbyte, CopyOnWriteArrayList<Item>> items { get; set; } = new();
+    public CopyOnWriteArrayList<Pet> pets { get; set; } = new();
+    public CopyOnWriteArrayList<int> tasking { get; set; } = new();
+    public CopyOnWriteArrayList<TaskData> task { get; set; } = new();
+    public CopyOnWriteArrayList<int> wasTask { get; set; } = new();
     public Pet petSelected { get; set; }
     public bool isFirstFree { get; set; } = false;
     public int x, y;
@@ -34,17 +34,19 @@ public class PlayerData
     public sbyte questIndex { get; set; } = 1;
     public DateTime loginDate { get; set; }
     public int star { get; set; } = 0;
-    public Item? skin { get; set; }
-    public Item? wing { get; set; }
+    public Item skin { get; set; }
+    public Item wing { get; set; }
     public bool isOnSky { get; set; } = false;
     public BuffExp? buffExp { get; set; } = new BuffExp();
     public int pkPoint { get; set; } = 0;
     public DateTime pkPointTime { get; set; }
-    public GopetCaptcha? captcha { get; set; }
+    public GopetCaptcha captcha { get; set; }
     public bool isAdmin { get; set; } = false;
-    public ShopArena? shopArena { get; set; }
+    public ShopArena shopArena { get; set; }
     public int clanId { get; set; }
     public String avatarPath { get; set; }
+
+    public Dictionary<int, int> numUseEnergy { get; set; } = new();
 
     public PlayerData()
     {
@@ -98,7 +100,9 @@ public class PlayerData
                             gold = @gold,
                             friends = @friends,
                             items = @items ,
-                            favouriteList = @favouriteList    WHERE ID = @ID", playerData);
+                            favouriteList = @favouriteList,
+                            numUseEnergy = @numUseEnergy 
+                            WHERE ID = @ID", playerData);
         }
     }
 

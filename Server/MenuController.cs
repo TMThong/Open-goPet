@@ -12,7 +12,7 @@ using MySql.Data.MySqlClient;
 
 public class MenuController
 {
-
+    #region Const
     /**
      * Danh sách nhận pet miễn phí
      */
@@ -175,6 +175,7 @@ public class MenuController
     public const int OP_UPGRADE_STAR_PET = 8;
     public const int OP_CHALLENGE = 10;
     public const int OP_SHOP_ARENA = 11;
+    public const int OP_SHOP_ENERGY = 14;
     public const int OP_MERGE_PART_PET = 15;
     public const int OP_PET_TATOO = 16;
     public const int OP_MERGE_ITEM = 19;
@@ -241,6 +242,7 @@ public class MenuController
     public const sbyte SHOP_ARENA = 9;
 
     public const sbyte SHOP_CLAN = 10;
+    public const sbyte SHOP_ENERGY = 11;
 
     public const int OBJKEY_REMOVE_ITEM_EQUIP = 0;
     public const int OBJKEY_KIOSK_ITEM = 1;
@@ -309,7 +311,7 @@ public class MenuController
     public const int INPUT_TYPE_GIFT_CODE = 17;
     public const int INPUT_TYPE_NAME_TO_BUFF_ENCHANT = 18;
     public const int IMGDIALOG_CAPTCHA = 0;
-
+    #endregion
     public static void init()
     {
         foreach (int petFreeId in GopetManager.petFreeIds)
@@ -1619,17 +1621,24 @@ public class MenuController
                             break;
                         case MENU_MERGE_PART_PET:
                             {
-                                if (itemSelect.count >= GopetManager.PART_NEED_MERGE_PET)
+                                if (itemSelect.getTemp().itemOptionValue.Length > 0)
                                 {
-                                    player.controller.subCountItem(itemSelect, GopetManager.PART_NEED_MERGE_PET, GopetManager.NORMAL_INVENTORY);
-                                    int petTemplateId = itemSelect.getTemp().getOptionValue()[0];
-                                    Pet pet = new Pet(petTemplateId);
-                                    player.playerData.addPet(pet, player);
-                                    player.okDialog(Utilities.Format("Chức mừng bạn ghép thành công %s", pet.getNameWithStar()));
+                                    if (itemSelect.count >= itemSelect.getTemp().getOptionValue()[1])
+                                    {
+                                        player.controller.subCountItem(itemSelect, itemSelect.getTemp().getOptionValue()[1], GopetManager.NORMAL_INVENTORY);
+                                        int petTemplateId = itemSelect.getTemp().getOptionValue()[0];
+                                        Pet pet = new Pet(petTemplateId);
+                                        player.playerData.addPet(pet, player);
+                                        player.okDialog(Utilities.Format("Chức mừng bạn ghép thành công %s", pet.getNameWithStar()));
+                                    }
+                                    else
+                                    {
+                                        player.redDialog(Utilities.Format("Bạn không đủ", itemSelect.getTemp().getOptionValue()[1]));
+                                    }
                                 }
                                 else
                                 {
-                                    player.redDialog(Utilities.Format("Bạn không đủ", GopetManager.PART_NEED_MERGE_PET));
+                                    player.redDialog("Lỗi mảnh pet!!!!");
                                 }
                             }
                             break;
@@ -1761,6 +1770,34 @@ public class MenuController
                                 }
                                 return;
                             }
+                        case GopetManager.ITEM_ENERGY:
+                            {
+                                if (itemSelect.Template.itemOptionValue != null)
+                                {
+                                    if (itemSelect.Template.itemOptionValue.Length >= 2)
+                                    {
+                                        int numUse = 0;
+
+                                        if (player.playerData.numUseEnergy.ContainsKey(itemSelect.Template.itemId)) numUse = player.playerData.numUseEnergy[itemSelect.Template.itemId];
+
+                                        if (numUse >= itemSelect.Template.itemOptionValue[1])
+                                        {
+                                            player.redDialog("Bạn đã sử dụng đạt tối đa ngày hôm nay");
+                                        }
+                                        else
+                                        {
+                                            numUse++;
+                                            player.controller.subCountItem(itemSelect, 1, GopetManager.NORMAL_INVENTORY);
+                                            player.playerData.star += itemSelect.Template.itemOptionValue[0];
+                                            player.controller.updateUserInfo();
+                                            player.playerData.numUseEnergy[itemSelect.itemTemplateId] = numUse;
+                                            player.okDialog($"Sử dụng thành công và hiện tại bạn đang có {Utilities.FormatNumber(player.playerData.star)} năng lượng");
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+
                         default:
                             {
                                 player.redDialog("Không thể sử dụng vật phẩm này");
@@ -2336,6 +2373,10 @@ public class MenuController
                     player.controller.showUpgradePet();
                 }
                 break;
+            case OP_SHOP_ENERGY:
+                showShop(SHOP_ENERGY, player);
+                break;
+
             case OP_MERGE_PART_PET:
                 sendMenu(MENU_MERGE_PART_PET, player); break;
             case OP_KIOSK_HAT:

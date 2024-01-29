@@ -1073,6 +1073,7 @@ public class GameController
         var serverDate = Utilities.GetCurrentDate();
         if (player.playerData.loginDate.Day != serverDate.Day || player.playerData.loginDate.Month != serverDate.Month || player.playerData.loginDate.Year != serverDate.Year)
         {
+            this.player.playerData.numUseEnergy.Clear();
             this.player.playerData.star = GopetManager.DAILY_STAR;
         }
         player.playerData.loginDate = DateTime.Now;
@@ -1326,7 +1327,7 @@ public class GameController
         message.putInt(item.itemId);
         message.putUTF(template.getFrameImgPath());
         message.putUTF("???");
-        message.putUTF(item.getEquipName());
+        message.putUTF(item.getEquipName() );
         message.putInt(template.getType());
         message.putInt(item.petEuipId);
         for (int j = 0; j < 11; j++)
@@ -2535,10 +2536,10 @@ public class GameController
                             {
                                 removeItemEquip(itemEuipPassive.itemId);
                                 player.mineCoin(GopetManager.PRICE_UP_TIER_ITEM);
-                                itemEuipActive.setHp(Utilities.round(Utilities.GetValueFromPercent(itemEuipActive.getHp() + itemEuipPassive.getHp(), GopetManager.PERCENT_ITEM_TIER_INFO)));
-                                itemEuipActive.setMp(Utilities.round(Utilities.GetValueFromPercent(itemEuipActive.getMp() + itemEuipPassive.getMp(), GopetManager.PERCENT_ITEM_TIER_INFO)));
-                                itemEuipActive.setAtk(Utilities.round(Utilities.GetValueFromPercent(itemEuipActive.getAtk() + itemEuipPassive.getAtk(), GopetManager.PERCENT_ITEM_TIER_INFO)));
-                                itemEuipActive.setDef(Utilities.round(Utilities.GetValueFromPercent(itemEuipActive.getDef() + itemEuipPassive.getDef(), GopetManager.PERCENT_ITEM_TIER_INFO)));
+                                itemEuipActive.hp = Utilities.round(Utilities.GetValueFromPercent(itemEuipActive.getHp() + itemEuipPassive.getHp(), GopetManager.PERCENT_ITEM_TIER_INFO));
+                                itemEuipActive.mp = (Utilities.round(Utilities.GetValueFromPercent(itemEuipActive.getMp() + itemEuipPassive.getMp(), GopetManager.PERCENT_ITEM_TIER_INFO)));
+                                itemEuipActive.atk = (Utilities.round(Utilities.GetValueFromPercent(itemEuipActive.getAtk() + itemEuipPassive.getAtk(), GopetManager.PERCENT_ITEM_TIER_INFO)));
+                                itemEuipActive.def = (Utilities.round(Utilities.GetValueFromPercent(itemEuipActive.getDef() + itemEuipPassive.getDef(), GopetManager.PERCENT_ITEM_TIER_INFO)));
                                 itemEuipActive.lvl = 0;
                                 itemEuipActive.itemTemplateId = tierItem.getItemTemplateIdTier2();
                                 resendPetEquipInfo(itemEuipActive);
@@ -3195,7 +3196,7 @@ public class GameController
                     }
                     break;
 
- 
+
                 case GopetManager.GIFT_ITEM_PERCENT_NO_DROP_MORE:
                     {
                         if (!flagDrop)
@@ -3214,7 +3215,7 @@ public class GameController
                     }
                     break;
 
-                
+
                 case GopetManager.GIFT_EXP:
                     {
                         Pet myPet = player.getPet();

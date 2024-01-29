@@ -172,5 +172,29 @@ namespace Gopet.Data.Mob
         {
             return getPetTemplate().getName();
         }
+
+        public PetTemplate Template
+        {
+            get
+            {
+                return petTemplate;
+            }
+        }
+
+        public virtual float SkipPercent
+        {
+            get
+            {
+                return 15 + Template.agi / 1000;
+            }
+        }
+
+        public virtual float AccuracyPercent
+        {
+            get
+            {
+                return 100 + Template.agi / 1000;
+            }
+        }
     }
 }

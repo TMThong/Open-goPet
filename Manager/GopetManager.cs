@@ -169,6 +169,7 @@ public class GopetManager
     public const int ITEM_GEM = 17;
     public const int ITEM_MATERIAL_EMCHANT_GEM = 18;
     public const int ITEM_PART_ITEM = 19;
+    public const int ITEM_ENERGY = 20;
     public const int GIFT_GOLD = 0;
     public const int GIFT_COIN = 1;
     public const int GIFT_ITEM = 2;
@@ -257,6 +258,83 @@ public class GopetManager
     public static readonly List<ItemTemplate> itemTemplates = new ArrayList<ItemTemplate>();
 
     public static readonly Dictionary<int, string> itemAssetsIcon = new();
+    /*
+     * Truyền vào là pet của mình
+     * Rồi sau đó là pet của đối phương
+     */
+    public static Dictionary<sbyte, Dictionary<sbyte, float>> MitigatePetData = new()
+    {
+        [FIRE_ELEMENT] = new()
+        {
+            [FIRE_ELEMENT] = 20f,
+            [TREE_ELEMENT] = 30f,
+            [ROCK_ELEMENT] = 0f,
+            [THUNDER_ELEMENT] = 0f,
+            [WATER_ELEMENT] = -50f,
+            [DARK_ELEMENT] = 0f,
+            [LIGHT_ELEMENT] = 0f
+        },
+        [TREE_ELEMENT] = new()
+        {
+            [FIRE_ELEMENT] = -50f,
+            [TREE_ELEMENT] = 20f,
+            [ROCK_ELEMENT] = 0f,
+            [THUNDER_ELEMENT] = 0f,
+            [WATER_ELEMENT] = 0f,
+            [DARK_ELEMENT] = 0f,
+            [LIGHT_ELEMENT] = 0f
+        },
+        [ROCK_ELEMENT] = new()
+        {
+            [FIRE_ELEMENT] = 0f,
+            [TREE_ELEMENT] = -50f,
+            [ROCK_ELEMENT] = 20f,
+            [THUNDER_ELEMENT] = 30f,
+            [WATER_ELEMENT] = 0f,
+            [DARK_ELEMENT] = 0f,
+            [LIGHT_ELEMENT] = 0f
+        },
+        [THUNDER_ELEMENT] = new()
+        {
+            [FIRE_ELEMENT] = 0f,
+            [TREE_ELEMENT] = 0f,
+            [ROCK_ELEMENT] = -50f,
+            [WATER_ELEMENT] = 20f,
+            [THUNDER_ELEMENT] = 20f,
+            [DARK_ELEMENT] = 0f,
+            [LIGHT_ELEMENT] = 0f
+        },
+        [WATER_ELEMENT] = new()
+        {
+            [FIRE_ELEMENT] = 30f,
+            [TREE_ELEMENT] = 0f,
+            [ROCK_ELEMENT] = 0f,
+            [THUNDER_ELEMENT] = -50f,
+            [WATER_ELEMENT] = 20f,
+            [DARK_ELEMENT] = 0f,
+            [LIGHT_ELEMENT] = 0f
+        },
+        [DARK_ELEMENT] = new()
+        {
+            [FIRE_ELEMENT] = -10f,
+            [TREE_ELEMENT] = -10f,
+            [ROCK_ELEMENT] = -10f,
+            [THUNDER_ELEMENT] = -10f,
+            [WATER_ELEMENT] = -10f,
+            [DARK_ELEMENT] = 0f,
+            [LIGHT_ELEMENT] = -50f,
+        },
+        [LIGHT_ELEMENT] = new()
+        {
+            [FIRE_ELEMENT] = -10f,
+            [TREE_ELEMENT] = -10f,
+            [ROCK_ELEMENT] = -10f,
+            [THUNDER_ELEMENT] = -10f,
+            [WATER_ELEMENT] = -10f,
+            [DARK_ELEMENT] = -50f,
+            [LIGHT_ELEMENT] = 0f,
+        }
+    };
 
 
     /**
@@ -410,6 +488,7 @@ public class GopetManager
         SqlMapper.AddTypeHandler(new JsonAdapter<BuffExp>());
         SqlMapper.AddTypeHandler(new JsonAdapter<GopetCaptcha>());
         SqlMapper.AddTypeHandler(new JsonAdapter<ShopArena>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<Dictionary<int, int>>());
         shopTemplate.put(MenuController.SHOP_ARMOUR, new ShopTemplate(MenuController.SHOP_ARMOUR));
         shopTemplate.put(MenuController.SHOP_SKIN, new ShopTemplate(MenuController.SHOP_SKIN));
         shopTemplate.put(MenuController.SHOP_HAT, new ShopTemplate(MenuController.SHOP_HAT));
@@ -418,6 +497,7 @@ public class GopetManager
         shopTemplate.put(MenuController.SHOP_PET, new ShopTemplate(MenuController.SHOP_PET));
         shopTemplate.put(MenuController.SHOP_FOOD, new ShopTemplate(MenuController.SHOP_FOOD));
         shopTemplate.put(MenuController.SHOP_CLAN, new ShopTemplate(MenuController.SHOP_CLAN));
+        shopTemplate.put(MenuController.SHOP_ENERGY, new ShopTemplate(MenuController.SHOP_ENERGY));
     }
 
     public static void readMobLvl(String cmd, HashMap<int, MobLvInfo> hashMap)
@@ -648,7 +728,7 @@ public class GopetManager
             shopTemplate1.setNeedShopClanLvl(resultSet.getInt("needShopClanLvl"));
             shopTemplate1.setComment(resultSet.getString("comment"));
             shopTemplate1.setPercent(resultSet.getFloat("percent"));
-            shopTemplate1.setOption(JsonConvert.DeserializeObject<int[][]>(resultSet.getString("optionValue")));
+            shopTemplate1.setOption(JsonConvert.DeserializeObject<int[][]>(resultSet.getString("itemOptionValue")));
             if (!shopClanByLvl.ContainsKey(shopTemplate1.getNeedShopClanLvl()))
             {
                 shopClanByLvl.put(shopTemplate1.getNeedShopClanLvl(), new());
@@ -740,7 +820,7 @@ public class GopetManager
         {
             ShopArenaTemplate shopArenaTemplate = new ShopArenaTemplate();
             shopArenaTemplate.setId(resultSet.getInt("Id"));
-            shopArenaTemplate.setOption(JsonConvert.DeserializeObject<int[][]>(resultSet.getString("optionValue")));
+            shopArenaTemplate.setOption(JsonConvert.DeserializeObject<int[][]>(resultSet.getString("itemOptionValue")));
             shopArenaTemplate.setComment(resultSet.getString("comment"));
             shopArenaTemplate.setPercent(resultSet.getFloat("percent"));
             SHOP_ARENA_TEMPLATE.add(shopArenaTemplate);

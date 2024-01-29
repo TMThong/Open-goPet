@@ -11,6 +11,13 @@ namespace Gopet.Adapter
 {
     public class JsonAdapter<T> : SqlMapper.TypeHandler<T>
     {
+
+        public static JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings()
+        {
+            DefaultValueHandling = DefaultValueHandling.Ignore,
+            NullValueHandling = NullValueHandling.Ignore
+        };
+
         public override T? Parse(object value)
         {
             if (value is string text)
@@ -27,7 +34,7 @@ namespace Gopet.Adapter
         {
             if (value != null)
             {
-                parameter.Value = JsonConvert.SerializeObject(value);
+                parameter.Value = JsonConvert.SerializeObject(value, SerializerSettings);
             }
         }
     }

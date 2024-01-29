@@ -1,5 +1,6 @@
 using Gopet.Data.Collections;
 using Gopet.Util;
+using Newtonsoft.Json;
 
 namespace Gopet.Data.GopetItem
 {
@@ -38,18 +39,51 @@ namespace Gopet.Data.GopetItem
 
         public bool wasSell = false;
 
-        public Item(int itemTemplateId)
+
+
+
+        public Item(int itemTemplateId, bool isSkipRandom = false)
         {
-           /* this.itemTemplateId = itemTemplateId;
-            
+            this.itemTemplateId = itemTemplateId;
             option = getTemp().getOption();
             optionValue = getTemp().getOptionValue();
-            ItemTemplate itemTemplate = getTemp();*/
+            ItemTemplate itemTemplate = getTemp();
+            if (!isSkipRandom)
+            {
+                atk = RandomInfoItem(itemTemplate.atkRange);
+                def = RandomInfoItem(itemTemplate.defRange);
+                hp = RandomInfoItem(itemTemplate.hpRange);
+                mp = RandomInfoItem(itemTemplate.mpRange);
+            }
+        }
+
+        public int RandomInfoItem(int[] range)
+        {
+            if (range != null)
+            {
+                if (range.Length > 0)
+                {
+                    if (range.Length >= 2)
+                    {
+                        return Utilities.nextInt(range[0], range[1]);
+                    }
+                    return range[0];
+                }
+            }
+            return 0;
         }
 
         public ItemTemplate getTemp()
         {
             return GopetManager.itemTemplate.get(itemTemplateId);
+        }
+
+        public ItemTemplate Template
+        {
+            get
+            {
+                return GopetManager.itemTemplate.get(itemTemplateId);
+            }
         }
 
         public string getDescription(Player player)
@@ -58,9 +92,6 @@ namespace Gopet.Data.GopetItem
             switch (itemTemplate.getType())
             {
                 case GopetManager.SKIN_ITEM:
-
-
-
                     return Utilities.Format("+%s (atk) +%s (def) +%s (hp) +%s (mp)", itemTemplate.getAtk(), itemTemplate.getDef(), itemTemplate.getHp(), itemTemplate.getMp()) + " (HSD: " + Utilities.ToDateString(Utilities.GetDate(expire)) + " )";
                 case GopetManager.WING_ITEM:
                     string strExpire = "";
@@ -89,10 +120,6 @@ namespace Gopet.Data.GopetItem
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_DEF)));
         }
 
-        public void setDef(int def)
-        {
-            this.def = def;
-        }
 
         public int getAtk()
         {
@@ -101,10 +128,6 @@ namespace Gopet.Data.GopetItem
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_ATK)));
         }
 
-        public void setAtk(int atk)
-        {
-            this.atk = atk;
-        }
 
         public int getHp()
         {
@@ -113,10 +136,6 @@ namespace Gopet.Data.GopetItem
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_HP)));
         }
 
-        public void setHp(int hp)
-        {
-            this.hp = hp;
-        }
 
         public int getMp()
         {
@@ -125,10 +144,6 @@ namespace Gopet.Data.GopetItem
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_MP)));
         }
 
-        public void setMp(int mp)
-        {
-            this.mp = mp;
-        }
 
         public static CopyOnWriteArrayList<Item> search(int type, CopyOnWriteArrayList<Item> listNeedSearchItems)
         {
@@ -235,7 +250,7 @@ namespace Gopet.Data.GopetItem
                     }
                 }
             }
-            return getTemp().getName() + "  " + Utilities.Format("up: %s ", lvl) + string.Join(" ", infoStrings) + (gemInfo == null ? "" : " " + gemInfo.getElementIcon());
+            return Template.getName() + "  " + getTemp().description + " " + Utilities.Format("up: %s ", lvl) + string.Join(" ", infoStrings) + (gemInfo == null ? "" : " " + gemInfo.getElementIcon());
         }
 
         public void updateGemOption()
