@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Gopet.Data.Dialog;
 using Org.BouncyCastle.Asn1.Crmf;
 using Gopet.Adapter;
+using Gopet.Data.item;
 
 public class GopetManager
 {
@@ -169,6 +170,7 @@ public class GopetManager
     public const int ITEM_MATERIAL_EMCHANT_GEM = 18;
     public const int ITEM_PART_ITEM = 19;
     public const int ITEM_ENERGY = 20;
+    public const int ITEM_MATERIAL_ENCHANT_WING = 21;
     public const int GIFT_GOLD = 0;
     public const int GIFT_COIN = 1;
     public const int GIFT_ITEM = 2;
@@ -476,6 +478,10 @@ public class GopetManager
     public const int MAX_TIMES_SHOW_CAPTCHA = 5;
 
     public const int PERCENT_EXCHANGE_GOLD_TO_COIN = 20;
+    public const int MAX_LVL_ENCHANT_WING = 10;
+    public const float PERCENT_ADD_WHEN_ENCHANT_WING = 10f;
+
+    public static readonly Dictionary<int, EnchantWingData> EnchantWingData = new();
 
     static GopetManager()
     {
@@ -551,6 +557,13 @@ public class GopetManager
                 MOBLVLINFO_HASH_MAP[mobLvInfo.lvl] = mobLvInfo;
             }
             ServerMonitor.LogInfo("Tải dữ liệu quái từ cơ sở dữ liệu OK");
+
+            IEnumerable<EnchantWingData> enchantWing = conn.Query<EnchantWingData>("SELECT * FROM `enchant_wing_data`");
+            foreach (var wingData in enchantWing)
+            {
+                EnchantWingData[wingData.Level] = wingData;
+            }
+            ServerMonitor.LogInfo("Tải dữ liệu cường hóa cánh từ cơ sở dữ liệu OK");
         }
 
         using (var connWeb = MYSQLManager.createWebMySqlConnection())

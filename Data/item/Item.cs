@@ -116,6 +116,10 @@ namespace Gopet.Data.GopetItem
         public int getDef()
         {
             int value = def;
+            if (Template.type == GopetManager.WING_ITEM)
+            {
+                return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
+            }
             int info = value + Utilities.round((value * 4 + 50) / 100 * 5 / 2) * lvl;
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_DEF)));
         }
@@ -124,6 +128,10 @@ namespace Gopet.Data.GopetItem
         public int getAtk()
         {
             int value = atk;
+            if(Template.type == GopetManager.WING_ITEM)
+            {
+                return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
+            }
             int info = value + Utilities.round((value * 4 + 50) / 100 * 5 / 2) * lvl;
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_ATK)));
         }
@@ -132,6 +140,10 @@ namespace Gopet.Data.GopetItem
         public int getHp()
         {
             int value = hp;
+            if (Template.type == GopetManager.WING_ITEM)
+            {
+                return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
+            }
             int info = value + Utilities.round((value * 4 + 50) / 100 * 5 / 2) * lvl;
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_HP)));
         }
@@ -140,6 +152,10 @@ namespace Gopet.Data.GopetItem
         public int getMp()
         {
             int value = mp;
+            if (Template.type == GopetManager.WING_ITEM)
+            {
+                return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
+            }
             int info = value + Utilities.round((value * 4 + 50) / 100 * 5 / 2) * lvl;
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_MP)));
         }

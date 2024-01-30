@@ -9,6 +9,7 @@ using Gopet.Data.User;
 using Gopet.IO;
 using Gopet.Util;
 using MySql.Data.MySqlClient;
+using Gopet.Data.item;
 
 public class MenuController
 {
@@ -32,7 +33,7 @@ public class MenuController
      * Tẩy tiềm năng
      */
     public const int MENU_DELETE_TIEM_NANG = 800;
-    public const int MENU_WING_INVENTORY = 801;
+    public const int MENU_WING_INVENTORY = 81040;
     public const int MENU_NORMAL_INVENTORY = 802;
     public const int MENU_SKIN_INVENTORY = 803;
     public const int MENU_SELECT_PET_UPGRADE_ACTIVE = 804;
@@ -80,12 +81,13 @@ public class MenuController
     public const int MENU_SHOW_MY_LIST_TASK = 1034;
     public const int MENU_OPTION_TASK = 1035;
     public const int MENU_UNEQUIP_PET = 1036;
-    public const int MENU_UNEQUIP_WING = 1037;
     public const int MENU_UNEQUIP_SKIN = 1038;
     public const int MENU_ATM = 1039;
     public const int MENU_EXCHANGE_GOLD = 1040;
     public const int MENU_SHOW_ALL_ITEM = 1041;
     public const int MENU_SHOW_ALL_PLAYER_HAVE_ITEM_LVL_10 = 1042;
+    public const int MENU_SELECT_MATERIAL_TO_ENCAHNT_WING = 1043;
+    public const int MENU_SELECT_MONEY_TO_PAY_FOR_ENCHANT_WING = 1044;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -277,6 +279,9 @@ public class MenuController
     public const int OBJKEY_INDEX_SLOT_SKILL_RENT = 30;
     public const int OBJKEY_NPC_ID_FOR_MAIN_TASK = 31;
     public const int OBJKEY_INDEX_TASK_IN_MY_LIST = 32;
+    public const int OBJKEY_INDEX_WING_WANT_ENCHANT = 33;
+    public const int OBJKEY_TYPE_PAY_FOR_ENCHANT_WING = 34;
+    public const int OBJKEY_ID_MATERIAL_ENCHANT_WING = 35;
     public const int DIALOG_CONFIRM_REMOVE_ITEM_EQUIP = 0;
     public const int DIALOG_CONFIRM_BUY_KIOSK_ITEM = 1;
     public const int DIALOG_ENCHANT = 3;
@@ -292,6 +297,7 @@ public class MenuController
     public const int DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN = 13;
     public const int DIALOG_ASK_UPGRADE_SKILL_HOUSE = 14;
     public const int DIALOG_ASK_UPGRADE_SHOP_HOUSE = 15;
+    public const int DIALOG_ASK_ENCHANT_WING = 16;
     public const int INPUT_DIALOG_KIOSK = 0;
     public const int INPUT_DIALOG_CHALLENGE_INVITE = 2;
     public const int INPUT_DIALOG_COUNT_OF_KISOK_ITEM = 3;
@@ -387,7 +393,6 @@ public class MenuController
                     player.controller.showMenuItem(menuId, TYPE_MENU_NONE, "Tất cả vật phẩm", menuInfos);
                 }
                 break;
-            case MENU_UNEQUIP_WING:
             case MENU_UNEQUIP_SKIN:
             case MENU_UNEQUIP_PET:
                 {
@@ -401,9 +406,6 @@ public class MenuController
                             break;
                         case MENU_UNEQUIP_SKIN:
                             titleStr = "Tùy chọn với trang phục đang mặc của bạn";
-                            break;
-                        case MENU_UNEQUIP_WING:
-                            titleStr = "Tùy chọn với cánh đang mặc của bạn";
                             break;
                     }
                     player.controller.sendListOption(menuId, titleStr, titleStr, list);
@@ -424,6 +426,32 @@ public class MenuController
                         taskMenuInfos.add(menuItemInfo);
                     }
                     player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Nhiệm vụ của bạn", taskMenuInfos);
+                }
+                break;
+            case MENU_SELECT_MONEY_TO_PAY_FOR_ENCHANT_WING:
+                {
+                    if (!player.controller.objectPerformed.ContainsKey(OBJKEY_INDEX_WING_WANT_ENCHANT)) return;
+
+                    Item wingItem = player.controller.findWingItemWantEnchant();
+
+                    if (wingItem != null)
+                    {
+                        if (wingItem.lvl >= 0 && wingItem.lvl < GopetManager.MAX_LVL_ENCHANT_WING)
+                        {
+                            EnchantWingData enchantWingData = GopetManager.EnchantWingData[wingItem.lvl + 1];
+                            ArrayList<Option> list = new();
+                            if (enchantWingData.Coin > 0)
+                            {
+                                list.add(new Option(0, Utilities.FormatNumber(enchantWingData.Coin) + " (ngoc)", Option.CAN_SELECT));
+                            }
+                            if (enchantWingData.Gold > 0)
+                            {
+                                list.add(new Option(1, Utilities.FormatNumber(enchantWingData.Gold) + " (vang)", Option.CAN_SELECT));
+                            }
+
+                            player.controller.sendListOption(MENU_SELECT_MONEY_TO_PAY_FOR_ENCHANT_WING, "Thanh toán cường hóa", "", list);
+                        }
+                    }
                 }
                 break;
             case MENU_OPTION_TASK:
@@ -623,6 +651,7 @@ public class MenuController
             case MENU_SKIN_INVENTORY:
                 showInventory(player, GopetManager.SKIN_INVENTORY, menuId, "Tủ quần ảo");
                 break;
+            case MENU_SELECT_MATERIAL_TO_ENCAHNT_WING:
             case MENU_SELECT_ENCHANT_MATERIAL1:
             case MENU_SELECT_ENCHANT_MATERIAL2:
             case MENU_MERGE_PART_PET:
@@ -932,6 +961,9 @@ public class MenuController
             case MENU_MERGE_PART_ITEM:
                 arrayList.add(GopetManager.ITEM_PART_ITEM);
                 break;
+            case MENU_SELECT_MATERIAL_TO_ENCAHNT_WING:
+                arrayList.add(GopetManager.ITEM_MATERIAL_ENCHANT_WING);
+                break;
         }
         return arrayList;
     }
@@ -940,7 +972,6 @@ public class MenuController
     {
         switch (menuId)
         {
-            case MENU_UNEQUIP_WING:
             case MENU_UNEQUIP_SKIN:
             case MENU_UNEQUIP_PET:
                 {
@@ -1002,27 +1033,7 @@ public class MenuController
                             }
                             break;
 
-                        case MENU_UNEQUIP_WING:
-                            {
-                                Item it = player.playerData.wing;
-                                if (it != null)
-                                {
-                                    player.playerData.wing = null;
-                                    player.addItemToInventory(it);
-                                    place_Lc.sendUnEquipWing(player);
-                                    if (p != null)
-                                    {
-                                        p.applyInfo(player);
-                                    }
-                                    player.okDialog("Thao tác thành công");
-                                    HistoryManager.addHistory(new History(player).setLog("Tháo cánh " + it.getName()).setObj(it));
-                                }
-                                else
-                                {
-                                    player.redDialog("Hiện tại bạn không có mang bất kỳ cánh nào!");
-                                }
-                            }
-                            break;
+
                     }
                 }
                 break;
@@ -1320,11 +1331,7 @@ public class MenuController
                 }
                 break;
             case MENU_WING_INVENTORY:
-                if (index == -1)
-                {
-                    sendMenu(MENU_UNEQUIP_WING, player);
-                    return;
-                }
+
                 CopyOnWriteArrayList<Item> listWingItems = player.playerData.getInventoryOrCreate(GopetManager.WING_INVENTORY);
                 if (index >= 0 && index < listWingItems.Count)
                 {
@@ -1342,6 +1349,7 @@ public class MenuController
                         p.applyInfo(player);
                     }
                     player.controller.updateWing();
+                    player.okDialog("Trang bị thành công");
                 }
                 break;
             case MENU_SELECT_SKILL_CLAN_TO_RENT:
@@ -1581,6 +1589,8 @@ public class MenuController
                     }
                 }
                 break;
+            
+            case MENU_SELECT_MATERIAL_TO_ENCAHNT_WING:
             case MENU_SELECT_GEM_TO_INLAY:
             case MENU_SELECT_GEM_UP_TIER:
             case MENU_SELECT_ENCHANT_MATERIAL1:
@@ -1722,6 +1732,41 @@ public class MenuController
                                 player.controller.objectPerformed.remove(OBJKEY_EQUIP_INLAY_GEM_ID);
                             }
                             break;
+                        case MENU_SELECT_MATERIAL_TO_ENCAHNT_WING:
+                            {
+                                if (!player.controller.objectPerformed.ContainsKey(OBJKEY_INDEX_WING_WANT_ENCHANT) || itemSelect == null) return;
+                                Item wingItem = player.controller.findWingItemWantEnchant();
+                                if (wingItem != null)
+                                {
+                                    if (wingItem.lvl >= 0 && wingItem.lvl < GopetManager.MAX_LVL_ENCHANT_WING)
+                                    {
+                                        EnchantWingData enchantWingData = GopetManager.EnchantWingData[wingItem.lvl + 1];
+                                        int[] PAYMENT = new int[] { enchantWingData.Coin, enchantWingData.Gold };
+                                        string[] PAYMENT_DISPLAY = new string[] { Utilities.FormatNumber(enchantWingData.Coin) + " (ngoc)", Utilities.FormatNumber(enchantWingData.Gold) + " (vang)" };
+                                        int typePayment = player.controller.objectPerformed[OBJKEY_TYPE_PAY_FOR_ENCHANT_WING];
+                                        if (typePayment >= 0 && typePayment < PAYMENT.Length)
+                                        {
+                                            if (PAYMENT[typePayment] > 0)
+                                            {
+                                                if (player.controller.checkCountItem(itemSelect, enchantWingData.NumItemMaterial))
+                                                {
+                                                    player.controller.objectPerformed[OBJKEY_ID_MATERIAL_ENCHANT_WING] = itemSelect.itemTemplateId;
+                                                    showYNDialog(DIALOG_ASK_ENCHANT_WING, $"Bạn có chắc muốn cường hóa {wingItem.getEquipName()} lên cấp {wingItem.lvl + 1} với giá {PAYMENT_DISPLAY[typePayment]} và tỷ lệ thành công là {enchantWingData.Percent}% không? Và khi thất bại sẽ giảm {enchantWingData.NumDropLevelWing} cấp !!!", player);
+                                                }
+                                                else
+                                                {
+                                                    player.controller.notEnoughItem(itemSelect, enchantWingData.NumItemMaterial);
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            player.redDialog("Tính bug à :)");
+                                        }
+                                    }
+                                }
+                            }
+                            break;
                     }
                 }
                 break;
@@ -1731,6 +1776,13 @@ public class MenuController
                 {
                     Item itemSelect = listItemEquip.get(index);
                     player.controller.selectMaterialEnchant(itemSelect.itemId, itemSelect.getTemp().getIconPath(), itemSelect.getEquipName(), int.MaxValue);
+                }
+                break;
+
+            case MENU_SELECT_MONEY_TO_PAY_FOR_ENCHANT_WING:
+                {
+                    player.controller.objectPerformed[OBJKEY_TYPE_PAY_FOR_ENCHANT_WING] = index;
+                    sendMenu(MENU_SELECT_MATERIAL_TO_ENCAHNT_WING, player);
                 }
                 break;
 
@@ -2980,6 +3032,94 @@ public class MenuController
                             var objENtry = (KeyValuePair<Kiosk, SellItem>)obj;
                             player.controller.objectPerformed.remove(OBJKEY_KIOSK_ITEM);
                             objENtry.Key.confirmBuy(player, objENtry.Value);
+                        }
+                    }
+                    break;
+                case DIALOG_ASK_ENCHANT_WING:
+                    {
+                        if (!player.controller.objectPerformed.ContainsKey(OBJKEY_ID_MATERIAL_ENCHANT_WING)) return;
+                        Item itemSelect = player.controller.selectItemsbytemp(player.controller.objectPerformed[OBJKEY_ID_MATERIAL_ENCHANT_WING], GopetManager.NORMAL_INVENTORY);
+                        if (!player.controller.objectPerformed.ContainsKey(OBJKEY_INDEX_WING_WANT_ENCHANT) || itemSelect == null) return;
+
+                        Item wingItem = player.controller.findWingItemWantEnchant();
+                        if (itemSelect.Template.type == GopetManager.ITEM_MATERIAL_ENCHANT_WING)
+                        {
+                            if (wingItem != null)
+                            {
+                                if (wingItem.lvl >= 0 && wingItem.lvl < GopetManager.MAX_LVL_ENCHANT_WING)
+                                {
+                                    EnchantWingData enchantWingData = GopetManager.EnchantWingData[wingItem.lvl + 1];
+                                    int[] PAYMENT = new int[] { enchantWingData.Coin, enchantWingData.Gold };
+                                    string[] PAYMENT_DISPLAY = new string[] { Utilities.FormatNumber(enchantWingData.Coin) + " (ngoc)", Utilities.FormatNumber(enchantWingData.Gold) + " (gold)" };
+                                    int typePayment = player.controller.objectPerformed[OBJKEY_TYPE_PAY_FOR_ENCHANT_WING];
+                                    if (typePayment >= 0 && typePayment < PAYMENT.Length)
+                                    {
+                                        if (PAYMENT[typePayment] > 0)
+                                        {
+                                            if (player.controller.checkCountItem(itemSelect, enchantWingData.NumItemMaterial))
+                                            {
+                                                switch (typePayment)
+                                                {
+                                                    case 0:
+                                                        if (player.checkCoin(PAYMENT[typePayment]))
+                                                        {
+                                                            player.mineCoin(PAYMENT[typePayment]);
+                                                        }
+                                                        else
+                                                        {
+                                                            player.controller.notEnoughCoin();
+                                                            return;
+                                                        }
+                                                        break;
+                                                    case 1:
+                                                        if (player.checkGold(PAYMENT[typePayment]))
+                                                        {
+                                                            player.mineGold(PAYMENT[typePayment]);
+                                                        }
+                                                        else
+                                                        {
+                                                            player.controller.notEnoughCoin();
+                                                            return;
+                                                        }
+                                                        break;
+                                                }
+                                                player.controller.subCountItem(itemSelect, enchantWingData.NumItemMaterial, GopetManager.NORMAL_INVENTORY);
+                                                bool IsSucces = Utilities.NextFloatPer() < enchantWingData.Percent;
+                                                if (IsSucces)
+                                                {
+                                                    wingItem.lvl++;
+                                                    player.getPet()?.applyInfo(player);
+                                                    MenuController.sendMenu(MenuController.MENU_WING_INVENTORY, player);
+                                                    player.okDialog($"Chúc mừng bạn đã nâng cấp {wingItem.getName()} lên cáp {wingItem.lvl} thành công");
+                                                }
+                                                else
+                                                {
+                                                    wingItem.lvl += enchantWingData.NumDropLevelWing;
+                                                    player.getPet()?.applyInfo(player);
+                                                    MenuController.sendMenu(MenuController.MENU_WING_INVENTORY, player);
+                                                    player.redDialog($"Thật xui xẻo bạn cường hóa thất bại giảm {enchantWingData.NumDropLevelWing} cấp độ");
+                                                }
+
+                                                player.controller.objectPerformed.Remove(OBJKEY_ID_MATERIAL_ENCHANT_WING);
+                                                player.controller.objectPerformed.Remove(OBJKEY_INDEX_WING_WANT_ENCHANT);
+                                                player.controller.objectPerformed.Remove(OBJKEY_TYPE_PAY_FOR_ENCHANT_WING);
+                                            }
+                                            else
+                                            {
+                                                player.controller.notEnoughItem(itemSelect, enchantWingData.NumItemMaterial);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        player.redDialog("Tính bug à :)");
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            player.redDialog("Không phải nguyên liệu cường hóa cánh!!!!");
                         }
                     }
                     break;

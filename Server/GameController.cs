@@ -17,7 +17,7 @@ public class GameController
     private Player player;
     private PetBattle petBattle;
     private PetUpgradeInfo petUpgradeInfo;
-    public HashMap<int, Object> objectPerformed = new();
+    public HashMap<int, dynamic> objectPerformed = new();
     private long changePlaceDelay = Utilities.CurrentTimeMillis;
     private ClanMember _clanMember;
 
@@ -161,7 +161,7 @@ public class GameController
 
     public void onMessage(Message message)
     {
-        //        System.out.println("server.GameController.onMessage() " + message.id);
+
         switch (message.id)
         {
             case GopetCMD.ON_OTHER_USER_MOVE:
@@ -661,7 +661,9 @@ public class GameController
 
     private void processPet(sbyte subCmd, Message message)
     {
-        //System.err.println("processPet " + subCmd);
+#if DEBUG
+        GopetManager.ServerMonitor.LogInfo($" MESSAGE SERVICE: {subCmd}");
+#endif
         switch (subCmd)
         {
             case GopetCMD.CHAT_PUBLIC:
@@ -745,7 +747,59 @@ public class GameController
                 MenuController.sendMenu(MenuController.MENU_SKIN_INVENTORY, player);
                 break;
             case GopetCMD.WING:
-                MenuController.sendMenu(MenuController.MENU_WING_INVENTORY, player);
+                {
+                    sbyte type = message.readsbyte();
+                    switch (type)
+                    {
+                        case GopetCMD.WING_TYPE_INVENTORY:
+                            MenuController.sendMenu(MenuController.MENU_WING_INVENTORY, player);
+                            break;
+                        case GopetCMD.WING_TYPE_ENCHANT:
+                            {
+                                int index = message.readInt();
+                                var wingInventory = player.playerData[GopetManager.WING_INVENTORY];
+                                if (wingInventory.Count > 0 && wingInventory.Count > index && index >= -1)
+                                {
+                                    this.objectPerformed[MenuController.OBJKEY_INDEX_WING_WANT_ENCHANT] = index;
+                                    MenuController.sendMenu(MENU_SELECT_MONEY_TO_PAY_FOR_ENCHANT_WING, player);
+                                }
+                                else
+                                {
+                                    player.redDialog("Xảy ra lỗi ở nâng cấp cánh");
+                                }
+                            }
+                            break;
+                        case GopetCMD.WING_TYPE_USE:
+                            MenuController.selectMenu(MenuController.MENU_WING_INVENTORY, message.readInt(), 0, player);
+                            MenuController.sendMenu(MenuController.MENU_WING_INVENTORY, player);
+                            break;
+                        case GopetCMD.WING_TYPE_UNEQUIP:
+                            {
+                                Pet p = player.getPet();
+                                GopetPlace place_Lc = (GopetPlace)player.getPlace();
+                                Item it = player.playerData.wing;
+                                if (it != null)
+                                {
+                                    player.playerData.wing = null;
+                                    player.addItemToInventory(it);
+                                    place_Lc.sendUnEquipWing(player);
+                                    if (p != null)
+                                    {
+                                        p.applyInfo(player);
+                                    }
+                                    player.okDialog("Thao tác thành công");
+                                    MenuController.sendMenu(MenuController.MENU_WING_INVENTORY, player);
+                                    HistoryManager.addHistory(new History(player).setLog("Tháo cánh " + it.getName()).setObj(it));
+                                }
+                                else
+                                {
+                                    player.redDialog("Hiện tại bạn không có mang bất kỳ cánh nào!");
+                                }
+                            }
+                            break;
+                    }
+                    GopetManager.ServerMonitor.LogWarning($"WING :{type}");
+                }
                 break;
             case GopetCMD.REMOVE_ITEM_EQUIP:
                 confirmRemoveItemEquip(message.readInt());
@@ -820,6 +874,23 @@ public class GameController
                 inviteMatch(message.readInt());
                 break;
         }
+    }
+
+    public Item findWingItemWantEnchant()
+    {
+        int indexWing = objectPerformed[OBJKEY_INDEX_WING_WANT_ENCHANT];
+        Item wingItem = null;
+        if (indexWing == -1) wingItem = player.playerData.wing;
+        else
+        {
+            var wingInventory = player.playerData[GopetManager.WING_INVENTORY];
+            if (indexWing <= 0 && wingInventory.Count > indexWing)
+            {
+                wingItem = wingInventory[indexWing];
+            }
+        }
+
+        return wingItem;
     }
 
     private void learnSkill(int skillId)
@@ -1327,7 +1398,7 @@ public class GameController
         message.putInt(item.itemId);
         message.putUTF(template.getFrameImgPath());
         message.putUTF("???");
-        message.putUTF(item.getEquipName() );
+        message.putUTF(item.getEquipName());
         message.putInt(template.getType());
         message.putInt(item.petEuipId);
         for (int j = 0; j < 11; j++)
@@ -1427,6 +1498,10 @@ public class GameController
     public bool checkCount(int tempId, int count)
     {
         Item itemSelect = selectItemsbytemp(tempId, GopetManager.NORMAL_INVENTORY);
+        return checkCountItem(itemSelect, count);
+    }
+    public bool checkCountItem(Item itemSelect, int count)
+    {
         if (itemSelect != null)
         {
             return itemSelect.count >= count;
@@ -4003,5 +4078,10 @@ public class GameController
     internal void setBuffEnchent(bool v)
     {
         this.isBuffEnchent = v;
+    }
+
+    public void notEnoughItem(Item itemSelect, int count)
+    {
+        player.redDialog($"Không đủ vật phẩm {itemSelect.Template.name} cần số lượng : {count}");
     }
 }

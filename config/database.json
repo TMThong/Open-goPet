@@ -1,12 +1,12 @@
 {
-  "host": "103.200.23.222",
+  "host": "127.0.0.1",
   "port": 3306,
-  "database": "gopetvnm_tu",
-  "username": "gopetvnm_gameUser",
-  "password": "-u9b(jT]e3fO",
-  "host_web": "103.200.23.222",
+  "database": "gopettu",
+  "username": "root",
+  "password": "",
+  "host_web": "127.0.0.1",
   "port_web": 3306,
-  "database_web": "gopetvnm_tu_web",
-  "username_web": "gopetvnm_webUser",
-  "password_web": "cz#0&DW#WQR%"
+  "database_web": "gopettu_web",
+  "username_web": "root",
+  "password_web": ""
 }

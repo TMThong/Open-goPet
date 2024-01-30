@@ -38,7 +38,7 @@ namespace Gopet.Data.Collections
         {
         }
 
-
+        public T this[int index] => get(index);
         public void Add(T item)
         {
             lock (this)

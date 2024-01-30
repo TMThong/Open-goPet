@@ -152,4 +152,8 @@ public class GopetCMD {
     public const sbyte INVITE_MATCH = 12;
     
     public const sbyte PET_UNFOLLOW = 3;
+    public const sbyte WING_TYPE_USE = 4;
+    public const sbyte WING_TYPE_INVENTORY = 2;
+    public const sbyte WING_TYPE_UNEQUIP = 5;
+    public const sbyte WING_TYPE_ENCHANT = 6;
 }

@@ -611,11 +611,12 @@ public class GopetPlace : Place
             int key = entry.Key;
             Item val = entry.Value;
             m.putInt(key);
-            m.putUTF(val.getTemp().getFrameImgPath());
+            m.putUTF(val.Template.frameImgPath);
             m.putsbyte(val.getTemp().getOptionValue()[0]);
         }
         m.cleanup();
         player.session.sendMessage(m);
+
     }
 
     public void sendMyWing(Player player)

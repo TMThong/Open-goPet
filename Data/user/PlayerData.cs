@@ -15,7 +15,7 @@ public class PlayerData
     public long coin { get; set; }
     public long spendGold { get; set; }
     public int ID { get; set; }
-    
+
     public int user_id { get; set; }
     public ArrayList<int> friends { get; set; } = new ArrayList<int>();
     public ArrayList<int> favouriteList { get; set; } = new ArrayList<int>();
@@ -105,6 +105,16 @@ public class PlayerData
                             WHERE ID = @ID", playerData);
         }
     }
+
+
+    public CopyOnWriteArrayList<Item> this[sbyte type]
+    {
+        get
+        {
+            return getInventoryOrCreate(type);
+        }
+    }
+
 
     public CopyOnWriteArrayList<Item> getInventoryOrCreate(sbyte type)
     {
