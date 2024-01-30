@@ -1,7 +1,7 @@
 
 using Gopet.Util;
 
-public class BuffExp : DataVersion {
+public class BuffExp  {
 
      
     public long buffExpTime = -1;

@@ -1,6 +1,6 @@
 namespace Gopet.Data.GopetItem
 {
-    public class ItemGem : DataVersion
+    public class ItemGem 
     {
 
         private int element;

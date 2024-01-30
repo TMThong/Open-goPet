@@ -2,7 +2,7 @@ using Gopet.Util;
 
 namespace Gopet.Data.GopetItem
 {
-    public class SellItem : DataVersion
+    public class SellItem 
     {
 
         private object lockObject;

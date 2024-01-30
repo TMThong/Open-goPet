@@ -14,7 +14,7 @@ public class Pet : GameObject
     public int petId;
     public int star = 0;
 
-    public int lvl = 1;
+
 
     public long exp = 0;
 
@@ -65,6 +65,12 @@ public class Pet : GameObject
 
     public bool wasSell = false;
 
+    protected Pet()
+    {
+
+    }
+
+
     public Pet(int petIdTemplate)
     {
         this.petIdTemplate = petIdTemplate;
@@ -87,7 +93,7 @@ public class Pet : GameObject
         return petIdTemplate;
     }
 
-    public PetTemplate Template
+    public override PetTemplate Template
     {
         get
         {
@@ -95,17 +101,25 @@ public class Pet : GameObject
         }
     }
 
-    public int getAgi()
+    public bool IsCrit
+    {
+        get
+        {
+            return isCrit();
+        }
+    }
+
+    public override int getAgi()
     {
         return agi + tiemnang[1];
     }
 
-    public int getInt()
+    public override int getInt()
     {
         return _int + tiemnang[2];
     }
 
-    public int getStr()
+    public override int getStr()
     {
         return str + tiemnang[0];
     }
@@ -206,28 +220,9 @@ public class Pet : GameObject
         return 99;
     }
 
-    public int getAtk()
-    {
-        switch (Template.nclass)
-        {
-            case GopetManager.Archer:
-            case GopetManager.Fighter:
-                return atk + (getStr() / 3) + 5;
-            case GopetManager.Demon:
-            case GopetManager.Assassin:
-                return atk + (getAgi() / 3) + 5;
-            case GopetManager.Angel:
-            case GopetManager.Wizard:
-                return atk + (getInt() / 3) + 5;
-        }
 
-        return atk + Utilities.round(str / 2) + (tiemnang[0] / 2);
-    }
 
-    public int getDef()
-    {
-        return def + getAgi() / 3;
-    }
+
 
     public String getNameWithoutStar()
     {
@@ -278,30 +273,7 @@ public class Pet : GameObject
         return false;
     }
 
-    public int getHpViaPrice()
-    {
-        return lvl * 3 + getStr() * 4 + 20;
-    }
 
-    public int getMpViaPrice()
-    {
-        return lvl * 3 + getInt() * 5 + 20;
-    }
-    public virtual float SkipPercent
-    {
-        get
-        {
-            return 15 + getAgi() / 1000;
-        }
-    }
-
-    public virtual float AccuracyPercent
-    {
-        get
-        {
-            return 100 + getAgi() / 1000;
-        }
-    }
 
     /**
      * Áp dụng chỉ số sao khi mặc đồ hoặc thay đổi

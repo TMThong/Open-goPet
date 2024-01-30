@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Gopet.Data.GopetItem
 {
-    public class Item : DataVersion
+    public class Item 
     {
 
         public int itemId;

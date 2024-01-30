@@ -1,7 +1,7 @@
 
 using Gopet.Data.Collections;
 
-public class ShopTemplate : DataVersion {
+public class ShopTemplate  {
 
     private String name;
     protected ArrayList<ShopTemplateItem> shopTemplateItems = new();

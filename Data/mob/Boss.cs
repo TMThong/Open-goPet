@@ -12,9 +12,8 @@ namespace Gopet.Data.Mob
         public Boss(int bossTemplateId, MobLocation mobLocation)
         {
             bossTemplate = GopetManager.boss.get(bossTemplateId);
-            this.setPetTemplate(bossTemplate.getPetTemplate());
+            this.petIdTemplate = getBossTemplate().petTemplateId;
             this.setMobLocation(mobLocation);
-            this.def = bossTemplate.def;
             this.setMobLvInfo(new MobLvInfoImp(bossTemplate));
             initMob();
         }
@@ -28,40 +27,14 @@ namespace Gopet.Data.Mob
 
             public BossTemplate bossTemplate { get; }
 
-            public override int getLvl()
-            {
-                return bossTemplate.getLvl();
-            }
-
-
-            public override int getHp()
-            {
-                return bossTemplate.hp;
-            }
-
-
-            public override int getExp()
-            {
-                return 0;
-            }
-
-
-            public override int getStrength()
-            {
-                return bossTemplate.atk;
-            }
+             
         }
-        public void initMob()
-        {
-            base.initMob(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-            this.mp = 500 + this.mobLvInfo.getLvl() * 100;
-            this.maxMp = 500 + this.mobLvInfo.getLvl() * 100;
-        }
+         
 
 
         public string getName()
         {
-            return bossTemplate.getName();
+            return bossTemplate.name;
         }
 
         internal BossTemplate getBossTemplate()

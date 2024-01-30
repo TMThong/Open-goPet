@@ -261,7 +261,7 @@ Thread.Sleep(1000);
         ResultSet result
                 = MYSQLManager.jquery(
                         Utilities.Format(
-                                "SELECT * FROM `User` where username = '%s' && password = '%s'",
+                                "SELECT * FROM `user` where username = '%s' && password = '%s'",
                                 username, password), conn);
         if (result.next())
         {

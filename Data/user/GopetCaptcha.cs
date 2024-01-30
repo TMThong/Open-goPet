@@ -1,5 +1,5 @@
 
-public class GopetCaptcha : DataVersion
+public class GopetCaptcha 
 {
 
     public sbyte[] bufferImg;

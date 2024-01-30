@@ -14,7 +14,10 @@ namespace Gopet.Data.Map
         public Thread MyThread;
         public GopetMap(int mapId_, bool canUpdate, MapTemplate mapTemplate)
         {
-
+            if(!GopetManager.dropItem.ContainsKey(mapId_))
+            {
+                GopetManager.dropItem[mapId_] = new();
+            }
             mapID = mapId_;
             this.mapTemplate = mapTemplate;
             createZoneDefault();

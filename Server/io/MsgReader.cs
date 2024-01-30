@@ -25,7 +25,6 @@ namespace Gopet.IO
                         Message message = readMessage();
                         if (message != null)
                         {
-                            Console.WriteLine("MSG " + message.id);
                             session.messageHandler.onMessage(message);
                             session.msgCount++;
                             continue;
@@ -34,7 +33,9 @@ namespace Gopet.IO
                 }
                 catch (Exception var5)
                 {
-
+#if DEBUG
+                    throw var5;
+#endif
                 }
 
                 if (session.isConnected())

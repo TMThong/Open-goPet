@@ -119,7 +119,7 @@ public class TaskCalculator
                     taskText.add(Utilities.Format("Nâng cấp %s / %s kỹ năng pet lên cấp %s", task[i], taskI[1], taskI[2]));
                     break;
                 case REQUEST_KILL_BOSS:
-                    taskText.add(Utilities.Format("Tiêu diệt %s(tinh anh) %s / %s", GopetManager.boss.get(taskI[2]).getName(), task[i], taskI[1]));
+                    taskText.add(Utilities.Format("Tiêu diệt %s(tinh anh) %s / %s", GopetManager.boss.get(taskI[2]).name, task[i], taskI[1]));
                     break;
                 case REQUEST_UP_TIER_ITEM:
                     taskText.add(Utilities.Format("Tiến hóa trang bị thú cưng %s / %s lần lên đời %s", task[i], taskI[1], taskI[2]));
@@ -131,7 +131,7 @@ public class TaskCalculator
                     taskText.add(Utilities.Format("Hoàn thành nhiệm vụ %s %s / %s", GopetManager.taskTemplate.get(taskI[2]).getName(), task[i], taskI[1]));
                     break;
                 case REQUEST_ATTACK_BOSS:
-                    taskText.add(Utilities.Format("Tấn công %s(tinh anh) %s / %s", GopetManager.boss.get(taskI[2]).getName(), task[i], taskI[1]));
+                    taskText.add(Utilities.Format("Tấn công %s(tinh anh) %s / %s", GopetManager.boss.get(taskI[2]).name, task[i], taskI[1]));
                     break;
                 case REQUEST_ITEM:
                     taskText.add(Utilities.Format("Vật phẩm %s %s / %s", GopetManager.itemTemplate.get(taskI[2]).getName(), task[i], taskI[1]));
@@ -196,7 +196,7 @@ public class TaskCalculator
                     case REQUEST_KILL_BOSS:
                         {
                             Boss boss = (Boss)dObjects[0];
-                            if (taskData.taskInfo[i][2] == boss.getBossTemplate().getBossId())
+                            if (taskData.taskInfo[i][2] == boss.getBossTemplate().bossId)
                             {
                                 taskData.task[i]++;
                             }
@@ -236,7 +236,7 @@ public class TaskCalculator
                     case REQUEST_ATTACK_BOSS:
                         {
                             Boss boss = (Boss)dObjects[0];
-                            if (taskData.taskInfo[i][2] == boss.getBossTemplate().getBossId())
+                            if (taskData.taskInfo[i][2] == boss.getBossTemplate().bossId)
                             {
                                 taskData.task[i]++;
                             }

@@ -39,7 +39,7 @@ namespace Gopet.Battle
 
             getActiveBattleInfo().addBuff(new Debuff(new ItemInfo[] { new ItemInfo(10, Utilities.round(GopetManager.MitigatePetData[activePet.Template.element][passivePet.Template.element] * 100)) }, int.MaxValue));
             PassiveBattleInfo.addBuff(new Debuff(new ItemInfo[] { new ItemInfo(10, Utilities.round(GopetManager.MitigatePetData[passivePet.Template.element][activePet.Template.element] * 100)) }, int.MaxValue));
-
+            if (place == null) throw new ArgumentNullException(nameof(place));
         }
 
         public PetBattle(Mob mob, GopetPlace place, Player activePlayer)
@@ -54,8 +54,8 @@ namespace Gopet.Battle
             setActiveBattleInfo(new PetBattleInfo(activePlayer));
             getActiveBattleInfo().addBuff(new Debuff(new ItemInfo[] { new ItemInfo(10, Utilities.round(GopetManager.MitigatePetData[activePet.Template.element][mob.Template.element] * 100)) }, int.MaxValue));
             PassiveBattleInfo.addBuff(new Debuff(new ItemInfo[] { new ItemInfo(10, Utilities.round(GopetManager.MitigatePetData[mob.Template.element][activePet.Template.element] * 100)) }, int.MaxValue));
-
             timeCheckplayer = Utilities.CurrentTimeMillis + 7000L;
+            if (place == null) throw new ArgumentNullException(nameof(place));
         }
 
         public void setUserInvitePK(int userInvitePK)
@@ -204,6 +204,7 @@ namespace Gopet.Battle
             }
         }
 
+
         private void petAttack(Player player)
         {
             bool isStun = ItemInfo.getValueById(getUserPetBattleInfo().getBuff(), ItemInfo.Type.STUN) > 0;
@@ -219,7 +220,7 @@ namespace Gopet.Battle
                 if (!isMiss)
                 {
                     PetDamgeInfo damge = makeDamage(getUserPetBattleInfo(), getNonUserPetBattleInfo(), null);
-                    if (isCrit(getPet()))
+                    if (getPet().IsCrit)
                     {
                         damge.setDamge(damge.getDamge() * 2);
                         turnEffects.add(new TurnEffect(TurnEffect.SKILL_CRIT, getFocus(), TurnEffect.SKILL_CRIT, -damge.getDamge(), 0));
@@ -343,6 +344,21 @@ namespace Gopet.Battle
             }
         }
 
+        public GameObject ActiveObject
+        {
+            get
+            {
+                return petAttackMob ? isActiveTurn ? activePet : mob : isActiveTurn ? activePet : passivePet;
+            }
+        }
+        public GameObject PassiveObject
+        {
+            get
+            {
+                return petAttackMob ? !isActiveTurn ? activePet : mob : !isActiveTurn ? activePet : passivePet;
+            }
+        }
+
         private int getUserTurnId()
         {
             return petAttackMob ? isActiveTurn ? activePlayer.user.user_id : mob.getMobId() : isActiveTurn ? activePlayer.user.user_id : passivePlayer.user.user_id;
@@ -373,41 +389,6 @@ namespace Gopet.Battle
             return petAttackMob ? !isActiveTurn ? activePet : null : !isActiveTurn ? activePet : passivePet;
         }
 
-        public static bool isCrit(Mob mob)
-        {
-
-            switch (mob.Template.nclass)
-            {
-                case GopetManager.Archer:
-                case GopetManager.Fighter:
-                    return Utilities.NextFloatPer() < (mob.Template.str + mob.Template.agi * 2) / 4000 + (4 / 100);
-                case GopetManager.Demon:
-                case GopetManager.Assassin:
-                    return Utilities.NextFloatPer() < (mob.Template._int + mob.Template.agi * 2) / 4000 + (4 / 100);
-                case GopetManager.Angel:
-                case GopetManager.Wizard:
-                    return Utilities.NextFloatPer() < (mob.Template.agi * 2) / 2200 + (4 / 100);
-            }
-
-            return false;
-        }
-
-        public static bool isCrit(Pet pet)
-        {
-            switch (pet.Template.nclass)
-            {
-                case GopetManager.Archer:
-                case GopetManager.Fighter:
-                    return Utilities.NextFloatPer() < (pet.getStr() + pet.getAgi() * 2) / 4000 + (4 / 100);
-                case GopetManager.Demon:
-                case GopetManager.Assassin:
-                    return Utilities.NextFloatPer() < (pet.getInt() + pet.getAgi() * 2) / 4000 + (4 / 100);
-                case GopetManager.Angel:
-                case GopetManager.Wizard:
-                    return Utilities.NextFloatPer() < (pet.getAgi() * 2) / 2200 + (4 / 100);
-            }
-            return false;
-        }
 
         public void sendBattleInfo(Player playerInZone)
         {
@@ -683,7 +664,7 @@ namespace Gopet.Battle
                             perExpPlus += clanMember.getClan().getBuffByIdBuff(ClanBuff.BUFF_EXP).getPercent();
                             coinPlus += clanMember.getClan().getBuffByIdBuff(ClanBuff.BUFF_GEM).getPercent();
                         }
-                        exp = genExpWhenMobDie(activePlayer, activePet, mob, mob.getMobLvInfo().getExp());
+                        exp = genExpWhenMobDie(activePlayer, activePet, mob, mob.getMobLvInfo().exp);
                         exp = Math.Max(0, exp + Utilities.round(Utilities.GetValueFromPercent(exp, activePlayer.playerData.buffExp.getPercent() + perExpPlus)));
                         int constCoin = genGemWhenMobDie(activePlayer, activePet, mob);
                         coin = (int)(constCoin + Utilities.GetValueFromPercent(constCoin, coinPlus));
@@ -691,14 +672,14 @@ namespace Gopet.Battle
                         activePet.addExp(exp);
                         activePlayer.controller.updatePetLvl();
                         place.mobDie(mob);
-                        ArrayList<DropItem> listItemDrop = (ArrayList<DropItem>)GopetManager.dropItem.get(place.map.mapID).ToList();
+                        ArrayList<DropItem> listItemDrop = new(GopetManager.dropItem.get(place.map.mapID).ToList());
                         if (GopetManager.mapHasDropItemLvlRange.Contains(place.map.mapID))
                         {
                             foreach (DropItem next in listItemDrop.ToArray())
                             {
                                 if (next.getLvlRange() != null)
                                 {
-                                    if (!(next.getLvlRange()[0] <= mob.getMobLvInfo().getLvl() && next.getLvlRange()[1] >= mob.getMobLvInfo().getLvl()))
+                                    if (!(next.getLvlRange()[0] <= mob.getMobLvInfo().lvl && next.getLvlRange()[1] >= mob.getMobLvInfo().lvl))
                                     {
                                         listItemDrop.remove(next);
                                     }
@@ -726,14 +707,14 @@ namespace Gopet.Battle
                     else
                     {
                         Boss boss = (Boss)mob;
-                        petBattleTexts.AddRange(activePlayer.controller.onReiceiveGift(boss.getBossTemplate().getGift()));
+                        petBattleTexts.AddRange(activePlayer.controller.onReiceiveGift(boss.getBossTemplate().gift));
                         place.mobDie(mob);
                         ArrayList<string> txtInfo = new();
                         foreach (Popup petBattleText in petBattleTexts)
                         {
                             txtInfo.add(petBattleText.getText());
                         }
-                        activePlayer.okDialog(Utilities.Format("Chức mừng bạn kích sát %s nhận được :\n%s", boss.getBossTemplate().getName(), string.Join(",", txtInfo)));
+                        activePlayer.okDialog(Utilities.Format("Chức mừng bạn kích sát %s nhận được :\n%s", boss.getBossTemplate().name, string.Join(",", txtInfo)));
                         activePlayer.controller.getTaskCalculator().onKillBoss(boss);
                     }
                     HistoryManager.addHistory(new History(activePlayer).setLog(Utilities.Format("Tiếu diệt quái %s", mob.getName())).setObj(mob).setSpceialType(History.KILL_MOB));
@@ -1031,7 +1012,7 @@ namespace Gopet.Battle
         private bool randMiss(PetBattleInfo nonPetBattleInfo)
         {
             ItemInfo[] itemInfos = nonPetBattleInfo.getBuff();
-            return ItemInfo.getValueById(itemInfos, ItemInfo.Type.MISS_IN_2_TURN) > 0 && ItemInfo.getValueById(itemInfos, ItemInfo.Type.MISS_IN_2_TURN) / 100f > Utilities.NextFloatPer();
+            return ItemInfo.getValueById(itemInfos, ItemInfo.Type.MISS_IN_2_TURN) > 0 && ActiveObject.AccuracyPercent - ItemInfo.getValueById(itemInfos, ItemInfo.Type.MISS_IN_2_TURN) / 100f - PassiveObject.SkipPercent > Utilities.NextFloatPer();
         }
 
         private bool dotmana(PetSkillLv petSkillLv)
@@ -1045,7 +1026,7 @@ namespace Gopet.Battle
             Pet nonPet = getNonPet();
             int trueDamge = 0;
             Pet myPet = getPet();
-            int sum = isPetAttackMob() && nonPet == activePet ? mob.getMobLvInfo().getStrength() : myPet.getAtk();
+            int sum = isPetAttackMob() && nonPet == activePet ? mob.getAtk() : myPet.getAtk();
             bool isPassiveSKill = petSkillLv != null;
             if (petSkillLv != null)
             {
@@ -1129,11 +1110,11 @@ namespace Gopet.Battle
             {
                 ArrayList<TurnEffect> turnEffects = new();
                 bool isMiss = randMiss(getNonUserPetBattleInfo());
-                int sum = mob.getMobLvInfo().getStrength();
+                int sum = mob.getAtk();
 
                 if (!isMiss)
                 {
-                    bool crit = isCrit(mob);
+                    bool crit = mob.IsCrit;
                     if (crit)
                     {
                         sum *= 2;
@@ -1181,7 +1162,6 @@ namespace Gopet.Battle
                     {
                         turnEffects.add(new TurnEffect(TurnEffect.SKILL_NORMAL, getFocus(), TurnEffect.SKILL_NORMAL, -sum, 0));
                     }
-
                     activePet.hp -= sum;
                 }
                 else
@@ -1336,8 +1316,8 @@ namespace Gopet.Battle
                         if (!petAttackMob)
                         {
                             Pet nonPet = getNonPet();
-                            petBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.DEF, (int)Utilities.GetValueFromPercent(nonPet.def, i.getPercent())) }, 3));
-                            nonBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.DEF, -(int)Utilities.GetValueFromPercent(nonPet.def, i.getPercent())) }, 3));
+                            petBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.DEF, (int)Utilities.GetValueFromPercent(nonPet.getDef(), i.getPercent())) }, 3));
+                            nonBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.DEF, -(int)Utilities.GetValueFromPercent(nonPet.getDef(), i.getPercent())) }, 3));
                         }
                         break;
                     case ItemInfo.Type.STUN:
@@ -1466,12 +1446,12 @@ namespace Gopet.Battle
 
         public static int genGemWhenMobDie(Player player, Pet p, Mob mob)
         {
-            int begin = mob.getMobLvInfo().getLvl() * 10;
-            bool minus = Math.Abs(p.lvl - mob.getMobLvInfo().getLvl()) >= 5;
+            int begin = mob.getMobLvInfo().lvl * 10;
+            bool minus = Math.Abs(p.lvl - mob.getMobLvInfo().lvl) >= 5;
             if (minus)
             {
                 //            System.out.println("data.battle.PetBattle.genGemWhenMobDie()" + begin);
-                begin = (int)Utilities.GetValueFromPercent(begin, Math.Max(0, 100 - Math.Abs(p.lvl - mob.getMobLvInfo().getLvl()) * 3));
+                begin = (int)Utilities.GetValueFromPercent(begin, Math.Max(0, 100 - Math.Abs(p.lvl - mob.getMobLvInfo().lvl) * 3));
                 //            System.out.println("data.battle.PetBattle.genGemWhenMobDie()" + begin);
             }
             begin = Math.Max(0, (int)Utilities.GetValueFromPercent(begin, 100 - Utilities.nextInt(-10, 10)));
@@ -1482,7 +1462,7 @@ namespace Gopet.Battle
         public static int genExpWhenMobDie(Player player, Pet p, Mob mob, int exp)
         {
             int begin = exp;
-            int deltaLvl = p.lvl - mob.getMobLvInfo().getLvl();
+            int deltaLvl = p.lvl - mob.getMobLvInfo().lvl;
             if (deltaLvl >= 0)
             {
                 if (deltaLvl <= 10)

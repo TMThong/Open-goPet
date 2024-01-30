@@ -89,9 +89,8 @@ public class ChallengePlace : GopetPlace {
                     PetTemplate petTemplate = Utilities.RandomArray(templates);
                     MobLocation mobLocation = new MobLocation(this.map.mapID, XY[0], XY[1]);
                     MobLvlMap mobLvlMap = new MobLvlMap(map.mapID, turn, turn, petTemplate.getPetId());
-                    MobLvInfo mobLvInfo = GopetManager.MOBLVLINFO_CHALLENGE.get(turn);
+                    MobLvInfo mobLvInfo = GopetManager.MOBLVLINFO_HASH_MAP.get(turn);
                     Mob mob = new Mob(petTemplate, this, mobLvlMap, mobLocation, mobLvInfo);
-                    mob.setElite(false);
                     mob.setMobId(-(i + 1));
                     this.addNewMob(mob);
                 }

@@ -21,7 +21,6 @@ public class GopetManager
      * Chỉ số của quái từng cấp độ
      */
     public static HashMap<int, MobLvInfo> MOBLVLINFO_HASH_MAP = new();
-    public static HashMap<int, MobLvInfo> MOBLVLINFO_CHALLENGE = new();
 
     public static ArrayList<PetTemplate> PET_TEMPLATES = new();
     /**
@@ -258,6 +257,9 @@ public class GopetManager
     public static readonly List<ItemTemplate> itemTemplates = new ArrayList<ItemTemplate>();
 
     public static readonly Dictionary<int, string> itemAssetsIcon = new();
+
+    public static Gopet.Logging.Monitor ServerMonitor { get; } = new Gopet.Logging.Monitor("Máy chủ");
+
     /*
      * Truyền vào là pet của mình
      * Rồi sau đó là pet của đối phương
@@ -507,7 +509,7 @@ public class GopetManager
             IEnumerable<MobLvInfo> data = conn.Query<MobLvInfo>(cmd);
             foreach (var mobLvInfo in data)
             {
-                hashMap.put(mobLvInfo.getLvl(), mobLvInfo);
+                hashMap.put(mobLvInfo.lvl, mobLvInfo);
             }
         }
     }
@@ -528,7 +530,7 @@ public class GopetManager
                 typePetTemplate.get(petTemplate.getType()).add(petTemplate);
                 PETTEMPLATE_HASH_MAP.put(petTemplate.getPetId(), petTemplate);
             });
-
+            ServerMonitor.LogInfo("Tải dữ liệu thú cưng từ cơ sở dữ liệu OK");
             itemTemplates.AddRange(conn.Query<ItemTemplate>("SELECT * FROM `item`"));
             int assetsId = 1;
             itemTemplates.ForEach(itemTemp =>
@@ -542,6 +544,13 @@ public class GopetManager
                 }
                 assetsId++;
             });
+            ServerMonitor.LogInfo("Tải dữ liệu vật phẩm từ cơ sở dữ liệu OK");
+            IEnumerable<MobLvInfo> data = conn.Query<MobLvInfo>("SELECT * FROM `gopet_mob`");
+            foreach (var mobLvInfo in data)
+            {
+                MOBLVLINFO_HASH_MAP[mobLvInfo.lvl] = mobLvInfo;
+            }
+            ServerMonitor.LogInfo("Tải dữ liệu quái từ cơ sở dữ liệu OK");
         }
 
         using (var connWeb = MYSQLManager.createWebMySqlConnection())
@@ -557,8 +566,6 @@ public class GopetManager
             PetExp.put(resultSet.getInt("petLvl"), resultSet.getInt("exp"));
         }
         resultSet.Close();
-        readMobLvl("SELECT * FROM `gopet_mob`", MOBLVLINFO_HASH_MAP);
-        readMobLvl("SELECT * FROM `mob_challenge`", MOBLVLINFO_CHALLENGE);
         resultSet = MYSQLManager.jquery("SELECT * FROM `iteminfo`");
         while (resultSet.next())
         {
@@ -793,27 +800,7 @@ public class GopetManager
         }
         resultSet.Close();
 
-        resultSet = MYSQLManager.jquery("SELECT * FROM `boss`");
-        while (resultSet.next())
-        {
-            BossTemplate bossTemplate = new BossTemplate();
-            bossTemplate.setBossId(resultSet.getInt("bossId"));
-            bossTemplate.setPetTemplate(PETTEMPLATE_HASH_MAP.get(resultSet.getInt("petTemplateId")));
-            bossTemplate.setName(resultSet.getString("name"));
-            bossTemplate.setLvl(resultSet.getInt("lvl"));
-            bossTemplate.setAtk(resultSet.getInt("atk"));
-            bossTemplate.setDef(resultSet.getInt("def"));
-            bossTemplate.setHp(resultSet.getInt("hp"));
-            bossTemplate.setTypeBoss(resultSet.getsbyte("typeBoss"));
-            bossTemplate.setGift(JsonConvert.DeserializeObject<int[][]>(resultSet.getString("gift")));
-            boss.put(bossTemplate.getBossId(), bossTemplate);
-            if (bossTemplate.getPetTemplate() == null)
-            {
-                resultSet.Close();
-                throw new NullReferenceException("Bị rổng do id pet template không tồn tại");
-            }
-        }
-        resultSet.Close();
+
 
         resultSet = MYSQLManager.jquery("SELECT * FROM `shoparena` WHERE `shoparena`.`enable` = 1");
         while (resultSet.next())
@@ -977,6 +964,27 @@ public class GopetManager
     }
 
 
+    private static DateTime OldDateTime = DateTime.Now;
+
+    private static StreamWriter __writer;
+
+    public static StreamWriter Writer
+    {
+        get
+        {
+            if (OldDateTime.Day != DateTime.Now.Day || __writer != null ? !__writer.BaseStream.CanWrite : true)
+            {
+                FileInfo fileInfo = new FileInfo(Directory.GetCurrentDirectory() + $"/log/log_{DateTime.Now.Day}_{DateTime.Now.Month}_{DateTime.Now.Year}.txt");
+                fileInfo.Directory.Create();
+                __writer?.Close();
+                __writer = new StreamWriter(fileInfo.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read), System.Text.Encoding.UTF8);
+                OldDateTime = DateTime.Now;
+                return __writer;
+            }
+            return __writer;
+        }
+    }
+
     public static string GetElementDisplay(sbyte typeE)
     {
         switch (typeE)
@@ -1006,6 +1014,7 @@ public class GopetManager
         }
         return string.Empty;
     }
+
 
     public static string GetElementDisplay(sbyte typeE, sbyte nClass)
     {

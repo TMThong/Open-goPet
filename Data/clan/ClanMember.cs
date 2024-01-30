@@ -3,7 +3,7 @@ using Gopet.Util;
 
 namespace Gopet.Data.GopetClan
 {
-    public class ClanMember : DataVersion
+    public class ClanMember 
     {
         public string avatarPath;
         public int user_id;

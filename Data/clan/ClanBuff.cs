@@ -2,7 +2,7 @@ using Gopet.Util;
 
 namespace Gopet.Data.GopetClan
 {
-    public class ClanBuff : DataVersion
+    public class ClanBuff 
     {
 
         public const int BUFF_GEM = 1;

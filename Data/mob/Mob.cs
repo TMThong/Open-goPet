@@ -1,19 +1,17 @@
+
 using Gopet.Battle;
 using Gopet.Util;
 using System.Drawing;
 
 namespace Gopet.Data.Mob
 {
-    public class Mob : GameObject
+    public class Mob : Pet
     {
-
-        protected PetTemplate petTemplate;
         private GopetPlace place;
         protected MobLvInfo mobLvInfo;
         protected MobLvlMap mobLvlMap;
         protected MobLocation mobLocation;
         private int mobId;
-        private bool elite = false;
 
         private PetBattle petBattle;
 
@@ -57,8 +55,7 @@ namespace Gopet.Data.Mob
 
         public Mob(PetTemplate petTemplate, GopetPlace place, MobLvlMap mobLvlMap, MobLocation mobLocation) : this()
         {
-
-            this.petTemplate = petTemplate;
+            this.petIdTemplate = petTemplate.petId;
             this.place = place;
             this.mobLvlMap = mobLvlMap;
             this.mobLocation = mobLocation;
@@ -68,7 +65,7 @@ namespace Gopet.Data.Mob
         public Mob(PetTemplate petTemplate, GopetPlace place, MobLvlMap mobLvlMap, MobLocation mobLocation, MobLvInfo mobLvInfo) : this()
         {
 
-            this.petTemplate = petTemplate;
+            this.petIdTemplate = petTemplate.petId;
             this.place = place;
             this.mobLvlMap = mobLvlMap;
             this.mobLocation = mobLocation;
@@ -83,20 +80,12 @@ namespace Gopet.Data.Mob
             mp = 1;
         }
 
-        public void setPetTemplate(PetTemplate petTemplate)
-        {
-            this.petTemplate = petTemplate;
-        }
 
         public void setMobLocation(MobLocation mobLocation)
         {
             this.mobLocation = mobLocation;
         }
 
-        public PetTemplate getPetTemplate()
-        {
-            return petTemplate;
-        }
 
         public GopetPlace getPlace()
         {
@@ -118,16 +107,19 @@ namespace Gopet.Data.Mob
             this.hp = hp;
         }
 
+
+
         public virtual void initMob()
         {
             if (mobLvInfo == null)
             {
                 mobLvInfo = GopetManager.MOBLVLINFO_HASH_MAP.get(Utilities.nextInt(mobLvlMap.getLvlFrom(), mobLvlMap.getLvlTo()));
             }
-            hp = mobLvInfo.getHp();
-            maxHp = mobLvInfo.getHp();
-            mp = 100 + mobLvInfo.getLvl() * 10;
-            maxMp = 100 + mobLvInfo.getLvl() * 10;
+            this.lvl = mobLvInfo.lvl;
+            hp = base.getHpViaPrice();
+            maxHp = base.getHpViaPrice();
+            mp = base.getMpViaPrice();
+            maxMp = base.getMpViaPrice();
             int xTile = 4;
             bound = new Rectangle(mobLocation.getX() - 24 * xTile, mobLocation.getY() - 24 * xTile, 24 * xTile * 2, 24 * xTile * 2);
         }
@@ -158,43 +150,25 @@ namespace Gopet.Data.Mob
             this.mobLvInfo = mobLvInfo;
         }
 
-        public bool isElite()
-        {
-            return elite;
-        }
-
-        public void setElite(bool elite)
-        {
-            this.elite = elite;
-        }
 
         public string getName()
         {
             return getPetTemplate().getName();
         }
 
-        public PetTemplate Template
+        public override int getAgi()
         {
-            get
-            {
-                return petTemplate;
-            }
+            return this.mobLvInfo.agi;
         }
 
-        public virtual float SkipPercent
+        public override int getInt()
         {
-            get
-            {
-                return 15 + Template.agi / 1000;
-            }
+            return this.mobLvInfo._int;
         }
 
-        public virtual float AccuracyPercent
+        public override int getStr()
         {
-            get
-            {
-                return 100 + Template.agi / 1000;
-            }
+            return this.mobLvInfo.str;
         }
     }
 }

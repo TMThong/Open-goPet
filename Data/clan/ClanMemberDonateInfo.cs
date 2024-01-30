@@ -1,6 +1,6 @@
 namespace Gopet.Data.GopetClan
 {
-    public class ClanMemberDonateInfo : DataVersion
+    public class ClanMemberDonateInfo 
     {
         private sbyte priceType;
         private long price;

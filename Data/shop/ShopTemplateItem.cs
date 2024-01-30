@@ -2,7 +2,7 @@
 using Gopet.Data.GopetItem;
 using Gopet.Util;
 
-public class ShopTemplateItem : DataVersion
+public class ShopTemplateItem 
 {
 
     public int shopId;

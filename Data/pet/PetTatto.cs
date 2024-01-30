@@ -1,7 +1,7 @@
 
 using Gopet.Data.Collections;
 
-public class PetTatto : DataVersion {
+public class PetTatto  {
 
     public int tattooTemplateId;
     public int tattoId;
