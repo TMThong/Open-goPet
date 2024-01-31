@@ -180,6 +180,7 @@ public class GopetManager
     public const int GIFT_ITEM_MERGE_ITEM = 6;
     public const int GIFT_EXP = 7;
     public const int GIFT_ENERGY = 8;
+    public const int GIFT_RANDOM_ITEM = 9;
 
     /**
      * thời gian chờ lượt đánh (mili giây)
@@ -483,9 +484,15 @@ public class GopetManager
 
     public static readonly Dictionary<int, EnchantWingData> EnchantWingData = new();
 
+    public static readonly int[] ID_ITEM_SILVER = new int[] { 392, 395, 398, 401, 405, 408, 411, 414, 417 };
+    public static readonly int[] ID_ITEM_PET_TIER_ONE = new int[] { 726, 728, 730, 732, 734, 738 };
+    public static readonly int[] ID_ITEM_PET_TIER_TOW = new int[] { 740, 742, 744, 746, 748, 750, 756, 760, 762, 764, 766 };
+
+
     static GopetManager()
     {
         SqlMapper.AddTypeHandler(new JsonAdapter<int[]>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<int[][]>());
         SqlMapper.AddTypeHandler(new JsonAdapter<sbyte[]>());
         SqlMapper.AddTypeHandler(new JsonAdapter<ArrayList<int>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<HashMap<sbyte, CopyOnWriteArrayList<Item>>>());
@@ -498,6 +505,7 @@ public class GopetManager
         SqlMapper.AddTypeHandler(new JsonAdapter<GopetCaptcha>());
         SqlMapper.AddTypeHandler(new JsonAdapter<ShopArena>());
         SqlMapper.AddTypeHandler(new JsonAdapter<Dictionary<int, int>>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<Waypoint[]>());
         shopTemplate.put(MenuController.SHOP_ARMOUR, new ShopTemplate(MenuController.SHOP_ARMOUR));
         shopTemplate.put(MenuController.SHOP_SKIN, new ShopTemplate(MenuController.SHOP_SKIN));
         shopTemplate.put(MenuController.SHOP_HAT, new ShopTemplate(MenuController.SHOP_HAT));
@@ -549,6 +557,7 @@ public class GopetManager
                 {
                     NonAdminItemList.add(itemTemp);
                 }
+
                 assetsId++;
             });
             ServerMonitor.LogInfo("Tải dữ liệu vật phẩm từ cơ sở dữ liệu OK");
@@ -579,6 +588,20 @@ public class GopetManager
 
             }
             ServerMonitor.LogInfo("Tải dữ liệu cửa hàng từ cơ sở dữ liệu OK");
+
+            IEnumerable<BossTemplate> bossTemArr = conn.Query<BossTemplate>("SELECT * FROM `boss`");
+            foreach (var bossTemplate in bossTemArr)
+            {
+                boss[bossTemplate.bossId] = bossTemplate;
+            }
+            ServerMonitor.LogInfo("Tải dữ liệu boss từ cơ sở dữ liệu OK");
+
+            IEnumerable<MapTemplate> mapTemplates = conn.Query<MapTemplate>("SELECT * FROM `map` WHERE `map`.`enable` = true;");
+            foreach (var mTem in mapTemplates)
+            {
+                mapTemplate[mTem.mapId] = mTem;
+            }
+            ServerMonitor.LogInfo("Tải dữ liệu map từ cơ sở dữ liệu OK");
         }
 
         using (var connWeb = MYSQLManager.createWebMySqlConnection())
@@ -689,30 +712,6 @@ public class GopetManager
             npcTemplate.put(npcTemp.getNpcId(), npcTemp);
         }
         resultSet.Close();
-        resultSet = MYSQLManager.jquery("SELECT * FROM `map` WHERE `map`.`enable` = true;");
-        while (resultSet.next())
-        {
-            MapTemplate mapTemp = new MapTemplate();
-            mapTemp.setMapId(resultSet.getInt("mapId"));
-            mapTemp.setMapName(resultSet.getString("name"));
-            mapTemp.npc = JsonConvert.DeserializeObject<int[]>(resultSet.getString("npc"));
-            int[] waypointX = JsonConvert.DeserializeObject<int[]>(resultSet.getString("waypointX"));
-            int[] waypointY = JsonConvert.DeserializeObject<int[]>(resultSet.getString("waypointY"));
-            string[] waypointName = JsonConvert.DeserializeObject<string[]>(resultSet.getString("waypointName"));
-            Waypoint[] waypoints = new Waypoint[waypointName.Length];
-            for (int i = 0; i < waypoints.Length; i++)
-            {
-                waypoints[i] = new Waypoint();
-                waypoints[i].setName(waypointName[i]);
-                waypoints[i].setX(waypointX[i]);
-                waypoints[i].setY(waypointY[i]);
-            }
-            mapTemp.setWaypoints(waypoints);
-            mapTemp.boss = JsonConvert.DeserializeObject<int[]>(resultSet.getString("boss"));
-            mapTemplate.put(mapTemp.getMapId(), mapTemp);
-        }
-        resultSet.Close();
-
         resultSet = MYSQLManager.jquery("SELECT * FROM `tattoo`");
         while (resultSet.next())
         {

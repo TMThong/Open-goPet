@@ -607,10 +607,10 @@ public class MenuController
                         ArrayList<MenuItemInfo> mapMenuItem = new();
                         foreach (GopetMap gopetMap in MapManager.mapArr)
                         {
-                            MenuItemInfo menuItemInfo = new MenuItemInfo(gopetMap.mapTemplate.getMapName() + "  (" + gopetMap.mapID + ")", "", "", true);
+                            MenuItemInfo menuItemInfo = new MenuItemInfo(gopetMap.mapTemplate.name + "  (" + gopetMap.mapID + ")", "", "", true);
                             menuItemInfo.setImgPath("npcs/mgo.png");
                             menuItemInfo.setShowDialog(true);
-                            menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", gopetMap.mapTemplate.getMapName()));
+                            menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", gopetMap.mapTemplate.name));
                             menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                             mapMenuItem.add(menuItemInfo);
                         }
@@ -2108,7 +2108,7 @@ public class MenuController
                             {
                                 numPlayerMap += place1.numPlayer;
                             }
-                            player.okDialog(Utilities.Format("Online player %s: %s", place.map.mapTemplate.getMapName(), numPlayerMap));
+                            player.okDialog(Utilities.Format("Online player %s: %s", place.map.mapTemplate.name, numPlayerMap));
                             break;
                         case ADMIN_INDEX_TELE_TO_MAP:
                             sendMenu(MENU_ADMIN_MAP, player);

@@ -196,7 +196,7 @@ public class TaskCalculator
                     case REQUEST_KILL_BOSS:
                         {
                             Boss boss = (Boss)dObjects[0];
-                            if (taskData.taskInfo[i][2] == boss.getBossTemplate().bossId)
+                            if (taskData.taskInfo[i][2] == boss.Template.bossId)
                             {
                                 taskData.task[i]++;
                             }
@@ -236,7 +236,7 @@ public class TaskCalculator
                     case REQUEST_ATTACK_BOSS:
                         {
                             Boss boss = (Boss)dObjects[0];
-                            if (taskData.taskInfo[i][2] == boss.getBossTemplate().bossId)
+                            if (taskData.taskInfo[i][2] == boss.Template.bossId)
                             {
                                 taskData.task[i]++;
                             }

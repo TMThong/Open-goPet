@@ -1,4 +1,5 @@
 ﻿using Gopet.CommandLine;
+using Gopet.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,40 +13,49 @@ namespace Gopet.Manager
         public static readonly BaseCommand[] baseCommands = new BaseCommand[]
         {
             new HelpCommand(),
-            new ShutdownCommand()
+            new ShutdownCommand(),
+            new ZoneCommand(),
+            new ExecuteCommand()
         };
 
         public static void StartReadingKeys()
         {
             while (true)
             {
-                string text = Console.ReadLine();
-                var options = text.Split(" ");
-                if (options.Length > 0)
+                try
                 {
-                    var cmd = options[0];
-
-                    var op = new string[options.Length - 1];
-
-                    for (int i = 1; i < options.Length; i++)
+                    string text = Console.ReadLine();
+                    var options = text.Split(" ");
+                    if (options.Length > 0)
                     {
-                        op[i -1] = options[i];
-                    }
+                        var cmd = options[0];
 
-                    var listCmd = baseCommands.Where(p => p.CommandName == cmd);
+                        var op = new string[options.Length - 1];
 
-                    if (listCmd.Count() > 0)
-                    {
-                        listCmd.FirstOrDefault().Execute(op);
+                        for (int i = 1; i < options.Length; i++)
+                        {
+                            op[i - 1] = options[i];
+                        }
+
+                        var listCmd = baseCommands.Where(p => p.CommandName == cmd);
+
+                        if (listCmd.Count() > 0)
+                        {
+                            listCmd.FirstOrDefault().Execute(op);
+                        }
+                        else
+                        {
+                            GopetManager.ServerMonitor.LogError($"Không có lệnh {cmd} \r\nDùng lệnh help <cmd> để tra cứu nhiều thông tin");
+                        }
                     }
                     else
                     {
-                        GopetManager.ServerMonitor.LogError($"Không có lệnh {cmd} \r\nDùng lệnh help <cmd> để tra cứu nhiều thông tin");
+                        GopetManager.ServerMonitor.LogError("Dùng lệnh help <cmd> để tra cứu nhiều thông tin");
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    GopetManager.ServerMonitor.LogError("Dùng lệnh help <cmd> để tra cứu nhiều thông tin");
+                    ex.printStackTrace();
                 }
             }
         }

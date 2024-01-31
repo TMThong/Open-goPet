@@ -12,7 +12,7 @@ namespace Gopet.Data.Mob
         public Boss(int bossTemplateId, MobLocation mobLocation)
         {
             bossTemplate = GopetManager.boss.get(bossTemplateId);
-            this.petIdTemplate = getBossTemplate().petTemplateId;
+            this.petIdTemplate = Template.petTemplateId;
             this.setMobLocation(mobLocation);
             this.setMobLvInfo(new MobLvInfoImp(bossTemplate));
             initMob();
@@ -23,13 +23,18 @@ namespace Gopet.Data.Mob
             public MobLvInfoImp(BossTemplate bossTemplate)
             {
                 this.bossTemplate = bossTemplate;
+                this.agi = this.bossTemplate.agi;
+                this.lvl = this.bossTemplate.lvl;
+                this.exp = this.bossTemplate.exp;
+                this._int = this.bossTemplate._int;
+                this.str = this.bossTemplate.str;
             }
 
-            public BossTemplate bossTemplate { get; }
 
-             
+
+            public BossTemplate bossTemplate { get; }
         }
-         
+
 
 
         public string getName()
@@ -37,9 +42,9 @@ namespace Gopet.Data.Mob
             return bossTemplate.name;
         }
 
-        internal BossTemplate getBossTemplate()
+        internal BossTemplate Template
         {
-            return bossTemplate;
+            get { return bossTemplate; }
         }
     }
 }

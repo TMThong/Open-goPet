@@ -2,14 +2,15 @@ namespace Gopet.Data.Mob
 {
     public class BossTemplate
     {
-        public int bossId;
-        public string name;
-        public int[][] gift;
-        public sbyte typeBoss;
-        public int petTemplateId;
-        public int lvl;
-        public int str;
-        public int agi;
-        public int _int;
+        public int bossId { get; private set; }
+        public string name { get; private set; }
+        public int[][] gift { get; private set; }
+        public sbyte typeBoss { get; private set; }
+        public int petTemplateId { get; private set; }
+        public int lvl { get; private set; }
+        public int str { get; private set; }
+        public int agi { get; private set; }
+        public int _int { get; private set; }
+        public int exp { get; private set; }
     }
 }

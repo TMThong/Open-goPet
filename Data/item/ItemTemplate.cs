@@ -5,125 +5,41 @@ namespace Gopet.Data.GopetItem
 {
     public class ItemTemplate
     {
-        public int itemId;
-        public string name;
-        public string description;
-        public int requireStr;
-        public int requireAgi;
-        public int requireInt;
-        public int type;
+        public int itemId {  get; private set; }
+        public string name { get; private set; }
+        public string description { get; private set; }
+        public int requireStr { get; private set; }
+        public int requireAgi { get; private set; }
+        public int requireInt { get; private set; }
+        public int type { get; private set; }
        
-        public int[] itemOption = new int[0];
+        public int[] itemOption { get; private set; } = new int[0];
        
-        public int[] itemOptionValue = new int[0];
+        public int[] itemOptionValue { get; private set; } = new int[0];
        
-        public int[] hpRange;
+        public int[] hpRange { get; private set; }
+      
+        public int[] mpRange { get; private set; }
+        public int[] atkRange { get; private set; }
        
-        public int[] mpRange;
-       
-        public int[] atkRange;
-       
-        public int[] defRange;
-        public bool isStackable;
-        public string frameImgPath;
-        public string iconPath;
-        public sbyte gender;
-        public long expire;
-        public bool isOnSky;
-        public bool canTrade;
-        public sbyte petNClass;
-        public int iconId;
-        public sbyte element;
-
-        public void setItemId(int itemId)
-        {
-            this.itemId = itemId;
-        }
-
-        public void setName(string name)
-        {
-            this.name = name;
-        }
-
-        public void setDescription(string description)
-        {
-            this.description = description;
-        }
-
-
-
-        public void setRequireStr(int requireStr)
-        {
-            this.requireStr = requireStr;
-        }
-
-        public void setRequireAgi(int requireAgi)
-        {
-            this.requireAgi = requireAgi;
-        }
-
-        public void setRequireInt(int requireInt)
-        {
-            this.requireInt = requireInt;
-        }
-
-        public void setType(int type)
-        {
-            this.type = type;
-        }
-
-        public void setOption(int[] option)
-        {
-            this.itemOption = option;
-        }
-
-        public void setOptionValue(int[] optionValue)
-        {
-            this.itemOptionValue = optionValue;
-        }
-
-
-
-        public void setFrameImgPath(string frameImgPath)
-        {
-            this.frameImgPath = frameImgPath;
-        }
-
-        public void setIconPath(string iconPath)
-        {
-            this.iconPath = iconPath;
-        }
-
-        public void setGender(sbyte gender)
-        {
-            this.gender = gender;
-        }
-
-        public void setExpire(long expire)
-        {
-            this.expire = expire;
-        }
-
-
-        public void setCanTrade(bool canTrade)
-        {
-            this.canTrade = canTrade;
-        }
-
-        public void setNClass(sbyte NClass)
-        {
-            this.petNClass = NClass;
-        }
+        public int[] defRange { get; private set; }
+        public bool isStackable { get; private set; }
+        public string frameImgPath { get; private set; }
+        public string iconPath { get; private set; }
+        public sbyte gender { get; private set; }
+        public long expire { get; private set; }
+        public bool isOnSky { get; private set; }
+        public bool canTrade { get; private set; }
+        public sbyte petNClass { get; private set; }
+        public int iconId { get; private set; }
+        public sbyte element { get; private set; }
 
         public void setIconId(int iconId)
         {
             this.iconId = iconId;
         }
 
-        public void setElement(sbyte element)
-        {
-            this.element = element;
-        }
+        
 
  
 

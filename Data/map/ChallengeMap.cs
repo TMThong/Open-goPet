@@ -1,3 +1,5 @@
+using Gopet.Util;
+
 namespace Gopet.Data.Map
 {
     public class ChallengeMap : GopetMap
@@ -8,6 +10,46 @@ namespace Gopet.Data.Map
 
         }
 
+        public override void run()
+        {
+            isRunning = true;
+            while (isRunning)
+            {
+                try
+                {
+                    long lastTime = Utilities.CurrentTimeMillis;
+                    update();
+                    if (Utilities.CurrentTimeMillis - lastTime < 500)
+                    {
+                        Thread.Sleep(500);
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        public virtual void update()
+        {
+            foreach (Place place in places)
+            {
+                try
+                {
+                    place.update();
+                    if (place.needRemove())
+                    {
+                        place.removeAllPlayer();
+                        places.remove(place);
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
 
         public override void addRandom(Player player)
         {
@@ -19,9 +61,12 @@ namespace Gopet.Data.Map
                     return;
                 }
             }
-            Place place = new ChallengePlace(this, places.Count);
-            place.add(player);
-            addPlace(place);
+            lock (this)
+            {
+                Place place = new ChallengePlace(this, places.Count);
+                place.add(player);
+                addPlace(place);
+            }
         }
 
 

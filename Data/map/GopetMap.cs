@@ -23,7 +23,7 @@ namespace Gopet.Data.Map
             createZoneDefault();
             MyThread = new Thread(run)
             {
-                Name = Utilities.Format("Thread of map %s and mapId = %s", mapTemplate.getMapName(), mapId_),
+                Name = Utilities.Format("Thread of map %s and mapId = %s", mapTemplate.name, mapId_),
                 IsBackground = true,
             };
 
@@ -54,7 +54,7 @@ namespace Gopet.Data.Map
         }
 
 
-        public void run()
+        public virtual void run()
         {
             isRunning = true;
             while (isRunning)

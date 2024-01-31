@@ -444,7 +444,7 @@ public class GameController
             case GopetCMD.NPC_GUIDER:
                 int npcId = message.reader().readInt();
                 GopetPlace place = (GopetPlace)player.getPlace();
-                foreach (int npcIdTemp in place.map.mapTemplate.getNpc())
+                foreach (int npcIdTemp in place.map.mapTemplate.npc)
                 {
                     if (npcIdTemp == npcId)
                     {
@@ -501,7 +501,7 @@ public class GameController
         GopetPlace gopetPlace = (GopetPlace)player.getPlace();
         if (gopetPlace != null)
         {
-            foreach (int npcIdTemp in gopetPlace.map.mapTemplate.getNpc())
+            foreach (int npcIdTemp in gopetPlace.map.mapTemplate.npc)
             {
                 if (npcIdTemp == npcId)
                 {
@@ -1058,8 +1058,8 @@ public class GameController
             int j = GopetManager.TeleMapId[i];
             GopetMap mapData = MapManager.maps.get(j);
             ms.putsbyte((sbyte)j);
-            ms.putUTF(mapData.mapTemplate.getMapName());
-            ms.putUTF(mapData.mapTemplate.getMapName());
+            ms.putUTF(mapData.mapTemplate.name);
+            ms.putUTF(mapData.mapTemplate.name);
             ms.putsbyte(0);
         }
         ms.writer().flush();
@@ -3315,6 +3315,59 @@ public class GameController
                     {
                         player.playerData.star += giftInfo[1];
                         popups.add(new Popup(Utilities.FormatNumber(giftInfo[1]) + " năng lượng"));
+                    }
+                    break;
+                case GopetManager.GIFT_RANDOM_ITEM:
+                    {
+                        int numGift = giftInfo[1];
+                        List<int[]> listGiftRandom = new();
+                        for (int xxx = 2; xxx < giftInfo.Length; xxx += 2)
+                        {
+                            listGiftRandom.Add(new int[] { giftInfo[xxx], giftInfo[xxx + 1] });
+                        }
+                        if (listGiftRandom.Count > 0)
+                        {
+                            for (int t = 0; t < numGift; t++)
+                            {
+                                bool flag = false;
+                                int[] rand = Utilities.RandomArray(listGiftRandom);
+                                int itemId = rand[1];
+                                int count = rand[0];
+                                switch(itemId)
+                                {
+                                    case -123:
+                                        itemId = Utilities.RandomArray(GopetManager.ID_ITEM_SILVER);
+                                        break; 
+                                    case -124:
+                                        itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PET_TIER_ONE);
+                                        break; 
+                                    case -125:
+                                        itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PET_TIER_TOW);
+                                        break;
+                                    case -126:
+                                        player.playerData.AccumulatedPoint += count;
+                                        popups.add(new Popup($"{count} điểm tích lũy"));
+                                        flag = true;
+                                        break;
+                                }
+                                if (flag) break;
+                                Item item = new Item(itemId);
+                                if (!item.getTemp().isStackable)
+                                {
+                                    for (int j = 0; j < count; j++)
+                                    {
+                                        player.addItemToInventory(new Item(itemId));
+                                    }
+                                    popups.add(new Popup(item.getName() + " x" + count));
+                                }
+                                else
+                                {
+                                    item.count = count;
+                                    player.addItemToInventory(item);
+                                    popups.add(new Popup(item.getName()));
+                                }
+                            }
+                        }
                     }
                     break;
             }

@@ -116,10 +116,10 @@ namespace Gopet.Data.Mob
                 mobLvInfo = GopetManager.MOBLVLINFO_HASH_MAP.get(Utilities.nextInt(mobLvlMap.getLvlFrom(), mobLvlMap.getLvlTo()));
             }
             this.lvl = mobLvInfo.lvl;
-            hp = base.getHpViaPrice();
-            maxHp = base.getHpViaPrice();
-            mp = base.getMpViaPrice();
-            maxMp = base.getMpViaPrice();
+            hp = getHpViaPrice();
+            maxHp = getHpViaPrice();
+            mp = getMpViaPrice();
+            maxMp = getMpViaPrice();
             int xTile = 4;
             bound = new Rectangle(mobLocation.getX() - 24 * xTile, mobLocation.getY() - 24 * xTile, 24 * xTile * 2, 24 * xTile * 2);
         }

@@ -46,6 +46,8 @@ public class PlayerData
     public int clanId { get; set; }
     public String avatarPath { get; set; }
 
+    public int AccumulatedPoint { get; set; }
+
     public Dictionary<int, int> numUseEnergy { get; set; } = new();
 
     public PlayerData()
@@ -101,7 +103,8 @@ public class PlayerData
                             friends = @friends,
                             items = @items ,
                             favouriteList = @favouriteList,
-                            numUseEnergy = @numUseEnergy 
+                            numUseEnergy = @numUseEnergy,
+                            AccumulatedPoint = @AccumulatedPoint
                             WHERE ID = @ID", playerData);
         }
     }

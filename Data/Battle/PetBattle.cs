@@ -707,14 +707,14 @@ namespace Gopet.Battle
                     else
                     {
                         Boss boss = (Boss)mob;
-                        petBattleTexts.AddRange(activePlayer.controller.onReiceiveGift(boss.getBossTemplate().gift));
+                        petBattleTexts.AddRange(activePlayer.controller.onReiceiveGift(boss.Template.gift));
                         place.mobDie(mob);
                         ArrayList<string> txtInfo = new();
                         foreach (Popup petBattleText in petBattleTexts)
                         {
                             txtInfo.add(petBattleText.getText());
                         }
-                        activePlayer.okDialog(Utilities.Format("Chức mừng bạn kích sát %s nhận được :\n%s", boss.getBossTemplate().name, string.Join(",", txtInfo)));
+                        activePlayer.okDialog(Utilities.Format("Chức mừng bạn kích sát %s nhận được :\n%s", boss.Template.name, string.Join(",", txtInfo)));
                         activePlayer.controller.getTaskCalculator().onKillBoss(boss);
                     }
                     HistoryManager.addHistory(new History(activePlayer).setLog(Utilities.Format("Tiếu diệt quái %s", mob.getName())).setObj(mob).setSpceialType(History.KILL_MOB));

@@ -17,7 +17,13 @@ public class GopetPlace : Place
     public ConcurrentHashMap<MobLocation, long> newMob = new();
     public const long TIME_NEW_MOB = 25000;
     public int numMobDie = 0;
-    public int numMobDieNeed = Utilities.nextInt(1500000, 20000000);
+    public int numMobDieNeed
+    {
+        get
+        {
+            return base.map.mapTemplate.numPetDie;
+        }
+    }
 
     public GopetPlace(GopetMap m, int ID) : base(m, ID)
     {
@@ -31,7 +37,7 @@ public class GopetPlace : Place
 
     public override void add(Player player)
     {
-        HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Bạn đã vào khu %s map %s", zoneID, map.mapTemplate.getMapName())));
+        HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Bạn đã vào khu %s map %s", zoneID, map.mapTemplate.name)));
         PetBattle petBattle = player.controller.getPetBattle();
         if (petBattle != null)
         {
@@ -220,7 +226,7 @@ public class GopetPlace : Place
     private void sendGameObj(Player player)
     {
         Message ms = new Message(GopetCMD.GAME_OBJECT);
-        foreach (int npcId in map.mapTemplate.getNpc())
+        foreach (int npcId in map.mapTemplate.npc)
         {
             NpcTemplate npcTemplate = GopetManager.npcTemplate.get(npcId);
             if (npcTemplate != null)
@@ -532,46 +538,48 @@ public class GopetPlace : Place
     {
         MobLocation[] mobLocations = locations;
         MobLvlMap[] mobLvlMaps = GopetManager.MOBLVL_MAP.get(map.mapID);
-        if (mobLocations.Length > 0 && mobLvlMaps.Length > 0)
+        if(mobLvlMaps != null)
         {
-            ArrayList<Mob> nGopetMobs = new();
-            int index = -1;
-            foreach (MobLocation mobLocation in mobLocations)
+            if (mobLocations.Length > 0 && mobLvlMaps.Length > 0)
             {
-                index++;
-                if (this.map.mapTemplate.getBoss().Length > 0)
+                ArrayList<Mob> nGopetMobs = new();
+                int index = -1;
+                foreach (MobLocation mobLocation in mobLocations)
                 {
-                    if (numMobDie >= numMobDieNeed)
+                    index++;
+                    if (this.map.mapTemplate.boss.Length > 0)
                     {
-                        Boss boss = new Boss(Utilities.RandomArray(this.map.mapTemplate.getBoss()), mobLocation);
-                        boss.isTimeOut = true;
-                        boss.timeoutMilis = Utilities.CurrentTimeMillis + GopetManager.TIME_BOSS_DISPOINTED;
+                        if (numMobDie >= numMobDieNeed)
+                        {
+                            Boss boss = new Boss(Utilities.RandomArray(this.map.mapTemplate.boss), mobLocation);
+                            boss.isTimeOut = true;
+                            boss.timeoutMilis = Utilities.CurrentTimeMillis + GopetManager.TIME_BOSS_DISPOINTED;
 
-                        addNewMob(boss);
-                        nGopetMobs.add(boss);
-                        PlayerManager.showBanner(Utilities.Format("Boss %s đã xuất hiện tại %s khu %s nhanh tay lên nào!!!!", boss.getBossTemplate().name, this.map.mapTemplate.getMapName(), this.zoneID));
-                        numMobDie = 0;
-                        numMobDieNeed = Utilities.nextInt(150, 200);
-                        continue;
+                            addNewMob(boss);
+                            nGopetMobs.add(boss);
+                            PlayerManager.showBanner(Utilities.Format("Boss %s đã xuất hiện tại %s khu %s nhanh tay lên nào!!!!", boss.Template.name, this.map.mapTemplate.name, this.zoneID));
+                            numMobDie = 0;
+                            continue;
+                        }
                     }
-                }
-                long deltaTime = Utilities.CurrentTimeMillis + 3000;
-                while (deltaTime > Utilities.CurrentTimeMillis)
-                {
-                    MobLvlMap mobLvlMap = Utilities.RandomArray(mobLvlMaps);
-                    if (GopetManager.PETTEMPLATE_HASH_MAP.ContainsKey(mobLvlMap.getPetId()))
+                    long deltaTime = Utilities.CurrentTimeMillis + 3000;
+                    while (deltaTime > Utilities.CurrentTimeMillis)
                     {
-                        PetTemplate petTemplate = GopetManager.PETTEMPLATE_HASH_MAP.get(mobLvlMap.getPetId());
-                        Mob m = new Mob(petTemplate, this, mobLvlMap, mobLocation);
+                        MobLvlMap mobLvlMap = Utilities.RandomArray(mobLvlMaps);
+                        if (GopetManager.PETTEMPLATE_HASH_MAP.ContainsKey(mobLvlMap.getPetId()))
+                        {
+                            PetTemplate petTemplate = GopetManager.PETTEMPLATE_HASH_MAP.get(mobLvlMap.getPetId());
+                            Mob m = new Mob(petTemplate, this, mobLvlMap, mobLocation);
 
-                        addNewMob(m);
-                        nGopetMobs.add(m);
-                        break;
+                            addNewMob(m);
+                            nGopetMobs.add(m);
+                            break;
+                        }
                     }
+                    numMobDie++;
                 }
-                numMobDie++;
+                sendMob(nGopetMobs);
             }
-            sendMob(nGopetMobs);
         }
     }
 

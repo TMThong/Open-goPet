@@ -157,6 +157,11 @@ namespace Gopet.Util
             return arr[nextInt(arr.Length)];
         }
 
+        public static T RandomArray<T>(List<T> arr)
+        {
+            return arr[nextInt(arr.Count)];
+        }
+
         public static bool IsValidName(string s)
         {
             if (s == null)
