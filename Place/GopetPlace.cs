@@ -611,6 +611,7 @@ public class GopetPlace : Place
             int key = entry.Key;
             Item val = entry.Value;
             m.putInt(key);
+            GopetManager.ServerMonitor.LogWarning($"DEBUG [{val.Template.frameImgPath}]");
             m.putUTF(val.Template.frameImgPath);
             m.putsbyte(val.getTemp().getOptionValue()[0]);
         }

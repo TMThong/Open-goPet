@@ -274,13 +274,13 @@ namespace Gopet.Data.GopetItem
 
         public string getRange(string icon, int[] range)
         {
-            if (range == null) return "";
+            if (range == null) return string.Format("[{0} ({2}) -{1} ({2}) ]", 0, 0, icon);
 
             if (range.Length == 0) return string.Empty;
 
             if (range.Length == 1) return range[0].ToString() + " (atk) ";
 
-            return string.Format("[{0}({2})-{1}({2})]", range[0], range[1], icon);
+            return string.Format("[{0} ({2}) -{1} ({2}) ]", range[0], range[1], icon);
         }
 
         internal string getAtk()

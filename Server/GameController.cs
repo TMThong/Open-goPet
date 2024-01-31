@@ -560,7 +560,9 @@ public class GameController
 
     private void requestImg(sbyte gameType, sbyte type, String path)
     {
-        //System.out.println("requestImg|" + gameType + "|" + type + "|" + path);
+#if DEBUG
+        GopetManager.ServerMonitor.LogWarning($"CLIENT REQUEST IMAGE: {path}");
+#endif
         String originPath = path;
         if (path.Equals(GopetManager.EMPTY_IMG_PATH))
         {
@@ -757,6 +759,11 @@ public class GameController
                         case GopetCMD.WING_TYPE_ENCHANT:
                             {
                                 int index = message.readInt();
+                                if (index == -1)
+                                {
+                                    player.redDialog("Vui lòng tháo cánh ra");
+                                    return;
+                                }
                                 var wingInventory = player.playerData[GopetManager.WING_INVENTORY];
                                 if (wingInventory.Count > 0 && wingInventory.Count > index && index >= -1)
                                 {
@@ -935,7 +942,9 @@ public class GameController
 
     private void requestPetImg(sbyte type, String path)
     {
-        //        System.err.println("requestPetImg: " + path + "|" + type);
+#if DEBUG
+        GopetManager.ServerMonitor.LogWarning($"CLIENT REQUEST IMAGE: {type} {path}");
+#endif
         String originPath = path;
         if (path.Equals(GopetManager.EMPTY_IMG_PATH))
         {

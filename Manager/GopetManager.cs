@@ -486,6 +486,7 @@ public class GopetManager
     static GopetManager()
     {
         SqlMapper.AddTypeHandler(new JsonAdapter<int[]>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<sbyte[]>());
         SqlMapper.AddTypeHandler(new JsonAdapter<ArrayList<int>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<HashMap<sbyte, CopyOnWriteArrayList<Item>>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<Pet>>());
@@ -564,6 +565,20 @@ public class GopetManager
                 EnchantWingData[wingData.Level] = wingData;
             }
             ServerMonitor.LogInfo("Tải dữ liệu cường hóa cánh từ cơ sở dữ liệu OK");
+            IEnumerable<ShopTemplateItem> shopitemTemplate = conn.Query<ShopTemplateItem>("SELECT * FROM `shop`");
+            foreach (var shopTemplate1 in shopitemTemplate)
+            {
+                if (shopTemplate.ContainsKey(shopTemplate1.shopId))
+                {
+                    shopTemplate.get(shopTemplate1.shopId).getShopTemplateItems().add(shopTemplate1);
+                }
+                else
+                {
+                    throw new UnsupportedOperationException(" khong ho tro loai shop " + shopTemplate1.shopId);
+                }
+
+            }
+            ServerMonitor.LogInfo("Tải dữ liệu cửa hàng từ cơ sở dữ liệu OK");
         }
 
         using (var connWeb = MYSQLManager.createWebMySqlConnection())
@@ -715,31 +730,6 @@ public class GopetManager
         }
         resultSet.Close();
 
-        resultSet = MYSQLManager.jquery("SELECT * FROM `shop`");
-        while (resultSet.next())
-        {
-            sbyte shopId = resultSet.getsbyte("ShopId");
-            ShopTemplateItem shopTemplate1 = new ShopTemplateItem();
-            shopTemplate1.setShopId(resultSet.getInt("shopId"));
-            shopTemplate1.setItemTempalteId(resultSet.getInt("itemTemTempleId"));
-            shopTemplate1.setCount(resultSet.getInt("count"));
-            shopTemplate1.setMoneyType(JsonConvert.DeserializeObject<sbyte[]>(resultSet.getString("moneyType")));
-            shopTemplate1.setPrice(JsonConvert.DeserializeObject<int[]>(resultSet.getString("price")));
-            shopTemplate1.setInventoryType(resultSet.getsbyte("inventoryType"));
-            shopTemplate1.setClanLvl(resultSet.getInt("clanLvl"));
-            shopTemplate1.setPerCount(resultSet.getInt("perCount"));
-            shopTemplate1.isSellItem = resultSet.getbool("isSellItem");
-            shopTemplate1.setPetId(resultSet.getInt("petId"));
-            if (shopTemplate.ContainsKey(shopId))
-            {
-                shopTemplate.get(shopId).getShopTemplateItems().add(shopTemplate1);
-            }
-            else
-            {
-                //throw new UnsupportedOperationException(" khong ho tro loai shop " + shopId);
-            }
-
-        }
         resultSet = MYSQLManager.jquery("SELECT * FROM `shop_clan`");
         while (resultSet.next())
         {

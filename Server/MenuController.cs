@@ -1331,7 +1331,11 @@ public class MenuController
                 }
                 break;
             case MENU_WING_INVENTORY:
-
+                if (index == -1)
+                {
+                    player.redDialog("Bạn đang sử dụng cành này!!!");
+                    return;
+                }
                 CopyOnWriteArrayList<Item> listWingItems = player.playerData.getInventoryOrCreate(GopetManager.WING_INVENTORY);
                 if (index >= 0 && index < listWingItems.Count)
                 {
@@ -1589,7 +1593,7 @@ public class MenuController
                     }
                 }
                 break;
-            
+
             case MENU_SELECT_MATERIAL_TO_ENCAHNT_WING:
             case MENU_SELECT_GEM_TO_INLAY:
             case MENU_SELECT_GEM_UP_TIER:
@@ -2987,6 +2991,7 @@ public class MenuController
             menuItemInfo.setCloseScreenAfterClick(true);
             menuItemInfo.setHasId(true);
             menuItemInfo.setItemId(i);
+            
             if (i == -1)
             {
                 menuItemInfo.setTitleMenu(menuItemInfo.getTitleMenu() + " (Đang sử dụng)");
@@ -2994,6 +2999,7 @@ public class MenuController
             menuList.add(menuItemInfo);
             i++;
         }
+
         player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, title, menuList);
     }
 
@@ -3089,14 +3095,12 @@ public class MenuController
                                                 {
                                                     wingItem.lvl++;
                                                     player.getPet()?.applyInfo(player);
-                                                    MenuController.sendMenu(MenuController.MENU_WING_INVENTORY, player);
                                                     player.okDialog($"Chúc mừng bạn đã nâng cấp {wingItem.getName()} lên cáp {wingItem.lvl} thành công");
                                                 }
                                                 else
                                                 {
                                                     wingItem.lvl += enchantWingData.NumDropLevelWing;
                                                     player.getPet()?.applyInfo(player);
-                                                    MenuController.sendMenu(MenuController.MENU_WING_INVENTORY, player);
                                                     player.redDialog($"Thật xui xẻo bạn cường hóa thất bại giảm {enchantWingData.NumDropLevelWing} cấp độ");
                                                 }
 

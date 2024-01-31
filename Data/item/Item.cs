@@ -193,6 +193,10 @@ namespace Gopet.Data.GopetItem
             {
                 return getTemp().getName() + " x" + count;
             }
+            if(Template.type == GopetManager.WING_INVENTORY)
+            {
+                return getTemp().getName() + " cấp " + lvl;
+            }
             return getTemp().getName();
         }
 

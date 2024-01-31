@@ -5,8 +5,8 @@ using Gopet.Util;
 public class ShopTemplateItem 
 {
 
-    public int shopId;
-    public int itemTempalteId;
+    public sbyte shopId;
+    public int itemTemTempleId;
     public int count;
     public sbyte[] moneyType;
     public int[] price;
@@ -24,14 +24,14 @@ public class ShopTemplateItem
     public int petId;
     public bool isSellItem = true;
 
-    public void setShopId(int shopId)
+    public void setShopId(sbyte shopId)
     {
         this.shopId = shopId;
     }
 
     public void setItemTempalteId(int itemTempalteId)
     {
-        this.itemTempalteId = itemTempalteId;
+        this.itemTemTempleId = itemTempalteId;
     }
 
     public void setCount(int count)
@@ -115,7 +115,7 @@ public class ShopTemplateItem
 
     public int getItemTempalteId()
     {
-        return this.itemTempalteId;
+        return this.itemTemTempleId;
     }
 
     public int getCount()
@@ -195,7 +195,7 @@ public class ShopTemplateItem
 
     public ItemTemplate getItemTemplate()
     {
-        return GopetManager.itemTemplate.get(itemTempalteId);
+        return GopetManager.itemTemplate.get(itemTemTempleId);
     }
 
     public PetTemplate getPetTemplate()
@@ -234,7 +234,7 @@ public class ShopTemplateItem
 
         if (itemTemplate.getType() == GopetManager.PET_EQUIP_ARMOUR || itemTemplate.getType() == GopetManager.PET_EQUIP_GLOVE || itemTemplate.getType() == GopetManager.PET_EQUIP_HAT || itemTemplate.getType() == GopetManager.PET_EQUIP_SHOE || itemTemplate.getType() == GopetManager.PET_EQUIP_WEAPON)
         {
-            return itemTemplate.getDescription() + Utilities.Format("( + %s (atk) , + %s (def) , + %s (hp) , + %s (mp))", itemTemplate.getAtk(), itemTemplate.getDef(), itemTemplate.getHp(), itemTemplate.getMp());
+            return itemTemplate.getDescription() + Utilities.Format("( %s ,  %s,  %s ,  %s )", itemTemplate.getAtk(), itemTemplate.getDef(), itemTemplate.getHp(), itemTemplate.getMp());
         }
 
         if (itemTemplate.getType() == GopetManager.SKIN_ITEM)

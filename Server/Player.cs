@@ -338,7 +338,8 @@ Thread.Sleep(1000);
             MySqlConnection MySqlConnectionPlayer = MYSQLManager.create();
             try
             {
-                playerData = MySqlConnectionPlayer.QuerySingle<PlayerData>("SELECT * FROM `player` where user_id = " + user.user_id);
+                playerData = MySqlConnectionPlayer.QueryFirstOrDefault<PlayerData>("SELECT * FROM `player` where user_id = " + user.user_id);
+                if (playerData != null)
                 PlayerManager.put(this);
             }
             catch (Exception e)

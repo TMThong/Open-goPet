@@ -247,7 +247,7 @@ namespace Gopet.Util
 
         public static void printStackTrace(this Exception e)
         {
-            Console.WriteLine(e.StackTrace);
+            GopetManager.ServerMonitor.LogError(e.ToString());
         }
 
         public static int round(float value)

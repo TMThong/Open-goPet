@@ -14,7 +14,7 @@ public class PlatformHelper
     public static String assetsPath;
     public static String dirPath;
 
-    static void init()
+    static PlatformHelper()
     {
         assetsPath = currentDirectory() + "/assets/";
     }
@@ -24,6 +24,9 @@ public class PlatformHelper
         sbyte[] buffer = null;
         try
         {
+#if DEBUG
+            GopetManager.ServerMonitor.LogWarning($"Load ASSETS: {path}");
+#endif
             buffer = File.ReadAllBytes(Path.Combine(assetsPath + path)).sbytes();
         }
         catch (Exception e)
@@ -33,23 +36,8 @@ public class PlatformHelper
         return buffer;
     }
 
-    public static FileInfo loadAssetsFile(String path)
-    {
-        return new FileInfo(assetsPath + path);
-    }
-
-    public static Stream loadAssetsStream(String path)
-    {
-        return File.OpenRead(assetsPath + path);
-    }
-
     public static bool hasAssets(String path)
     {
         return File.Exists(assetsPath + path);
-    }
-
-    static PlatformHelper()
-    {
-        init();
     }
 }
