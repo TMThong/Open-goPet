@@ -71,7 +71,7 @@ public class MenuController
     public const int MENU_APPROVAL_CLAN_MEMBER = 1024;
     public const int MENU_APPROVAL_CLAN_MEM_OPTION = 1025;
     public const int MENU_SELECT_TYPE_CHANGE_GIFT = 1026;
-    public const int MENU_LIST_GIFT = 1027;
+    public const int MENU_ITEM_MONEY_INVENTORY = 1027;
     public const int MENU_UPGRADE_MEMBER_DUTY = 1028;
     public const int MENU_SELECT_TYPE_UPGRADE_DUTY = 1029;
     public const int MENU_SELECT_SKILL_CLAN_TO_RENT = 1030;
@@ -218,6 +218,8 @@ public class MenuController
     public const int OP_TYPE_GIFT_CODE = 60;
     public const int OP_NUM_OF_TASK = 61;
     public const int OP_SHOW_ALL_ITEM = 62;
+    public const int OP_TRADE_GIFT_COIN = 1000000000;
+    public const int OP_TRADE_GIFT_GOLD = 1000000001;
     /**
      * Văn bản khi hiện center dialog
      */
@@ -521,31 +523,18 @@ public class MenuController
                 break;
             case MENU_SELECT_TYPE_CHANGE_GIFT:
                 {
-                    ArrayList<Option> changeList = new();
-                    changeList.add(new Option(0, "Đổi x1", 1));
-                    changeList.add(new Option(1, "Đổi x5", 1));
-                    player.controller.sendListOption(menuId, "Đổi thưởng", CMD_CENTER_OK, changeList);
+                    Option[] changeList = new Option[GopetManager.TradeGiftPrice.Count];
+                    for (sbyte i = 0; i < GopetManager.TradeGiftPrice.Count; i++)
+                    {
+                        var tradeGiftTemplate = GopetManager.TradeGiftPrice[i];
+                        changeList[i] = new Option(tradeGiftTemplate.Item3, $"Dùng {getMoneyText((sbyte)tradeGiftTemplate.Item1[0], tradeGiftTemplate.Item2[0])} và {getMoneyText((sbyte)tradeGiftTemplate.Item1[1], tradeGiftTemplate.Item2[1])} để đổi phần thưởng");
+                    }
+                    showNpcOption(GopetManager.NPC_TIEN_NU, player, changeList);
                 }
                 break;
-            case MENU_LIST_GIFT:
+            case MENU_ITEM_MONEY_INVENTORY:
                 {
-                    ArrayList<MenuItemInfo> MenuItem = new();
-                    MenuItem.add(new MenuItemInfo("Mảnh sơ cấp pet", "", "npcs/gopet.png"));
-                    //                MenuItem.add(new MenuItemInfo("Mảnh trung cấp pet", "", "npcs/gopet.png"));
-                    //                MenuItem.add(new MenuItemInfo("Mảnh trang bị trung", "", "npcs/gopet.png"));
-                    foreach (int[] info in GopetManager.CHANGE_ITEM_DATA)
-                    {
-                        switch (info[0])
-                        {
-                            case GopetManager.GIFT_ITEM_PERCENT_NO_DROP_MORE:
-                                ItemTemplate template = GopetManager.itemTemplate.get(info[1]);
-                                MenuItemInfo m = new AdminItemInfo(template.getName(), template.getDescription(), template.getIconPath());
-                                MenuItem.add(m);
-                                break;
-                        }
-                    }
-
-                    player.controller.showMenuItem(menuId, TYPE_MENU_NONE, "Danh sách phần thưởng", MenuItem);
+                    showInventory(player, GopetManager.MONEY_INVENTORY, MENU_ITEM_MONEY_INVENTORY, "Vật phẩm hiện có");
                 }
                 break;
             case MENU_APPROVAL_CLAN_MEMBER:
@@ -897,6 +886,29 @@ public class MenuController
                 }
                 break;
         }
+    }
+
+    static void Trade(sbyte type, Player player)
+    {
+        var price = GopetManager.TradeGiftPrice[type];
+        for (int i = 0; i < price.Item1.Length; i++)
+        {
+            if (!checkMoney((sbyte)price.Item1[i], price.Item2[i], player))
+            {
+                NotEngouhMoney((sbyte)price.Item1[i], price.Item2[i], player);
+                return;
+            }
+        }
+
+        for (int i = 0; i < price.Item1.Length; i++)
+        {
+            addMoney((sbyte)price.Item1[i], -price.Item2[i], player);
+        }
+
+        TradeGiftTemplate tradeGift = Utilities.RandomArray(GopetManager.TradeGift[type]);
+        var it = new Item(tradeGift.ItemTemplateId, tradeGift.Count);
+        player.addItemToInventory(it);
+        player.okDialog($"Chúc mừng bạn nhận được: {it.Template.name} x{tradeGift.Count}");
     }
 
     public static ArrayList<int> typeSelectItemMaterial(int menuId, Player player)
@@ -1716,7 +1728,7 @@ public class MenuController
                         case MENU_MERGE_PART_ITEM:
                             {
                                 int[] optionValue = itemSelect.getTemp().getOptionValue();
-                                if (player.controller.checkCount(itemSelect.itemTemplateId, optionValue[1]))
+                                if (player.controller.checkCount(itemSelect.itemTemplateId, optionValue[1], GopetManager.NORMAL_INVENTORY))
                                 {
                                     player.controller.subCountItem(itemSelect, optionValue[1], GopetManager.NORMAL_INVENTORY);
                                     Item item = new Item(optionValue[0]);
@@ -2159,33 +2171,6 @@ public class MenuController
                             count = 5;
                             break;
                     }
-
-                    int price = count * GopetManager.PRICE_SILVER_BAR_CHANGE_GIFT;
-                    if (player.controller.checkSilverBar(price))
-                    {
-                        player.controller.mineSilverBar(price);
-                        ArrayList<Popup> arrayList = new();
-                        for (int i = 0; i < count; i++)
-                        {
-                            foreach (Popup popup in player.controller.onReiceiveGift(GopetManager.CHANGE_ITEM_DATA))
-                            {
-                                arrayList.add(popup);
-                            }
-
-                        }
-
-                        ArrayList<String> txtInfo = new();
-                        foreach (Popup petBattleText in arrayList)
-                        {
-                            txtInfo.add(petBattleText.getText());
-                        }
-
-                        player.okDialog(Utilities.Format("Chúc mừng bạn nhận được: %s", String.Join(",", txtInfo.ToArray())));
-                    }
-                    else
-                    {
-                        player.controller.notEnoughSilverBar();
-                    }
                 }
                 break;
 
@@ -2362,6 +2347,26 @@ public class MenuController
         }
     }
 
+    public static void showNpcOption(int npcId, Player player, Option[] options)
+    {
+        NpcTemplate npcTemplate = GopetManager.npcTemplate.get(npcId);
+        if (npcTemplate != null)
+        {
+            Message ms = new Message(GopetCMD.COMMAND_GUIDER);
+            ms.putsbyte(GopetCMD.NPC_OPTION);
+            ms.putInt(npcId);
+
+            ms.putInt(options.Length);
+            for (int i = 0; i < options.Length; i++)
+            {
+                ms.putInt(options[i].getOptionId());
+                ms.putUTF(options[i].getOptionText());
+            }
+            ms.cleanup();
+            player.session.sendMessage(ms);
+        }
+    }
+
     private static PetSkill[] getPetSkills(Player player)
     {
         ArrayList<PetSkill> petSkills = GopetManager.NCLASS_PETSKILL_HASH_MAP.get(player.playerData.petSelected.getPetTemplate().getNclass());
@@ -2428,6 +2433,13 @@ public class MenuController
                     player.controller.setPetUpgradeInfo(new PetUpgradeInfo());
                     player.controller.showUpgradePet();
                 }
+                break;
+
+            case OP_TRADE_GIFT_COIN:
+                Trade(TradeGiftTemplate.TYPE_COIN, player);
+                break;
+            case OP_TRADE_GIFT_GOLD:
+                Trade(TradeGiftTemplate.TYPE_GOLD, player);
                 break;
             case OP_SHOP_ENERGY:
                 showShop(SHOP_ENERGY, player);
@@ -2664,7 +2676,7 @@ public class MenuController
                 break;
             case OP_LIST_GIFT:
                 {
-                    sendMenu(MENU_LIST_GIFT, player);
+                    sendMenu(MENU_ITEM_MONEY_INVENTORY, player);
                 }
                 break;
             case OP_PLUS_CLAN_BUFF:
@@ -2859,6 +2871,11 @@ public class MenuController
         return str;
     }
 
+    public static void NotEngouhMoney(sbyte type, long value, Player player)
+    {
+        player.redDialog($"Bạn không đủ {getMoneyText(type, value)}");
+    }
+
     public static bool checkMoney(sbyte type, long value, Player player)
     {
         switch (type)
@@ -2991,7 +3008,7 @@ public class MenuController
             menuItemInfo.setCloseScreenAfterClick(true);
             menuItemInfo.setHasId(true);
             menuItemInfo.setItemId(i);
-            
+
             if (i == -1)
             {
                 menuItemInfo.setTitleMenu(menuItemInfo.getTitleMenu() + " (Đang sử dụng)");

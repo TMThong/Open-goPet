@@ -360,7 +360,7 @@ public class GopetManager
     /**
      * Số lượt cần để hồi xong 1 kỹ năng
      */
-    public const int MAX_SKILL_COOLDOWN = 5;
+    public const int MAX_SKILL_COOLDOWN = 3;
 
     /**
      * Mẫu của npc
@@ -394,6 +394,7 @@ public class GopetManager
     public const sbyte SKIN_INVENTORY = 2;
     public const sbyte WING_INVENTORY = 3;
     public const sbyte GEM_INVENTORY = 4;
+    public const sbyte MONEY_INVENTORY = 5;
 
     public const sbyte MONEY_TYPE_COIN = 1;
 
@@ -432,7 +433,7 @@ public class GopetManager
     public static int[] ENCHANT_INFO = new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 20 };
     public static float[] PERCENT_ENCHANT = new float[] { 90f, 80f, 70f, 60f, 50f, 30f, 20f, 5f, -10f, -20f };
     public static float[] DISPLAY_PERCENT_ENCHANT = new float[] { 90f, 80f, 70f, 60f, 50f, 30f, 20f, 15f, 10f, 5f };
-    public static float[] PERCENT_UP_SKILL = new float[] { 60f, 50f, 40f, 30f, 20f, 10f, 0f, -10f, -20f, -30f, -40f };
+    public static float[] PERCENT_UP_SKILL = new float[] { 90, 80, 60, 50, 40, 30, 10, 5, 2, 0 };
     public static int[] PRICE_ENCHANT = new int[] { 5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000 };
     public const int PERCENT_LVL_ITEM = 5;
     public const int DELAY_TURN_PET_BATTLE = 3000;
@@ -451,9 +452,9 @@ public class GopetManager
     public const long PRICE_REVIVAL_PET_FATER_PK = 5000;
     public const float BET_PRICE_PLAYER_CHALLENGE = 10f;
     public const int LVL_PET_PASSIVE_REQUIER_UP_TIER = 10;
-    public const int SILVER_BAR_ID = 184;
-    public const int GOLD_BAR_ID = 185;
-    public const int BLOOD_GEM_ID = 186;
+    public const int SILVER_BAR_ID = 186;
+    public const int GOLD_BAR_ID = 187;
+    public const int BLOOD_GEM_ID = 188;
     public static int[] ID_BOSS_CHALLENGE = new int[] { 11, 12, 13, 14, 15 };
 
     public static int[] LVL_REQUIRE_PET_TATTO = new int[] { 3, 5, 10, 15, 20, 25, 30, 35 };
@@ -475,7 +476,6 @@ public class GopetManager
     public static readonly int[] PRICE_RENT_SKILL = new int[] { 550, 100 };
     public static readonly long[] PRICE_BET_CHALLENGE = new long[] { 2000l, 10000l, 15000l };
 
-    public static int[][] CHANGE_ITEM_DATA;
     public const int MAX_TIMES_SHOW_CAPTCHA = 5;
 
     public const int PERCENT_EXCHANGE_GOLD_TO_COIN = 20;
@@ -488,6 +488,16 @@ public class GopetManager
     public static readonly int[] ID_ITEM_PET_TIER_ONE = new int[] { 726, 728, 730, 732, 734, 738 };
     public static readonly int[] ID_ITEM_PET_TIER_TOW = new int[] { 740, 742, 744, 746, 748, 750, 756, 760, 762, 764, 766 };
 
+    public static readonly Dictionary<sbyte, TradeGiftTemplate[]> TradeGift = new();
+
+    public static readonly Dictionary<sbyte, Tuple<int[], int[] , int>> TradeGiftPrice = new()
+    {
+        [TradeGiftTemplate.TYPE_COIN] = new Tuple<int[], int[], int>(new int[] { GopetManager.MONEY_TYPE_SILVER_BAR, GopetManager.MONEY_TYPE_COIN }, new int[] { 3, 200 }, MenuController.OP_TRADE_GIFT_COIN),
+        [TradeGiftTemplate.TYPE_GOLD] = new Tuple<int[], int[], int>(new int[] { GopetManager.MONEY_TYPE_GOLD_BAR, GopetManager.MONEY_TYPE_GOLD }, new int[] { 3, 100 }, MenuController.OP_TRADE_GIFT_GOLD)
+    };
+
+    public const int NPC_TRAN_CHAN = -1;
+    public const int NPC_TIEN_NU = -2;
 
     static GopetManager()
     {
@@ -602,6 +612,11 @@ public class GopetManager
                 mapTemplate[mTem.mapId] = mTem;
             }
             ServerMonitor.LogInfo("Tải dữ liệu map từ cơ sở dữ liệu OK");
+
+            TradeGift[TradeGiftTemplate.TYPE_COIN] = conn.Query<TradeGiftTemplate>("SELECT * FROM `trade_gift` where Type = " + TradeGiftTemplate.TYPE_COIN).ToArray();
+            TradeGift[TradeGiftTemplate.TYPE_GOLD] = conn.Query<TradeGiftTemplate>("SELECT * FROM `trade_gift` where Type = " + TradeGiftTemplate.TYPE_GOLD).ToArray();
+
+            ServerMonitor.LogInfo("Tải dữ liệu trao đổi thưởng từ cơ sở dữ liệu OK");
         }
 
         using (var connWeb = MYSQLManager.createWebMySqlConnection())
@@ -899,8 +914,6 @@ public class GopetManager
             clanSkillHouseTemp.put(clanHouseTemplate.getLvl(), clanHouseTemplate);
         }
         resultSet.Close();
-
-        CHANGE_ITEM_DATA = JsonConvert.DeserializeObject<int[][]>("[[4,74,5000,1],[4,71,5500,1],[4,75,4500,1],[4,76,2000,1],[4,77,1000,1],[5,1,5000,1]]");
 
         foreach (var entry in tierItem)
         {

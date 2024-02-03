@@ -1,5 +1,6 @@
 
 using Gopet.Util;
+using System.Text.Json.Serialization;
 
 public class GameObject
 {
@@ -79,6 +80,7 @@ public class GameObject
         return 0;
     }
 
+    [JsonIgnore]
     public virtual PetTemplate Template
     {
         get;

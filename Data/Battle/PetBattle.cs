@@ -207,7 +207,7 @@ namespace Gopet.Battle
 
         private void petAttack(Player player)
         {
-            bool isStun = ItemInfo.getValueById(getUserPetBattleInfo().getBuff(), ItemInfo.Type.STUN) > 0;
+            bool isStun = ItemInfo.getValueById(getUserPetBattleInfo().getBuff(), ItemInfo.Type.STUN) > 0 || Utilities.NextFloatPer() < ItemInfo.getValueById(getUserPetBattleInfo().getBuff(), ItemInfo.Type.PER_STUN_1_TURN) / 100f;
             if (isStun)
             {
                 nextTurn();
@@ -878,7 +878,7 @@ namespace Gopet.Battle
 
         private void useSkill(Player player, int skillId)
         {
-            bool isStun = ItemInfo.getValueById(getUserPetBattleInfo().getBuff(), ItemInfo.Type.STUN) > 0;
+            bool isStun = ItemInfo.getValueById(getUserPetBattleInfo().getBuff(), ItemInfo.Type.STUN) > 0 || Utilities.NextFloatPer() < ItemInfo.getValueById(getUserPetBattleInfo().getBuff(), ItemInfo.Type.PER_STUN_1_TURN) / 100f;
 
             if (isStun)
             {
@@ -909,7 +909,7 @@ namespace Gopet.Battle
                     {
                         PetBattleInfo nonPetBattleInfo = getNonUserPetBattleInfo();
                         PetSkill petSkill = GopetManager.PETSKILL_HASH_MAP.get(pet.skill[skillindex][0]);
-                        PetSkillLv petSkillLv = petSkill.skillLv.get(pet.skill[skillindex][1] - 1);
+                        PetSkillLv petSkillLv = petSkill.skillLv.get(pet.skill[skillindex][1]);
                         if (pet.mp - petSkillLv.mpLost >= 0)
                         {
                             int mpdelta = 0;
@@ -1012,7 +1012,7 @@ namespace Gopet.Battle
         private bool randMiss(PetBattleInfo nonPetBattleInfo)
         {
             ItemInfo[] itemInfos = nonPetBattleInfo.getBuff();
-            return ItemInfo.getValueById(itemInfos, ItemInfo.Type.MISS_IN_2_TURN) > 0 && ActiveObject.AccuracyPercent - ItemInfo.getValueById(itemInfos, ItemInfo.Type.MISS_IN_2_TURN) / 100f - PassiveObject.SkipPercent > Utilities.NextFloatPer();
+            return ItemInfo.getValueById(itemInfos, ItemInfo.Type.MISS_IN_3_TURN) > 0 && ActiveObject.AccuracyPercent - ItemInfo.getValueById(itemInfos, ItemInfo.Type.MISS_IN_3_TURN) / 100f - PassiveObject.SkipPercent > Utilities.NextFloatPer();
         }
 
         private bool dotmana(PetSkillLv petSkillLv)
@@ -1105,7 +1105,7 @@ namespace Gopet.Battle
 
         private void mobUseNormalAttack()
         {
-            bool isStun = ItemInfo.getValueById(getUserPetBattleInfo().getBuff(), ItemInfo.Type.STUN) > 0;
+            bool isStun = ItemInfo.getValueById(getUserPetBattleInfo().getBuff(), ItemInfo.Type.STUN) > 0 || Utilities.NextFloatPer() < ItemInfo.getValueById(getUserPetBattleInfo().getBuff(), ItemInfo.Type.PER_STUN_1_TURN) / 100f;
             if (!isStun)
             {
                 ArrayList<TurnEffect> turnEffects = new();
@@ -1179,7 +1179,7 @@ namespace Gopet.Battle
 
         private void mobUseSkill(PetSkill skill, PetSkillLv petSkillLv)
         {
-            bool isStun = ItemInfo.getValueById(activeBattleInfo.getBuff(), ItemInfo.Type.STUN) > 0;
+            bool isStun = ItemInfo.getValueById(activeBattleInfo.getBuff(), ItemInfo.Type.STUN) > 0 || Utilities.NextFloatPer() < ItemInfo.getValueById(activeBattleInfo.getBuff(), ItemInfo.Type.PER_STUN_1_TURN) / 100f;
             if (!isStun)
             {
                 PetBattleInfo nonPetBattleInfo = passiveBattleInfo;
@@ -1291,8 +1291,8 @@ namespace Gopet.Battle
             {
                 switch (i.id)
                 {
-                    case ItemInfo.Type.MISS_IN_2_TURN:
-                        petBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 2));
+                    case ItemInfo.Type.MISS_IN_3_TURN:
+                        petBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 3));
                         break;
                     case ItemInfo.Type.POWER_DOWN_4_TURN:
                         nonBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.BUFF_DAMGE, -i.value) }, 4));
@@ -1303,8 +1303,8 @@ namespace Gopet.Battle
                     case ItemInfo.Type.POWER_DOWN_1_TURN:
                         nonBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.BUFF_DAMGE, -i.value) }, 1));
                         break;
-                    case ItemInfo.Type.DAMGE_TOXIC_IN_5_TURN_PER:
-                        nonBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 5));
+                    case ItemInfo.Type.DAMGE_TOXIC_IN_3_TURN_PER:
+                        nonBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 3));
                         break;
                     case ItemInfo.Type.BUFF_STR:
                         petBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 2));
@@ -1320,11 +1320,19 @@ namespace Gopet.Battle
                             nonBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.DEF, -(int)Utilities.GetValueFromPercent(nonPet.getDef(), i.getPercent())) }, 3));
                         }
                         break;
+                    case ItemInfo.Type.PER_DEF_BUFF_3_TURN:
+                        {
+                            petBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.DEF, (int)Utilities.GetValueFromPercent(this.ActiveObject.getDef(), i.getPercent())) }, 3));
+                        }
+                        break;
                     case ItemInfo.Type.STUN:
                         nonBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 2));
                         break;
-                    case ItemInfo.Type.BUFF_ATK_2_TURN:
-                        petBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.BUFF_DAMGE, i.value) }, 3));
+                    case ItemInfo.Type.PER_STUN_1_TURN:
+                        nonBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 2));
+                        break;
+                    case ItemInfo.Type.BUFF_ATK_3_TURN:
+                        petBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.BUFF_DAMGE, i.value) }, 4));
                         break;
                     case ItemInfo.Type.PHANDOAN_2_TURN:
                         petBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 3));
@@ -1372,7 +1380,7 @@ namespace Gopet.Battle
             Pet pet = getPet();
             Pet nonPet = getNonPet();
             ArrayList<TurnEffect> turnEffects = new();
-            float damagePer = ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.DAMGE_TOXIC_IN_5_TURN_PER) / 100f;
+            float damagePer = ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.DAMGE_TOXIC_IN_3_TURN_PER) / 100f;
 
             if (damagePer > 0)
             {

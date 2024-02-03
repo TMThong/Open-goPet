@@ -2,6 +2,7 @@
 using Gopet.Data.Collections;
 using Gopet.Data.GopetItem;
 using Gopet.Util;
+using Newtonsoft.Json;
 
 public class Pet : GameObject
 {
@@ -93,6 +94,7 @@ public class Pet : GameObject
         return petIdTemplate;
     }
 
+    [JsonIgnore]
     public override PetTemplate Template
     {
         get
@@ -169,7 +171,7 @@ public class Pet : GameObject
     {
         int[][] oldSkillList = this.skill;
         this.skill = new int[oldSkillList.Length + 1][];
-        this.skill[oldSkillList.Length - 1] = new int[2];
+        this.skill[oldSkillList.Length] = new int[2];
         for (int i = 0; i < oldSkillList.Length; i++)
         {
             int[] is_ = oldSkillList[i];

@@ -15,7 +15,8 @@ namespace Gopet.Manager
             new HelpCommand(),
             new ShutdownCommand(),
             new ZoneCommand(),
-            new ExecuteCommand()
+            new ExecuteCommand(),
+            new AdminCommand()
         };
 
         public static void StartReadingKeys()

@@ -91,7 +91,7 @@ namespace Gopet.Data.GopetItem
         public static class Type
         {
 
-            public const int MISS_IN_2_TURN = 25;
+            public const int MISS_IN_3_TURN = 25;
             public const int SKILL_MISS = 26;
             public const int HP = 4;
             public const int MP = 5;
@@ -108,7 +108,7 @@ namespace Gopet.Data.GopetItem
             public const int BUFF_DAMGE = 15;
             public const int SKILL_BUFF_DAMGE = 8;
             public const int DOT_MANA = 17;
-            public const int DAMGE_TOXIC_IN_5_TURN_PER = 27;
+            public const int DAMGE_TOXIC_IN_3_TURN_PER = 27;
             public const int DAMGE_TOXIC_IN_5_TURN = 28;
             public const int BUFF_STR = 11;
             public const int SKILL_SKIP_DEF = 21;
@@ -118,9 +118,11 @@ namespace Gopet.Data.GopetItem
             public const int DEF_PER = 10;
             public const int SELECT_DEF_IN_3_TURN = 23;
             public const int STUN = 30;
-            public const int BUFF_ATK_2_TURN = 31;
+            public const int BUFF_ATK_3_TURN = 31;
             public const int PHANDOAN_2_TURN = 32;
             public const int DAMAGE_PHANDOAN = 33;
+            public const int PER_STUN_1_TURN= 36;
+            public const int PER_DEF_BUFF_3_TURN = 37;
         }
 
         public static class OptionType

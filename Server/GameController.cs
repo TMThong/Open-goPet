@@ -355,13 +355,13 @@ public class GameController
                 int skillId = pet.skill[i][0];
                 int skilllvl = pet.skill[i][1];
                 PetSkill petSkill = GopetManager.PETSKILL_HASH_MAP.get(skillId);
-                PetSkillLv petSkillLv = petSkill.skillLv.get(skilllvl - 1);
+                PetSkillLv petSkillLv = petSkill.skillLv.get(skilllvl);
                 message.putInt(skillId);
                 message.putUTF(petSkill.name + " " + skilllvl);
                 message.putUTF(petSkill.getDescription(petSkillLv));
                 message.putInt(petSkillLv.mpLost);
             }
-            message.putInt(1);
+            message.putInt(pet.tiemnang_point);
             CopyOnWriteArrayList<PetTatto> petTattos = (CopyOnWriteArrayList<PetTatto>)pet.tatto.clone();
             message.putInt(petTattos.Count);
 
@@ -1255,7 +1255,7 @@ public class GameController
             message.putUTF(pet.getPetTemplate().getFrameImg());
             message.putUTF(pet.getNameWithStar());
             message.putsbyte(pet.getNClassIcon());
-            message.putInt(02);
+            message.putInt(pet.lvl);
             message.putlong(pet.exp);
             if (GopetManager.PetExp.ContainsKey(pet.lvl))
             {
@@ -1491,22 +1491,22 @@ public class GameController
 
     public bool checkGoldBar(int count)
     {
-        return checkCount(GopetManager.GOLD_BAR_ID, count);
+        return checkCount(GopetManager.GOLD_BAR_ID, count , GopetManager.MONEY_INVENTORY);
     }
 
     public bool checkSilverBar(int count)
     {
-        return checkCount(GopetManager.SILVER_BAR_ID, count);
+        return checkCount(GopetManager.SILVER_BAR_ID, count, GopetManager.MONEY_INVENTORY);
     }
 
     public bool checkBloodGem(int count)
     {
-        return checkCount(GopetManager.BLOOD_GEM_ID, count);
+        return checkCount(GopetManager.BLOOD_GEM_ID, count, GopetManager.MONEY_INVENTORY);
     }
 
-    public bool checkCount(int tempId, int count)
+    public bool checkCount(int tempId, int count, sbyte inventory)
     {
-        Item itemSelect = selectItemsbytemp(tempId, GopetManager.NORMAL_INVENTORY);
+        Item itemSelect = selectItemsbytemp(tempId, inventory);
         return checkCountItem(itemSelect, count);
     }
     public bool checkCountItem(Item itemSelect, int count)
@@ -1525,36 +1525,36 @@ public class GameController
     {
         Item item = new Item(GopetManager.GOLD_BAR_ID);
         item.count = gold;
-        player.addItemToNormalInventory(item);
+        player.addItemToInventory(item, GopetManager.MONEY_INVENTORY);
     }
 
     public void addSilverBar(int silver)
     {
         Item item = new Item(GopetManager.SILVER_BAR_ID);
         item.count = silver;
-        player.addItemToNormalInventory(item);
+        player.addItemToInventory(item, GopetManager.MONEY_INVENTORY);
     }
 
     public void addBloodGem(int blood)
     {
         Item item = new Item(GopetManager.BLOOD_GEM_ID);
         item.count = blood;
-        player.addItemToNormalInventory(item);
+        player.addItemToInventory(item, GopetManager.MONEY_INVENTORY);
     }
 
     public void mineGoldBar(int gold)
     {
-        subCountItem(selectItemsbytemp(GopetManager.GOLD_BAR_ID, GopetManager.NORMAL_INVENTORY), gold, GopetManager.NORMAL_INVENTORY);
+        subCountItem(selectItemsbytemp(GopetManager.GOLD_BAR_ID, GopetManager.MONEY_INVENTORY), gold, GopetManager.MONEY_INVENTORY);
     }
 
     public void mineSilverBar(int silver)
     {
-        subCountItem(selectItemsbytemp(GopetManager.SILVER_BAR_ID, GopetManager.NORMAL_INVENTORY), silver, GopetManager.NORMAL_INVENTORY);
+        subCountItem(selectItemsbytemp(GopetManager.SILVER_BAR_ID, GopetManager.MONEY_INVENTORY), silver, GopetManager.MONEY_INVENTORY);
     }
 
     public void mineBloodGem(int blood)
     {
-        subCountItem(selectItemsbytemp(GopetManager.BLOOD_GEM_ID, GopetManager.NORMAL_INVENTORY), blood, GopetManager.NORMAL_INVENTORY);
+        subCountItem(selectItemsbytemp(GopetManager.BLOOD_GEM_ID, GopetManager.MONEY_INVENTORY), blood, GopetManager.MONEY_INVENTORY);
     }
 
     private void tatto(sbyte type, Message message)

@@ -42,8 +42,9 @@ namespace Gopet.Data.GopetItem
 
 
 
-        public Item(int itemTemplateId, bool isSkipRandom = false)
+        public Item(int itemTemplateId, int count_ = 0, bool isSkipRandom = false)
         {
+            this.count = count_;
             this.itemTemplateId = itemTemplateId;
             option = getTemp().getOption();
             optionValue = getTemp().getOptionValue();

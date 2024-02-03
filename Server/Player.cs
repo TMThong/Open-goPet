@@ -340,7 +340,7 @@ Thread.Sleep(1000);
             {
                 playerData = MySqlConnectionPlayer.QueryFirstOrDefault<PlayerData>("SELECT * FROM `player` where user_id = " + user.user_id);
                 if (playerData != null)
-                PlayerManager.put(this);
+                    PlayerManager.put(this);
             }
             catch (Exception e)
             {
@@ -605,7 +605,7 @@ Thread.Sleep(1000);
         redDialog("Bạn không đủ ngôi sao");
     }
 
-    public void addItemToNormalInventory(Item item)
+    public void addItemToInventory(Item item, sbyte inventory)
     {
         if (item.getTemp().isStackable)
         {
@@ -614,7 +614,7 @@ Thread.Sleep(1000);
                 return;
             }
             Item itemFlag = null;
-            foreach (Item item1 in playerData.getInventoryOrCreate(GopetManager.NORMAL_INVENTORY))
+            foreach (Item item1 in playerData.getInventoryOrCreate(inventory))
             {
                 if (item1.itemTemplateId == item.itemTemplateId)
                 {
@@ -628,42 +628,50 @@ Thread.Sleep(1000);
             }
             else
             {
-                playerData.addItem(GopetManager.NORMAL_INVENTORY, item);
+                playerData.addItem(inventory, item);
             }
         }
         else
         {
-            playerData.addItem(GopetManager.NORMAL_INVENTORY, item);
+            playerData.addItem(inventory, item);
         }
     }
 
-    public void addItemToInventory(Item ItemSell)
+    public void addItemToNormalInventory(Item item)
     {
-        if (ItemSell.getTemp().isStackable && ItemSell.count == 0)
+        addItemToInventory(item, GopetManager.NORMAL_INVENTORY);
+    }
+
+    public void addItemToInventory(Item Item)
+    {
+        if (Item.getTemp().isStackable && Item.count == 0)
         {
             return;
         }
 
-        switch (ItemSell.getTemp().getType())
+        switch (Item.getTemp().getType())
         {
             case GopetManager.PET_EQUIP_HAT:
             case GopetManager.PET_EQUIP_GLOVE:
             case GopetManager.PET_EQUIP_ARMOUR:
             case GopetManager.PET_EQUIP_WEAPON:
             case GopetManager.PET_EQUIP_SHOE:
-                playerData.addItem(GopetManager.EQUIP_PET_INVENTORY, ItemSell);
+                playerData.addItem(GopetManager.EQUIP_PET_INVENTORY, Item);
                 break;
             case GopetManager.ITEM_GEM:
-                playerData.addItem(GopetManager.GEM_INVENTORY, ItemSell);
+                playerData.addItem(GopetManager.GEM_INVENTORY, Item);
                 break;
             case GopetManager.WING_ITEM:
-                playerData.addItem(GopetManager.WING_INVENTORY, ItemSell);
+                playerData.addItem(GopetManager.WING_INVENTORY, Item);
                 break;
             case GopetManager.SKIN_ITEM:
-                playerData.addItem(GopetManager.SKIN_INVENTORY, ItemSell);
+                playerData.addItem(GopetManager.SKIN_INVENTORY, Item);
+                break;
+            case GopetManager.ITEM_MONEY:
+                playerData.addItem(GopetManager.MONEY_INVENTORY, Item);
                 break;
             default:
-                addItemToNormalInventory(ItemSell);
+                addItemToNormalInventory(Item);
                 break;
         }
     }
