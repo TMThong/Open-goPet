@@ -57,6 +57,7 @@ namespace Gopet.Manager
                 catch (Exception ex)
                 {
                     ex.printStackTrace();
+                    Thread.Sleep(3000);
                 }
             }
         }

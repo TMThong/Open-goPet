@@ -1,11 +1,12 @@
 using Gopet.Util;
+using Newtonsoft.Json;
 
 namespace Gopet.Data.GopetItem
 {
     public class SellItem 
     {
-
-        private object lockObject;
+        [JsonIgnore]
+        private object lockObject = new object();
         public Item ItemSell;
         public int price;
         public bool hasSell = false;
@@ -14,6 +15,8 @@ namespace Gopet.Data.GopetItem
         public long expireTime = 0l;
         public int itemId;
         public int user_id = 0;
+
+        protected SellItem() { }
 
         public SellItem(int hoursExpire)
         {
@@ -44,9 +47,9 @@ namespace Gopet.Data.GopetItem
         {
             if (pet != null)
             {
-                return pet.getNameWithoutStar() + Utilities.Format(" (Mã định danh:%s)", itemId);
+                return pet.getNameWithoutStar() + Utilities.Format(" (Id:%s)", itemId);
             }
-            return ItemSell.getTemp().getName() + Utilities.Format(" (Mã định danh:%s)", itemId);
+            return ItemSell.getTemp().getName() + Utilities.Format(" (Id:%s)", itemId);
         }
 
         public string getFrameImgPath()

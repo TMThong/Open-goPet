@@ -1,4 +1,5 @@
 
+using Dapper;
 using Gopet.Data.User;
 using Gopet.Util;
 
@@ -20,17 +21,22 @@ public class TopLVLClan : Top {
             lastDatas.AddRange(datas);
             datas.Clear();
             try   {
-                ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `clan` ORDER BY `lvl` DESC LIMIT 10;");
-                int index = 1;
-                while (resultSet.next()) {
-                    TopData topData = new TopData();
-                    topData.id = resultSet.getInt("clanId");
-                    topData.name = "Bang " + resultSet.getString("name");
-                    topData.imgPath = "npcs/gopet.png";
-                    topData.title = topData.name;
-                    topData.desc = Utilities.Format("Hạng %s : bang lvl %s", index, resultSet.getInt("lvl"));
-                    datas.add(topData);
-                    index++;
+                using (var conn = MYSQLManager.create())
+                {
+                    var topDataDynamic = conn.Query("SELECT * FROM `clan` ORDER BY `clanLvl` DESC LIMIT 10;");
+                    int index = 1;
+                    foreach
+                        (dynamic data in topDataDynamic)
+                    {
+                        TopData topData = new TopData();
+                        topData.id = data.clanId;
+                        topData.name = "Bang " + data.name;
+                        topData.imgPath = "npcs/gopet.png";
+                        topData.title = topData.name;
+                        topData.desc = Utilities.Format("Hạng %s : bang clanLvl %s", index, data.lvl);
+                        datas.add(topData);
+                        index++;
+                    }
                 }
             }
             catch (Exception e)

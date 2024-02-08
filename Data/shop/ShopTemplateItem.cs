@@ -10,7 +10,6 @@ public class ShopTemplateItem
     public int count;
     public sbyte[] moneyType;
     public int[] price;
-    public sbyte inventoryType;
     public bool isSpceial = false;
     public String nameSpeceial, descriptionSpeceial;
     public bool needRemove = false;
@@ -49,10 +48,6 @@ public class ShopTemplateItem
         this.price = price;
     }
 
-    public void setInventoryType(sbyte inventoryType)
-    {
-        this.inventoryType = inventoryType;
-    }
 
 
 
@@ -132,13 +127,6 @@ public class ShopTemplateItem
     {
         return this.price;
     }
-
-    public sbyte getInventoryType()
-    {
-        return this.inventoryType;
-    }
-
-
 
     public String getNameSpeceial()
     {
@@ -239,7 +227,7 @@ public class ShopTemplateItem
 
         if (itemTemplate.getType() == GopetManager.SKIN_ITEM)
         {
-            return Utilities.Format("+%s (atk) +%s (def) +%s (hp) +%s (mp)", itemTemplate.getAtk(), itemTemplate.getDef(), itemTemplate.getHp(), itemTemplate.getMp());
+            return Utilities.Format("+%s  +%s +%s  +%s ", itemTemplate.getAtk(), itemTemplate.getDef(), itemTemplate.getHp(), itemTemplate.getMp());
         }
         return itemTemplate.getDescription();
     }
@@ -281,15 +269,10 @@ public class ShopTemplateItem
                 {
                     if (player.playerData.shopArena != null)
                     {
-                        if (player.playerData.shopArena.getNumReset() + 1 >= GopetManager.MAX_RESET_SHOP_ARENA)
+                        if (player.playerData.shopArena.getNumReset() - 1 >= GopetManager.MAX_RESET_SHOP_ARENA)
                         {
                             player.redDialog("Reset đạt số lần tối đa trong hôm nay");
                             return;
-                        }
-
-                        if (player.playerData.shopArena.numResetFree > 0)
-                        {
-                            player.playerData.shopArena.numResetFree--;
                         }
                         player.playerData.shopArena.nextArena();
                         MenuController.sendMenu(MenuController.SHOP_ARENA, player);

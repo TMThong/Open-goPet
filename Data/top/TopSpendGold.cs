@@ -1,4 +1,5 @@
 
+using Dapper;
 using Gopet.Data.User;
 using Gopet.Util;
 
@@ -36,18 +37,23 @@ public class TopSpendGold : Top
             datas.Clear();
             try
             {
-                ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `player`  WHERE isAdmin = 0 ORDER BY  `spendGold` DESC LIMIT 300;");
-                int index = 1;
-                while (resultSet.next())
+                
+                using(var conn = MYSQLManager.create())
                 {
-                    TopData topData = new TopData();
-                    topData.id = resultSet.getInt("user_id");
-                    topData.name = resultSet.getString("name");
-                    topData.imgPath = resultSet.getString("avatarPath");
-                    topData.title = topData.name;
-                    topData.desc = Utilities.Format("Hạng %s: Đã tiêu %s (vang)", index, Utilities.FormatNumber(resultSet.getBigDecimal("spendGold").longValue()));
-                    datas.add(topData);
-                    index++;
+                    var topDataDynamic = conn.Query("SELECT * FROM `player`  WHERE isAdmin = 0 ORDER BY  `spendGold` DESC LIMIT 300;");
+                    int index = 1;
+                    foreach
+                        (dynamic data in topDataDynamic)
+                    {
+                        TopData topData = new TopData();
+                        topData.id = data.user_id;
+                        topData.name = data.name;
+                        topData.imgPath = data.avatarPath;
+                        topData.title = topData.name;
+                        topData.desc = Utilities.Format("Hạng %s: Đã tiêu %s (vang)", index, Utilities.FormatNumber(data.spendGold));
+                        datas.add(topData);
+                        index++;
+                    }
                 }
             }
             catch (Exception e)

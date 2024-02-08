@@ -8,7 +8,7 @@ namespace Gopet.Battle
     {
 
         private int turn = 0;
-        private ArrayList<Buff> buffs = new();
+        private JArrayList<Buff> buffs = new();
         private HashMap<int, int> skill_cooldown = new();
         private bool isPlayer = false;
         private Player player;
@@ -44,7 +44,7 @@ namespace Gopet.Battle
             this.turn = turn;
         }
 
-        public ArrayList<Buff> getBuffs()
+        public JArrayList<Buff> getBuffs()
         {
             return buffs;
         }
@@ -54,7 +54,7 @@ namespace Gopet.Battle
             buffs.add(buff);
         }
 
-        public void setBuffs(ArrayList<Buff> buffs)
+        public void setBuffs(JArrayList<Buff> buffs)
         {
             this.buffs = buffs;
         }
@@ -80,7 +80,7 @@ namespace Gopet.Battle
                 }
             }
             turn++;
-            ArrayList<int> skill_cooldownArrayList = new();
+            JArrayList<int> skill_cooldownArrayList = new();
             foreach (var entry in skill_cooldown)
             {
                 int key = entry.Key;

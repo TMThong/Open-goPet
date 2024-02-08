@@ -1,14 +1,17 @@
-﻿using Org.BouncyCastle.Pqc.Crypto.Lms;
+﻿using Gopet.Util;
+using Org.BouncyCastle.Pqc.Crypto.Lms;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace Gopet.Data.Collections
 {
@@ -18,6 +21,9 @@ namespace Gopet.Data.Collections
     {
 
         private ImmutableList<T> values = ImmutableList<T>.Empty;
+
+        private Mutex mutex = new Mutex();
+
 
         public CopyOnWriteArrayList(ImmutableList<T> values)
         {
@@ -38,12 +44,19 @@ namespace Gopet.Data.Collections
         {
         }
 
+
         public T this[int index] => get(index);
         public void Add(T item)
         {
-            lock (this)
+            mutex.WaitOne();
+            try
             {
-                this.values = this.values.Add(item);
+                this.values = values.Add(item);
+            }
+            catch (Exception e) { e.printStackTrace(); }
+            finally
+            {
+                mutex.ReleaseMutex();
             }
         }
 
@@ -54,27 +67,27 @@ namespace Gopet.Data.Collections
 
         public bool Contains(T item)
         {
-            lock (this)
-            {
-                return this.values.Contains(item);
-            }
+            return this.values.Contains(item);
         }
 
 
         public void Remove(T item)
         {
-            lock (this)
+            mutex.WaitOne();
+            try
             {
-                this.values = this.values.Remove(item);
+                this.values = values.Remove(item);
+            }
+            catch (Exception e) { e.printStackTrace(); }
+            finally
+            {
+                mutex.ReleaseMutex();
             }
         }
 
         public T get(int index)
         {
-            lock (this)
-            {
-                return this.values[index];
-            }
+            return this.values[index];
         }
 
 
@@ -114,42 +127,63 @@ namespace Gopet.Data.Collections
 
         public void Clear()
         {
-            lock (this)
+            mutex.WaitOne();
+            try
             {
-                this.values = ImmutableList<T>.Empty;
+                this.values = values.Clear();
+            }
+            catch (Exception e) { e.printStackTrace(); }
+            finally
+            {
+                mutex.ReleaseMutex();
             }
         }
 
         public void AddRange(IEnumerable<T> datas)
         {
-            lock (this)
+            mutex.WaitOne();
+            try
             {
-                this.values = this.values.AddRange(datas);
+                this.values = values.AddRange(datas);
+            }
+            catch (Exception e) { e.printStackTrace(); }
+            finally
+            {
+                mutex.ReleaseMutex();
             }
         }
 
         public void Sort(IComparer<T>? comparer)
         {
-            lock (this)
+            mutex.WaitOne();
+            try
             {
-                this.values = this.values.Sort(comparer);
+                this.values = values.Sort(comparer);
+            }
+            catch (Exception e) { e.printStackTrace(); }
+            finally
+            {
+                mutex.ReleaseMutex();
             }
         }
 
         public void add(int index, T item)
         {
-            lock (this)
+            mutex.WaitOne();
+            try
             {
                 this.values = this.values.Insert(index, item);
+            }
+            catch (Exception e) { e.printStackTrace(); }
+            finally
+            {
+                mutex.ReleaseMutex();
             }
         }
 
         public void Add(int index, T item)
         {
-            lock (this)
-            {
-                this.values = this.values.Insert(index, item);
-            }
+            add(index, item);
         }
 
         public CopyOnWriteArrayList<T> clone()
@@ -164,23 +198,35 @@ namespace Gopet.Data.Collections
 
         public void set(int indexSlot, T data)
         {
-            lock (this)
+            mutex.WaitOne();
+            try
             {
                 this.values = this.values.SetItem(indexSlot, data);
+            }
+            catch (Exception e) { e.printStackTrace(); }
+            finally
+            {
+                mutex.ReleaseMutex();
             }
         }
 
         public void removeAt(int index)
         {
-            lock (this)
+            mutex.WaitOne();
+            try
             {
                 this.values = this.values.RemoveAt(index);
+            }
+            catch(Exception e) { e.printStackTrace(); }
+            finally
+            {
+                mutex.ReleaseMutex();
             }
         }
 
         public void addIfAbsent(T data)
         {
-            if(!this.values.Contains(data)) Add(data);
+            if (!this.values.Contains(data)) Add(data);
         }
     }
 }

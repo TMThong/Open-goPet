@@ -2,12 +2,12 @@ namespace Gopet.Data.GopetClan
 {
     public class ClanTemplate
     {
-        private int maxMember;
-        private int tiemnangPoint;
-        private long fundNeed;
-        private long growthPointNeed;
-        private int[] permission;
-        private int lvl;
+        public int maxMember;
+        public int tiemnangPoint;
+        public long fundNeed;
+        public long growthPointNeed;
+        public int[] permission;
+        public int clanLvl;
 
         public void setMaxMember(int maxMember)
         {
@@ -36,7 +36,7 @@ namespace Gopet.Data.GopetClan
 
         public void setLvl(int lvl)
         {
-            this.lvl = lvl;
+            this.clanLvl = lvl;
         }
 
         public int getMaxMember()
@@ -66,7 +66,7 @@ namespace Gopet.Data.GopetClan
 
         public int getLvl()
         {
-            return lvl;
+            return clanLvl;
         }
 
     }

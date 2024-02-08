@@ -216,7 +216,7 @@ namespace Gopet.Battle
             if (checkWhoseTurn(player))
             {
                 bool isMiss = randMiss(getNonUserPetBattleInfo());
-                ArrayList<TurnEffect> turnEffects = new();
+                JArrayList<TurnEffect> turnEffects = new();
                 if (!isMiss)
                 {
                     PetDamgeInfo damge = makeDamage(getUserPetBattleInfo(), getNonUserPetBattleInfo(), null);
@@ -259,7 +259,7 @@ namespace Gopet.Battle
             }
         }
 
-        private void sendPetAttack(ArrayList<TurnEffect> turnDatas, TurnEffect mainTurnData)
+        private void sendPetAttack(JArrayList<TurnEffect> turnDatas, TurnEffect mainTurnData)
         {
             Message message = new Message(GopetCMD.PET_SERVICE);
             message.putsbyte(GopetCMD.PET_BATTLE);
@@ -448,7 +448,7 @@ namespace Gopet.Battle
             message.putbool(false);
             message.cleanup();
             passivePlayer.session.sendMessage(message);
-            ArrayList<Player> listNoneSend = new();
+            JArrayList<Player> listNoneSend = new();
             listNoneSend.add(activePlayer);
             listNoneSend.add(passivePlayer);
             place.sendMessage(message, listNoneSend);
@@ -647,7 +647,7 @@ namespace Gopet.Battle
             {
                 hadFinished = true;
             }
-            ArrayList<Popup> petBattleTexts = new();
+            JArrayList<Popup> petBattleTexts = new();
             if (petAttackMob)
             {
                 int exp = 0;
@@ -672,7 +672,7 @@ namespace Gopet.Battle
                         activePet.addExp(exp);
                         activePlayer.controller.updatePetLvl();
                         place.mobDie(mob);
-                        ArrayList<DropItem> listItemDrop = new(GopetManager.dropItem.get(place.map.mapID).ToList());
+                        JArrayList<DropItem> listItemDrop = new(GopetManager.dropItem.get(place.map.mapID).ToList());
                         if (GopetManager.mapHasDropItemLvlRange.Contains(place.map.mapID))
                         {
                             foreach (DropItem next in listItemDrop.ToArray())
@@ -709,7 +709,7 @@ namespace Gopet.Battle
                         Boss boss = (Boss)mob;
                         petBattleTexts.AddRange(activePlayer.controller.onReiceiveGift(boss.Template.gift));
                         place.mobDie(mob);
-                        ArrayList<string> txtInfo = new();
+                        JArrayList<string> txtInfo = new();
                         foreach (Popup petBattleText in petBattleTexts)
                         {
                             txtInfo.add(petBattleText.getText());
@@ -915,7 +915,7 @@ namespace Gopet.Battle
                             int mpdelta = 0;
                             pet.mp -= petSkillLv.mpLost;
                             petBattleInfo.addSkillCoolDown(skillId, GopetManager.MAX_SKILL_COOLDOWN);
-                            ArrayList<TurnEffect> turnEffects = new();
+                            JArrayList<TurnEffect> turnEffects = new();
                             bool isMiss = randMiss(nonPetBattleInfo);
                             applySkill(petSkillLv, petBattleInfo, nonPetBattleInfo);
                             PetDamgeInfo damageInfo = makeDamage(petBattleInfo, nonPetBattleInfo, petSkillLv);
@@ -923,7 +923,7 @@ namespace Gopet.Battle
                             {
                                 if (isPetAttackMob())
                                 {
-                                    mpdelta = Utilities.round(Utilities.GetValueFromPercent(mob.mp, ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) / 100f));
+                                    mpdelta = Utilities.round(Utilities.GetValueFromPercent(mob.mp, ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) / 100f) + Utilities.GetValueFromPercent(damageInfo.getDamge(), ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA_BY_ATK) / 100f));
                                     if (mob.mp - mpdelta > 0)
                                     {
                                         mob.mp -= mpdelta;
@@ -936,7 +936,7 @@ namespace Gopet.Battle
                                 }
                                 else
                                 {
-                                    mpdelta = Utilities.round(Utilities.GetValueFromPercent(mob.mp, ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) / 100f));
+                                    mpdelta = Utilities.round(Utilities.GetValueFromPercent(mob.mp, ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) / 100f) + Utilities.GetValueFromPercent(damageInfo.getDamge(), ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA_BY_ATK) / 100f));
                                     if (nonPet.mp - mpdelta > 0)
                                     {
                                         nonPet.mp -= mpdelta;
@@ -1017,7 +1017,8 @@ namespace Gopet.Battle
 
         private bool dotmana(PetSkillLv petSkillLv)
         {
-            return ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) > 0;
+            return ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) > 0 || 
+              ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA_BY_ATK) > 0;
         }
 
         private PetDamgeInfo makeDamage(PetBattleInfo petBattleInfo, PetBattleInfo nonPetBattleInfo, PetSkillLv petSkillLv)
@@ -1108,7 +1109,7 @@ namespace Gopet.Battle
             bool isStun = ItemInfo.getValueById(getUserPetBattleInfo().getBuff(), ItemInfo.Type.STUN) > 0 || Utilities.NextFloatPer() < ItemInfo.getValueById(getUserPetBattleInfo().getBuff(), ItemInfo.Type.PER_STUN_1_TURN) / 100f;
             if (!isStun)
             {
-                ArrayList<TurnEffect> turnEffects = new();
+                JArrayList<TurnEffect> turnEffects = new();
                 bool isMiss = randMiss(getNonUserPetBattleInfo());
                 int sum = mob.getAtk();
 
@@ -1189,7 +1190,7 @@ namespace Gopet.Battle
                     int mpdelta = 0;
                     mob.mp -= petSkillLv.mpLost;
                     petBattleInfo.addSkillCoolDown(skill.skillID, GopetManager.MAX_SKILL_COOLDOWN);
-                    ArrayList<TurnEffect> turnEffects = new();
+                    JArrayList<TurnEffect> turnEffects = new();
                     bool isMiss = randMiss(nonPetBattleInfo);
                     applySkill(petSkillLv, petBattleInfo, nonPetBattleInfo);
                     PetDamgeInfo damageInfo = makeDamage(petBattleInfo, nonPetBattleInfo, petSkillLv);
@@ -1335,18 +1336,17 @@ namespace Gopet.Battle
                         petBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.BUFF_DAMGE, i.value) }, 4));
                         break;
                     case ItemInfo.Type.PHANDOAN_2_TURN:
-                        petBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 3));
+                        petBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 1));
                         break;
                 }
             }
-
         }
 
         private void updateDamagePhanDoan()
         {
             Pet pet = getPet();
             Pet nonPet = getNonPet();
-            ArrayList<TurnEffect> turnEffects = new();
+            JArrayList<TurnEffect> turnEffects = new();
             int damagePhandoan = ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.DAMAGE_PHANDOAN);
             if (damagePhandoan > 0)
             {
@@ -1355,12 +1355,12 @@ namespace Gopet.Battle
                     if (pet != null)
                     {
                         activePet.subHp(damagePhandoan);
-                        turnEffects.add(new TurnEffect(TurnEffect.NONE, mob.getMobId(), PetSkill.PHANDOAN, -damagePhandoan, 0));
+                        turnEffects.add(new TurnEffect(TurnEffect.NONE, mob.getMobId(), PetSkill.GetTPhanDonSkill(activePet), -damagePhandoan, 0));
                     }
                     else
                     {
                         mob.addHp(damagePhandoan);
-                        turnEffects.add(new TurnEffect(TurnEffect.NONE, activePlayer.playerData.user_id, PetSkill.PHANDOAN, -damagePhandoan, 0));
+                        turnEffects.add(new TurnEffect(TurnEffect.NONE, activePlayer.playerData.user_id, PetSkill.GetTPhanDonSkill(mob), -damagePhandoan, 0));
                     }
                 }
                 else
@@ -1368,7 +1368,7 @@ namespace Gopet.Battle
                     if (pet != null)
                     {
                         getNonPet().subHp(damagePhandoan);
-                        turnEffects.add(new TurnEffect(TurnEffect.NONE, getFocus(), PetSkill.PHANDOAN, -damagePhandoan, 0));
+                        turnEffects.add(new TurnEffect(TurnEffect.NONE, getFocus(), PetSkill.GetTPhanDonSkill(getNonPet()), -damagePhandoan, 0));
                     }
                 }
                 sendPetAttack(turnEffects, new TurnEffect(TurnEffect.NONE, -1, 0, 0, 0));
@@ -1379,7 +1379,7 @@ namespace Gopet.Battle
         {
             Pet pet = getPet();
             Pet nonPet = getNonPet();
-            ArrayList<TurnEffect> turnEffects = new();
+            JArrayList<TurnEffect> turnEffects = new();
             float damagePer = ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.DAMGE_TOXIC_IN_3_TURN_PER) / 100f;
 
             if (damagePer > 0)
@@ -1388,24 +1388,24 @@ namespace Gopet.Battle
                 {
                     if (pet != null)
                     {
-                        int damage = (int)Utilities.GetValueFromPercent(pet.getMaxHp(), damagePer);
-                        activePet.subHp(damage);
-                        turnEffects.add(new TurnEffect(TurnEffect.NONE, mob.getMobId(), PetSkill.TOXIC, -damage, 0));
+                        int damage = (int)Utilities.GetValueFromPercent(PassiveObject.maxHp, damagePer);
+                        mob.subHp(damage);
+                        turnEffects.add(new TurnEffect(TurnEffect.NONE, mob.getMobId(), PetSkill.GetToxicSkill(activePet), -damage, 0));
                     }
                     else
                     {
-                        int damage = (int)Utilities.GetValueFromPercent(mob.maxHp, damagePer);
-                        mob.addHp(damage);
-                        turnEffects.add(new TurnEffect(TurnEffect.NONE, activePlayer.playerData.user_id, PetSkill.TOXIC, -damage, 0));
+                        int damage = (int)Utilities.GetValueFromPercent(ActiveObject.maxHp, damagePer);
+                        activePet.addHp(damage);
+                        turnEffects.add(new TurnEffect(TurnEffect.NONE, activePlayer.playerData.user_id, PetSkill.GetToxicSkill(mob), -damage, 0));
                     }
                 }
                 else
                 {
                     if (pet != null)
                     {
-                        int damage = (int)Utilities.GetValueFromPercent(pet.getMaxHp(), damagePer);
-                        getNonPet().subHp(damage);
-                        turnEffects.add(new TurnEffect(TurnEffect.NONE, getFocus(), PetSkill.TOXIC, -damage, 0));
+                        int damage = (int)Utilities.GetValueFromPercent(ActiveObject.maxHp, damagePer);
+                        getPet().subHp(damage);
+                        turnEffects.add(new TurnEffect(TurnEffect.NONE, getFocus(), PetSkill.GetToxicSkill(getNonPet()), -damage, 0));
                     }
                 }
                 sendPetAttack(turnEffects, new TurnEffect(TurnEffect.NONE, -1, 0, 0, 0));

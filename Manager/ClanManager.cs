@@ -3,6 +3,7 @@ using Gopet.Data.GopetClan;
 using Gopet.Data.Collections;
 using Gopet.Data.User;
 using Newtonsoft.Json;
+using Dapper;
 
 public class ClanManager
 {
@@ -30,33 +31,18 @@ public class ClanManager
 
     public static void init()
     {
-        ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `clan`");
-        while (resultSet.next())
+        using(var conn = MYSQLManager.create())
         {
-            Clan clan = new Clan(resultSet.getInt("clanId"));
-            clan.setName(resultSet.getString("name"));
-            clan.setCurMember(resultSet.getInt("curMember"));
-            clan.setMaxMember(resultSet.getInt("maxMember"));
-            clan.setLeaderId(resultSet.getInt("leaderId"));
-            clan.setLvl(resultSet.getInt("lvl"));
-            clan.setMembers(JsonConvert.DeserializeObject<CopyOnWriteArrayList<ClanMember>>(resultSet.getString("members")));
-            clan.setFund(resultSet.getBigDecimal("fund").longValue());
-            clan.setGrowthPoint(resultSet.getBigDecimal("growthPoint").longValue());
-            clan.setSkillHouseLvl(resultSet.getInt("skillHouseLvl"));
-            clan.setbaseMarketLvl(resultSet.getInt("baseMarketLvl"));
-            clan.setSlogan(resultSet.getString("slogan"));
-            String joinRequestStr = resultSet.getString("joinRequest");
-            if (!string.IsNullOrEmpty(joinRequestStr))
+            IEnumerable<Clan> clans = conn.Query<Clan>("SELECT * FROM `clan`");
+            foreach(Clan clan in clans)
             {
-
-                clan.setRequestJoin(JsonConvert.DeserializeObject<CopyOnWriteArrayList<ClanRequestJoin>>(joinRequestStr));
+                foreach (ClanMember member in clan.getMembers())
+                {
+                    member.clan = clan;
+                }
+                clan.setShopClan(new ShopClan(clan));
+                addClan(clan);
             }
-            foreach (ClanMember member in clan.getMembers())
-            {
-                member.clan = clan;
-            }
-            clan.setShopClan(new ShopClan(clan));
-            addClan(clan);
         }
     }
 }

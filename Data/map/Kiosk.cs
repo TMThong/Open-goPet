@@ -1,3 +1,4 @@
+using Dapper;
 using Gopet.Data.Collections;
 using Gopet.Data.GopetItem;
 using Gopet.Util;
@@ -8,7 +9,7 @@ namespace Gopet.Data.Map
     public class Kiosk
     {
 
-        public sbyte kioskType { get; protected set; }
+        public sbyte kioskType { get; set; }
 
         public CopyOnWriteArrayList<SellItem> kioskItems = new();
 
@@ -161,18 +162,12 @@ namespace Gopet.Data.Map
                     }
                     else
                     {
-                        MySqlConnection CONN = MYSQLManager.create();
-                        try
+                        using(var conn = MYSQLManager.create())
                         {
-                            MYSQLManager.updateSql(Utilities.Format("Update `player` set coin = coin + %s where user_id =%s", priceReiceived, sellItem.user_id), CONN);
+                            conn.Execute("Update `player` set coin = coin + @priceReiceived where user_id =@user_id",
+                                new { priceReiceived = priceReiceived,  user_id = sellItem.user_id });
                             HistoryManager.addHistory(new History(sellItem.user_id).setObj(sellItem).setLog("Bán thành công vật phẩm trong ki ốt người mua là " + player.playerData.name));
                         }
-                        catch (Exception e)
-                        {
-                            e.printStackTrace();
-                            //System.err.println("Error them tien khi ng choi mua vp , tien them là " + sellItem.price + " vào user_id = " + sellItem.user_id);
-                        }
-                        CONN.Close();
                     }
                 }
                 else
@@ -229,18 +224,12 @@ namespace Gopet.Data.Map
                         HistoryManager.addHistory(new History(kioskItem.user_id).setObj(kioskItem).setLog("Lưu vật phẩm ki ốt vào cơ sở dữ liệu thành công"));
                         continue;
                     }
-                    MySqlConnection MySqlConnection = MYSQLManager.create();
-                    try
+                    using(var conn = MYSQLManager.create())
                     {
-                        MYSQLManager.updateSql(Utilities.Format("INSERT INTO `kiosk_recovery`(`kioskType`, `user_id`, `item`) VALUES ('%s','%s','%s')", kioskType, kioskItem.user_id, JsonManager.ToJson(kioskItem)), MySqlConnection);
+                        conn.Execute("INSERT INTO `kiosk_recovery`(`kioskType`, `user_id`, `item`) VALUES (@kioskType,@user_id,@jsonData)",
+                            new { kioskType = kioskType, user_id = kioskItem.user_id, jsonData =  JsonManager.ToJson(kioskItem) });
                         HistoryManager.addHistory(new History(kioskItem.user_id).setObj(kioskItem).setLog("Lưu vật phẩm ki ốt vào cơ sở dữ liệu thành công"));
                     }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                        HistoryManager.addHistory(new History(kioskItem.user_id).setObj(kioskItem).setLog("Trao trả vật phẩm ki ốt thất bại"));
-                    }
-                    MySqlConnection.Close();
                 }
             }
         }

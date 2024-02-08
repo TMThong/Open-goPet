@@ -53,7 +53,7 @@ public class PetTatto  {
     }
 
     public String getName() {
-        ArrayList<String> infoStrings = new ArrayList<String>();
+        JArrayList<String> infoStrings = new JArrayList<String>();
         if (getAtk() > 0) {
             infoStrings.add(getAtk() + " (atk) ");
         }

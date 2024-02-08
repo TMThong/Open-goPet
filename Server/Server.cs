@@ -7,7 +7,7 @@ public class Server : IDisposable
 {
 
     private TcpListener serverSc;
-    public bool isRunning = false;
+    public bool isRunning { get; private set; } = false;
     public CopyOnWriteArrayList<Session> sessions { get; } = new();
     public Thread ServerThread { get; }
     public Server(int port)
@@ -20,8 +20,9 @@ public class Server : IDisposable
 
     public void start()
     {
-        ServerThread.Start();
+
         Console.WriteLine("Start Server " + this.serverSc.LocalEndpoint.ToString());
+        ServerThread.Start();
     }
 
     public void run()
@@ -29,7 +30,7 @@ public class Server : IDisposable
         if (!isRunning)
         {
             isRunning = true;
-            serverSc.Start(100);
+            serverSc.Start();
             while (isRunning)
             {
                 try
@@ -44,9 +45,9 @@ public class Server : IDisposable
                 catch (Exception e)
                 {
                     e.printStackTrace();
-                    break;
                 }
             }
+            isRunning = false;
         }
     }
 

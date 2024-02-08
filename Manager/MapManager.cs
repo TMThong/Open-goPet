@@ -8,7 +8,7 @@ public class MapManager
 
     public static HashMap<int, GopetMap> maps = new();
 
-    public static ArrayList<GopetMap> mapArr = new();
+    public static JArrayList<GopetMap> mapArr = new();
 
     public const int ID_LINH_THU_CITY = 11;
 

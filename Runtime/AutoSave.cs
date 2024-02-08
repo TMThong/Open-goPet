@@ -8,25 +8,29 @@ public class AutoSave : IRuntime
 
     public static long lastTime = Utilities.CurrentTimeMillis + 60 * 1000;
     public static long lastTimeSaveClan = Utilities.CurrentTimeMillis + (60 * 1000 * 30);
+    public static long lastTimeSaveMarket = Utilities.CurrentTimeMillis + (60 * 1000 * 2);
 
 
     public void update()
     {
         if (lastTime < Utilities.CurrentTimeMillis)
         {
-            foreach (Player player in PlayerManager.players)
+            using(var conn = MYSQLManager.create())
             {
-                if (player.session.isConnected())
+                foreach (Player player in PlayerManager.players)
                 {
-                    if (player.timeSaveDelta < Utilities.CurrentTimeMillis)
+                    if (player.session.isConnected())
                     {
-                        if (player.playerData != null)
+                        if (player.timeSaveDelta < Utilities.CurrentTimeMillis)
                         {
-                            player.playerData.save();
-                            player.Popup("Dữ liệu của bạn đã được máy chủ lưu dự phòng thành công");
-                            HistoryManager.addHistory(new History(player).setLog("Backup dữ liệu thành công").setObj(player.playerData));
+                            if (player.playerData != null)
+                            {
+                                PlayerData.saveStatic(player.playerData, conn);
+                                player.Popup("Dữ liệu của bạn đã được máy chủ lưu dự phòng thành công");
+                                HistoryManager.addHistory(new History(player).setLog("Backup dữ liệu thành công").setObj(player.playerData));
+                            }
+                            player.timeSaveDelta = Utilities.CurrentTimeMillis + Player.TIME_SAVE_DATA;
                         }
-                        player.timeSaveDelta = Utilities.CurrentTimeMillis + Player.TIME_SAVE_DATA;
                     }
                 }
             }
@@ -46,6 +50,12 @@ public class AutoSave : IRuntime
                 }
             }
             lastTimeSaveClan = Utilities.CurrentTimeMillis + (60 * 1000 * 30);
+        }
+
+        if (lastTimeSaveMarket < Utilities.CurrentTimeMillis)
+        {
+            GopetManager.saveMarket();
+            lastTimeSaveMarket = Utilities.CurrentTimeMillis + (60 * 1000 * 2);
         }
     }
 }

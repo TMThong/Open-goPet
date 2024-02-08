@@ -9,7 +9,7 @@ public class TaskTemplate
     public String guide = "";
     public int[][] task;
     public int[][] gift;
-    public int fromNpc;
+    public int fromNPC;
     public int[] taskNeed;
     public long timeTask = -1;
 
@@ -50,7 +50,7 @@ public class TaskTemplate
 
     public void setFromNpc(int fromNpc)
     {
-        this.fromNpc = fromNpc;
+        this.fromNPC = fromNpc;
     }
 
     public void setTaskNeed(int[] taskNeed)
@@ -100,7 +100,7 @@ public class TaskTemplate
 
     public int getFromNpc()
     {
-        return this.fromNpc;
+        return this.fromNPC;
     }
 
     public int[] getTaskNeed()

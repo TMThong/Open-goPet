@@ -1,10 +1,10 @@
  
 public class PetTattoTemplate {
-    private int tattooId;
-    private String name, iconPath;
-    private int atk, def, hp, mp;
-    private float percent;
-    private int type;
+    public int tattooId;
+    public String name, iconPath;
+    public int atk, def, hp, mp;
+    public float percent;
+    public int type;
 
     public void setTattooId(int tattooId)
     {

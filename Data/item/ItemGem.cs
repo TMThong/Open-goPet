@@ -3,12 +3,12 @@ namespace Gopet.Data.GopetItem
     public class ItemGem 
     {
 
-        private int element;
-        private string name;
-        private int[] option;
-        private int[] optionValue;
-        private int lvl = 0;
-        private int itemTemplateId;
+        public int element;
+        public string name;
+        public int[] option;
+        public int[] optionValue;
+        public int lvl = 0;
+        public int itemTemplateId;
         public long timeUnequip = -1;
 
         public string getElementIcon()

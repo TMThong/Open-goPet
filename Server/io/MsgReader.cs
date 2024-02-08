@@ -34,7 +34,7 @@ namespace Gopet.IO
                 catch (Exception var5)
                 {
 #if DEBUG
-         //           throw var5;
+                    //throw var5;
 #endif
                 }
 

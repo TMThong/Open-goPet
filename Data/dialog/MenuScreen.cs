@@ -6,7 +6,7 @@ namespace Gopet.Data.Dialog
     {
 
         protected int menuId;
-        protected ArrayList<MenuItemInfo> menuItemInfos = new ArrayList<MenuItemInfo>();
+        protected JArrayList<MenuItemInfo> menuItemInfos = new JArrayList<MenuItemInfo>();
         private string title;
         private sbyte type = 0;
 
@@ -26,12 +26,12 @@ namespace Gopet.Data.Dialog
             this.menuId = menuId;
         }
 
-        public ArrayList<MenuItemInfo> getMenuItemInfos()
+        public JArrayList<MenuItemInfo> getMenuItemInfos()
         {
             return menuItemInfos;
         }
 
-        public void setMenuItemInfos(ArrayList<MenuItemInfo> menuItemInfos)
+        public void setMenuItemInfos(JArrayList<MenuItemInfo> menuItemInfos)
         {
             this.menuItemInfos = menuItemInfos;
         }

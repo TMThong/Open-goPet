@@ -16,41 +16,17 @@ public class MYSQLManager
 
     }
 
-    private static MySqlConnection MySqlConnection;
+   
 
     public static MySqlConnection getMySqlConnection()
     {
         return create();
     }
 
-    public static void resetConnect()
-    {
-
-    }
-
-    public static ResultSet jquery(String sql)
-    {
-        return jquery(sql, getMySqlConnection());
-    }
-
-    public static void updateSql(String sql)
-    {
-        updateSql(sql, getMySqlConnection());
-    }
-
-    public static ResultSet jquery(String sql, MySqlConnection CONN)
-    {
-        return new ResultSet(new MySqlCommand(sql, CONN));
-    }
-
-    public static void updateSql(String sql, MySqlConnection CONN)
-    {
-        new MySqlCommand(sql, CONN).ExecuteNonQuery();
-    }
+ 
 
     public static MySqlConnection create()
     {
-
         var conn = new MySqlConnection(GameSQLInfoStr);
         conn.Open();
         return conn;

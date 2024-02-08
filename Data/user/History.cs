@@ -1,4 +1,5 @@
 
+using Dapper;
 using Gopet.Data.User;
 using Gopet.Util;
 using MySql.Data.MySqlClient;
@@ -7,13 +8,13 @@ public class History {
 
     public const int KILL_MOB = 1;
 
-    private Object obj;
-    private String log;
-    private DateTime DateTime;
-    private long currentTime;
-    private Player player;
-    private int user_id;
-    private int spceialType = 0;
+    public Object obj;
+    public String log;
+    public DateTime DateTime;
+    public long currentTime;
+    public Player player;
+    public int user_id;
+    public int spceialType = 0;
 
     public History(Player player) {
         currentTime = Utilities.CurrentTimeMillis;
@@ -30,15 +31,10 @@ public class History {
 
     public String charName(MySqlConnection MySqlConnection) {
         if (this.player == null) {
-            try {
-                ResultSet resultSet = MYSQLManager.jquery(Utilities.Format("Select * from player where user_id = %s", this.user_id), MySqlConnection);
-                if (resultSet.next()) {
-                    String charname = resultSet.getString("name");
-                    resultSet.Close();
-                    return charname;
-                }
-                resultSet.Close();
-            } catch (Exception e) {
+            using(var conn = MYSQLManager.create())
+            {
+                dynamic dynamicData = conn.QuerySingleOrDefault("Select name from player where user_id = @user_id", new { user_id = this.user_id });
+                if (dynamicData != null) return dynamicData.name;
             }
         } else {
             if (this.player.playerData == null) return "Chưa tạo nhân vật";

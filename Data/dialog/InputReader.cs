@@ -50,7 +50,7 @@ namespace Gopet.Data.Dialog
                         listField.put(i, double.Parse(strings[i]));
                         break;
                     case FIELD_long:
-                        listField.put(i, double.Parse(strings[i]));
+                        listField.put(i, long.Parse(strings[i]));
                         break;
                     case FIELD_BIGINT:
                         listField.put(i, BigInteger.Parse(strings[i]));

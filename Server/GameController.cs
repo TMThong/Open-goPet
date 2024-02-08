@@ -11,6 +11,10 @@ using Gopet.IO;
 using Gopet.Util;
 using MySql.Data.MySqlClient;
 using static MenuController;
+using Microsoft.AspNetCore.Mvc;
+using Dapper;
+
+[NonController]
 public class GameController
 {
 
@@ -405,29 +409,18 @@ public class GameController
                 player.loginOK();
                 return;
             }
-            MySqlConnection conn = MYSQLManager.create();
-            try
+            using(var conn = MYSQLManager.create())
             {
-                ResultSet resultSet = MYSQLManager.jquery("select user_id from player where name = '" + name + "'", conn);
-                if (resultSet.next())
+                var playerData = conn.QueryFirstOrDefault("select user_id from player where name = @name", new {name = name});
+                if(playerData != null)
                 {
-                    resultSet.Close();
                     player.redDialog("Tên nhân vật đã tồn tại");
                     Thread.Sleep(1000);
                     player.session.Close();
-                    conn.Close();
                     return;
                 }
-                resultSet.Close();
+                
             }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-                conn.Close();
-                return;
-            }
-            conn.Close();
-
             PlayerData.create(player.user.user_id, name, gender);
             player.login(player.user.username, player.user.password, "");
         }
@@ -512,7 +505,7 @@ public class GameController
         }
     }
 
-    public void showMenuItem(int listID, sbyte type, String title, ArrayList<MenuItemInfo> menuItemInfos)
+    public void showMenuItem(int listID, sbyte type, String title, JArrayList<MenuItemInfo> menuItemInfos)
     {
         Message message = new Message(GopetCMD.COMMAND_GUIDER);
         message.putsbyte(GopetCMD.SHOW_MENU_ITEM);
@@ -645,7 +638,7 @@ public class GameController
             try
             {
                 player.user.password = newPass;
-                MYSQLManager.updateSql(Utilities.Format("update User set password = '%s' where user_id = %s", newPass, player.user.user_id), MySqlConnection);
+                MySqlConnection.Execute(Utilities.Format("update User set password = '%s' where user_id = %s", newPass, player.user.user_id));
                 player.okDialog("Đổi mật khẩu thành công, vui lòng nhớ kỷ thông tin");
                 HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Đổi mật khẩu từ %s thành %s", oldPass, newPass)));
             }
@@ -805,7 +798,6 @@ public class GameController
                             }
                             break;
                     }
-                    GopetManager.ServerMonitor.LogWarning($"WING :{type}");
                 }
                 break;
             case GopetCMD.REMOVE_ITEM_EQUIP:
@@ -1820,7 +1812,7 @@ public class GameController
         if (clanMember != null)
         {
             Clan clan = clanMember.getClan();
-            ArrayList<String> listInfoClan = new();
+            JArrayList<String> listInfoClan = new();
             listInfoClan.add("Tên bang hội: " + clan.getName());
             listInfoClan.add("Bang chủ: " + clan.getMemberByUserId(clan.getLeaderId()).name);
             listInfoClan.add(Utilities.Format("Thành viên: %s/%s", clan.getCurMember(), clan.getMaxMember()));
@@ -3240,9 +3232,9 @@ public class GameController
         }
     }
 
-    public ArrayList<Popup> onReiceiveGift(int[][] gift)
+    public JArrayList<Popup> onReiceiveGift(int[][] gift)
     {
-        ArrayList<Popup> popups = new();
+        JArrayList<Popup> popups = new();
         bool flagDrop = false;
         for (int i = 0; i < gift.Length; i++)
         {
@@ -3779,7 +3771,7 @@ public class GameController
         player.redDialog("Bạn chưa vào bang hội");
     }
 
-    public void sendListOption(int listId, String title, String message, ArrayList<Option> options)
+    public void sendListOption(int listId, String title, String message, JArrayList<Option> options)
     {
         Message m = new Message(GopetCMD.COMMAND_GUIDER);
         m.putsbyte(GopetCMD.GUIDER_LIST_OPTION);

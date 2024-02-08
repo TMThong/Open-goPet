@@ -1,4 +1,5 @@
 
+using Dapper;
 using Gopet.Data.Collections;
 using Gopet.Util;
 using MySql.Data.MySqlClient;
@@ -39,38 +40,26 @@ public class HistoryManager
             while (true)
             {
 
-                try
+                using(var conn = MYSQLManager.createWebMySqlConnection())
                 {
-                    MySqlConnection conn = MYSQLManager.createWebMySqlConnection();
-                    MySqlConnection gameMySqlConnection = MYSQLManager.create();
-                    while (historys.Count > 0)
+                    using(var gameMySqlConnection = MYSQLManager.create())
                     {
-                        History history = historys.get(0);
-                        historys.remove(history);
-                        try
+                        while (historys.Count > 0)
                         {
-                            MYSQLManager.updateSql(Utilities.Format("INSERT INTO `history`(`historyId` , `targetId`, `currentTime`, `dateSave`, `log`, `obj`, `charname`) VALUES (NULL, '%s' ,'%s','%s','%s','%s','%s')",
-                                    history.getUser_id(),
-                                    history.getCurrentTime(),
-                                    Utilities.ToDateString(history.getDate()),
-                                    history.getLog(),
-                                    JsonManager.ToJson(history.getObj()),
-                                    history.charName(gameMySqlConnection)
-                            ), conn);
-                        }
-                        catch (Exception e)
-                        {
-                            e.printStackTrace();
-                            //System.err.println("History Log Error " + history.getLog());
+                            History history = historys.get(0);
+                            historys.remove(history);
+                            conn.Execute("INSERT INTO `history`(`historyId` , `targetId`, `currentTime`, `dateSave`, `log`, `obj`, `charname`) VALUES (NULL, @targetId ,@currentTime,@dateSave,@log,@obj,@charname)", new
+                            {
+                                targetId = history.user_id,
+                                currentTime = history.currentTime,
+                                dateSave = history.DateTime,
+                                log = history.log,
+                                obj = history.obj,
+                                charname = history.charName(gameMySqlConnection)
+                            });
                         }
                     }
-                    conn.Close();
                 }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
                 Thread.Sleep(2000);
             }
         }

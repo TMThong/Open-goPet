@@ -57,7 +57,7 @@ public class Pet : GameObject
      * Các vật phẩm mà pet đã trang bị
      */
 
-    public ArrayList<int> equip = new();
+    public JArrayList<int> equip = new();
 
     public bool isUpTier = false;
 
@@ -326,7 +326,7 @@ public class Pet : GameObject
             this.maxMp += petTatto.getMp();
         }
 
-        ArrayList<Item> otherItems = new();
+        JArrayList<Item> otherItems = new();
         Item skinItem = player.playerData.skin;
         if (skinItem != null)
         {
@@ -436,7 +436,7 @@ public class Pet : GameObject
 
     public String getDesc()
     {
-        ArrayList<String> infoStrings = new();
+        JArrayList<String> infoStrings = new();
         infoStrings.add(Utilities.FormatNumber(exp) + " exp ");
 
         if (getAtk() > 0)
@@ -456,7 +456,7 @@ public class Pet : GameObject
             infoStrings.add(getMp() + " (mp) ");
         }
 
-        ArrayList<String> tattooStrings = new();
+        JArrayList<String> tattooStrings = new();
 
         bool flag = false;
         foreach (PetTatto petTatto in tatto)
@@ -471,7 +471,7 @@ public class Pet : GameObject
         }
         String desc = Utilities.Format("(str) %s (int) %s (agi) %s", getStr(), getInt(), getAgi());
 
-        return desc + Utilities.Format("  lvl: %s , ", lvl) + String.Join(" , ", infoStrings) + String.Join(" , ", tattooStrings);
+        return desc + Utilities.Format("  clanLvl: %s , ", lvl) + String.Join(" , ", infoStrings) + String.Join(" , ", tattooStrings);
     }
 
 

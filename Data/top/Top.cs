@@ -24,34 +24,7 @@ public class Top
 
     public virtual void updateSQLBXH()
     {
-        if (!lastDatas.isEmpty() || !datas.isEmpty())
-        {
-            if (!lastDatas.isEmpty() && !datas.isEmpty())
-            {
-                TopData topDataLast = lastDatas.get(0);
-                TopData topDataNew = datas.get(0);
-                if (topDataLast.id != topDataNew.id)
-                {
-                    MYSQLManager.updateSql(Utilities.Format("DELETE FROM `top_data` WHERE user_id != %s && timeReceiveTop < %s && topID = '%s'", topDataNew.id, Utilities.CurrentTimeMillis, top_id));
-                    MYSQLManager.updateSql(Utilities.Format("INSERT INTO `top_data`(`user_id`, `topID`, `timeBeginTop`, `timeReceiveTop`) VALUES (%s, '%s', %s, %s)", topDataNew.id, top_id, Utilities.CurrentTimeMillis, 0));
-                }
-                else
-                {
-                    return;
-                }
-            }
-            else if (lastDatas.isEmpty() && !datas.isEmpty())
-            {
-                TopData topD = datas.get(0);
-                ResultSet resultSet = MYSQLManager.jquery(Utilities.Format("SELECT * FROM `top_data` where user_id = %s && topID = '%s'", topD.id, top_id));
-                if (!resultSet.next())
-                {
-                    MYSQLManager.updateSql(Utilities.Format("INSERT INTO `top_data`(`user_id`, `topID`, `timeBeginTop`, `timeReceiveTop`) VALUES (%s, '%s', %s, %s)", topD.id, top_id, Utilities.CurrentTimeMillis, 0));
-                }
-                resultSet.Close();
-                MYSQLManager.updateSql(Utilities.Format("DELETE FROM `top_data` WHERE user_id != %s && timeReceiveTop < %s && topID = '%s'", topD.id, Utilities.CurrentTimeMillis, top_id));
-            }
-        }
+         
     }
 
     public virtual CopyOnWriteArrayList<TopData> getTOPData()

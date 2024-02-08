@@ -17,8 +17,8 @@ public class PlayerData
     public int ID { get; set; }
 
     public int user_id { get; set; }
-    public ArrayList<int> friends { get; set; } = new ArrayList<int>();
-    public ArrayList<int> favouriteList { get; set; } = new ArrayList<int>();
+    public JArrayList<int> friends { get; set; } = new JArrayList<int>();
+    public JArrayList<int> favouriteList { get; set; } = new JArrayList<int>();
     public HashMap<sbyte, CopyOnWriteArrayList<Item>> items { get; set; } = new();
     public CopyOnWriteArrayList<Pet> pets { get; set; } = new();
     public CopyOnWriteArrayList<int> tasking { get; set; } = new();
@@ -75,11 +75,9 @@ public class PlayerData
         saveStatic(this);
     }
 
-    public static void saveStatic(PlayerData playerData)
+    public static void saveStatic(PlayerData playerData, MySqlConnection conn)
     {
-        using (var conn = MYSQLManager.create())
-        {
-            conn.Execute(@"Update `player` SET pets = @pets,
+        conn.Execute(@"Update `player` SET pets = @pets,
                             petSelected = @petSelected,
                             isFirstFree = @isFirstFree,
                             loginDate = @loginDate,
@@ -106,6 +104,13 @@ public class PlayerData
                             numUseEnergy = @numUseEnergy,
                             AccumulatedPoint = @AccumulatedPoint
                             WHERE ID = @ID", playerData);
+    }
+
+    public static void saveStatic(PlayerData playerData)
+    {
+        using (var conn = MYSQLManager.create())
+        {
+            saveStatic(playerData, conn);
         }
     }
 
@@ -136,6 +141,15 @@ public class PlayerData
     public void addItem(sbyte type, Item item)
     {
         CopyOnWriteArrayList<Item> list = getInventoryOrCreate(type);
+        if (item.Template.isStackable)
+        {
+            var findDupcate = list.Where(p => p.Template.itemId == item.Template.itemId);
+            if (findDupcate.Any())
+            {
+                findDupcate.First().count += item.count;
+                return;
+            }
+        }
         list.add(item);
         while (true)
         {

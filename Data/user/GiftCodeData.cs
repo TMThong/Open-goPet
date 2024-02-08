@@ -7,29 +7,17 @@ using Newtonsoft.Json;
 public class GiftCodeData
 {
 
-    private int id;
-    private string code;
+    public int id {  get; private set; }
+    public string code { get; private set; }
 
-    private int curUser;
-    private int maxUser;
+    public int currentUser { get; private set; }
+    public int maxUser { get; private set; }
+    
+    public int[][] gift_data { get; private set; }
+    
+    public DateTime expire { get; private set; }
 
-    private int[][] gift_data;
-
-    private DateTime expire;
-
-    private ArrayList<int> usersOfUseThis = new();
-
-    public GiftCodeData(ResultSet resultSet)
-    {
-        this.id = resultSet.getInt("id");
-        this.code = resultSet.getString("code");
-        this.curUser = resultSet.getInt("currentUser");
-        this.maxUser = resultSet.getInt("maxUser");
-        this.gift_data = JsonConvert.DeserializeObject<int[][]>(resultSet.getString("gift_data"));
-        this.expire = resultSet.getDateTime("expire");
-
-        this.usersOfUseThis = JsonConvert.DeserializeObject<ArrayList<int>>(resultSet.getString("usersOfUseThis"));
-    }
+    public JArrayList<int> usersOfUseThis { get; private set; } = new();
 
     public void setId(int id)
     {
@@ -43,7 +31,7 @@ public class GiftCodeData
 
     public void setCurUser(int curUser)
     {
-        this.curUser = curUser;
+        this.currentUser = curUser;
     }
 
     public void setMaxUser(int maxUser)
@@ -61,7 +49,7 @@ public class GiftCodeData
         this.expire = expire;
     }
 
-    public void setUsersOfUseThis(ArrayList<int> usersOfUseThis)
+    public void setUsersOfUseThis(JArrayList<int> usersOfUseThis)
     {
         this.usersOfUseThis = usersOfUseThis;
     }
@@ -78,7 +66,7 @@ public class GiftCodeData
 
     public int getCurUser()
     {
-        return this.curUser;
+        return this.currentUser;
     }
 
     public int getMaxUser()
@@ -96,7 +84,7 @@ public class GiftCodeData
         return this.expire;
     }
 
-    public ArrayList<int> getUsersOfUseThis()
+    public JArrayList<int> getUsersOfUseThis()
     {
         return this.usersOfUseThis;
     }

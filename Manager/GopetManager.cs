@@ -14,6 +14,7 @@ using Gopet.Data.Dialog;
 using Org.BouncyCastle.Asn1.Crmf;
 using Gopet.Adapter;
 using Gopet.Data.item;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 
 public class GopetManager
 {
@@ -23,13 +24,13 @@ public class GopetManager
      */
     public static HashMap<int, MobLvInfo> MOBLVLINFO_HASH_MAP = new();
 
-    public static ArrayList<PetTemplate> PET_TEMPLATES = new();
+    public static JArrayList<PetTemplate> PET_TEMPLATES = new();
     /**
      * Mẫu pet
      */
     public static HashMap<int, PetTemplate> PETTEMPLATE_HASH_MAP = new();
 
-    public static HashMap<sbyte, ArrayList<PetTemplate>> typePetTemplate = new();
+    public static HashMap<sbyte, JArrayList<PetTemplate>> typePetTemplate = new();
     /**
      * Cho thông tin Cấp độ quái giao động (từ - đến)
      */
@@ -200,19 +201,19 @@ public class GopetManager
     /**
      * Kỹ năng của pet (theo phái)
      */
-    public static HashMap<sbyte, ArrayList<PetSkill>> NCLASS_PETSKILL_HASH_MAP = new();
+    public static HashMap<sbyte, JArrayList<PetSkill>> NCLASS_PETSKILL_HASH_MAP = new();
 
     /**
      * Kỹ năng của pet (tất cả)
      */
-    public static ArrayList<PetSkill> PET_SKILLS = new();
+    public static JArrayList<PetSkill> PET_SKILLS = new();
 
     /**
      * Kinh nghiệm của pet
      */
     public static HashMap<int, int> PetExp = new();
 
-    public static HashMap<int, ArrayList<DropItem>> dropItem = new();
+    public static HashMap<int, JArrayList<DropItem>> dropItem = new();
 
     public static HashMap<int, TierItem> tierItem = new();
 
@@ -223,23 +224,23 @@ public class GopetManager
     public static HashMap<int, BossTemplate> boss = new();
 
 
-    public static ArrayList<int> mapHasDropItemLvlRange = new();
+    public static JArrayList<int> mapHasDropItemLvlRange = new();
 
-    public static ArrayList<PetTemplate> petEnable = new();
+    public static JArrayList<PetTemplate> petEnable = new();
 
-    public static ArrayList<ShopArenaTemplate> SHOP_ARENA_TEMPLATE = new();
+    public static ShopArenaTemplate[] SHOP_ARENA_TEMPLATE;
 
     public static HashMap<int, ClanTemplate> clanTemp = new();
 
     public static HashMap<int, TaskTemplate> taskTemplate = new();
 
-    public static ArrayList<TaskTemplate> taskTemplateList = new();
+    public static JArrayList<TaskTemplate> taskTemplateList = new();
 
-    public static HashMap<int, ArrayList<TaskTemplate>> taskTemplateByType = new();
+    public static HashMap<int, JArrayList<TaskTemplate>> taskTemplateByType = new();
 
-    public static HashMap<int, ArrayList<TaskTemplate>> taskTemplateByNpcId = new();
+    public static HashMap<int, JArrayList<TaskTemplate>> taskTemplateByNpcId = new();
 
-    public static ArrayList<ClanBuffTemplate> CLAN_BUFF_TEMPLATES = new();
+    public static JArrayList<ClanBuffTemplate> CLAN_BUFF_TEMPLATES = new();
 
     public static HashMap<int, ClanBuffTemplate> CLANBUFF_HASH_MAP = new();
 
@@ -247,17 +248,17 @@ public class GopetManager
 
     public static HashMap<int, ClanHouseTemplate> clanMarketHouseTemp = new();
 
-    public static HashMap<int, ArrayList<ShopClanTemplate>> shopClanByLvl = new();
+    public static HashMap<int, JArrayList<ShopClanTemplate>> shopClanByLvl = new();
 
     public static HashMap<int, int> tierItemHashMap = new();
 
 
-    public static ArrayList<ExchangeData> EXCHANGE_DATAS = new();
+    public static JArrayList<ExchangeData> EXCHANGE_DATAS = new();
 
-    public static ArrayList<ItemTemplate> NonAdminItemList = new();
+    public static JArrayList<ItemTemplate> NonAdminItemList = new();
 
 
-    public static readonly List<ItemTemplate> itemTemplates = new ArrayList<ItemTemplate>();
+    public static readonly List<ItemTemplate> itemTemplates = new JArrayList<ItemTemplate>();
 
     public static readonly Dictionary<int, string> itemAssetsIcon = new();
 
@@ -464,8 +465,8 @@ public class GopetManager
     public const int PRICE_KEEP_GEM = 5000;
     public const int MAX_SLOT_SHOP_ARENA = 6;
     public const int DEFAULT_FREE_RESET_ARENA_SHOP = 2;
-    public const int PRICE_RESET_SHOP_ARENA = 100;
-    public const int MAX_RESET_SHOP_ARENA = 20;
+    public const int PRICE_RESET_SHOP_ARENA = 1000;
+    public const int MAX_RESET_SHOP_ARENA = 5;
     public const long TIME_UNEQUIP_GEM = 1000 * 60 * 60;
     public const int PRICE_UNEQUIP_GEM = 2500;
     public const long COIN_CREATE_CLAN = 200000;
@@ -490,7 +491,7 @@ public class GopetManager
 
     public static readonly Dictionary<sbyte, TradeGiftTemplate[]> TradeGift = new();
 
-    public static readonly Dictionary<sbyte, Tuple<int[], int[] , int>> TradeGiftPrice = new()
+    public static readonly Dictionary<sbyte, Tuple<int[], int[], int>> TradeGiftPrice = new()
     {
         [TradeGiftTemplate.TYPE_COIN] = new Tuple<int[], int[], int>(new int[] { GopetManager.MONEY_TYPE_SILVER_BAR, GopetManager.MONEY_TYPE_COIN }, new int[] { 3, 200 }, MenuController.OP_TRADE_GIFT_COIN),
         [TradeGiftTemplate.TYPE_GOLD] = new Tuple<int[], int[], int>(new int[] { GopetManager.MONEY_TYPE_GOLD_BAR, GopetManager.MONEY_TYPE_GOLD }, new int[] { 3, 100 }, MenuController.OP_TRADE_GIFT_GOLD)
@@ -504,9 +505,12 @@ public class GopetManager
         SqlMapper.AddTypeHandler(new JsonAdapter<int[]>());
         SqlMapper.AddTypeHandler(new JsonAdapter<int[][]>());
         SqlMapper.AddTypeHandler(new JsonAdapter<sbyte[]>());
-        SqlMapper.AddTypeHandler(new JsonAdapter<ArrayList<int>>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<string[]>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<JArrayList<int>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<HashMap<sbyte, CopyOnWriteArrayList<Item>>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<Pet>>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<ClanRequestJoin>>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<ClanMember>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<int>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<TaskData>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<Pet>());
@@ -617,6 +621,157 @@ public class GopetManager
             TradeGift[TradeGiftTemplate.TYPE_GOLD] = conn.Query<TradeGiftTemplate>("SELECT * FROM `trade_gift` where Type = " + TradeGiftTemplate.TYPE_GOLD).ToArray();
 
             ServerMonitor.LogInfo("Tải dữ liệu trao đổi thưởng từ cơ sở dữ liệu OK");
+
+            SHOP_ARENA_TEMPLATE = conn.Query<ShopArenaTemplate>("SELECT * FROM `shoparena`").ToArray();
+            ServerMonitor.LogInfo("Tải dữ liệu shop đấu trường từ cơ sở dữ liệu OK");
+
+            var listExp = conn.Query("SELECT * FROM `petexp`");
+            foreach (var exp in listExp)
+            {
+                PetExp.put(exp.petLvl, exp.exp);
+            }
+            ServerMonitor.LogInfo("Tải dữ liệu exps từ cơ sở dữ liệu OK");
+
+            var listIteminfo = conn.Query("SELECT * FROM `iteminfo`");
+            foreach (var item in listIteminfo)
+            {
+                int ID = item.ID;
+                String name = item.name;
+                bool isPercent = item.isPercent;
+                bool canFormat = name.Contains("%s");
+                itemInfoName.put(ID, name);
+                itemInfoIsPercent.put(ID, isPercent);
+                itemInfoCanFormat.put(ID, canFormat);
+            }
+
+            ServerMonitor.LogInfo("Tải dữ liệu các dòng từ cơ sở dữ liệu OK");
+
+            var listSkill = conn.Query("SELECT * FROM `skill`");
+            foreach (var skill in listSkill)
+            {
+                PetSkill petSkill = new PetSkill();
+                petSkill.skillID = skill.skillID;
+                petSkill.name = skill.name;
+                petSkill.description = skill.description;
+                petSkill.nClass = skill.nClass;
+                var listSkillLv = conn.Query(Utilities.Format("SELECT * FROM `skilllv` WHERE skillID = %s ORDER BY lv ASC;", petSkill.skillID));
+                foreach (var item in listSkillLv)
+                {
+                    PetSkillLv petSkillLv = new PetSkillLv();
+                    petSkillLv.lv = item.lv;
+                    petSkillLv.mpLost = item.mpLost;
+                    petSkillLv.skillInfo = JsonConvert.DeserializeObject<PetSkillInfo[]>(item.skillInfo);
+                    petSkill.skillLv.add(petSkillLv);
+                }
+                PETSKILL_HASH_MAP.put(petSkill.skillID, petSkill);
+                if (!NCLASS_PETSKILL_HASH_MAP.ContainsKey(petSkill.nClass))
+                {
+                    NCLASS_PETSKILL_HASH_MAP.put(petSkill.nClass, new());
+                }
+                NCLASS_PETSKILL_HASH_MAP.get(petSkill.nClass).add(petSkill);
+            }
+
+            ServerMonitor.LogInfo("Tải dữ liệu kỹ năng pet từ cơ sở dữ liệu OK");
+
+            HashMap<int, JArrayList<MobLvlMap>> mobLvlMap_ = new();
+            var mobLvlMapList = conn.Query("SELECT * FROM `gopet_map_moblvl`");
+            foreach (var item in mobLvlMapList)
+            {
+                MobLvlMap mobLvlMap = new MobLvlMap(item.mapID, item.lvlFrom, item.lvlTo, item.petId);
+                if (!mobLvlMap_.ContainsKey(mobLvlMap.getMapId()))
+                {
+                    mobLvlMap_.put(mobLvlMap.getMapId(), new());
+                }
+                mobLvlMap_.get(mobLvlMap.getMapId()).add(mobLvlMap);
+            }
+            foreach (var entry in mobLvlMap_)
+            {
+                int key = entry.Key;
+                JArrayList<MobLvlMap> val = entry.Value;
+                MOBLVL_MAP.put(key, val.ToArray());
+            }
+            var mobLocationList = conn.Query("SELECT * FROM `gopet_mob_location`");
+            HashMap<int, JArrayList<MobLocation>> mobLoc = new();
+            foreach (var item in mobLocationList)
+            {
+                MobLocation mobLocation1 = new MobLocation(item.mapID, item.x, item.y);
+                if (!mobLoc.ContainsKey(mobLocation1.getMapId()))
+                {
+                    mobLoc.put(mobLocation1.getMapId(), new());
+                }
+                mobLoc.get(mobLocation1.getMapId()).add(mobLocation1);
+            }
+
+            foreach (var entry in mobLoc)
+            {
+                int key = entry.Key;
+                JArrayList<MobLocation> val = entry.Value;
+                mobLocation.put(key, val.ToArray());
+            }
+
+            var npcList = conn.Query<NpcTemplate>("SELECT * FROM `npc`");
+            foreach (var npcTemp in npcList)
+            {
+                npcTemplate.put(npcTemp.getNpcId(), npcTemp);
+            }
+
+            var tattoList = conn.Query<PetTattoTemplate>("SELECT * FROM `tattoo`");
+            foreach (var petTattoTemplate in tattoList)
+            {
+                tattos.put(petTattoTemplate.getTattooId(), petTattoTemplate);
+            }
+
+            var dropItemList = conn.Query<DropItem>("SELECT * FROM `drop_item`");
+            foreach (var dropItem1 in dropItemList)
+            {
+                if (!dropItem.ContainsKey(dropItem1.getMapId()))
+                {
+                    dropItem.put(dropItem1.getMapId(), new());
+                }
+
+                if (dropItem1.getPercent() < 0f)
+                {
+                    continue;
+                }
+                dropItem.get(dropItem1.getMapId()).add(dropItem1);
+            }
+
+            var itemTierList = conn.Query<TierItem>("SELECT * FROM `tier_item`");
+            foreach (var tierItem1 in itemTierList)
+            {
+                tierItem.put(tierItem1.getItemTemplateIdTier1(), tierItem1);
+            }
+
+            var petTierList = conn.Query<PetTier>("SELECT * FROM `pet_tier`");
+            foreach (var petTier1 in petTierList)
+            {
+                petTier.put(petTier1.getPetTemplateId1(), petTier1);
+            }
+
+            var clanTemplateData = conn.Query<ClanTemplate>("SELECT * FROM `clan_template` ORDER BY `clan_template`.`clanLvl` ASC");
+            foreach (var clanTemplate in clanTemplateData)
+            {
+                clanTemp.put(clanTemplate.getLvl(), clanTemplate);
+            }
+
+            var taskDataTemp = conn.Query<TaskTemplate>("SELECT * FROM `task`");
+            foreach (var taskTemp in taskDataTemp)
+            {
+                taskTemplate.put(taskTemp.getTaskId(), taskTemp);
+                taskTemplateList.add(taskTemp);
+                if (!taskTemplateByType.ContainsKey(taskTemp.getType()))
+                {
+                    taskTemplateByType.put(taskTemp.getType(), new());
+                }
+                taskTemplateByType.get(taskTemp.getType()).add(taskTemp);
+
+                if (!taskTemplateByNpcId.ContainsKey(taskTemp.getFromNpc()))
+                {
+                    taskTemplateByNpcId.put(taskTemp.getFromNpc(), new());
+                }
+
+                taskTemplateByNpcId.get(taskTemp.getFromNpc()).add(taskTemp);
+            }
         }
 
         using (var connWeb = MYSQLManager.createWebMySqlConnection())
@@ -625,125 +780,7 @@ public class GopetManager
             EXCHANGE_DATAS.ForEach(exchangeData => MenuController.EXCHANGE_ITEM_INFOS.add(new ExchangeItemInfo(exchangeData)));
 
         }
-
-        ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `petexp`");
-        while (resultSet.next())
-        {
-            PetExp.put(resultSet.getInt("petLvl"), resultSet.getInt("exp"));
-        }
-        resultSet.Close();
-        resultSet = MYSQLManager.jquery("SELECT * FROM `iteminfo`");
-        while (resultSet.next())
-        {
-            int ID = resultSet.getInt("ID");
-            String name = resultSet.getString("name");
-            bool isPercent = resultSet.getInt("isPercent") != 0;
-            bool canFormat = name.Contains("%s");
-            itemInfoName.put(ID, name);
-            itemInfoIsPercent.put(ID, isPercent);
-            itemInfoCanFormat.put(ID, canFormat);
-        }
-        resultSet.Close();
-
-        resultSet = MYSQLManager.jquery("SELECT * FROM `skill`");
-        while (resultSet.next())
-        {
-            PetSkill petSkill = new PetSkill();
-            petSkill.skillID = resultSet.getInt("skillID");
-            petSkill.name = resultSet.getString("name");
-            petSkill.description = resultSet.getString("description");
-            petSkill.nClass = resultSet.getsbyte("nClass");
-            ResultSet skillLvResultSet = MYSQLManager.jquery(Utilities.Format("SELECT * FROM `skilllv` WHERE skillID = %s ORDER BY lv ASC;", petSkill.skillID));
-            while (skillLvResultSet.next())
-            {
-                PetSkillLv petSkillLv = new PetSkillLv();
-                petSkillLv.lv = skillLvResultSet.getInt("lv");
-                petSkillLv.mpLost = skillLvResultSet.getInt("mpLost");
-                petSkillLv.skillInfo = JsonConvert.DeserializeObject<PetSkillInfo[]>(skillLvResultSet.getString("skillInfo"));
-                petSkill.skillLv.add(petSkillLv);
-            }
-            skillLvResultSet.Close();
-            PETSKILL_HASH_MAP.put(petSkill.skillID, petSkill);
-            if (!NCLASS_PETSKILL_HASH_MAP.ContainsKey(petSkill.nClass))
-            {
-                NCLASS_PETSKILL_HASH_MAP.put(petSkill.nClass, new());
-            }
-            NCLASS_PETSKILL_HASH_MAP.get(petSkill.nClass).add(petSkill);
-        }
-        resultSet.Close();
-
-        HashMap<int, ArrayList<MobLvlMap>> mobLvlMap_ = new();
-        resultSet = MYSQLManager.jquery("SELECT * FROM `gopet_map_moblvl`");
-        while (resultSet.next())
-        {
-            MobLvlMap mobLvlMap = new MobLvlMap(resultSet.getInt("mapId"), resultSet.getInt("lvlFrom"), resultSet.getInt("lvlTo"), resultSet.getInt("petId"));
-            if (!mobLvlMap_.ContainsKey(mobLvlMap.getMapId()))
-            {
-                mobLvlMap_.put(mobLvlMap.getMapId(), new());
-            }
-            mobLvlMap_.get(mobLvlMap.getMapId()).add(mobLvlMap);
-        }
-        resultSet.Close();
-        foreach (var entry in mobLvlMap_)
-        {
-            int key = entry.Key;
-            ArrayList<MobLvlMap> val = entry.Value;
-            MOBLVL_MAP.put(key, val.ToArray());
-        }
-        HashMap<int, ArrayList<MobLocation>> mobLoc = new();
-        resultSet = MYSQLManager.jquery("SELECT * FROM `gopet_mob_location`");
-        while (resultSet.next())
-        {
-            MobLocation mobLocation1 = new MobLocation(resultSet.getInt("mapId"), resultSet.getInt("x"), resultSet.getInt("y"));
-            if (!mobLoc.ContainsKey(mobLocation1.getMapId()))
-            {
-                mobLoc.put(mobLocation1.getMapId(), new());
-            }
-            mobLoc.get(mobLocation1.getMapId()).add(mobLocation1);
-        }
-        resultSet.Close();
-
-        foreach (var entry in mobLoc)
-        {
-            int key = entry.Key;
-            ArrayList<MobLocation> val = entry.Value;
-            mobLocation.put(key, val.ToArray());
-        }
-
-        resultSet = MYSQLManager.jquery("SELECT * FROM `npc`");
-        while (resultSet.next())
-        {
-            NpcTemplate npcTemp = new NpcTemplate();
-            npcTemp.setNpcId(resultSet.getInt("npcId"));
-            npcTemp.setName(resultSet.getString("name"));
-            npcTemp.chat = JsonConvert.DeserializeObject<string[]>(resultSet.getString("chat"));
-            npcTemp.optionName = JsonConvert.DeserializeObject<string[]>(resultSet.getString("optionName"));
-            npcTemp.optionId = JsonConvert.DeserializeObject<int[]>(resultSet.getString("optionId"));
-            npcTemp.bounds = JsonConvert.DeserializeObject<int[]>(resultSet.getString("bounds"));
-            npcTemp.setX(resultSet.getInt("x"));
-            npcTemp.setY(resultSet.getInt("y"));
-            npcTemp.setImgPath(resultSet.getString("imgPath"));
-            npcTemp.setType(resultSet.getsbyte("type"));
-            npcTemplate.put(npcTemp.getNpcId(), npcTemp);
-        }
-        resultSet.Close();
-        resultSet = MYSQLManager.jquery("SELECT * FROM `tattoo`");
-        while (resultSet.next())
-        {
-            PetTattoTemplate petTattoTemplate = new PetTattoTemplate();
-            petTattoTemplate.setTattooId(resultSet.getInt("tattooId"));
-            petTattoTemplate.setName(resultSet.getString("name"));
-            petTattoTemplate.setType(resultSet.getsbyte("type"));
-            petTattoTemplate.setIconPath(resultSet.getString("iconPath"));
-            petTattoTemplate.setAtk(resultSet.getInt("atk"));
-            petTattoTemplate.setDef(resultSet.getInt("def"));
-            petTattoTemplate.setHp(resultSet.getInt("hp"));
-            petTattoTemplate.setMp(resultSet.getInt("mp"));
-            petTattoTemplate.setPercent(resultSet.getFloat("percent"));
-            tattos.put(petTattoTemplate.getTattooId(), petTattoTemplate);
-        }
-        resultSet.Close();
-
+        /*
         resultSet = MYSQLManager.jquery("SELECT * FROM `shop_clan`");
         while (resultSet.next())
         {
@@ -759,121 +796,7 @@ public class GopetManager
             }
             shopClanByLvl.get(shopTemplate1.getNeedShopClanLvl()).add(shopTemplate1);
         }
-        resultSet.Close();
-        resultSet = MYSQLManager.jquery("SELECT * FROM `drop_item`");
-        while (resultSet.next())
-        {
-            DropItem dropItem1 = new DropItem();
-            dropItem1.setDropId(resultSet.getInt("dropId"));
-            dropItem1.setMapId(resultSet.getInt("mapId"));
-            dropItem1.setItemTemplateId(resultSet.getInt("itemTemplateId"));
-            dropItem1.setPercent(resultSet.getFloat("percent"));
-            dropItem1.setCount(resultSet.getInt("count"));
-            String lvlRange = resultSet.getString("lvlRange");
-            if (!string.IsNullOrEmpty(lvlRange))
-            {
-                dropItem1.setLvlRange(JsonConvert.DeserializeObject<int[]>(lvlRange));
-                if (!mapHasDropItemLvlRange.Contains(dropItem1.getMapId()))
-                {
-                    mapHasDropItemLvlRange.add(dropItem1.getMapId());
-                }
-            }
-            if (!dropItem.ContainsKey(dropItem1.getMapId()))
-            {
-                dropItem.put(dropItem1.getMapId(), new());
-            }
 
-            if (dropItem1.getPercent() < 0f)
-            {
-                continue;
-            }
-            dropItem.get(dropItem1.getMapId()).add(dropItem1);
-        }
-        resultSet.Close();
-
-
-
-        resultSet = MYSQLManager.jquery("SELECT * FROM `tier_item`");
-        while (resultSet.next())
-        {
-            TierItem tierItem1 = new TierItem();
-            tierItem1.setTierId(resultSet.getInt("tierId"));
-            tierItem1.setItemTemplateIdTier1(resultSet.getInt("itemTemplateIdTier1"));
-            tierItem1.setItemTemplateIdTier2(resultSet.getInt("itemTemplateIdTier2"));
-            tierItem1.setPercent(resultSet.getFloat("percent"));
-            tierItem.put(tierItem1.getItemTemplateIdTier1(), tierItem1);
-        }
-        resultSet.Close();
-
-        resultSet = MYSQLManager.jquery("SELECT * FROM `pet_tier`");
-        while (resultSet.next())
-        {
-            PetTier petTier1 = new PetTier();
-            petTier1.setTierId(resultSet.getInt("tierId"));
-            petTier1.setPetTemplateId1(resultSet.getInt("petTemplateId1"));
-            petTier1.setPetTemplateId2(resultSet.getInt("petTemplateId2"));
-            petTier1.setPetTemplateIdNeed(resultSet.getInt("petTemplateIdNeed"));
-            petTier.put(petTier1.getPetTemplateId1(), petTier1);
-        }
-        resultSet.Close();
-
-
-
-        resultSet = MYSQLManager.jquery("SELECT * FROM `shoparena` WHERE `shoparena`.`enable` = 1");
-        while (resultSet.next())
-        {
-            ShopArenaTemplate shopArenaTemplate = new ShopArenaTemplate();
-            shopArenaTemplate.setId(resultSet.getInt("Id"));
-            shopArenaTemplate.setOption(JsonConvert.DeserializeObject<int[][]>(resultSet.getString("itemOptionValue")));
-            shopArenaTemplate.setComment(resultSet.getString("comment"));
-            shopArenaTemplate.setPercent(resultSet.getFloat("percent"));
-            SHOP_ARENA_TEMPLATE.add(shopArenaTemplate);
-        }
-        resultSet.Close();
-
-        resultSet = MYSQLManager.jquery("SELECT * FROM `clan_template` ORDER BY `clan_template`.`clanLvl` ASC");
-        while (resultSet.next())
-        {
-            ClanTemplate clanTemplate = new ClanTemplate();
-            clanTemplate.setLvl(resultSet.getInt("clanLvl"));
-            clanTemplate.setMaxMember(resultSet.getInt("maxMember"));
-            clanTemplate.setTiemnangPoint(resultSet.getInt("tiemnangPoint"));
-            clanTemplate.setFundNeed(resultSet.getBigDecimal("fundNeed").longValue());
-            clanTemplate.setGrowthPointNeed(resultSet.getBigDecimal("growthPointNeed").longValue());
-            clanTemplate.setPermission(JsonConvert.DeserializeObject<int[]>(resultSet.getString("permission")));
-            clanTemp.put(clanTemplate.getLvl(), clanTemplate);
-        }
-        resultSet.Close();
-
-        resultSet = MYSQLManager.jquery("SELECT * FROM `task`");
-        while (resultSet.next())
-        {
-            TaskTemplate taskTemp = new TaskTemplate();
-            taskTemp.setTaskId(resultSet.getInt("taskId"));
-            taskTemp.setType(resultSet.getInt("type"));
-            taskTemp.setName(resultSet.getString("name"));
-            taskTemp.setDescription(resultSet.getString("description"));
-            taskTemp.setGuide(resultSet.getString("guide"));
-            taskTemp.setTask(JsonConvert.DeserializeObject<int[][]>(resultSet.getString("task")));
-            taskTemp.setGift(JsonConvert.DeserializeObject<int[][]>(resultSet.getString("gift")));
-            taskTemp.setTaskNeed(JsonConvert.DeserializeObject<int[]>(resultSet.getString("taskNeed")));
-            taskTemp.setFromNpc(resultSet.getInt("fromNPC"));
-            taskTemplate.put(taskTemp.getTaskId(), taskTemp);
-            taskTemplateList.add(taskTemp);
-            if (!taskTemplateByType.ContainsKey(taskTemp.getType()))
-            {
-                taskTemplateByType.put(taskTemp.getType(), new());
-            }
-            taskTemplateByType.get(taskTemp.getType()).add(taskTemp);
-
-            if (!taskTemplateByNpcId.ContainsKey(taskTemp.getFromNpc()))
-            {
-                taskTemplateByNpcId.put(taskTemp.getFromNpc(), new());
-            }
-
-            taskTemplateByNpcId.get(taskTemp.getFromNpc()).add(taskTemp);
-        }
-        resultSet.Close();
 
         resultSet = MYSQLManager.jquery("SELECT * FROM `clan_buff_template`");
         while (resultSet.next())
@@ -896,7 +819,7 @@ public class GopetManager
         while (resultSet.next())
         {
             ClanHouseTemplate clanHouseTemplate = new ClanHouseTemplate();
-            clanHouseTemplate.setLvl(resultSet.getInt("lvl"));
+            clanHouseTemplate.setLvl(resultSet.getInt("clanLvl"));
             clanHouseTemplate.setFundNeed(resultSet.getInt("fundNeed"));
             clanHouseTemplate.setGrowthPointNeed(resultSet.getInt("growthPoint"));
             clanHouseTemplate.setNeedClanLvl(resultSet.getInt("needClanLvl"));
@@ -908,13 +831,13 @@ public class GopetManager
         while (resultSet.next())
         {
             ClanHouseTemplate clanHouseTemplate = new ClanHouseTemplate();
-            clanHouseTemplate.setLvl(resultSet.getInt("lvl"));
+            clanHouseTemplate.setLvl(resultSet.getInt("clanLvl"));
             clanHouseTemplate.setFundNeed(resultSet.getInt("fundNeed"));
             clanHouseTemplate.setGrowthPointNeed(resultSet.getInt("growthPoint"));
             clanSkillHouseTemp.put(clanHouseTemplate.getLvl(), clanHouseTemplate);
         }
         resultSet.Close();
-
+        */
         foreach (var entry in tierItem)
         {
 
@@ -925,7 +848,7 @@ public class GopetManager
                 continue;
             }
 
-            ArrayList<int> map = findListTierId(val);
+            JArrayList<int> map = findListTierId(val);
 
             tierItemHashMap.put(val.getItemTemplateIdTier1(), 1);
             for (int i = 0; i < map.Count; i++)
@@ -937,9 +860,9 @@ public class GopetManager
 
     }
 
-    public static ArrayList<int> findListTierId(TierItem tInfo)
+    public static JArrayList<int> findListTierId(TierItem tInfo)
     {
-        ArrayList<int> list = new();
+        JArrayList<int> list = new();
         list.add(tInfo.getItemTemplateIdTier2());
 
         foreach (var entry in tierItem)
@@ -958,24 +881,18 @@ public class GopetManager
 
     public static void loadMarket()
     {
-        ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `market`");
-        while (resultSet.next())
+
+        using (var conn = MYSQLManager.create())
         {
-            sbyte typeKiosk = resultSet.getsbyte("type");
-            String sellItem = resultSet.getString("sellItem");
+            var marketData = conn.QueryFirstOrDefault("SELECT *, UNIX_TIMESTAMP(TimeSave) * 1000 AS milliseconds FROM `market` ORDER BY `market`.`TimeSave` DESC");
 
-
-
-            CopyOnWriteArrayList<SellItem> sellItems = JsonConvert.DeserializeObject<CopyOnWriteArrayList<SellItem>>(sellItem);
-
-            Kiosk kiosk = MarketPlace.getKiosk(typeKiosk);
-            if (kiosk != null)
+            if(marketData != null)
             {
-                kiosk.setKioskItem(sellItems);
+                MarketPlace.setKiosks(JsonConvert.DeserializeObject<Kiosk[]>(marketData.Data));
+                conn.Execute("DELETE FROM `market` WHERE (UNIX_TIMESTAMP(TimeSave) * 1000) + 1000 * 60 * 60 * 24 * 31 < @TimeReigonNeedDetele",
+                  new   { TimeReigonNeedDetele  = marketData.milliseconds });
             }
         }
-        resultSet.Close();
-        MYSQLManager.updateSql("DELETE FROM `market`");
     }
 
 
@@ -1037,18 +954,12 @@ public class GopetManager
     }
     public static void saveMarket()
     {
-        MySqlConnection MySqlConnection = MYSQLManager.create();
-        try
+        using (var conn = MYSQLManager.create())
         {
-            foreach (Kiosk kiosk in MarketPlace.kiosks)
+            conn.Execute("INSERT INTO `market`(`Data`) VALUES (@Data)", new
             {
-                MYSQLManager.updateSql(Utilities.Format("INSERT INTO `market`(`type`,  `sellItem`) VALUES (%s,'%s')", kiosk.getKioskType(), JsonManager.ToJson(kiosk.kioskItems)), MySqlConnection);
-            }
+                Data = JsonConvert.SerializeObject(MarketPlace.kiosks)
+            });
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        MySqlConnection.Close();
     }
 }

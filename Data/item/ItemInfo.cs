@@ -123,6 +123,7 @@ namespace Gopet.Data.GopetItem
             public const int DAMAGE_PHANDOAN = 33;
             public const int PER_STUN_1_TURN= 36;
             public const int PER_DEF_BUFF_3_TURN = 37;
+            public const int DOT_MANA_BY_ATK = 38;
         }
 
         public static class OptionType

@@ -71,7 +71,7 @@ public class GopetPlace : Place
         {
             petBattle.Close(player);
         }
-        base.remove(player); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        base.remove(player); 
     }
 
     public void addNewMob(Mob gopetMob)
@@ -169,7 +169,7 @@ public class GopetPlace : Place
         sendMessage(message);
     }
 
-    private void sendMob(ArrayList<Mob> newMobs)
+    private void sendMob(JArrayList<Mob> newMobs)
     {
         Message message = new Message(GopetCMD.PET_SERVICE);
         message.putsbyte(GopetCMD.SEND_LIST_MOB_ZONE);
@@ -325,7 +325,7 @@ public class GopetPlace : Place
     }
 
 
-    public void sendRemove(Player player)
+    public override void sendRemove(Player player)
     {
         Message message = new Message(GopetCMD.ON_PLAYER_EXIT_PLACE);
         message.putInt(player.playerData.user_id);
@@ -509,7 +509,7 @@ public class GopetPlace : Place
             }
         }
 
-        ArrayList<MobLocation> mobLocations_newMob = new();
+        JArrayList<MobLocation> mobLocations_newMob = new();
 
         foreach (var entry in newMob)
         {
@@ -542,7 +542,7 @@ public class GopetPlace : Place
         {
             if (mobLocations.Length > 0 && mobLvlMaps.Length > 0)
             {
-                ArrayList<Mob> nGopetMobs = new();
+                JArrayList<Mob> nGopetMobs = new();
                 int index = -1;
                 foreach (MobLocation mobLocation in mobLocations)
                 {
@@ -619,7 +619,6 @@ public class GopetPlace : Place
             int key = entry.Key;
             Item val = entry.Value;
             m.putInt(key);
-            GopetManager.ServerMonitor.LogWarning($"DEBUG [{val.Template.frameImgPath}]");
             m.putUTF(val.Template.frameImgPath);
             m.putsbyte(val.getTemp().getOptionValue()[0]);
         }
@@ -701,7 +700,7 @@ public class GopetPlace : Place
         sendMessage(m);
     }
 
-    public void sendMessage(Message message, ArrayList<Player> listNoneSend)
+    public void sendMessage(Message message, JArrayList<Player> listNoneSend)
     {
         foreach (Player player in players)
         {
@@ -727,7 +726,7 @@ public class GopetPlace : Place
 
         if (isAddToplace)
         {
-            ArrayList<ClanMember> clanMembers = new();
+            JArrayList<ClanMember> clanMembers = new();
             foreach (Player player1 in players)
             {
                 ClanMember clanMember1 = player1.controller.getClan();

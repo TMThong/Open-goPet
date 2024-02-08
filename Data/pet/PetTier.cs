@@ -1,9 +1,9 @@
  
 public class PetTier {
-    private int tierId;
-    private int petTemplateId1;
-    private int petTemplateId2;
-    private int petTemplateIdNeed;
+    public int tierId {  get; private set; }
+    public int petTemplateId1 { get; private set; }
+    public int petTemplateId2 { get; private set; }
+    public int petTemplateIdNeed { get; private set; }
 
     public void setTierId(int tierId)
     {

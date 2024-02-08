@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace Gopet.Data.Collections
 {
-    public class ArrayList<T> : List<T>
+    public class JArrayList<T> : List<T>
     {
-        public ArrayList()
+        public JArrayList()
         {
         }
 
-        public ArrayList(IEnumerable<T> collection) : base(collection)
+        public JArrayList(IEnumerable<T> collection) : base(collection)
         {
         }
 
-        public ArrayList(int capacity) : base(capacity)
+        public JArrayList(int capacity) : base(capacity)
         {
         }
 

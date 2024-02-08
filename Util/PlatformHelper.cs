@@ -27,7 +27,7 @@ public class PlatformHelper
 #if DEBUG
             GopetManager.ServerMonitor.LogWarning($"Load ASSETS: {path}");
 #endif
-            buffer = File.ReadAllBytes(Path.Combine(assetsPath + path)).sbytes();
+            buffer = File.ReadAllBytes(Path.Combine(assetsPath + path.Replace('\\', '/'))).sbytes();
         }
         catch (Exception e)
         {
@@ -38,6 +38,6 @@ public class PlatformHelper
 
     public static bool hasAssets(String path)
     {
-        return File.Exists(assetsPath + path);
+        return File.Exists(assetsPath + path.Replace('\\', '/'));
     }
 }

@@ -10,7 +10,10 @@ using Gopet.IO;
 using Gopet.Util;
 using MySql.Data.MySqlClient;
 using Gopet.Data.item;
+using Dapper;
+using Microsoft.AspNetCore.Mvc;
 
+[NonController]
 public class MenuController
 {
     #region Const
@@ -127,9 +130,9 @@ public class MenuController
     /**
      * Danh sách nhận pet miễn phí
      */
-    public static ArrayList<MenuItemInfo> PetFreeList = new();
+    public static JArrayList<MenuItemInfo> PetFreeList = new();
 
-    public static ArrayList<MenuItemInfo> EXCHANGE_ITEM_INFOS = new();
+    public static JArrayList<MenuItemInfo> EXCHANGE_ITEM_INFOS = new();
 
     /**
      * Giá tẩy tiềm năng
@@ -347,7 +350,7 @@ public class MenuController
                 {
                     CopyOnWriteArrayList<Pet> listPet = (CopyOnWriteArrayList<Pet>)player.playerData.pets.clone();
 
-                    ArrayList<MenuItemInfo> petItemInfos = new();
+                    JArrayList<MenuItemInfo> petItemInfos = new();
                     int i = 0;
                     if (menuId == MENU_PET_INVENTORY)
                     {
@@ -384,7 +387,7 @@ public class MenuController
                 break;
             case MENU_SHOW_ALL_ITEM:
                 {
-                    ArrayList<MenuItemInfo> menuInfos = new();
+                    JArrayList<MenuItemInfo> menuInfos = new();
 
                     foreach (ItemTemplate itemTemplate in GopetManager.NonAdminItemList)
                     {
@@ -398,7 +401,7 @@ public class MenuController
             case MENU_UNEQUIP_SKIN:
             case MENU_UNEQUIP_PET:
                 {
-                    ArrayList<Option> list = new();
+                    JArrayList<Option> list = new();
                     list.add(new Option(0, menuId == MENU_UNEQUIP_PET ? "Không cho thú cưng đi theo" : "Tháo", Option.CAN_SELECT));
                     String titleStr = "";
                     switch (menuId)
@@ -416,7 +419,7 @@ public class MenuController
             case MENU_SHOW_MY_LIST_TASK:
                 {
                     CopyOnWriteArrayList<TaskData> taskDatas = player.controller.getTaskCalculator().getTaskDatas();
-                    ArrayList<MenuItemInfo> taskMenuInfos = new();
+                    JArrayList<MenuItemInfo> taskMenuInfos = new();
                     foreach (TaskData taskData in taskDatas)
                     {
                         TaskTemplate taskTemplate = taskData.getTemplate();
@@ -441,7 +444,7 @@ public class MenuController
                         if (wingItem.lvl >= 0 && wingItem.lvl < GopetManager.MAX_LVL_ENCHANT_WING)
                         {
                             EnchantWingData enchantWingData = GopetManager.EnchantWingData[wingItem.lvl + 1];
-                            ArrayList<Option> list = new();
+                            JArrayList<Option> list = new();
                             if (enchantWingData.Coin > 0)
                             {
                                 list.add(new Option(0, Utilities.FormatNumber(enchantWingData.Coin) + " (ngoc)", Option.CAN_SELECT));
@@ -458,7 +461,7 @@ public class MenuController
                 break;
             case MENU_OPTION_TASK:
                 {
-                    ArrayList<Option> list = new();
+                    JArrayList<Option> list = new();
 
                     list.add(new Option(0, "Cập nhật", Option.CAN_SELECT));
                     list.add(new Option(1, "Hoàn thành nhiệm vụ", Option.CAN_SELECT));
@@ -472,10 +475,10 @@ public class MenuController
                     if (player.controller.objectPerformed.ContainsKey(OBJKEY_NPC_ID_FOR_MAIN_TASK))
                     {
                         int npcId = (int)player.controller.objectPerformed.get(OBJKEY_NPC_ID_FOR_MAIN_TASK);
-                        ArrayList<TaskTemplate> taskTemplates = player.controller.getTaskCalculator().getTaskTemplate(npcId);
+                        JArrayList<TaskTemplate> taskTemplates = player.controller.getTaskCalculator().getTaskTemplate(npcId);
                         if (taskTemplates.Count > 0)
                         {
-                            ArrayList<MenuItemInfo> taskMenuInfos = new();
+                            JArrayList<MenuItemInfo> taskMenuInfos = new();
                             foreach (TaskTemplate taskTemplate in taskTemplates)
                             {
                                 MenuItemInfo menuItemInfo = new MenuItemInfo(taskTemplate.getName(), taskTemplate.getDescription(), "dialog/1.png", true);
@@ -501,7 +504,7 @@ public class MenuController
                 {
                     if (player.playerData.petSelected != null)
                     {
-                        ArrayList<MenuItemInfo> skillMenuItem = new();
+                        JArrayList<MenuItemInfo> skillMenuItem = new();
                         foreach (PetSkill petSkill in getPetSkills(player))
                         {
                             MenuItemInfo menuItemInfo = new MenuItemInfo(petSkill.name, petSkill.description, petSkill.skillID + "", true);
@@ -543,7 +546,7 @@ public class MenuController
                     if (clanMember != null)
                     {
                         Clan clan = clanMember.getClan();
-                        ArrayList<MenuItemInfo> approvalElements = new();
+                        JArrayList<MenuItemInfo> approvalElements = new();
                         foreach (ClanRequestJoin clanRequestJoin in clan.getRequestJoin())
                         {
                             MenuItemInfo menuItemInfo = new MenuItemInfo(clanRequestJoin.name, Utilities.Format("Xin vào bang lúc: %s", Utilities.GetDate(clanRequestJoin.timeRequest)), "", true);
@@ -569,7 +572,7 @@ public class MenuController
                     if (clanMember != null)
                     {
                         Clan clan = clanMember.getClan();
-                        ArrayList<MenuItemInfo> approvalElements = new();
+                        JArrayList<MenuItemInfo> approvalElements = new();
                         foreach (ClanMember clanMemberSelect in clan.getMembers())
                         {
                             MenuItemInfo menuItemInfo = new MenuItemInfo(clanMemberSelect.name + "(Chức vụ: " + clanMemberSelect.getDutyName() + ")", Utilities.Format("Đóng góp quỹ :%s và %s điểm cống hiến", Utilities.FormatNumber(clanMemberSelect.fundDonate), Utilities.FormatNumber(clanMember.growthPointDonate)), "", true);
@@ -593,7 +596,7 @@ public class MenuController
                 {
                     if (player.checkIsAdmin())
                     {
-                        ArrayList<MenuItemInfo> mapMenuItem = new();
+                        JArrayList<MenuItemInfo> mapMenuItem = new();
                         foreach (GopetMap gopetMap in MapManager.mapArr)
                         {
                             MenuItemInfo menuItemInfo = new MenuItemInfo(gopetMap.mapTemplate.name + "  (" + gopetMap.mapID + ")", "", "", true);
@@ -609,7 +612,7 @@ public class MenuController
                 break;
             case MENU_DELETE_TIEM_NANG:
                 {
-                    ArrayList<MenuItemInfo> menuItemInfos = new();
+                    JArrayList<MenuItemInfo> menuItemInfos = new();
                     foreach (String option in gym_options)
                     {
                         MenuItemInfo menuItemInfo = new MenuItemInfo(Utilities.Format("Tẩy %s", option), Utilities.Format("Xóa 1 %s với giá %s (vang) và sẽ nhận lại 1 tiềm năng", option, PriceDeleteTiemNang), "", true);
@@ -657,7 +660,7 @@ public class MenuController
             case MENU_SELECT_GEM_TO_INLAY:
                 {
                     CopyOnWriteArrayList<Item> listItems = Item.search(typeSelectItemMaterial(menuId, player), player.playerData.getInventoryOrCreate(getTypeInventorySelect(menuId)));
-                    ArrayList<MenuItemInfo> menuItemMaterial1Infos = new();
+                    JArrayList<MenuItemInfo> menuItemMaterial1Infos = new();
                     foreach (Item item in listItems)
                     {
                         MenuItemInfo menuItemInfo = new MenuItemInfo(item.getTemp().isStackable ? item.getName() : item.getEquipName(), item.getDescription(player), item.getTemp().getIconPath(), true);
@@ -673,7 +676,7 @@ public class MenuController
                 break;
             case MENU_SELECT_ITEM_ADMIN:
                 {
-                    ArrayList<MenuItemInfo> menuItemInfos = new((ADMIN_INFOS));
+                    JArrayList<MenuItemInfo> menuItemInfos = new((ADMIN_INFOS));
                     player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "MENU ADMIN", menuItemInfos);
                     menuItemInfos.Clear();
                 }
@@ -684,7 +687,7 @@ public class MenuController
             case MENU_KIOSK_AMOUR_SELECT:
                 {
                     CopyOnWriteArrayList<Item> listItems = Item.search(typeSelectItemMaterial(menuId, player), player.playerData.getInventoryOrCreate(menuId != MENU_KIOSK_GEM_SELECT ? GopetManager.EQUIP_PET_INVENTORY : GopetManager.GEM_INVENTORY));
-                    ArrayList<MenuItemInfo> menuItemEquipInfos = new();
+                    JArrayList<MenuItemInfo> menuItemEquipInfos = new();
                     foreach (Item item in listItems)
                     {
                         MenuItemInfo menuItemInfo = new MenuItemInfo(item.getEquipName(), item.getDescription(player), item.getTemp().getIconPath(), true);
@@ -700,7 +703,7 @@ public class MenuController
             case MENU_KIOSK_OHTER_SELECT:
                 {
                     CopyOnWriteArrayList<Item> listItems = player.playerData.getInventoryOrCreate(GopetManager.NORMAL_INVENTORY);
-                    ArrayList<MenuItemInfo> menuItemEquipInfos = new();
+                    JArrayList<MenuItemInfo> menuItemEquipInfos = new();
                     foreach (Item item in listItems)
                     {
                         MenuItemInfo menuItemInfo = new MenuItemInfo(item.getName(), item.getDescription(player), item.getTemp().getIconPath(), true);
@@ -715,7 +718,7 @@ public class MenuController
                 break;
             case MENU_APPROVAL_CLAN_MEM_OPTION:
                 {
-                    ArrayList<Option> approvalOptions = new();
+                    JArrayList<Option> approvalOptions = new();
                     approvalOptions.add(new Option(0, "Duyệt", (sbyte)1));
                     approvalOptions.add(new Option(1, "Xóa", (sbyte)1));
                     approvalOptions.add(new Option(2, "Xóa và cho vào danh sách chặn", (sbyte)1));
@@ -731,7 +734,7 @@ public class MenuController
                         Clan clan = clanMember.getClan();
                         if (clan.getClanPotentialSkills().Count > 0)
                         {
-                            ArrayList<MenuItemInfo> skillMenuItemInfos = new();
+                            JArrayList<MenuItemInfo> skillMenuItemInfos = new();
                             foreach (ClanPotentialSkill clanPotentialSkill in clan.getClanPotentialSkills())
                             {
                                 ClanBuffTemplate clanBuffTemplate = GopetManager.CLANBUFF_HASH_MAP.get(clanPotentialSkill.getBuffId());
@@ -760,7 +763,7 @@ public class MenuController
                     ClanMember clanMember = player.controller.getClan();
                     if (clanMember != null)
                     {
-                        ArrayList<MenuItemInfo> skillMenuItemInfos = new();
+                        JArrayList<MenuItemInfo> skillMenuItemInfos = new();
                         foreach (ClanBuffTemplate clanBuffTemplate in GopetManager.CLAN_BUFF_TEMPLATES)
                         {
                             MenuItemInfo menuItemInfo = new MenuItemInfo(ClanBuff.getName(clanBuffTemplate.getValuePerLevel() * 1, clanBuffTemplate.getBuffId()) + " Yêu cấu bang cấp: " + clanBuffTemplate.getLvlClan(), ClanBuff.getDesc(clanBuffTemplate.getValuePerLevel() * 1, clanBuffTemplate.getBuffId()), "npcs/gopet.png", true);
@@ -780,7 +783,7 @@ public class MenuController
                 break;
             case MENU_INTIVE_CHALLENGE:
                 {
-                    ArrayList<Option> list = new();
+                    JArrayList<Option> list = new();
                     for (int i = 0; i < GopetManager.PRICE_BET_CHALLENGE.Length; i++)
                     {
                         long l = GopetManager.PRICE_BET_CHALLENGE[i];
@@ -792,7 +795,7 @@ public class MenuController
                 break;
             case MENU_ATM:
                 {
-                    ArrayList<Option> options = new();
+                    JArrayList<Option> options = new();
                     options.add(new Option(0, "Đổi (vang)"));
                     options.add(new Option(1, "Đổi (ngoc)"));
                     player.controller.sendListOption(menuId, "Cây ATM", CMD_CENTER_OK, options);
@@ -840,7 +843,7 @@ public class MenuController
                         case MENU_KIOSK_WEAPON:
                         case MENU_KIOSK_HAT:
                             {
-                                ArrayList<MenuItemInfo> arrayListEquip = new();
+                                JArrayList<MenuItemInfo> arrayListEquip = new();
                                 foreach (SellItem kioskItem in kiosk.kioskItems)
                                 {
                                     MenuItemInfo menuItemInfo = new MenuItemInfo();
@@ -862,7 +865,7 @@ public class MenuController
                             break;
                         case MENU_KIOSK_PET:
                             {
-                                ArrayList<MenuItemInfo> arrayListEquip = new();
+                                JArrayList<MenuItemInfo> arrayListEquip = new();
                                 foreach (SellItem kioskItem in kiosk.kioskItems)
                                 {
                                     MenuItemInfo menuItemInfo = new MenuItemInfo();
@@ -911,9 +914,9 @@ public class MenuController
         player.okDialog($"Chúc mừng bạn nhận được: {it.Template.name} x{tradeGift.Count}");
     }
 
-    public static ArrayList<int> typeSelectItemMaterial(int menuId, Player player)
+    public static JArrayList<int> typeSelectItemMaterial(int menuId, Player player)
     {
-        ArrayList<int> arrayList = new();
+        JArrayList<int> arrayList = new();
         switch (menuId)
         {
             case MENU_SELECT_GEM_ENCHANT_MATERIAL1:
@@ -1098,7 +1101,7 @@ public class MenuController
                     if (player.controller.objectPerformed.ContainsKey(OBJKEY_NPC_ID_FOR_MAIN_TASK))
                     {
                         int npcId = (int)player.controller.objectPerformed.get(OBJKEY_NPC_ID_FOR_MAIN_TASK);
-                        ArrayList<TaskTemplate> taskTemplates = player.controller.getTaskCalculator().getTaskTemplate(npcId);
+                        JArrayList<TaskTemplate> taskTemplates = player.controller.getTaskCalculator().getTaskTemplate(npcId);
                         if (index >= 0 && index < taskTemplates.Count)
                         {
                             TaskTemplate taskTemplate = taskTemplates.get(index);
@@ -1251,12 +1254,12 @@ public class MenuController
                             }
                             else
                             {
-                                player.redDialog("Pet của bạn phải đạt mốc lvl 3, 5, 10 để học skill 1 2 3 nhé");
+                                player.redDialog("Pet của bạn phải đạt mốc clanLvl 3, 5, 10 để học skill 1 2 3 nhé");
                             }
                         }
                         else
                         {
-                            player.redDialog("Pet của bạn phải đạt mốc lvl 3, 5, 10 để học skill 1 2 3 nhé");
+                            player.redDialog("Pet của bạn phải đạt mốc clanLvl 3, 5, 10 để học skill 1 2 3 nhé");
                         }
                     }
                 }
@@ -1314,6 +1317,7 @@ public class MenuController
                         player.playerData.addPet(oldPet, player);
                     }
                     player.playerData.petSelected = pet;
+                    pet.applyInfo(player);
                     player.controller.updatePetSelected(false);
                 }
                 break;
@@ -1526,14 +1530,7 @@ public class MenuController
                                     {
                                         item.expire = Utilities.CurrentTimeMillis + item.getTemp().getExpire();
                                     }
-                                    if (shopTemplateItem.getInventoryType() == GopetManager.NORMAL_INVENTORY)
-                                    {
-                                        player.addItemToNormalInventory(item);
-                                    }
-                                    else
-                                    {
-                                        player.playerData.addItem(shopTemplateItem.getInventoryType(), item);
-                                    }
+                                    player.addItemToInventory(item);
                                     player.okDialog(Utilities.Format("Bạn đã mua thành công %s", item.getTemp().getName()));
                                 }
                                 else
@@ -2023,6 +2020,10 @@ public class MenuController
                                     case 0:
                                         if (clan.canAddNewMember())
                                         {
+                                            using(var conn = MYSQLManager.create())
+                                            {
+
+                                            }
                                             MySqlConnection MySqlConnection = MYSQLManager.create();
                                             try
                                             {
@@ -2030,9 +2031,8 @@ public class MenuController
                                                 Player onlinePlayer = PlayerManager.get(requestJoin.user_id);
                                                 if (onlinePlayer == null)
                                                 {
-                                                    ResultSet resultSet = MYSQLManager.jquery(Utilities.Format("SELECT * from `player` where user_id = %s AND clanId > 0", requestJoin.user_id), MySqlConnection);
-                                                    hasClan = resultSet.next();
-                                                    resultSet.Close();
+                                                    var data = MySqlConnection.QueryFirstOrDefault(Utilities.Format("SELECT * from `player` where user_id = %s AND clanId > 0", requestJoin.user_id));
+                                                    hasClan = data != null;
                                                 }
                                                 else
                                                 {
@@ -2044,7 +2044,7 @@ public class MenuController
                                                     clan.getRequestJoin().remove(requestJoin);
                                                     if (onlinePlayer == null)
                                                     {
-                                                        MYSQLManager.updateSql(Utilities.Format("UPDATE `player` set clanId =%s where user_id =%s;", requestJoin.user_id, clanMember.getClan().getClanId()), MySqlConnection);
+                                                        MySqlConnection.Execute(Utilities.Format("UPDATE `player` set clanId =%s where user_id =%s;", requestJoin.user_id, clanMember.getClan().getClanId()));
                                                     }
                                                     else
                                                     {
@@ -2158,7 +2158,11 @@ public class MenuController
                     MapManager.mapArr.get(index).addRandom(player);
                 }
                 break;
-
+            case MENU_ITEM_MONEY_INVENTORY:
+                {
+                    player.okDialog("Vật phẩm dùng để đổi phần thưởng");
+                    break;
+                }
             case MENU_SELECT_TYPE_CHANGE_GIFT:
                 {
                     int count = 1;
@@ -2275,7 +2279,7 @@ public class MenuController
                         else
                         {
                             player.controller.objectPerformed.put(OBJKEY_MEM_ID_UPGRADE_DUTY, index);
-                            ArrayList<Option> list = new();
+                            JArrayList<Option> list = new();
                             if (clanMember.duty == Clan.TYPE_LEADER)
                             {
                                 list.add(new Option(0, "Nhường chức", 1));
@@ -2324,7 +2328,7 @@ public class MenuController
             int[] optionId = npcTemplate.getOptionId();
             String[] optionName = npcTemplate.getOptionName();
             int LengthOP = optionName.Length;
-            ArrayList<TaskTemplate> taskTemplates = player.controller.getTaskCalculator().getTaskTemplate(npcId);
+            JArrayList<TaskTemplate> taskTemplates = player.controller.getTaskCalculator().getTaskTemplate(npcId);
             if (taskTemplates.Count > 0)
             {
                 LengthOP++;
@@ -2369,7 +2373,7 @@ public class MenuController
 
     private static PetSkill[] getPetSkills(Player player)
     {
-        ArrayList<PetSkill> petSkills = GopetManager.NCLASS_PETSKILL_HASH_MAP.get(player.playerData.petSelected.getPetTemplate().getNclass());
+        JArrayList<PetSkill> petSkills = GopetManager.NCLASS_PETSKILL_HASH_MAP.get(player.playerData.petSelected.getPetTemplate().getNclass());
         return petSkills.ToArray();
     }
 
@@ -2779,7 +2783,7 @@ public class MenuController
 
     public static void showTop(Top top, Player player)
     {
-        ArrayList<MenuItemInfo> menuItemInfos = new();
+        JArrayList<MenuItemInfo> menuItemInfos = new();
         foreach (TopData data in top.datas)
         {
             MenuItemInfo menuItemInfo = new MenuItemInfo(data.title, data.desc, data.imgPath, false);
@@ -2796,7 +2800,7 @@ public class MenuController
             player.redDialog("Xảy ra lỗi hoặc do bạn vừa mới bị đá ra khỏi bang\nVui lòng thao tác lại");
             return;
         }
-        ArrayList<MenuItemInfo> menuItemInfos = new();
+        JArrayList<MenuItemInfo> menuItemInfos = new();
         foreach (ShopTemplateItem shopTemplateItem in shopTemplate.getShopTemplateItems())
         {
             ItemTemplate itemTemplate = shopTemplateItem.getItemTemplate();
@@ -2831,8 +2835,9 @@ public class MenuController
                     player.playerData.shopArena.nextWhenNewDay();
                     return player.playerData.shopArena;
                 }
-                ShopArena shopTemplate = new ShopArena(type);
+                ShopArena shopTemplate = new ShopArena();
                 player.playerData.shopArena = shopTemplate;
+                player.playerData.shopArena.nextArena();
                 return shopTemplate;
             case SHOP_CLAN:
                 ClanMember clanMember = player.controller.getClan();
@@ -2972,7 +2977,7 @@ public class MenuController
         CopyOnWriteArrayList<Item> items = (CopyOnWriteArrayList<Item>)player.playerData.getInventoryOrCreate(typeInventory).clone();
 
         int i = 0;
-        ArrayList<MenuItemInfo> menuList = new();
+        JArrayList<MenuItemInfo> menuList = new();
         switch (typeInventory)
         {
             case GopetManager.SKIN_INVENTORY:
@@ -3595,83 +3600,82 @@ public class MenuController
                             if (Utilities.CheckString(code, "^[a-z0-9A-Z]+$"))
                             {
                                 player.okDialog("Vui lòng chờ");
-                                MySqlConnection MySqlConnection = MYSQLManager.create();
-                                try
+
+                                using (MySqlConnection MySqlConnection = MYSQLManager.create())
                                 {
-                                    ResultSet keyLOCK = MYSQLManager.jquery(Utilities.Format("SELECT GET_LOCK('gift_code_lock_%s', 10) as hasLock;", code), MySqlConnection);
-                                    if (keyLOCK.next())
+                                    try
                                     {
-                                        bool hasLock = keyLOCK.getbool("hasLock");
-                                        if (!hasLock)
+                                        var keyL = MySqlConnection.QuerySingleOrDefault("SELECT GET_LOCK('gift_code_lock_@code', 10) as hasLock;", new { code = code });
+                                        if (keyL != null)
                                         {
-                                            player.redDialog("Quá nhiều người cố gắng dùng mã quà tặng này nên hệ thống quá tải!");
-                                        }
-                                        else
-                                        {
-                                            keyLOCK.Close();
-                                            ResultSet resultSet = MYSQLManager.jquery(Utilities.Format("SELECT * FROM `gift_code` WHERE `gift_code`.`code` = '%s';", code), MySqlConnection);
-                                            if (resultSet.next())
+                                            bool hasLock = keyL.hasLock == 1;
+                                            if (!hasLock)
                                             {
-                                                GiftCodeData giftCodeData = new GiftCodeData(resultSet);
-                                                if (giftCodeData.getUsersOfUseThis().Contains(player.user.user_id))
-                                                {
-                                                    player.redDialog("Bạn đã sử dụng mã quà tặng này rồi");
-                                                }
-                                                else
-                                                {
-                                                    if (giftCodeData.getCurUser() >= giftCodeData.getMaxUser())
-                                                    {
-                                                        player.redDialog("Số người dùng mã quà tặng này đã đạt giới hạn!");
-                                                    }
-                                                    else
-                                                    {
-                                                        if (giftCodeData.getExpire().GetTimeMillis() < Utilities.CurrentTimeMillis)
-                                                        {
-                                                            player.redDialog("Mã quà tặng đã hết hạn");
-                                                        }
-                                                        else
-                                                        {
-                                                            giftCodeData.getUsersOfUseThis().add(player.user.user_id);
-                                                            giftCodeData.setCurUser(giftCodeData.getCurUser() + 1);
-                                                            if (giftCodeData.getGift_data().Length <= 0)
-                                                            {
-                                                                player.redDialog("Mã quà tặng này chả tặng bạn được cái gì :)");
-                                                            }
-                                                            else
-                                                            {
-                                                                ArrayList<Popup> popups = player.controller.onReiceiveGift(giftCodeData.getGift_data());
-                                                                ArrayList<String> textInfo = new();
-                                                                foreach (Popup popup in popups)
-                                                                {
-                                                                    textInfo.add(popup.getText());
-                                                                }
-                                                                player.okDialog(Utilities.Format("Chức mừng bạn nhận được: %s", String.Join(",", textInfo)));
-                                                            }
-                                                            resultSet.Close();
-                                                            MYSQLManager.updateSql(Utilities.Format("UPDATE `gift_code` SET `currentUser` = %s , `usersOfUseThis` = '%s' WHERE `id` = '%s';", giftCodeData.getCurUser(), JsonManager.ToJson(giftCodeData.getUsersOfUseThis()), giftCodeData.getId()), MySqlConnection);
-                                                        }
-                                                    }
-                                                }
+                                                player.redDialog("Quá nhiều người cố gắng dùng mã quà tặng này nên hệ thống quá tải!");
                                             }
                                             else
                                             {
-                                                player.redDialog("Không có mã quà tặng này");
+                                                GiftCodeData giftCodeData = MySqlConnection.QuerySingleOrDefault<GiftCodeData>(Utilities.Format("SELECT * FROM `gift_code` WHERE `gift_code`.`code` = '%s';", code));
+                                                if (giftCodeData != null)
+                                                {
+                                                    if (giftCodeData.getUsersOfUseThis().Contains(player.user.user_id))
+                                                    {
+                                                        player.redDialog("Bạn đã sử dụng mã quà tặng này rồi");
+                                                    }
+                                                    else
+                                                    {
+                                                        if (giftCodeData.getCurUser() >= giftCodeData.getMaxUser())
+                                                        {
+                                                            player.redDialog("Số người dùng mã quà tặng này đã đạt giới hạn!");
+                                                        }
+                                                        else
+                                                        {
+                                                            if (giftCodeData.getExpire().GetTimeMillis() < Utilities.CurrentTimeMillis)
+                                                            {
+                                                                player.redDialog("Mã quà tặng đã hết hạn");
+                                                            }
+                                                            else
+                                                            {
+                                                                giftCodeData.getUsersOfUseThis().add(player.user.user_id);
+                                                                giftCodeData.setCurUser(giftCodeData.getCurUser() + 1);
+                                                                if (giftCodeData.getGift_data().Length <= 0)
+                                                                {
+                                                                    player.redDialog("Mã quà tặng này chả tặng bạn được cái gì :)");
+                                                                }
+                                                                else
+                                                                {
+                                                                    JArrayList<Popup> popups = player.controller.onReiceiveGift(giftCodeData.getGift_data());
+                                                                    JArrayList<String> textInfo = new();
+                                                                    foreach (Popup popup in popups)
+                                                                    {
+                                                                        textInfo.add(popup.getText());
+                                                                    }
+                                                                    player.okDialog(Utilities.Format("Chức mừng bạn nhận được: %s", String.Join(",", textInfo)));
+                                                                }
+                                                                MySqlConnection.Execute("UPDATE `gift_code` SET `currentUser` = @currentUser , `usersOfUseThis` = @usersOfUseThis WHERE `id` =  @id;", giftCodeData);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    player.redDialog("Không có mã quà tặng này");
+                                                }
                                             }
                                         }
+                                        else
+                                        {
+                                            player.redDialog("Xảy ra sự cố mà ông trời cũng cả biết");
+                                        }
                                     }
-                                    else
+                                    catch (Exception e)
                                     {
-                                        player.redDialog("Xảy ra sự cố mà ông trời cũng cả biết");
+                                        e.printStackTrace();
                                     }
-                                }
-                                catch (Exception e)
-                                {
-                                    e.printStackTrace();
-                                }
-                                finally
-                                {
-                                    MYSQLManager.updateSql(Utilities.Format("DO RELEASE_LOCK('gift_code_lock_%s');", code), MySqlConnection);
-                                    MySqlConnection.Close();
+                                    finally
+                                    {
+                                        MySqlConnection.Execute("DO RELEASE_LOCK('gift_code_lock_@code');", new { code = code });
+                                    }
                                 }
                             }
                             else
@@ -3775,6 +3779,11 @@ public class MenuController
 
                 case INPUT_DIALOG_EXCHANGE_GOLD_TO_COIN:
                     {
+                        if (true)
+                        {
+                            player.redDialog("Cây ATM này hiện đã hết ngọc bạn vui lòng chờ nhân viên ngân hàng nạp thêm ngọc vào cây ATM này!");
+                            return;
+                        }
                         long value = Math.Abs(reader.readlong(0));
                         if (player.checkGold(value))
                         {
@@ -3836,32 +3845,22 @@ public class MenuController
                         if (player.checkIsAdmin())
                         {
                             String namePlayer = reader.readString(0);
-                            int user_id = 0;
-                            MySqlConnection MySqlConnectionWeb = MYSQLManager.createWebMySqlConnection();
-                            MySqlConnection MySqlConnectionPlayer = MYSQLManager.create();
-                            try
+                            using (var gameconn = MYSQLManager.create())
                             {
-                                ResultSet resultSet = MYSQLManager.jquery("Select user_id from player where name ='" + namePlayer + "'", MySqlConnectionPlayer);
-                                if (resultSet.next())
+                                using(var webconn = MYSQLManager.createWebMySqlConnection())
                                 {
-                                    user_id = resultSet.getInt("user_id");
-                                    resultSet.Close();
-                                    MYSQLManager.updateSql("Update `User` set isBenned = 0 where user_id = " + user_id, MySqlConnectionWeb);
-                                }
-                                else
-                                {
-                                    resultSet.Close();
-                                    MySqlConnectionPlayer.Close();
-                                    MySqlConnectionWeb.Close();
-                                    player.redDialog("Người chơi này không tồn tại");
-                                    return;
+                                    dynamic queryData = gameconn.QueryFirstOrDefault("Select user_id from player where name ='" + namePlayer + "'");
+                                    if(queryData != null)
+                                    {
+                                        webconn.Execute("Update `User` set isBenned = 0 where user_id = @user_id", new { user_id = queryData.user_id });
+                                    }
+                                    else
+                                    {
+                                        player.redDialog("Người chơi này không tồn tại");
+                                        return;
+                                    }
                                 }
                             }
-                            catch (Exception e)
-                            {
-                            }
-                            MySqlConnectionPlayer.Close();
-                            MySqlConnectionWeb.Close();
                         }
                     }
                     break;
@@ -3874,36 +3873,26 @@ public class MenuController
                             sbyte typeLock = reader.readsbyte(1);
                             int min = reader.readInt(2);
                             String reason = reader.readString(0);
-                            int user_id = 0;
-                            MySqlConnection MySqlConnectionWeb = MYSQLManager.createWebMySqlConnection();
-                            MySqlConnection MySqlConnectionPlayer = MYSQLManager.create();
-                            try
+                            using (var gameconn = MYSQLManager.create())
                             {
-                                ResultSet resultSet = MYSQLManager.jquery("Select user_id from player where name ='" + namePlayer + "'", MySqlConnectionPlayer);
-                                if (resultSet.next())
+                                using (var webconn = MYSQLManager.createWebMySqlConnection())
                                 {
-                                    user_id = resultSet.getInt("user_id");
-                                    resultSet.Close();
+                                    dynamic queryData = gameconn.QueryFirstOrDefault("Select user_id from player where name ='" + namePlayer + "'");
+                                    if (queryData != null)
+                                    {
+                                        UserData.banBySQL(typeLock, reason, Utilities.CurrentTimeMillis + (min * 1000L * 60), queryData.user_id);
+                                        Player playerPassive = PlayerManager.get(namePlayer);
+                                        if (playerPassive != null)
+                                        {
+                                            playerPassive.session.Close();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        player.redDialog("Người chơi này không tồn tại");
+                                        return;
+                                    }
                                 }
-                                else
-                                {
-                                    resultSet.Close();
-                                    MySqlConnectionPlayer.Close();
-                                    MySqlConnectionWeb.Close();
-                                    player.redDialog("Người chơi này không tồn tại");
-                                    return;
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                            }
-                            MySqlConnectionPlayer.Close();
-                            MySqlConnectionWeb.Close();
-                            UserData.banBySQL(typeLock, reason, Utilities.CurrentTimeMillis + (min * 1000L * 60), user_id);
-                            Player playerPassive = PlayerManager.get(namePlayer);
-                            if (playerPassive != null)
-                            {
-                                playerPassive.session.Close();
                             }
                         }
                     }

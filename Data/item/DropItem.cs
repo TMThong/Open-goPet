@@ -3,12 +3,12 @@ namespace Gopet.Data.GopetItem
     public class DropItem
     {
 
-        private int mapId;
-        private int dropId;
-        private int itemTemplateId;
-        private float percent;
-        private int[] lvlRange;
-        private int count;
+        public int mapId;
+        public int dropId;
+        public int itemTemplateId;
+        public float percent;
+        public int[] lvlRange;
+        public int count;
 
         public void setMapId(int mapId)
         {

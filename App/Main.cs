@@ -1,4 +1,5 @@
 
+using Gopet.APIs;
 using Gopet.Data.GopetClan;
 using Gopet.Util;
  
@@ -11,6 +12,7 @@ namespace Gopet.App
         public static int PORT_SERVER = ServerSetting.instance.portGopetServer;
         public static bool isNetBeans = true;
         public static int HTTP_PORT = ServerSetting.instance.portHttpServer;
+        public static HttpServer APIServer ;
 
         /**
          * hàm chính
@@ -38,6 +40,8 @@ namespace Gopet.App
             MenuController.init();
             initRuntime();
             RuntimeServer.instance.start();
+            APIServer = new HttpServer(HTTP_PORT);
+            APIServer.Start();
             server = new Server(PORT_SERVER);
             server.start();
         }

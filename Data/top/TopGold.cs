@@ -1,5 +1,6 @@
 using Gopet.Util;
 using Gopet.Data.User;
+using Dapper;
 
 public class TopGold : Top
 {
@@ -25,18 +26,22 @@ public class TopGold : Top
             datas.Clear();
             try
             {
-                ResultSet resultSet = MYSQLManager.jquery("SELECT * FROM `player` WHERE gold > 0 && isAdmin = 0 ORDER BY `player`.`gold` DESC LIMIT 10");
-                int index = 1;
-                while (resultSet.next())
+                using (var conn = MYSQLManager.create())
                 {
-                    TopData topData = new TopData();
-                    topData.id = resultSet.getInt("user_id");
-                    topData.name = resultSet.getString("name");
-                    topData.imgPath = resultSet.getString("avatarPath");
-                    topData.title = topData.name;
-                    topData.desc = Utilities.Format("Hạng %s : đang có %s (vang)", index, Utilities.FormatNumber(resultSet.getBigDecimal("gold").longValue()));
-                    datas.add(topData);
-                    index++;
+                    var topDataDynamic = conn.Query("SELECT * FROM `player` WHERE gold > 0 && isAdmin = 0 ORDER BY `player`.`gold` DESC LIMIT 10");
+                    int index = 1;
+                    foreach
+                        (dynamic data in topDataDynamic)
+                    {
+                        TopData topData = new TopData();
+                        topData.id = data.user_id;
+                        topData.name = data.name;
+                        topData.imgPath = data.avatarPath;
+                        topData.title = topData.name;
+                        topData.desc = Utilities.Format("Hạng %s : đang có %s (vang)", index, Utilities.FormatNumber(data.gold));
+                        datas.add(topData);
+                        index++;
+                    }
                 }
             }
             catch (Exception e)

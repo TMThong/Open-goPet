@@ -1,3 +1,4 @@
+using Dapper;
 using Gopet.Data.Collections;
 using Gopet.Data.User;
 using Gopet.IO;
@@ -9,28 +10,28 @@ namespace Gopet.Data.GopetClan
     public class Clan
     {
 
-        private int clanId;
-        private int curMember;
-        private int maxMember;
-        private String name;
-        private int leaderId;
-        private long fund = 0;
-        private long growthPoint = 0;
-        private int lvl = 1;
-        private int skillHouseLvl = 1;
-        private int baseMarketLvl = 0;
-        private int potentialPoint = 0;
-        private CopyOnWriteArrayList<ClanMember> members = new CopyOnWriteArrayList<ClanMember>();
-        private CopyOnWriteArrayList<ClanRequestJoin> requestJoin = new();
-        private CopyOnWriteArrayList<ClanBuff> clanBuffs = new();
-        private CopyOnWriteArrayList<int> bannedJoinRequestId = new();
-        private CopyOnWriteArrayList<ClanChat> clanChats = new();
-        private CopyOnWriteArrayList<ClanPotentialSkill> clanPotentialSkills = new();
-        private ClanPlace clanPlace;
-        private String slogan = "GOPET T";
-        private ShopClan shopClan;
-        private Object LOCKObject = new Object();
-        private int superMarketLvl;
+        public int clanId;
+        public int curMember;
+        public int maxMember;
+        public String name;
+        public int leaderId;
+        public long fund = 0;
+        public long growthPoint = 0;
+        public int lvl = 1;
+        public int skillHouseLvl = 1;
+        public int baseMarketLvl = 0;
+        public int potentialPoint = 0;
+        public CopyOnWriteArrayList<ClanMember> members = new CopyOnWriteArrayList<ClanMember>();
+        public CopyOnWriteArrayList<ClanRequestJoin> requestJoin = new();
+        public CopyOnWriteArrayList<ClanBuff> clanBuffs = new();
+        public CopyOnWriteArrayList<int> bannedJoinRequestId = new();
+        public CopyOnWriteArrayList<ClanChat> clanChats = new();
+        public CopyOnWriteArrayList<ClanPotentialSkill> clanPotentialSkills = new();
+        public ClanPlace clanPlace;
+        public String slogan = "GOPET T";
+        public ShopClan shopClan;
+        public Object LOCKObject = new Object();
+        public int superMarketLvl;
         public const sbyte TYPE_LEADER = 0;
         public const sbyte TYPE_DEPUTY_LEADER = 1;
         public const sbyte TYPE_SENIOR = 2;
@@ -293,7 +294,7 @@ namespace Gopet.Data.GopetClan
 
         public String getClanDesc()
         {
-            ArrayList<String> clanInfo = new();
+            JArrayList<String> clanInfo = new();
             clanInfo.add(Utilities.Format(" Cấp: %s ", lvl));
             clanInfo.add(Utilities.Format(" Thành viên: %s/%s ", curMember, maxMember));
             clanInfo.add(Utilities.Format(" Shop bảo vật cấp: %s ", baseMarketLvl));
@@ -497,27 +498,28 @@ namespace Gopet.Data.GopetClan
 
         public void create()
         {
-            MySqlConnection connection = MYSQLManager.create();
-            MYSQLManager.updateSql(Utilities.Format("INSERT INTO `clan`(`clanId`, `name`, `lvl`, `curMember`, `maxMember`, `leaderId`, `members`, `fund`, `growthPoint`, `skillHouseLvl`, `baseMarketLvl`) "
-                    + "VALUES (NULL,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')", name, lvl, curMember, maxMember, leaderId, JsonManager.ToJson(members), fund, growthPoint, skillHouseLvl, baseMarketLvl), connection);
-            ResultSet resultSet = MYSQLManager.jquery(Utilities.Format("SELECT * FROM `clan` WHERE leaderId = %s", leaderId), connection);
-            if (resultSet.next())
+            using(var connection = MYSQLManager.create())
             {
-                setClanId(resultSet.getInt("clanId"));
+                connection.Execute(Utilities.Format("INSERT INTO `clan`(`clanId`, `name`, `clanLvl`, `curMember`, `maxMember`, `leaderId`, `members`, `fund`, `growthPoint`, `skillHouseLvl`, `baseMarketLvl`) "
+                    + "VALUES (NULL,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')", name, lvl, curMember, maxMember, leaderId, JsonManager.ToJson(members), fund, growthPoint, skillHouseLvl, baseMarketLvl));
+                var clanData = connection.QueryFirstOrDefault(Utilities.Format("SELECT * FROM `clan` WHERE leaderId = %s", leaderId));
+                if(clanData != null)
+                {
+                    setClanId(clanData.clanId);
+                }
+                else
+                {
+                    throw new NullReferenceException("Không tìm thấy clan có người lãnh đạo này");
+                }
             }
-            else
-            {
-                throw new NullReferenceException("Không tìm thấy clan có người lãnh đạo này");
-            }
-            resultSet.Close();
-            connection.Close();
         }
 
         public void save()
         {
-            MySqlConnection MySqlConnection = MYSQLManager.create();
-            MYSQLManager.updateSql(Utilities.Format("UPDATE `clan` set `lvl` = %s , `curMember` = %s , `maxMember` =%s , `leaderId` =%s , `members` = '%s' , `fund` =%s, `growthPoint` =%s , `skillHouseLvl` = %s , `baseMarketLvl` =%s , `joinRequest` = '%s' WHERE `clanId` =%s", lvl, curMember, maxMember, leaderId, JsonManager.ToJson(members), fund, growthPoint, skillHouseLvl, baseMarketLvl, JsonManager.ToJson(requestJoin), this.clanId), MySqlConnection);
-            MySqlConnection.Close();
+            using(MySqlConnection MySqlConnection = MYSQLManager.create())
+            {
+                MySqlConnection.Execute(Utilities.Format("UPDATE `clan` set `clanLvl` = %s , `curMember` = %s , `maxMember` =%s , `leaderId` =%s , `members` = '%s' , `fund` =%s, `growthPoint` =%s , `skillHouseLvl` = %s , `baseMarketLvl` =%s , `joinRequest` = '%s' WHERE `clanId` =%s", lvl, curMember, maxMember, leaderId, JsonManager.ToJson(members), fund, growthPoint, skillHouseLvl, baseMarketLvl, JsonManager.ToJson(requestJoin), this.clanId));
+            }
         }
 
         public void setTemplate(ClanTemplate clanTemplate)

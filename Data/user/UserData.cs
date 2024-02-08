@@ -1,5 +1,6 @@
 
 
+using Dapper;
 using Gopet.Data.User;
 using Gopet.Util;
 using MySql.Data.MySqlClient;
@@ -20,72 +21,40 @@ public class UserData
 
     public void ban(sbyte typeBan, String reason, long timeBan)
     {
-        MySqlConnection conn = MYSQLManager.createWebMySqlConnection();
-        try
+        using (var conn = MYSQLManager.createWebMySqlConnection())
         {
-            MYSQLManager.updateSql(Utilities.Format("UPDATE `User` SET `User`.`isBaned` = %s , `User`.`banReason` = '%s', `User`.`banTime` = %s WHERE user_id = %s;", typeBan, reason, timeBan, user_id), conn);
-        }
-        finally
-        {
-            conn.Close();
+            conn.Execute(Utilities.Format("UPDATE `user` SET `user`.`isBaned` = %s , `user`.`banReason` = '%s', `user`.`banTime` = %s WHERE user_id = %s;", typeBan, reason, timeBan, user_id));
         }
     }
 
     public static void banBySQL(sbyte typeBan, String reason, long timeBan, int user_id)
     {
-        MySqlConnection conn = MYSQLManager.createWebMySqlConnection();
-        try
+        using (var conn = MYSQLManager.createWebMySqlConnection())
         {
-            MYSQLManager.updateSql(Utilities.Format("UPDATE `User` SET `User`.`isBaned` = %s , `User`.`banReason` = '%s', `User`.`banTime` = %s WHERE user_id = %s;", typeBan, reason, timeBan, user_id), conn);
-        }
-        finally
-        {
-            conn.Close();
+            conn.Execute(Utilities.Format("UPDATE `user` SET `user`.`isBaned` = %s , `user`.`banReason` = '%s', `user`.`banTime` = %s WHERE user_id = %s;", typeBan, reason, timeBan, user_id));
         }
     }
 
     public int getCoin()
     {
-        MySqlConnection webMySqlConnection = null;
-        try
+        using (var conn = MYSQLManager.createWebMySqlConnection())
         {
-            webMySqlConnection = MYSQLManager.createWebMySqlConnection();
-            ResultSet resultSet = MYSQLManager.jquery(Utilities.Format("SELECT   `coin` FROM `User` WHERE `User`.`user_id` = %s;", user_id), webMySqlConnection);
-            if (resultSet.next())
+            dynamic coinData = conn.QuerySingleOrDefault("SELECT   `coin` FROM `user` WHERE `user`.`user_id` = @user_id;", new { user_id = user_id });
+            if (coinData != null)
             {
-                int coin = resultSet.getInt("coin");
-                resultSet.Close();
-                webMySqlConnection.Close();
-                return coin;
+                return coinData.coin;
             }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            webMySqlConnection.Close();
         }
         return 0;
     }
 
     public void mineCoin(int coin, int myCOin)
     {
-        MySqlConnection webMySqlConnection = null;
-        try
+
+        using (var conn = MYSQLManager.createWebMySqlConnection())
         {
-            webMySqlConnection = MYSQLManager.createWebMySqlConnection();
-            MYSQLManager.updateSql(Utilities.Format("INSERT INTO `dongtien`(`username`, `sotientruoc`, `sotienthaydoi`, `sotiensau`, `thoigian`, `noidung`) VALUES ('%s', %s, %s, %s, '%s' , '%s')", username, myCOin, coin, myCOin - coin, Utilities.ToDateString(Utilities.GetCurrentDate()), Utilities.Format("Đổi gold trên game với giá %svnđ", Utilities.FormatNumber(coin))), webMySqlConnection);
-            MYSQLManager.updateSql(Utilities.Format("UPDATE `User` set coin = coin - %s where user_id = %s", coin, this.user_id), webMySqlConnection);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            webMySqlConnection.Close();
+            conn.Execute(Utilities.Format("INSERT INTO `dongtien`(`username`, `sotientruoc`, `sotienthaydoi`, `sotiensau`, `thoigian`, `noidung`) VALUES ('%s', %s, %s, %s, '%s' , '%s')", username, myCOin, coin, myCOin - coin, Utilities.ToDateString(Utilities.GetCurrentDate()), Utilities.Format("Đổi gold trên game với giá %svnđ", Utilities.FormatNumber(coin))));
+            conn.Execute(Utilities.Format("UPDATE `user` set coin = coin - %s where user_id = %s", coin, this.user_id));
         }
     }
 }

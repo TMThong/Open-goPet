@@ -7,7 +7,11 @@ using Gopet.Data.User;
 using Gopet.IO;
 using Gopet.Util;
 using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI.Common;
 using Newtonsoft.Json;
+using System.Net.Sockets;
+using System.Net;
+using System.Net.WebSockets;
 using static Gopet.Util.Utilities;
 public class Player : IHandleMessage
 {
@@ -121,52 +125,54 @@ Thread.Sleep(1000);
             okDialog(ServerSetting.instance.messageWhenLogin);
             return;
         }
+        /*
         if (true)
         {
             redDialog("Chức năng này bị khóa. Để đăng ký tài khoản vui lòng vào trang web\n gopetvn.me vào mục diễn đàn.");
             return;
+        }*/
+        if (CheckString(username, "^[a-z0-9]+$") && CheckString(password, "^[a-z0-9]+$"))
+        {
+            if (username.Length >= 6 && password.Length >= 6 && username.Length < 25 && password.Length < 60)
+            {
+                foreach (var str in BANNAME)
+                {
+                    if (username.Contains(str))
+                    {
+                        redDialog("Tài khoản không được phép có những từ này : " + String.Join(",", BANNAME));
+                        return;
+                    }
+                }
+                using(MySqlConnection conn = MYSQLManager.createWebMySqlConnection())
+                {
+                    var user = conn.QueryFirstOrDefault("SELECT * FROM `user` WHERE username = @username;", new { username = username });
+                    if (user != null)
+                    {
+                        redDialog("Tên tài khoản đã tồn tại rồi");
+                    }
+                    else
+                    {
+                        conn.Execute("INSERT INTO `user`(`user_id`, `username`, `password` , `ipv4Create` , `dayCreate`, `avatar`) VALUES (NULL,@username,@password, @ipv4Create, @dayCreate, NULL)", 
+                            new
+                            {
+                                username = username,
+                                password = password,
+                                ipv4Create = ((IPEndPoint)session.sc.RemoteEndPoint).Address.ToString(),
+                                dayCreate = Utilities.CurrentTimeMillis
+                            });
+                        okDialog("Đăng ký tài khoản thành công mời bạn đăng nhập");
+                    }
+                }
+            }
+            else
+            {
+                redDialog("Tài khoản và mật khẩu phải có số lượng kí tự lớn hơn 6 và bé hơn 25 đối với tài khoản , bé hơn 45 đối với mật khẩu");
+            }
         }
-        //        if (CheckString(username, "^[a-z0-9]+$") && CheckString(password, "^[a-z0-9]+$")) {
-        //            if (username.Length() >= 6 && password.Length() >= 6 && username.Length() < 25 && password.Length() < 60) {
-        //                for (String string : BANNAME) {
-        //                    if (username.Contains(string)) {
-        //                        redDialog("Tài khoản không được phép có những từ này : " + String.Join(",", BANNAME));
-        //                        return;
-        //                    }
-        //                }
-        //                InetSocketAddress netSocket = (InetSocketAddress) session.sc.getRemoteSocketAddress();
-        //                PreparedStatement preparedStatement = MYSQLManager.createWebMySqlConnection().prepareStatement(Utilities.Format("SELECT * FROM `user` WHERE ipv4Create = '%s' && dayCreate > %s;", netSocket.getHostString(), Utilities.CurrentTimeMillis - (1000l * 60l * 60l * 24l * 7)));
-        ////                try (ResultSet result = preparedStatement.executeQuery()) {
-        ////                    if (result.next()) {
-        ////                        redDialog("Tạo tài khoản cách nhau 1 tuần nhé");
-        ////                        result.Close();
-        ////                        preparedStatement.getMySqlConnection().Close();
-        ////                        return;
-        ////                    }
-        ////                    result.Close();
-        ////                } catch (Exception e) {
-        ////                    e.printStackTrace();
-        ////                }
-        //                preparedStatement = preparedStatement.getMySqlConnection().prepareStatement(Utilities.Format("SELECT * FROM `user` WHERE username = '%s';", username));
-        //                try (ResultSet result = preparedStatement.executeQuery()) {
-        //                    if (result.next()) {
-        //                        redDialog("Tên tài khoản đã tồn tại rồi");
-        //                    } else {
-        //                        preparedStatement.getMySqlConnection().createStatement().execute(Utilities.Format("INSERT INTO `user`(`user_id`, `username`, `password` , `ipv4Create` , `dayCreate`, `avatar`) VALUES (NULL,'%s','%s', '%s', %s, NULL)", username, password, netSocket.getHostString(), Utilities.CurrentTimeMillis));
-        //                        okDialog("Đăng ký tài khoản thành công mời bạn đăng nhập");
-        //                    }
-        //                    result.Close();
-        //                } catch (Exception e) {
-        //                    e.printStackTrace();
-        //                }
-        //                preparedStatement.getMySqlConnection().Close();
-        //
-        //            } else {
-        //                redDialog("Tài khoản và mật khẩu phải có số lượng kí tự lớn hơn 6 và bé hơn 25 đối với tài khoản , bé hơn 45 đối với mật khẩu");
-        //            }
-        //        } else {
-        //            redDialog("Tài khoản và mật khẩu phải không chứa các kí tự đặc biệt");
-        //        }
+        else
+        {
+            redDialog("Tài khoản và mật khẩu phải không chứa các kí tự đặc biệt");
+        }
     }
 
     public void requestChangePass(int id, String oldPass, String newPass)
@@ -176,27 +182,21 @@ Thread.Sleep(1000);
             if (!CheckString(newPass, "^[a-z0-9]+$")
                     || newPass.Length < 5)
             {
-                Message m = new Message(GopetCMD.CHANGE_PASSWORD);
-                m.putUTF("Mật khẩu phải có số lượng kí tự lớn hơn 5 và không chứa các kí tự đặc biệt");
-                m.writer().flush();
-                session.sendMessage(m);
+                Message mW = new Message(GopetCMD.CHANGE_PASSWORD);
+                mW.putUTF("Mật khẩu phải có số lượng kí tự lớn hơn 5 và không chứa các kí tự đặc biệt");
+                mW.writer().flush();
+                session.sendMessage(mW);
                 return;
             }
             user.password = newPass;
-            MySqlConnection MySqlConnection = MYSQLManager.createWebMySqlConnection();
-            try
+            using(var conn = MYSQLManager.createWebMySqlConnection())
             {
-                MYSQLManager.updateSql(Utilities.Format("update User set password = '%s' where user_id = %s", newPass, user.user_id), MySqlConnection);
-                Message m = new Message(GopetCMD.CHANGE_PASSWORD);
-                m.putUTF("Đổi mật khẩu thành công, vui lòng nhớ kỷ thông tin");
-                m.writer().flush();
-                session.sendMessage(m);
+                conn.Execute(Utilities.Format("update User set password = '%s' where user_id = %s", newPass, user.user_id));
             }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-            MySqlConnection.Close();
+            Message m = new Message(GopetCMD.CHANGE_PASSWORD);
+            m.putUTF("Đổi mật khẩu thành công, vui lòng nhớ kỷ thông tin");
+            m.writer().flush();
+            session.sendMessage(m);
         }
         else
         {
@@ -257,174 +257,148 @@ Thread.Sleep(1000);
             redDialog("Tồn tại ký tự lạ");
             return;
         }
-        MySqlConnection conn = MYSQLManager.createWebMySqlConnection();
-        ResultSet result
-                = MYSQLManager.jquery(
-                        Utilities.Format(
-                                "SELECT * FROM `user` where username = '%s' && password = '%s'",
-                                username, password), conn);
-        if (result.next())
+        using(MySqlConnection conn = MYSQLManager.createWebMySqlConnection())
         {
-            user = new UserData();
-            user.user_id = result.getInt("user_id");
-            user.phone = result.getString("phone");
-            user.email = result.getString("email");
-            user.banReason = result.getString("banReason");
-            user.banTime = result.getBigDecimal("banTime").longValue();
-            user.isBanned = (sbyte)result.getsbyte("isBaned");
-            user.role = (sbyte)result.getsbyte("role");
-            user.username = username;
-            user.password = password;
-            result.Close();
-            if (user.role == UserData.ROLE_NON_ACTIVE)
-            {
-                redDialog(Utilities.Format("Tài khoản của bạn chưa kích hoạt vui lòng lên trang web %s để kích hoạt tài khoản!", ServerSetting.instance.webDomainName));
-                return;
-            }
+            UserData userData = conn.QueryFirstOrDefault<UserData>("SELECT * FROM `user` where username = @username && password = @password",
+                new {username = username, password = password});
 
-            switch (user.isBanned)
+            if (userData != null)
             {
-                case UserData.BAN_INFINITE:
-                    {
-                        this.redDialog(Utilities.Format("Tài khoản của bạn đã bị khóa vĩnh viên \n Lý do :%s", user.banReason));
-                        Thread.Sleep(100);
-                        this.session.Close();
-                        conn.Close();
-                        return;
-                    }
-                case UserData.BAN_TIME:
-                    {
-                        if (Utilities.CurrentTimeMillis < user.banTime)
+                this.user = userData;
+                if (user.role == UserData.ROLE_NON_ACTIVE)
+                {
+                    redDialog(Utilities.Format("Tài khoản của bạn chưa kích hoạt vui lòng lên trang web %s để kích hoạt tài khoản!", ServerSetting.instance.webDomainName));
+                    return;
+                }
+
+                switch (user.isBanned)
+                {
+                    case UserData.BAN_INFINITE:
                         {
-                            long deltaTime = user.banTime - Utilities.CurrentTimeMillis;
-                            int hours = (int)(deltaTime / 1000 / 60 / 60);
-                            int min = (int)((deltaTime - (hours * 1000 * 60 * 60)) / 1000 / 60);
-                            this.redDialog(Utilities.Format("Tài khoản của bạn đã bị khóa vì %s \n Sau %s giờ %s phút nữa tài khoản sẽ được mở khóa", user.banReason, hours, min));
+                            this.redDialog(Utilities.Format("Tài khoản của bạn đã bị khóa vĩnh viên \n Lý do :%s", user.banReason));
                             Thread.Sleep(100);
                             this.session.Close();
                             conn.Close();
                             return;
                         }
-                        else
+                    case UserData.BAN_TIME:
                         {
-                            user.isBanned = UserData.BAN_NONE;
-                            MYSQLManager.updateSql(Utilities.Format("update User set isBaned = DEFAULT where user_id = %s", user.user_id), conn);
+                            if (Utilities.CurrentTimeMillis < user.banTime)
+                            {
+                                long deltaTime = user.banTime - Utilities.CurrentTimeMillis;
+                                int hours = (int)(deltaTime / 1000 / 60 / 60);
+                                int min = (int)((deltaTime - (hours * 1000 * 60 * 60)) / 1000 / 60);
+                                this.redDialog(Utilities.Format("Tài khoản của bạn đã bị khóa vì %s \n Sau %s giờ %s phút nữa tài khoản sẽ được mở khóa", user.banReason, hours, min));
+                                Thread.Sleep(100);
+                                this.session.Close();
+                                conn.Close();
+                                return;
+                            }
+                            else
+                            {
+                                user.isBanned = UserData.BAN_NONE;
+                                conn.Execute(Utilities.Format("update user set isBaned = DEFAULT where user_id = @user_id", user));
+                            }
+                            break;
                         }
-                        break;
-                    }
-            }
-            Player player2 = PlayerManager.get(user.user_id);
-            if (player2 != null)
-            {
-                String str = "Người chơi khác đăng nhập vào tài khoản";
-                player2.redDialog(str);
-                this.redDialog(str);
-                player2.session.Close();
-                player2.onDisconnected();
-                this.session.Close();
-                conn.Close();
-                return;
-            }
-            long timeWait = PlayerManager.GetTimeMillisWaitLogin(user.user_id);
-            if (timeWait > 0)
-            {
-                String str = Utilities.Format("Vui lòng chờ %s giây nữa để đăng nhập", timeWait / 1000);
-                this.redDialog(str);
-                Thread.Sleep(500);
-                this.session.Close();
-                conn.Close();
-                return;
-            }
-            MySqlConnection MySqlConnectionPlayer = MYSQLManager.create();
-            try
-            {
-                playerData = MySqlConnectionPlayer.QueryFirstOrDefault<PlayerData>("SELECT * FROM `player` where user_id = " + user.user_id);
-                if (playerData != null)
-                    PlayerManager.put(this);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-            try
-            {
-                ResultSet result2 = MYSQLManager.jquery(
-                        Utilities.Format("SELECT * FROM `kiosk_recovery` where user_id = %s", user.user_id), MySqlConnectionPlayer);
-                while (result2.next())
+                }
+                Player player2 = PlayerManager.get(user.user_id);
+                if (player2 != null)
                 {
-                    SellItem sellItem = JsonConvert.DeserializeObject<SellItem>(result2.getString("item"));
-                    if (sellItem.pet == null)
+                    String str = "Người chơi khác đăng nhập vào tài khoản";
+                    player2.redDialog(str);
+                    this.redDialog(str);
+                    player2.session.Close();
+                    this.session.Close();
+                    return;
+                }
+
+                long timeWait = PlayerManager.GetTimeMillisWaitLogin(user.user_id);
+                if (timeWait > 0)
+                {
+                    String str = Utilities.Format("Vui lòng chờ %s giây nữa để đăng nhập", timeWait / 1000);
+                    this.redDialog(str);
+                    Thread.Sleep(500);
+                    this.session.Close();
+                    return;
+                }
+                using (MySqlConnection gameconn = MYSQLManager.create())
+                {
+                    playerData = gameconn.QueryFirstOrDefault<PlayerData>("SELECT * FROM `player` where user_id = " + user.user_id);
+                    if (playerData != null)
+                    { 
+                        PlayerManager.put(this);
+                    }
+                    var kioskList = gameconn.Query("SELECT * FROM `kiosk_recovery` where user_id = @user_id", new {  user_id = this.user.user_id });
+                    if(kioskList.Any())
                     {
-                        addItemToInventory(sellItem.ItemSell);
+                        foreach (var item in kioskList)
+                        {
+                            SellItem sellItem = JsonConvert.DeserializeObject<SellItem>(item.item);
+                            if (sellItem.pet == null)
+                            {
+                                addItemToInventory(sellItem.ItemSell);
+                            }
+                            else
+                            {
+                                playerData.addPet(sellItem.pet, this);
+                            }
+                        }
+                    }
+                    gameconn.Execute("DELETE FROM `kiosk_recovery` where user_id = @user_id", new { user_id = this.user.user_id });
+                    loginOK();
+                    controller.LoadMap();
+                    controller.sendMail();
+                    controller.updateAvatar();
+                    if (playerData != null)
+                    {
+                        controller.updateUserInfo();
+                        showBanner("Người chơi game quá 180 phút có thể gây ảnh hưởng đến sức khỏe");
+                        getPet()?.applyInfo(this);
+                        if (ServerSetting.instance.isOnlyAdminLogin)
+                        {
+                            if (!playerData.isAdmin)
+                            {
+                                redDialog("Server này chỉ cho Admin đăng nhập bạn vui lòng không truy cập");
+                                session.Close();
+                                return;
+                            }
+                        }
+                        int goldPlus = 0;
+                        JArrayList<String> listIdRemove = new();
+                        var exhangeGoldData = gameconn.Query("SELECT * FROM `exchange_gold` WHERE `user_id` = @user_id", new { user_id = this.user.user_id });
+                        foreach (var item in exhangeGoldData)
+                        {
+                            String id = item.id;
+                            int g = item.gold;
+                            addGold(g);
+                            listIdRemove.add(id);
+                            goldPlus += g;
+                        }
+                        if (!listIdRemove.isEmpty())
+                        {
+                            foreach (String uuidString in listIdRemove)
+                            {
+                                gameconn.Execute("DELETE FROM `exchange_gold` WHERE `id`  = @id AND `user_id` = @user_id", new { id = uuidString, user_id = this.user.user_id });
+                            }
+                        }
+                        if (goldPlus > 0)
+                        {
+                            okDialog(Utilities.Format("Nhận dược %s (vang) do nạp tiền", Utilities.FormatNumber(goldPlus)));
+                        }
                     }
                     else
                     {
-                        playerData.addPet(sellItem.pet, this);
+                        controller.createChar();
                     }
-                }
-                result2.Close();
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-            MYSQLManager.updateSql(Utilities.Format("DELETE FROM `kiosk_recovery` where user_id = %s", user.user_id), MySqlConnectionPlayer);
-            MySqlConnectionPlayer.Close();
-            loginOK();
-            controller.LoadMap();
-            controller.sendMail();
-            controller.updateAvatar();
-            if (playerData != null)
-            {
-                controller.updateUserInfo();
-                showBanner("Người chơi game quá 180 phút có thể gây ảnh hưởng đến sức khỏe");
-                if (ServerSetting.instance.isOnlyAdminLogin)
-                {
-                    if (!playerData.isAdmin)
-                    {
-                        redDialog("Server này chỉ cho Admin đăng nhập bạn vui lòng không truy cập");
-                        session.Close();
-                        return;
-                    }
-                }
-                int goldPlus = 0;
-                MySqlConnection gameMySqlConnection__ = MYSQLManager.create();
-                ArrayList<String> listIdRemove = new();
-                ResultSet resultSetExchangeGold = MYSQLManager.jquery(Utilities.Format("SELECT * FROM `exchange_gold` WHERE `user_id` = %s", playerData.user_id), gameMySqlConnection__);
-                while (resultSetExchangeGold.next())
-                {
-                    String id = resultSetExchangeGold.getString("id");
-                    int g = resultSetExchangeGold.getInt("gold");
-                    addGold(g);
-                    listIdRemove.add(id);
-                    goldPlus += g;
-                }
-                resultSetExchangeGold.Close();
-                if (!listIdRemove.isEmpty())
-                {
-                    foreach (String uuidString in listIdRemove)
-                    {
-                        MYSQLManager.updateSql(Utilities.Format("DELETE FROM `exchange_gold` WHERE `id`  = '%s' AND `user_id` = %s;", uuidString, playerData.user_id), gameMySqlConnection__);
-                    }
-                }
-                gameMySqlConnection__.Close();
-                if (goldPlus > 0)
-                {
-                    okDialog(Utilities.Format("Nhận dược %s (vang) do nạp tiền", Utilities.FormatNumber(goldPlus)));
+                    controller.getTaskCalculator().update();
                 }
             }
             else
             {
-                controller.createChar();
+                loginFailed("Tài khoản hoặc mật khẩu của bạn không chính xác");
             }
-            controller.getTaskCalculator().update();
         }
-        else
-        {
-            result.Close();
-            loginFailed("Tài khoản hoặc mật khẩu của bạn không chính xác");
-        }
-        conn.Close();
     }
 
     public void loginOK()

@@ -1,21 +1,33 @@
+using Gopet.Data.Collections;
+using Gopet.Util;
+
 namespace Gopet.IO
 {
     public class MsgSender
     {
 
         protected Session session;
-        protected List<Message> sendingMessage = new();
+        protected Queue<Message> sendingMessage = new Queue<Message>();
+
+        public static CopyOnWriteArrayList<MsgSender> msgSenders = new CopyOnWriteArrayList<MsgSender>();
+
+        private bool isClose = false;
 
         public MsgSender(Session session)
         {
             this.session = session;
+            if (session == null)
+            {
+                throw new ArgumentNullException();
+            }
+            msgSenders.add(this);
         }
 
         public void addMessage(Message message)
         {
             lock (sendingMessage)
             {
-                sendingMessage.Add(message);
+                sendingMessage.Enqueue(message);
                 Monitor.PulseAll(sendingMessage);
             }
         }
@@ -27,20 +39,25 @@ namespace Gopet.IO
             {
                 try
                 {
-                    if (session.isConnected())
+                    if (session.isConnected() && !isClose)
                     {
                         lock (sendingMessage)
                         {
-                            while (sendingMessage.Count != 0)
+                            try
                             {
-                                if (session.isConnected())
+                                while (sendingMessage.Count != 0)
                                 {
-                                    Message m = sendingMessage[0];
-                                    sendingMessage.RemoveAt(0);
-                                    doSendMessage(m);
+                                    if (session.isConnected())
+                                    {
+                                        Message m = sendingMessage.Dequeue();
+                                        doSendMessage(m);
+                                    }
                                 }
                             }
-
+                            catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
                             Monitor.Wait(sendingMessage);
                             continue;
                         }
@@ -82,9 +99,19 @@ namespace Gopet.IO
 
         public void stop()
         {
+            isClose = true;
             lock (sendingMessage)
             {
                 sendingMessage.Clear();
+                Monitor.PulseAll(sendingMessage);
+            }
+            msgSenders.Remove(this);
+        }
+
+        public void Release()
+        {
+            lock (sendingMessage)
+            {
                 Monitor.PulseAll(sendingMessage);
             }
         }

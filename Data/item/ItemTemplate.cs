@@ -194,7 +194,7 @@ namespace Gopet.Data.GopetItem
 
             if (range.Length == 0) return string.Empty;
 
-            if (range.Length == 1) return range[0].ToString() + " (atk) ";
+            if (range.Length == 1) return range[0].ToString() + " ("+icon+") ";
 
             return string.Format("[{0} ({2}) -{1} ({2}) ]", range[0], range[1], icon);
         }

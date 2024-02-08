@@ -18,7 +18,7 @@ public class ShopClan : ShopTemplate {
     public   void refresh()   {
         timeRefresh = Utilities.CurrentTimeMillis;
         this.shopTemplateItems.Clear();
-        ArrayList<ShopClanTemplate> list = GopetManager.shopClanByLvl.get(clan.getbaseMarketLvl());
+        JArrayList<ShopClanTemplate> list = GopetManager.shopClanByLvl.get(clan.getbaseMarketLvl());
         if (list != null) {
             foreach (ShopClanTemplate shopClanTemplate in list) {
                 this.shopTemplateItems.AddRange(shopClanTemplate.next());

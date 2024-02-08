@@ -72,8 +72,8 @@ public class ShopClanTemplate {
         return this.needShopClanLvl;
     }
 
-    public ArrayList<ShopTemplateItem> next() {
-        ArrayList<ShopTemplateItem> shopTemplateItems = new ArrayList<ShopTemplateItem>();
+    public JArrayList<ShopTemplateItem> next() {
+        JArrayList<ShopTemplateItem> shopTemplateItems = new JArrayList<ShopTemplateItem>();
         for (int i = 0; i < option.Length; i++) {
             int[] optionInfo = option[i];
             switch (optionInfo[0]) {
@@ -85,7 +85,6 @@ public class ShopClanTemplate {
                         shopTemplateItem.setCloseScreenAfterClick(true);
                         shopTemplateItem.setItemTempalteId(optionInfo[1]);
                         shopTemplateItem.setCount(optionInfo[2]);
-                        shopTemplateItem.setInventoryType((sbyte) optionInfo[3]);
                         shopTemplateItem.setMoneyType(new sbyte[]{(sbyte) optionInfo[4]});
                         shopTemplateItem.setPrice(new int[]{optionInfo[5]});
                         shopTemplateItems.add(shopTemplateItem);

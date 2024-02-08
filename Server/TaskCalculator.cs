@@ -29,7 +29,7 @@ public class TaskCalculator
     public const int REQUEST_UP_TIER_PET = 13;
     private Player player;
 
-    private HashMap<int, ArrayList<TaskTemplate>> cacheTask = new();
+    private HashMap<int, JArrayList<TaskTemplate>> cacheTask = new();
 
     public TaskCalculator(Player player)
     {
@@ -49,7 +49,7 @@ public class TaskCalculator
         {
             int key = entry.Key;
             NpcTemplate val = entry.Value;
-            ArrayList<TaskTemplate> taskFromNPC = GopetManager.taskTemplateByNpcId.get(key);
+            JArrayList<TaskTemplate> taskFromNPC = GopetManager.taskTemplateByNpcId.get(key);
             if (taskFromNPC != null)
             {
                 foreach (TaskTemplate taskTemplate in taskFromNPC)
@@ -80,9 +80,9 @@ public class TaskCalculator
         }
     }
 
-    public ArrayList<TaskTemplate> getTaskTemplate(int npcId)
+    public JArrayList<TaskTemplate> getTaskTemplate(int npcId)
     {
-        ArrayList<TaskTemplate> taskTemplates = this.cacheTask.get(npcId);
+        JArrayList<TaskTemplate> taskTemplates = this.cacheTask.get(npcId);
         if (taskTemplates == null)
         {
             return new();
@@ -97,7 +97,7 @@ public class TaskCalculator
             task = new int[taskInfo.Length];
             Array.Fill(task, 0);
         }
-        ArrayList<String> taskText = new();
+        JArrayList<String> taskText = new();
         for (int i = 0; i < taskInfo.Length; i++)
         {
             int[] taskI = taskInfo[i];
@@ -388,8 +388,8 @@ public class TaskCalculator
         }
         getTaskDatas().remove(taskData);
         player.playerData.tasking.remove(taskData.taskTemplateId);
-        ArrayList<Popup> list = player.controller.onReiceiveGift(taskData.gift);
-        ArrayList<String> txtInfo = new();
+        JArrayList<Popup> list = player.controller.onReiceiveGift(taskData.gift);
+        JArrayList<String> txtInfo = new();
         foreach (Popup petBattleText in list)
         {
             txtInfo.add(petBattleText.getText());

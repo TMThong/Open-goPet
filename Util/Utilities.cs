@@ -36,32 +36,32 @@ namespace Gopet.Util
 
         public static long TimeDay(int nDays)
         {
-            return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + (nDays * 86400000L);
+            return CurrentTimeMillis + (nDays * 86400000L);
         }
 
         public static long AfterDay(int nDays)
         {
-            return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + (nDays * 86400000L);
+            return CurrentTimeMillis + (nDays * 86400000L);
         }
 
         public static long TimeHours(int nHours)
         {
-            return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + (nHours * 3600000L);
+            return CurrentTimeMillis + (nHours * 3600000L);
         }
 
         public static long TimeMinutes(int nMinutes)
         {
-            return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + (nMinutes * 60000L);
+            return CurrentTimeMillis + (nMinutes * 60000L);
         }
 
         public static long TimeSeconds(long nSeconds)
         {
-            return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + (nSeconds * 1000L);
+            return CurrentTimeMillis + (nSeconds * 1000L);
         }
 
         public static long TimeMillis(long nMillis)
         {
-            return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + nMillis;
+            return CurrentTimeMillis + nMillis;
         }
 
         public static DateTime DateDay(int nDays)

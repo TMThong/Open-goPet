@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Gopet.Data.User
 {
-    public class ResultSet
+    public class ResultSet2
     {
         public MySqlDataReader SqlDataReader { get; }
 
         public MySqlCommand Command { get; }
 
-        public ResultSet(MySqlCommand command)
+        public ResultSet2(MySqlCommand command)
         {
             Command = command;
             this.SqlDataReader = command.ExecuteReader();

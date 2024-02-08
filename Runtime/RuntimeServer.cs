@@ -4,7 +4,7 @@ using Gopet.Util;
 public class RuntimeServer
 {
 
-    public ArrayList<IRuntime> runtimes = new();
+    public JArrayList<IRuntime> runtimes = new();
     public static int MINUTE = 1000 * 60;
     public static bool isRunning = true;
     public static RuntimeServer instance = new RuntimeServer();

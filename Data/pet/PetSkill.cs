@@ -4,13 +4,15 @@ using Gopet.Data.GopetItem;
 
 public class PetSkill {
 
-    public const int TOXIC = 107;
-    public const int PHANDOAN = 110;
+    private const int TOXIC = 107;
+    private const int TOXIC_SKY = 119;
+    private const int PHANDOAN = 110;
+    private const int PHANDON_SKY = 118;
 
     public int skillID;
     public sbyte nClass;
     public String name, description;
-    public ArrayList<PetSkillLv> skillLv = new ArrayList<PetSkillLv>();
+    public JArrayList<PetSkillLv> skillLv = new JArrayList<PetSkillLv>();
 
     public String getDescription(PetSkillLv petSkillLv) {
         return String.Join("\n", ItemInfo.getName(petSkillLv.skillInfo));
@@ -23,6 +25,18 @@ public class PetSkill {
      * @return
      */
     public bool isSkillBuff() {
-        return skillID == 103 || skillID == 109 || skillID == 115;
+        return skillID == 103 || skillID == 109 || skillID == 115 || skillID == 117 || skillID == 126 || skillID == 127;
+    }
+
+    public static int GetToxicSkill(GameObject gameObject)
+    {
+        if(gameObject.Template.nclass <= 2) return TOXIC; 
+        else return TOXIC_SKY;
+    }
+
+    public static int GetTPhanDonSkill(GameObject gameObject)
+    {
+        if (gameObject.Template.nclass <= 2) return PHANDOAN;
+        else return PHANDON_SKY;
     }
 }

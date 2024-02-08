@@ -4,22 +4,20 @@ using Gopet.Util;
 public class ShopArena : ShopTemplate
 {
 
-    private long timeGem = Utilities.CurrentTimeMillis;
-    public int numResetFree = GopetManager.DEFAULT_FREE_RESET_ARENA_SHOP;
-    private int numReset = 0;
+    public DateTime timeGem = DateTime.Now;
+    public int numReset = 0;
 
-    public ShopArena(sbyte type) : base(type)
+    public ShopArena() : base(MenuController.SHOP_ARENA)
     {
 
     }
 
     public void nextWhenNewDay()
     {
-        DateTime timeServerDateTime = new DateTime(Utilities.CurrentTimeMillis);
-        DateTime timeGenDateTime = new DateTime(timeGem);
+        DateTime timeServerDateTime = Utilities.GetCurrentDate();
+        DateTime timeGenDateTime =  timeGem;
         if ((timeGenDateTime.Day != timeServerDateTime.Day) || (timeGenDateTime.Month != timeServerDateTime.Month) || (timeGenDateTime.Year != timeServerDateTime.Year))
         {
-            numResetFree = GopetManager.DEFAULT_FREE_RESET_ARENA_SHOP;
             numReset = 0;
             nextArena();
         }
@@ -27,10 +25,10 @@ public class ShopArena : ShopTemplate
 
     public void nextArena()
     {
-        this.timeGem = Utilities.CurrentTimeMillis;
+        this.timeGem = DateTime.Now;
         this.shopTemplateItems.Clear();
         int numSlot = GopetManager.MAX_SLOT_SHOP_ARENA + 1;
-        int priceReset = (int)(numResetFree > 0 ? 0 : Utilities.round((float)Math.Pow(GopetManager.PRICE_RESET_SHOP_ARENA, numReset - GopetManager.DEFAULT_FREE_RESET_ARENA_SHOP + 2)));
+        int priceReset = Utilities.round(GopetManager.PRICE_RESET_SHOP_ARENA * (numReset + 1));
         ShopTemplateItem resetShopArenaItem = new ShopTemplateItem();
         resetShopArenaItem.setSpceialType(ShopTemplateItem.TYPE_RESET_SHOP_ARENA);
         resetShopArenaItem.setSpceial(true);
@@ -38,16 +36,16 @@ public class ShopArena : ShopTemplate
         resetShopArenaItem.setDescriptionSpeceial(Utilities.Format("Dùng %s (vang) để đổi các vật phẩm khác", Utilities.FormatNumber(priceReset)));
         resetShopArenaItem.setPrice(new int[] { priceReset });
         resetShopArenaItem.setMoneyType(new sbyte[] { GopetManager.MONEY_TYPE_GOLD });
-        this.shopTemplateItems.add(resetShopArenaItem);
+        if(!(numReset  >= GopetManager.MAX_RESET_SHOP_ARENA)) this.shopTemplateItems.add(resetShopArenaItem);
         long timeGen = Utilities.CurrentTimeMillis + 10000;
         while (timeGen > Utilities.CurrentTimeMillis)
         {
             if (this.shopTemplateItems.Count < numSlot)
             {
-                ShopArenaTemplate shopArenaTemplate = GopetManager.SHOP_ARENA_TEMPLATE.get(Utilities.nextInt(GopetManager.SHOP_ARENA_TEMPLATE.Count));
-                if (shopArenaTemplate.getPercent() > Utilities.NextFloatPer())
+                ShopArenaTemplate shopArenaTemplate = Utilities.RandomArray(GopetManager.SHOP_ARENA_TEMPLATE);
+                if (shopArenaTemplate.percent > Utilities.NextFloatPer())
                 {
-                    this.shopTemplateItems.add(shopArenaTemplate.next());
+                    this.shopTemplateItems.add(shopArenaTemplate.ToShopTemplateItem(MenuController.SHOP_ARENA));
                 }
             }
             else

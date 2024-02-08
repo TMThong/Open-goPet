@@ -1,6 +1,7 @@
 
 
 using Gopet.IO;
+using Gopet.Manager;
 using Gopet.Util;
 using System.Net.Sockets;
 
@@ -55,10 +56,15 @@ public class Session
             setReader(new MsgReader(this));
             Thread sendThread = new Thread(this.sender.run);
             sendThread.IsBackground = true;
+            sendThread.Name = "SEND THREAD " + sc.RemoteEndPoint.ToString();
             sendThread.Start();
+            
             Thread readThread = new Thread(this.reader.run);
             readThread.IsBackground = true;
+            readThread.Name = "READ THREAD " + sc.RemoteEndPoint.ToString();
             readThread.Start();
+            ThreadManager.AddThread(sendThread);
+            ThreadManager.AddThread(readThread);
         }
         catch (Exception e)
         {
@@ -170,7 +176,7 @@ public class Session
         }
         catch (Exception var2)
         {
-
+            var2.printStackTrace();
         }
     }
 }

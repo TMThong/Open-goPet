@@ -175,7 +175,7 @@ namespace Gopet.Data.GopetItem
             return arrayList;
         }
 
-        public static CopyOnWriteArrayList<Item> search(ArrayList<int> types, CopyOnWriteArrayList<Item> listNeedSearchItems)
+        public static CopyOnWriteArrayList<Item> search(JArrayList<int> types, CopyOnWriteArrayList<Item> listNeedSearchItems)
         {
             CopyOnWriteArrayList<Item> arrayList = new();
             foreach (Item item in listNeedSearchItems)
@@ -203,7 +203,7 @@ namespace Gopet.Data.GopetItem
 
         public string getEquipName()
         {
-            ArrayList<string> infoStrings = new();
+            JArrayList<string> infoStrings = new();
             if (getAtk() > 0)
             {
                 infoStrings.add(getAtk() + " (atk) ");
@@ -300,9 +300,9 @@ namespace Gopet.Data.GopetItem
 
         private float getPercentGemBuff(int idoption)
         {
-            float percent = 0;
             if (gemInfo != null)
             {
+                if(gemInfo.getOption() != null)
                 for (int i = 0; i < gemInfo.getOption().Length; i++)
                 {
                     int j = gemInfo.getOption()[i];
@@ -312,7 +312,7 @@ namespace Gopet.Data.GopetItem
                     }
                 }
             }
-            return percent;
+            return 0;
         }
     }
 }
