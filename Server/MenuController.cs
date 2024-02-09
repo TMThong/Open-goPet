@@ -107,7 +107,8 @@ public class MenuController
         new AdminItemInfo("Thêm vàng", "Thêm vàng vào người chơi chỉ định đang online", "items/4000766.png"),
         new AdminItemInfo("Thêm ngọc", "Thêm vàng vào người chơi chỉ định đang online", "items/4000766.png"),
         new AdminItemInfo("Tìm người chơi có trang bị cấp 10", "Máy chủ sẽ trả về danh sách người chơi có vật phẩm trang bị cấp 10", "items/4000766.png"),
-        new AdminItemInfo("Buff đập đồ", "Người được chỉ định buff sẽ không cường hóa bị thất bại", "items/4000766.png")
+        new AdminItemInfo("Buff đập đồ", "Người được chỉ định buff sẽ không cường hóa bị thất bại", "items/4000766.png"),
+        new AdminItemInfo("Cộng hoặc trừ tiền", "Cộng hoặc trừ tiền của tài khoản chỉ định", "items/4000766.png")
     };
 
     public const int ADMIN_INDEX_SET_PET_INFO = 0;
@@ -126,6 +127,7 @@ public class MenuController
     public const int ADMIN_INDEX_ADD_COIN = 13;
     public const int ADMIN_INDEX_FIND_ITEM_LVL_10 = 14;
     public const int ADMIN_INDEX_BUFF_ENCHANT = 15;
+    public const int ADMIN_INDEX_COIN = 16;
 
     /**
      * Danh sách nhận pet miễn phí
@@ -321,6 +323,7 @@ public class MenuController
     public const int INPUT_DIALOG_EXCHANGE_GOLD_TO_COIN = 16;
     public const int INPUT_TYPE_GIFT_CODE = 17;
     public const int INPUT_TYPE_NAME_TO_BUFF_ENCHANT = 18;
+    public const int INPUT_TYPE_NAME_TO_BUFF_COIN = 19;
     public const int IMGDIALOG_CAPTCHA = 0;
     #endregion
     public static void init()
@@ -2020,7 +2023,7 @@ public class MenuController
                                     case 0:
                                         if (clan.canAddNewMember())
                                         {
-                                            using(var conn = MYSQLManager.create())
+                                            using (var conn = MYSQLManager.create())
                                             {
 
                                             }
@@ -2148,6 +2151,9 @@ public class MenuController
                             break;
                         case ADMIN_INDEX_BUFF_ENCHANT:
                             player.controller.showInputDialog(INPUT_TYPE_NAME_TO_BUFF_ENCHANT, "Buff đập đồ", new String[] { "Tên nhân vật :" });
+                            break;
+                        case ADMIN_INDEX_COIN:
+                            player.controller.showInputDialog(INPUT_TYPE_NAME_TO_BUFF_COIN, "Cộng từ tiền", new String[] { "Tiền :", "Tài khoản :" });
                             break;
                     }
                 }
@@ -3847,10 +3853,10 @@ public class MenuController
                             String namePlayer = reader.readString(0);
                             using (var gameconn = MYSQLManager.create())
                             {
-                                using(var webconn = MYSQLManager.createWebMySqlConnection())
+                                using (var webconn = MYSQLManager.createWebMySqlConnection())
                                 {
                                     dynamic queryData = gameconn.QueryFirstOrDefault("Select user_id from player where name ='" + namePlayer + "'");
-                                    if(queryData != null)
+                                    if (queryData != null)
                                     {
                                         webconn.Execute("Update `User` set isBenned = 0 where user_id = @user_id", new { user_id = queryData.user_id });
                                     }
@@ -3913,6 +3919,31 @@ public class MenuController
                             {
                                 player.redDialog("Người chơi đã offline");
                             }
+                        }
+                    }
+                    break;
+
+                case INPUT_TYPE_NAME_TO_BUFF_COIN:
+                    {
+                        if (player.checkIsAdmin())
+                        {
+                            String name = reader.readString(0);
+                            int coin = reader.readInt(1);
+                            using (var conn = MYSQLManager.createWebMySqlConnection())
+                            {
+                                 
+                                UserData userData = conn.QueryFirstOrDefault<UserData>("SELECT * from user where username = @username", new { coin = conn, username = name });
+                                if (userData != null)
+                                {
+                                    userData.mineCoin(-coin, userData.getCoin());
+                                    player.okDialog($"Thành công người chơi đó hiện có {Utilities.FormatNumber(userData.getCoin())} vnd");
+                                }
+                                else
+                                {
+                                    player.redDialog("Sai tên tài khoản");
+                                }
+                            }
+
                         }
                     }
                     break;
@@ -4067,6 +4098,8 @@ public class MenuController
                 return new sbyte[] { InputReader.FIELD_STRING };
             case INPUT_DIALOG_ADMIN_LOCK_USER:
                 return new sbyte[] { InputReader.FIELD_STRING, InputReader.FIELD_sbyte, InputReader.FIELD_INT, InputReader.FIELD_STRING };
+            case INPUT_TYPE_NAME_TO_BUFF_COIN:
+                return new sbyte[] { InputReader.FIELD_STRING, InputReader.FIELD_INT };
         }
         return null;
     }

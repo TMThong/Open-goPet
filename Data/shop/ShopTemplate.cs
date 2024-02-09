@@ -4,7 +4,7 @@ using Gopet.Data.Collections;
 public class ShopTemplate  {
 
     private String name;
-    protected JArrayList<ShopTemplateItem> shopTemplateItems = new();
+    public JArrayList<ShopTemplateItem> shopTemplateItems = new();
     private sbyte type;
 
     public ShopTemplate(sbyte type) {

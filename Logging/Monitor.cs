@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Gopet.Logging
@@ -62,20 +63,29 @@ namespace Gopet.Logging
             }
         }
 
+
+        static readonly Mutex mutex = new Mutex();
+
         static void Write(string message, ConsoleColor consoleColor)
         {
-            lock(__LOCK)
+            Task.Run(() =>
             {
-                Console.ForegroundColor = consoleColor;
-                Console.Write(message);
-                Console.ResetColor();
-                var Writer = GopetManager.Writer;
-                if (Writer != null)
+                mutex.WaitOne();
+                try
                 {
-                    Writer.Write(message);
-                    Writer.Flush();
+
+                    Console.ForegroundColor = consoleColor;
+                    Console.Write(message);
+                    Console.ResetColor();
+                    var Writer = GopetManager.Writer;
+                    if (Writer != null)
+                    {
+                        Writer.Write(message);
+                        Writer.Flush();
+                    }
                 }
-            }
+                finally { mutex.ReleaseMutex(); }
+            });
         }
     }
 }

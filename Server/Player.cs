@@ -143,7 +143,7 @@ Thread.Sleep(1000);
                         return;
                     }
                 }
-                using(MySqlConnection conn = MYSQLManager.createWebMySqlConnection())
+                using (MySqlConnection conn = MYSQLManager.createWebMySqlConnection())
                 {
                     var user = conn.QueryFirstOrDefault("SELECT * FROM `user` WHERE username = @username;", new { username = username });
                     if (user != null)
@@ -152,7 +152,7 @@ Thread.Sleep(1000);
                     }
                     else
                     {
-                        conn.Execute("INSERT INTO `user`(`user_id`, `username`, `password` , `ipv4Create` , `dayCreate`, `avatar`) VALUES (NULL,@username,@password, @ipv4Create, @dayCreate, NULL)", 
+                        conn.Execute("INSERT INTO `user`(`user_id`, `username`, `password` , `ipv4Create` , `dayCreate`, `avatar`) VALUES (NULL,@username,@password, @ipv4Create, @dayCreate, NULL)",
                             new
                             {
                                 username = username,
@@ -189,7 +189,7 @@ Thread.Sleep(1000);
                 return;
             }
             user.password = newPass;
-            using(var conn = MYSQLManager.createWebMySqlConnection())
+            using (var conn = MYSQLManager.createWebMySqlConnection())
             {
                 conn.Execute(Utilities.Format("update User set password = '%s' where user_id = %s", newPass, user.user_id));
             }
@@ -257,18 +257,28 @@ Thread.Sleep(1000);
             redDialog("Tồn tại ký tự lạ");
             return;
         }
-        using(MySqlConnection conn = MYSQLManager.createWebMySqlConnection())
+        using (MySqlConnection conn = MYSQLManager.createWebMySqlConnection())
         {
             UserData userData = conn.QueryFirstOrDefault<UserData>("SELECT * FROM `user` where username = @username && password = @password",
-                new {username = username, password = password});
+                new { username = username, password = password });
 
             if (userData != null)
             {
                 this.user = userData;
                 if (user.role == UserData.ROLE_NON_ACTIVE)
                 {
-                    redDialog(Utilities.Format("Tài khoản của bạn chưa kích hoạt vui lòng lên trang web %s để kích hoạt tài khoản!", ServerSetting.instance.webDomainName));
-                    return;
+                    int coin = userData.getCoin();
+                    if (coin < GopetManager.PRICE_ACTIVE_USER)
+                    {
+                        redDialog($"Tài khoản của bạn chưa kích hoạt vui lòng nạp {Utilities.FormatNumber(GopetManager.PRICE_ACTIVE_USER)}");
+                        return;
+                    }
+                    else
+                    {
+                        user.mineCoin(GopetManager.PRICE_ACTIVE_USER, coin);
+                        user.role = 1;
+                        conn.Execute("UPDATE `user` set `role` = @role WHERE `user`.`user_id` = @user_id", new { role = userData.role , user_id = userData.user_id });
+                    }
                 }
 
                 switch (user.isBanned)
@@ -326,11 +336,11 @@ Thread.Sleep(1000);
                 {
                     playerData = gameconn.QueryFirstOrDefault<PlayerData>("SELECT * FROM `player` where user_id = " + user.user_id);
                     if (playerData != null)
-                    { 
+                    {
                         PlayerManager.put(this);
                     }
-                    var kioskList = gameconn.Query("SELECT * FROM `kiosk_recovery` where user_id = @user_id", new {  user_id = this.user.user_id });
-                    if(kioskList.Any())
+                    var kioskList = gameconn.Query("SELECT * FROM `kiosk_recovery` where user_id = @user_id", new { user_id = this.user.user_id });
+                    if (kioskList.Any())
                     {
                         foreach (var item in kioskList)
                         {

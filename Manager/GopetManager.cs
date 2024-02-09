@@ -489,6 +489,8 @@ public class GopetManager
     public static readonly int[] ID_ITEM_PET_TIER_ONE = new int[] { 726, 728, 730, 732, 734, 738 };
     public static readonly int[] ID_ITEM_PET_TIER_TOW = new int[] { 740, 742, 744, 746, 748, 750, 756, 760, 762, 764, 766 };
 
+    public const int PRICE_ACTIVE_USER = 20000;
+
     public static readonly Dictionary<sbyte, TradeGiftTemplate[]> TradeGift = new();
 
     public static readonly Dictionary<sbyte, Tuple<int[], int[], int>> TradeGiftPrice = new()
@@ -904,12 +906,12 @@ public class GopetManager
     {
         get
         {
-            if (OldDateTime.Day != DateTime.Now.Day || __writer != null ? !__writer.BaseStream.CanWrite : true)
+            if ( __writer == null )
             {
                 FileInfo fileInfo = new FileInfo(Directory.GetCurrentDirectory() + $"/log/log_{DateTime.Now.Day}_{DateTime.Now.Month}_{DateTime.Now.Year}.txt");
                 fileInfo.Directory.Create();
                 __writer?.Close();
-                __writer = new StreamWriter(fileInfo.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read), System.Text.Encoding.UTF8);
+                
                 OldDateTime = DateTime.Now;
                 return __writer;
             }

@@ -23,7 +23,7 @@ public class TopLVLClan : Top {
             try   {
                 using (var conn = MYSQLManager.create())
                 {
-                    var topDataDynamic = conn.Query("SELECT * FROM `clan` ORDER BY `clanLvl` DESC LIMIT 10;");
+                    var topDataDynamic = conn.Query("SELECT * FROM `clan` ORDER BY `lvl` DESC LIMIT 10;");
                     int index = 1;
                     foreach
                         (dynamic data in topDataDynamic)
@@ -33,7 +33,7 @@ public class TopLVLClan : Top {
                         topData.name = "Bang " + data.name;
                         topData.imgPath = "npcs/gopet.png";
                         topData.title = topData.name;
-                        topData.desc = Utilities.Format("Hạng %s : bang clanLvl %s", index, data.lvl);
+                        topData.desc = Utilities.Format("Hạng %s : bang lvl %s", index, data.lvl);
                         datas.add(topData);
                         index++;
                     }
