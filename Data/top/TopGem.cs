@@ -15,6 +15,23 @@ public class TopGem : Top
         base.desc = "";
     }
 
+    public override TopData getMyInfo(Player player)
+    {
+        var findTop = datas.Where(p => p.id == player.playerData.user_id);
+
+        if (findTop.Any())
+        {
+            return findTop.First();
+        }
+
+        TopData topData = new TopData();
+        topData.id = player.playerData.user_id;
+        topData.name = player.playerData.name;
+        topData.imgPath = player.playerData.avatarPath;
+        topData.title = topData.name;
+        topData.desc = $"Hạng chưa có : Bạn đang có {Utilities.FormatNumber(player.playerData.coin)} (ngoc)";
+        return topData;
+    }
 
     public override void update()
     {

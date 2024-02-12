@@ -3,6 +3,7 @@ using Gopet.Data.Collections;
 using Gopet.Data.GopetItem;
 using Gopet.Util;
 using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
 
 namespace Gopet.Data.Map
 {
@@ -227,7 +228,7 @@ namespace Gopet.Data.Map
                     using(var conn = MYSQLManager.create())
                     {
                         conn.Execute("INSERT INTO `kiosk_recovery`(`kioskType`, `user_id`, `item`) VALUES (@kioskType,@user_id,@jsonData)",
-                            new { kioskType = kioskType, user_id = kioskItem.user_id, jsonData =  JsonManager.ToJson(kioskItem) });
+                            new { kioskType = kioskType, user_id = kioskItem.user_id, jsonData =  JsonConvert.SerializeObject(kioskItem) });
                         HistoryManager.addHistory(new History(kioskItem.user_id).setObj(kioskItem).setLog("Lưu vật phẩm ki ốt vào cơ sở dữ liệu thành công"));
                     }
                 }

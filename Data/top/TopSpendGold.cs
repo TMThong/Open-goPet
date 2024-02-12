@@ -15,6 +15,24 @@ public class TopSpendGold : Top
         base.desc = "Chỉ người nạp số tiền cao nhất";
     }
 
+    public override TopData getMyInfo(Player player)
+    {
+        var findTop = datas.Where(p => p.id == player.playerData.user_id);
+
+        if (findTop.Any())
+        {
+            return findTop.First();
+        }
+
+        TopData topData = new TopData();
+        topData.id = player.playerData.user_id;
+        topData.name = player.playerData.name;
+        topData.imgPath = player.playerData.avatarPath;
+        topData.title = topData.name;
+        topData.desc = $"Hạng chưa có : Bạn đã tiêu {Utilities.FormatNumber(player.playerData.spendGold)} (vang)";
+        return topData;
+    }
+
     public TopData find(int user_id)
     {
         foreach (TopData data in datas)

@@ -27,6 +27,12 @@ public class TaskCalculator
     public const int REQUEST_CHALLENGE_PLACE = 11;
     public const int REQUEST_ITEM_AND_PLUS = 12;
     public const int REQUEST_UP_TIER_PET = 13;
+    public const int REQUEST_PLUS_GYM_POINT = 14;
+    public const int REQUEST_LEARN_SKILL2_PET = 15;
+    public const int REQUEST_MEET_NPC = 16;
+    public const int REQUEST_KILL_SPECIAL_BOSS = 17;
+    public const int REQUEST_WAIT_NEW_TASK = 18;
+    public const int REUQEST_BET_PLAYER_WIN = 19;
     private Player player;
 
     private HashMap<int, JArrayList<TaskTemplate>> cacheTask = new();
@@ -97,53 +103,69 @@ public class TaskCalculator
             task = new int[taskInfo.Length];
             Array.Fill(task, 0);
         }
-        JArrayList<String> taskText = new();
+        List<String> taskText = new();
         for (int i = 0; i < taskInfo.Length; i++)
         {
             int[] taskI = taskInfo[i];
             switch (taskI[0])
             {
                 case REQUEST_KILL_MOB:
-                    taskText.add(Utilities.Format("Tiêu diệt %s %s / %s", GopetManager.PETTEMPLATE_HASH_MAP.get(taskI[2]).getName(), task[i], taskI[1]));
+                    taskText.Add(Utilities.Format("Tiêu diệt %s %s / %s", GopetManager.PETTEMPLATE_HASH_MAP.get(taskI[2]).getName(), task[i], taskI[1]));
                     break;
                 case REQUEST_PET_LVL:
-                    taskText.add(Utilities.Format("Pet đạt đạt cấp %s / %s", task[i], taskI[1]));
+                    taskText.Add(Utilities.Format("Pet đạt đạt cấp %s / %s", task[i], taskI[1]));
                     break;
                 case REQUEST_LEARN_SKILL_PET:
-                    taskText.add(Utilities.Format("Học %s / %s kỹ năng cho thú cưng", task[i], taskI[1]));
+                    taskText.Add(Utilities.Format("Học %s / %s kỹ năng cho thú cưng", task[i], taskI[1]));
+                    break;
+                case REQUEST_LEARN_SKILL2_PET:
+                    taskText.Add(Utilities.Format("Học %s / %s kỹ năng 2 cho thú cưng", task[i], taskI[1]));
                     break;
                 case REQUEST_BUY_RANDOM_WEAPON:
-                    taskText.add(Utilities.Format("Mua %s / %s vũ khí bất kì của cửa hàng ở Tp Linh Thú", task[i], taskI[1]));
+                    taskText.Add(Utilities.Format("Mua %s / %s vũ khí bất kì của cửa hàng ở Tp Linh Thú", task[i], taskI[1]));
                     break;
                 case REQUEST_UP_SKILL_PET:
-                    taskText.add(Utilities.Format("Nâng cấp %s / %s kỹ năng pet lên cấp %s", task[i], taskI[1], taskI[2]));
+                    taskText.Add(Utilities.Format("Nâng cấp %s / %s kỹ năng pet lên cấp %s", task[i], taskI[1], taskI[2]));
                     break;
+                case REQUEST_KILL_SPECIAL_BOSS:
                 case REQUEST_KILL_BOSS:
-                    taskText.add(Utilities.Format("Tiêu diệt %s(tinh anh) %s / %s", GopetManager.boss.get(taskI[2]).name, task[i], taskI[1]));
+                    taskText.Add(Utilities.Format("Tiêu diệt %s(tinh anh) %s / %s", GopetManager.boss.get(taskI[2]).name, task[i], taskI[1]));
                     break;
                 case REQUEST_UP_TIER_ITEM:
-                    taskText.add(Utilities.Format("Tiến hóa trang bị thú cưng %s / %s lần lên đời %s", task[i], taskI[1], taskI[2]));
+                    taskText.Add(Utilities.Format("Tiến hóa trang bị thú cưng %s / %s lần lên đời %s", task[i], taskI[1], taskI[2]));
                     break;
                 case REQUEST_ENCHANT_ITEM:
-                    taskText.add(Utilities.Format("Cường hóa trang bị thú cưng %s / %s lần lên cấp %s", task[i], taskI[1], taskI[2]));
+                    taskText.Add(Utilities.Format("Cường hóa trang bị thú cưng %s / %s lần lên cấp %s", task[i], taskI[1], taskI[2]));
                     break;
                 case REQUEST_NEED_TASK:
-                    taskText.add(Utilities.Format("Hoàn thành nhiệm vụ %s %s / %s", GopetManager.taskTemplate.get(taskI[2]).getName(), task[i], taskI[1]));
+                    taskText.Add(Utilities.Format("Hoàn thành nhiệm vụ %s %s / %s", GopetManager.taskTemplate.get(taskI[2]).getName(), task[i], taskI[1]));
                     break;
                 case REQUEST_ATTACK_BOSS:
-                    taskText.add(Utilities.Format("Tấn công %s(tinh anh) %s / %s", GopetManager.boss.get(taskI[2]).name, task[i], taskI[1]));
+                    taskText.Add(Utilities.Format("Tấn công %s(tinh anh) %s / %s", GopetManager.boss.get(taskI[2]).name, task[i], taskI[1]));
                     break;
                 case REQUEST_ITEM:
-                    taskText.add(Utilities.Format("Vật phẩm %s %s / %s", GopetManager.itemTemplate.get(taskI[2]).getName(), task[i], taskI[1]));
+                    taskText.Add(Utilities.Format("Vật phẩm %s %s / %s", GopetManager.itemTemplate.get(taskI[2]).getName(), task[i], taskI[1]));
                     break;
                 case REQUEST_CHALLENGE_PLACE:
-                    taskText.add(Utilities.Format("Vượt ải Đấu Trường tới ải %s / %s", task[i], taskI[1]));
+                    taskText.Add(Utilities.Format("Vượt ải Đấu Trường tới ải %s / %s", task[i], taskI[1]));
                     break;
                 case REQUEST_ITEM_AND_PLUS:
-                    taskText.add(Utilities.Format("Vật phẩm %s %s / %s (vật phẩm sẽ tự trừ)", GopetManager.itemTemplate.get(taskI[2]).getName(), task[i], taskI[1]));
+                    taskText.Add(Utilities.Format("Vật phẩm %s %s / %s (vật phẩm sẽ tự trừ)", GopetManager.itemTemplate.get(taskI[2]).getName(), task[i], taskI[1]));
                     break;
                 case REQUEST_UP_TIER_PET:
-                    taskText.add(Utilities.Format("Tiến hóa thú cưng %s / %s lần", task[i], taskI[1]));
+                    taskText.Add(Utilities.Format("Tiến hóa thú cưng %s / %s lần", task[i], taskI[1]));
+                    break;
+                case REQUEST_PLUS_GYM_POINT:
+                    taskText.Add(Utilities.Format("Dùng điểm gym %s / %s lần", task[i], taskI[1]));
+                    break;
+                case REQUEST_MEET_NPC:
+                    taskText.Add(Utilities.Format($"Gặp {GopetManager.npcTemplate[taskI[2]].name} và trò chuyện %s / %s lần", task[i], taskI[1]));
+                    break;
+                case REUQEST_BET_PLAYER_WIN:
+                    taskText.Add($"Thách đấu thắng người chơi {task[i]}/{taskI[1]} lần");
+                    break;
+                case REQUEST_WAIT_NEW_TASK:
+                    taskText.Add("Con hãy chờ nhiệm vụ mới nhé !!!");
                     break;
             }
         }
@@ -177,7 +199,7 @@ public class TaskCalculator
                             }
                         }
                         break;
-
+                    case REQUEST_LEARN_SKILL2_PET:
                     case REQUEST_BUY_RANDOM_WEAPON:
                     case REQUEST_LEARN_SKILL_PET:
                         taskData.task[i]++;
@@ -192,7 +214,7 @@ public class TaskCalculator
                             }
                         }
                         break;
-
+                    case REQUEST_KILL_SPECIAL_BOSS:
                     case REQUEST_KILL_BOSS:
                         {
                             Boss boss = (Boss)dObjects[0];
@@ -207,6 +229,16 @@ public class TaskCalculator
                         {
                             int tier = (int)dObjects[0];
                             if (tier >= taskData.taskInfo[i][2])
+                            {
+                                taskData.task[i]++;
+                            }
+                        }
+                        break;
+
+                    case REQUEST_MEET_NPC:
+                        {
+                            int npc = (int)dObjects[0];
+                            if (npc == taskData.taskInfo[i][2] && taskData.taskInfo[i][1] > taskData.task[i])
                             {
                                 taskData.task[i]++;
                             }
@@ -269,7 +301,8 @@ public class TaskCalculator
                             }
                         }
                         break;
-
+                    case REUQEST_BET_PLAYER_WIN:
+                    case REQUEST_PLUS_GYM_POINT:
                     case REQUEST_UP_TIER_PET:
                         taskData.task[i]++;
                         break;
@@ -286,9 +319,20 @@ public class TaskCalculator
         }
     }
 
+
+    public void onWinBetBattle()
+    {
+        this.onAllTaskUpdate(REUQEST_BET_PLAYER_WIN);
+    }
+
     public void onUpTierPet()
     {
         this.onAllTaskUpdate(REQUEST_UP_TIER_PET);
+    }
+
+    public void onPlusGymPoint()
+    {
+        this.onAllTaskUpdate(REQUEST_PLUS_GYM_POINT);
     }
 
     public void onItemNeed(Item item)
@@ -314,9 +358,15 @@ public class TaskCalculator
         this.onAllTaskUpdate(REQUEST_UP_TIER_ITEM, tier);
     }
 
+    public void onMeetNpc(int npcId)
+    {
+        this.onAllTaskUpdate(REQUEST_MEET_NPC, npcId);
+    }
+
     public void onKillBoss(Boss boss)
     {
         this.onAllTaskUpdate(REQUEST_KILL_BOSS, boss);
+        this.onAllTaskUpdate(REQUEST_KILL_SPECIAL_BOSS, boss);
     }
 
     public void onUpdateSkillPet(Pet pet, int skillLv)
@@ -340,6 +390,11 @@ public class TaskCalculator
     {
         this.onAllTaskUpdate(REQUEST_LEARN_SKILL_PET);
     }
+    public void onLearnSkillPet2()
+    {
+        this.onAllTaskUpdate(REQUEST_LEARN_SKILL2_PET);
+    }
+
 
     public void onPetUpLevel(Pet pet)
     {

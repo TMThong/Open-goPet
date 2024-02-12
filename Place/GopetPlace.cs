@@ -16,8 +16,8 @@ public class GopetPlace : Place
     public CopyOnWriteArrayList<PetBattle> petBattles = new();
     public ConcurrentHashMap<MobLocation, long> newMob = new();
     public const long TIME_NEW_MOB = 25000;
-    public int numMobDie = 0;
-    public int numMobDieNeed
+    public int[] numMobDie;
+    public int[] numMobDieNeed
     {
         get
         {
@@ -28,6 +28,10 @@ public class GopetPlace : Place
     public GopetPlace(GopetMap m, int ID) : base(m, ID)
     {
         if (m == null) throw new ArgumentNullException();
+
+        numMobDie = new int[numMobDieNeed.Length];
+        Array.Fill(numMobDie, 0);
+
         if (GopetManager.mobLocation.ContainsKey(m.mapID) && GopetManager.MOBLVL_MAP.ContainsKey(m.mapID))
         {
             createNewMob(GopetManager.mobLocation.get(map.mapID));
@@ -61,6 +65,10 @@ public class GopetPlace : Place
         sendWing(player);
         sendSkin(player);
         sendClan(player, true);
+        if (this.map.mapID >= 26 && !player.playerData.isOnSky)
+        {
+            player.user.ban(UserData.BAN_TIME, "Xăm nhập bất hợp pháp", Utilities.CurrentTimeMillis + (1000L * 60 * 30));
+        }
     }
 
 
@@ -71,7 +79,7 @@ public class GopetPlace : Place
         {
             petBattle.Close(player);
         }
-        base.remove(player); 
+        base.remove(player);
     }
 
     public void addNewMob(Mob gopetMob)
@@ -538,7 +546,7 @@ public class GopetPlace : Place
     {
         MobLocation[] mobLocations = locations;
         MobLvlMap[] mobLvlMaps = GopetManager.MOBLVL_MAP.get(map.mapID);
-        if(mobLvlMaps != null)
+        if (mobLvlMaps != null)
         {
             if (mobLocations.Length > 0 && mobLvlMaps.Length > 0)
             {
@@ -549,17 +557,49 @@ public class GopetPlace : Place
                     index++;
                     if (this.map.mapTemplate.boss.Length > 0)
                     {
-                        if (numMobDie >= numMobDieNeed)
+                        for (global::System.Int32 i = 0; i < map.mapTemplate.boss.Length; i++)
                         {
-                            Boss boss = new Boss(Utilities.RandomArray(this.map.mapTemplate.boss), mobLocation);
-                            boss.isTimeOut = true;
-                            boss.timeoutMilis = Utilities.CurrentTimeMillis + GopetManager.TIME_BOSS_DISPOINTED;
+                            if (numMobDie[i] >= numMobDieNeed[i])
+                            {
+                                if (GopetManager.ID_BOSS_TASK.Contains(map.mapTemplate.boss[i]))
+                                {
+                                    bool flag = false;
+                                    foreach (var p in players)
+                                    {
+                                        if (flag) break;
+                                        foreach (var task in p.playerData.task)
+                                        {
+                                            if (flag) break;
+                                            foreach (var item in task.taskInfo)
+                                            {
+                                                if (item[0] == TaskCalculator.REQUEST_KILL_SPECIAL_BOSS)
+                                                {
+                                                    if (item[2] == map.mapTemplate.boss[i])
+                                                    {
+                                                        flag = true;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
 
-                            addNewMob(boss);
-                            nGopetMobs.add(boss);
-                            PlayerManager.showBanner(Utilities.Format("Boss %s đã xuất hiện tại %s khu %s nhanh tay lên nào!!!!", boss.Template.name, this.map.mapTemplate.name, this.zoneID));
-                            numMobDie = 0;
-                            continue;
+                                    if (!flag)
+                                    {
+                                        numMobDie[i] = 0;
+                                        continue;
+                                    }
+                                }
+                                Boss boss = new Boss(Utilities.RandomArray(this.map.mapTemplate.boss), mobLocation);
+                                boss.isTimeOut = true;
+                                boss.timeoutMilis = Utilities.CurrentTimeMillis + GopetManager.TIME_BOSS_DISPOINTED;
+
+                                addNewMob(boss);
+                                nGopetMobs.add(boss);
+                                PlayerManager.showBanner(Utilities.Format("Boss %s đã xuất hiện tại %s khu %s nhanh tay lên nào!!!!", boss.Template.name, this.map.mapTemplate.name, this.zoneID));
+                                numMobDie[i] = 0;
+                                continue;
+                            }
                         }
                     }
                     long deltaTime = Utilities.CurrentTimeMillis + 3000;
@@ -576,7 +616,10 @@ public class GopetPlace : Place
                             break;
                         }
                     }
-                    numMobDie++;
+                    for (global::System.Int32 i = 0; i < map.mapTemplate.boss.Length; i++)
+                    {
+                        numMobDie[i]++;
+                    }
                 }
                 sendMob(nGopetMobs);
             }

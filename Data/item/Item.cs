@@ -38,8 +38,7 @@ namespace Gopet.Data.GopetItem
         public ItemGem gemInfo = null;
 
         public bool wasSell = false;
-
-
+        public bool canTrade { get; set; } = true;
 
 
         public Item(int itemTemplateId, int count_ = 0, bool isSkipRandom = false)
@@ -192,13 +191,13 @@ namespace Gopet.Data.GopetItem
         {
             if (getTemp().isStackable)
             {
-                return getTemp().getName() + " x" + count;
+                return getTemp().getName() + " x" + count + (canTrade ? "" : " (Khóa)");
             }
             if(Template.type == GopetManager.WING_INVENTORY)
             {
-                return getTemp().getName() + " cấp " + lvl;
+                return getTemp().getName() + " cấp " + lvl + (canTrade ? "" : " (Khóa)");
             }
-            return getTemp().getName();
+            return getTemp().getName() + (canTrade ? "" : " (Khóa)");
         }
 
         public string getEquipName()
@@ -271,7 +270,7 @@ namespace Gopet.Data.GopetItem
                     }
                 }
             }
-            return Template.getName() + "  " + getTemp().description + " " + Utilities.Format("up: %s ", lvl) + string.Join(" ", infoStrings) + (gemInfo == null ? "" : " " + gemInfo.getElementIcon());
+            return getName() + "  " + getTemp().description + " " + Utilities.Format("up: %s ", lvl) + string.Join(" ", infoStrings) + (gemInfo == null ? "" : " " + gemInfo.getElementIcon());
         }
 
         public void updateGemOption()

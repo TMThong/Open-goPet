@@ -1,5 +1,6 @@
 
 using Gopet.Data.Collections;
+using Gopet.Data.top;
 using Gopet.Util;
 
 public class BXHManager
@@ -55,13 +56,13 @@ public class BXHManager
 
     public static CopyOnWriteArrayList<Top> listTop = new();
 
-    static BXHManager
-()
+    static BXHManager()
     {
         listTop.add(TopGold.instance);
         listTop.add(TopPet.instance);
         listTop.add(TopGem.instance);
         listTop.add(TopLVLClan.instance);
         listTop.add(TopSpendGold.instance);
+        listTop.add(TopAccumulatedPoint.Instance);
     }
 }

@@ -17,7 +17,7 @@ public class ShopTemplateItem
     public bool CloseScreenAfterClick = false;
     public int clanLvl;
     public int perCount = 0;
-    public const int TYPE_RESET_SHOP_ARENA = 0;
+    public const int TYPE_RESET_SHOP_ARENA = 1;
     public bool hasId;
     public int menuId;
     public int petId;
@@ -280,7 +280,11 @@ public class ShopTemplateItem
                     }
                 }
                 break;
+            default:
+                GopetManager.ServerMonitor.LogError($"Không có type đặc biệt là: {spceialType}");
+                break;
         }
+
     }
 
     public void setSpceial(bool v)

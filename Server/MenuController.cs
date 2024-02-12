@@ -12,6 +12,7 @@ using MySql.Data.MySqlClient;
 using Gopet.Data.item;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
+using Gopet.Data.top;
 
 [NonController]
 public class MenuController
@@ -37,7 +38,7 @@ public class MenuController
      */
     public const int MENU_DELETE_TIEM_NANG = 800;
     public const int MENU_WING_INVENTORY = 81040;
-    public const int MENU_NORMAL_INVENTORY = 802;
+    public const int MENU_NORMAL_INVENTORY = 81004;
     public const int MENU_SKIN_INVENTORY = 803;
     public const int MENU_SELECT_PET_UPGRADE_ACTIVE = 804;
     public const int MENU_SELECT_PET_UPGRADE_PASSIVE = 805;
@@ -45,7 +46,7 @@ public class MenuController
     public const int MENU_KIOSK_WEAPON = 807;
     public const int MENU_KIOSK_AMOUR = 808;
     public const int MENU_KIOSK_GEM = 809;
-    public const int MENU_KIOSK_PET = 810;
+    public const int MENU_KIOSK_PET = 81028;
     public const int MENU_KIOSK_OHTER = 811;
     public const int MENU_SELECT_ENCHANT_MATERIAL1 = 1000;
     public const int MENU_SELECT_ENCHANT_MATERIAL2 = 1001;
@@ -91,6 +92,7 @@ public class MenuController
     public const int MENU_SHOW_ALL_PLAYER_HAVE_ITEM_LVL_10 = 1042;
     public const int MENU_SELECT_MATERIAL_TO_ENCAHNT_WING = 1043;
     public const int MENU_SELECT_MONEY_TO_PAY_FOR_ENCHANT_WING = 1044;
+    public const int MENU_CHOOSE_PET_FROM_PACKAGE_PET = 1045;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -108,7 +110,8 @@ public class MenuController
         new AdminItemInfo("Thêm ngọc", "Thêm vàng vào người chơi chỉ định đang online", "items/4000766.png"),
         new AdminItemInfo("Tìm người chơi có trang bị cấp 10", "Máy chủ sẽ trả về danh sách người chơi có vật phẩm trang bị cấp 10", "items/4000766.png"),
         new AdminItemInfo("Buff đập đồ", "Người được chỉ định buff sẽ không cường hóa bị thất bại", "items/4000766.png"),
-        new AdminItemInfo("Cộng hoặc trừ tiền", "Cộng hoặc trừ tiền của tài khoản chỉ định", "items/4000766.png")
+        new AdminItemInfo("Cộng hoặc trừ tiền", "Cộng hoặc trừ tiền của tài khoản chỉ định", "items/4000766.png"),
+        new AdminItemInfo("Lấy Id khu", "Trả về Id của khu vực nhân vật đang đứng", "items/4000766.png"),
     };
 
     public const int ADMIN_INDEX_SET_PET_INFO = 0;
@@ -128,6 +131,7 @@ public class MenuController
     public const int ADMIN_INDEX_FIND_ITEM_LVL_10 = 14;
     public const int ADMIN_INDEX_BUFF_ENCHANT = 15;
     public const int ADMIN_INDEX_COIN = 16;
+    public const int ADMIN_INDEX_GET_ZONE_ID = 17;
 
     /**
      * Danh sách nhận pet miễn phí
@@ -223,6 +227,7 @@ public class MenuController
     public const int OP_TYPE_GIFT_CODE = 60;
     public const int OP_NUM_OF_TASK = 61;
     public const int OP_SHOW_ALL_ITEM = 62;
+    public const int OP_SHOW_TOP_ACCUMULATED_POINT = 63;
     public const int OP_TRADE_GIFT_COIN = 1000000000;
     public const int OP_TRADE_GIFT_GOLD = 1000000001;
     /**
@@ -289,6 +294,11 @@ public class MenuController
     public const int OBJKEY_INDEX_WING_WANT_ENCHANT = 33;
     public const int OBJKEY_TYPE_PAY_FOR_ENCHANT_WING = 34;
     public const int OBJKEY_ID_MATERIAL_ENCHANT_WING = 35;
+    public const int OBJKEY_ID_MENU_BUY_PET_TO_NAME = 36;
+    public const int OBJKEY_INDEX_MENU_BUY_PET_TO_NAME = 37;
+    public const int OBJKEY_NAME_PET_WANT = 38;
+    public const int OBJKEY_PAYMENT_INDEX_WANT_TO_NAME_PET = 39;
+    public const int OBJKEY_ITEM_PACKAGE_PET_TO_USE = 40;
     public const int DIALOG_CONFIRM_REMOVE_ITEM_EQUIP = 0;
     public const int DIALOG_CONFIRM_BUY_KIOSK_ITEM = 1;
     public const int DIALOG_ENCHANT = 3;
@@ -324,6 +334,7 @@ public class MenuController
     public const int INPUT_TYPE_GIFT_CODE = 17;
     public const int INPUT_TYPE_NAME_TO_BUFF_ENCHANT = 18;
     public const int INPUT_TYPE_NAME_TO_BUFF_COIN = 19;
+    public const int INPUT_TYPE_NAME_PET_WHEN_BUY_PET = 20;
     public const int IMGDIALOG_CAPTCHA = 0;
     #endregion
     public static void init()
@@ -381,6 +392,28 @@ public class MenuController
                         i++;
                     }
                     player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Pet của bạn", petItemInfos);
+                }
+                break;
+            case MENU_CHOOSE_PET_FROM_PACKAGE_PET:
+                {
+                    if (player.controller.objectPerformed.ContainsKey(OBJKEY_ITEM_PACKAGE_PET_TO_USE))
+                    {
+                        Item item = player.controller.objectPerformed[OBJKEY_ITEM_PACKAGE_PET_TO_USE];
+                        JArrayList<MenuItemInfo> petMenus = new();
+                        foreach (int petId in item.Template.itemOptionValue)
+                        {
+                            if (GopetManager.PETTEMPLATE_HASH_MAP.ContainsKey(petId))
+                            {
+                                PetMenuItemInfo petMenuItemInfo = new PetMenuItemInfo(GopetManager.PETTEMPLATE_HASH_MAP.get(petId));
+                                petMenuItemInfo.setCloseScreenAfterClick(true);
+                                petMenuItemInfo.setShowDialog(true);
+                                petMenuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn nó không?"));
+                                petMenuItemInfo.setLeftCmdText(CMD_CENTER_OK);
+                                petMenus.add(petMenuItemInfo);
+                            }
+                        }
+                        player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Quà nhiệm vụ", petMenus);
+                    }
                 }
                 break;
             case MENU_SHOW_ALL_PLAYER_HAVE_ITEM_LVL_10:
@@ -627,6 +660,7 @@ public class MenuController
                     player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Tẩy gym", menuItemInfos);
                 }
                 break;
+            case SHOP_ENERGY:
             case SHOP_WEAPON:
             case SHOP_HAT:
             case SHOP_SKIN:
@@ -881,11 +915,10 @@ public class MenuController
                                     menuItemInfo.setHasId(true);
                                     menuItemInfo.setItemId(kioskItem.itemId);
                                     menuItemInfo.setPaymentOptions(new MenuItemInfo.PaymentOption[]{
-                                new MenuItemInfo.PaymentOption(0, kioskItem.price + " (ngoc)", checkMoney(GopetManager.MONEY_TYPE_COIN, kioskItem.price, player) ? (sbyte) 1 : (sbyte) 0)
-                            });
+                                    new MenuItemInfo.PaymentOption(0, kioskItem.price + " (ngoc)", checkMoney(GopetManager.MONEY_TYPE_COIN, kioskItem.price, player) ? (sbyte) 1 : (sbyte) 0)});
                                     arrayListEquip.add(menuItemInfo);
                                 }
-                                player.controller.showMenuItem(menuId, TYPE_MENU_PAYMENT, "Ki ốt", arrayListEquip);
+                                player.controller.showMenuItem(menuId, TYPE_MENU_PAYMENT, menuId == MENU_KIOSK_PET ? "Chợ pet" : "Ki ốt", arrayListEquip);
                             }
                             break;
                     }
@@ -1069,7 +1102,25 @@ public class MenuController
                     }
                 }
                 break;
-
+            case MENU_CHOOSE_PET_FROM_PACKAGE_PET:
+                {
+                    if (player.controller.objectPerformed.ContainsKey(OBJKEY_ITEM_PACKAGE_PET_TO_USE))
+                    {
+                        Item item = player.controller.objectPerformed[OBJKEY_ITEM_PACKAGE_PET_TO_USE];
+                        if(index >= 0 && index < item.Template.itemOptionValue.Length && item.count > 0)
+                        {
+                            Pet p = new Pet(item.Template.itemOptionValue[index]);
+                            player.playerData.addPet(p, player);
+                            player.controller.subCountItem(item, 1, GopetManager.NORMAL_INVENTORY);
+                            player.okDialog($"Chúc mừng bạn nhận được {p.getNameWithStar()}");
+                        }
+                        else
+                        {
+                            player.redDialog("Tính bug ha gì?");
+                        }
+                    }
+                }
+                break;
             case MENU_EXCHANGE_GOLD:
                 {
                     if (index >= 0 && index < EXCHANGE_ITEM_INFOS.Count)
@@ -1149,6 +1200,7 @@ public class MenuController
                                     if (player.controller.getTaskCalculator().taskSuccess(taskData))
                                     {
                                         player.controller.getTaskCalculator().onTaskSucces(taskData);
+                                        player.controller.getTaskCalculator().update();
                                     }
                                     else
                                     {
@@ -1224,6 +1276,10 @@ public class MenuController
                             player.controller.magic(GopetCMD.MAGIC_LEARN_SKILL, true);
                             player.okDialog("Học kỹ năng thành công");
                             player.controller.getTaskCalculator().onLearnSkillPet();
+                            if (pet.skill.Length >= 2)
+                            {
+                                player.controller.getTaskCalculator().onLearnSkillPet2();
+                            }
                         }
                         else if (player.skillId_learn != -1)
                         {
@@ -1310,11 +1366,22 @@ public class MenuController
                     sendMenu(MENU_UNEQUIP_PET, player);
                     return;
                 }
+
+
+
                 if (index >= 0 && index < player.playerData.pets.Count)
                 {
+                    Pet oldPet = player.playerData.petSelected;
+                    if (oldPet != null)
+                    {
+                        if (oldPet.TimeDie > Utilities.CurrentTimeMillis)
+                        {
+                            player.redDialog("Pet của bạn đang bị thương!!!");
+                            return;
+                        }
+                    }
                     Pet pet = player.playerData.pets.get(index);
                     player.playerData.pets.remove(pet);
-                    Pet oldPet = player.playerData.petSelected;
                     if (oldPet != null)
                     {
                         player.playerData.addPet(oldPet, player);
@@ -1476,6 +1543,7 @@ public class MenuController
                     }
                 }
                 break;
+            case SHOP_ENERGY:
             case SHOP_CLAN:
             case SHOP_WEAPON:
             case SHOP_HAT:
@@ -1518,7 +1586,8 @@ public class MenuController
                     {
                         if (checkMoney(typeMoney[paymentIndex], price[paymentIndex], player))
                         {
-                            addMoney(typeMoney[paymentIndex], -price[paymentIndex], player);
+                            if (shopTemplateItem.isSellItem || player.controller.objectPerformed.ContainsKey(OBJKEY_NAME_PET_WANT))
+                                addMoney(typeMoney[paymentIndex], -price[paymentIndex], player);
                             if (shopTemplateItem.isNeedRemove())
                             {
                                 shopTemplate.getShopTemplateItems().remove(shopTemplateItem);
@@ -1538,9 +1607,22 @@ public class MenuController
                                 }
                                 else
                                 {
+                                    if (!player.controller.objectPerformed.ContainsKey(OBJKEY_NAME_PET_WANT))
+                                    {
+                                        player.controller.showInputDialog(INPUT_TYPE_NAME_PET_WHEN_BUY_PET, "Nhập tên pet", new string[] { " Tên:" });
+                                        player.controller.objectPerformed[OBJKEY_ID_MENU_BUY_PET_TO_NAME] = menuId;
+                                        player.controller.objectPerformed[OBJKEY_INDEX_MENU_BUY_PET_TO_NAME] = index;
+                                        player.controller.objectPerformed[OBJKEY_PAYMENT_INDEX_WANT_TO_NAME_PET] = paymentIndex;
+                                        return;
+                                    }
                                     Pet p = new Pet(shopTemplateItem.getPetId());
+                                    p.name = player.controller.objectPerformed[OBJKEY_NAME_PET_WANT];
                                     player.playerData.addPet(p, player);
-                                    player.okDialog(Utilities.Format("Bạn đã mua thành công %s", p.getPetTemplate().getName()));
+                                    player.okDialog(Utilities.Format("Bạn đã mua thành công %s", p.getNameWithStar()));
+                                    player.controller.objectPerformed.Remove(OBJKEY_ID_MENU_BUY_PET_TO_NAME);
+                                    player.controller.objectPerformed.Remove(OBJKEY_INDEX_MENU_BUY_PET_TO_NAME);
+                                    player.controller.objectPerformed.Remove(OBJKEY_PAYMENT_INDEX_WANT_TO_NAME_PET);
+                                    player.controller.objectPerformed.Remove(OBJKEY_NAME_PET_WANT);
                                 }
                                 if (shopTemplateItem.isCloseScreenAfterClick())
                                 {
@@ -1803,12 +1885,14 @@ public class MenuController
                 break;
 
             case MENU_NORMAL_INVENTORY:
+                /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/
                 CopyOnWriteArrayList<Item> listItemNormal = player.playerData.getInventoryOrCreate(GopetManager.NORMAL_INVENTORY);
                 if (index >= 0 && listItemNormal.Count > index)
                 {
                     Item itemSelect = listItemNormal.get(index);
                     switch (itemSelect.getTemp().getType())
                     {
+                        /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/
                         case GopetManager.ITEM_BUFF_EXP:
                             {
                                 BuffExp buffExp = player.playerData.buffExp;
@@ -1823,7 +1907,7 @@ public class MenuController
                                 player.okDialog(Utilities.Format("Bạn đang được buff %s/ kinh nghiệm trong %s phút!", buffExp.getPercent(), Utilities.round(buffExp.getBuffExpTime() / 1000 / 60)).Replace("/", "%"));
                                 break;
                             }
-
+                        /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/
                         case GopetManager.ITEM_ADMIN:
                             {
                                 if (player.checkIsAdmin())
@@ -1838,6 +1922,7 @@ public class MenuController
                                 }
                                 return;
                             }
+                        /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/
                         case GopetManager.ITEM_ENERGY:
                             {
                                 if (itemSelect.Template.itemOptionValue != null)
@@ -1851,11 +1936,11 @@ public class MenuController
                                         if (numUse >= itemSelect.Template.itemOptionValue[1])
                                         {
                                             player.redDialog("Bạn đã sử dụng đạt tối đa ngày hôm nay");
+                                            return;
                                         }
                                         else
                                         {
                                             numUse++;
-                                            player.controller.subCountItem(itemSelect, 1, GopetManager.NORMAL_INVENTORY);
                                             player.playerData.star += itemSelect.Template.itemOptionValue[0];
                                             player.controller.updateUserInfo();
                                             player.playerData.numUseEnergy[itemSelect.itemTemplateId] = numUse;
@@ -1865,7 +1950,13 @@ public class MenuController
                                 }
                                 break;
                             }
-
+                        case GopetManager.ITEM_PET_PACKAGE:
+                            {
+                                player.controller.objectPerformed[OBJKEY_ITEM_PACKAGE_PET_TO_USE] = itemSelect;
+                                sendMenu(MENU_CHOOSE_PET_FROM_PACKAGE_PET, player);
+                                return;
+                            }
+                        /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/
                         default:
                             {
                                 player.redDialog("Không thể sử dụng vật phẩm này");
@@ -2155,6 +2246,9 @@ public class MenuController
                         case ADMIN_INDEX_COIN:
                             player.controller.showInputDialog(INPUT_TYPE_NAME_TO_BUFF_COIN, "Cộng từ tiền", new String[] { "Tiền :", "Tài khoản :" });
                             break;
+                        case ADMIN_INDEX_GET_ZONE_ID:
+                            player.okDialog($"Bạn đang ở khu {player.getPlace().zoneID} của map {player.getPlace().map.mapTemplate.name} mapId = {player.getPlace().map.mapID}");
+                            break;
                     }
                 }
                 break;
@@ -2406,10 +2500,11 @@ public class MenuController
             case OP_TOP_PET:
                 showTop(TopPet.instance, player); break;
             case OP_TOP_GOLD:
-                break;
                 showTop(TopGold.instance, player); break;
             case OP_TOP_GEM:
                 showTop(TopGem.instance, player); break;
+            case OP_SHOW_TOP_ACCUMULATED_POINT:
+                showTop(TopAccumulatedPoint.Instance, player); break;
             case OP_TOP_SPEND_GOLD:
                 {
                     showTop(TopSpendGold.instance, player);
@@ -2502,22 +2597,23 @@ public class MenuController
                     Pet pet = player.getPet();
                     if (pet != null)
                     {
-                        if (pet.petDieByPK)
+                        if (pet.TimeDie > Utilities.CurrentTimeMillis)
                         {
-                            if (player.checkCoin(GopetManager.PRICE_REVIVAL_PET_FATER_PK))
+                            if (player.checkGold(GopetManager.PRICE_REVIVAL_PET_FATER_PK))
                             {
-                                player.mineCoin(GopetManager.PRICE_REVIVAL_PET_FATER_PK);
+                                player.mineGold(GopetManager.PRICE_REVIVAL_PET_FATER_PK);
                                 pet.petDieByPK = false;
-                                player.okDialog(Utilities.Format("Hồi sinh %s thành công, nhờ trân trọng nó nhé'", pet.getNameWithStar()));
+                                pet.TimeDie = 0;
+                                player.okDialog(Utilities.Format("Hồi sinh %s thành công, nhờ trân trọng nó nhé", pet.getNameWithStar()));
                             }
                             else
                             {
-                                player.controller.notEnoughCoin();
+                                player.controller.notEnoughGold();
                             }
                         }
                         else
                         {
-                            player.redDialog("Thứ cưng của bạn vẫn bình thường");
+                            player.redDialog("Nó vẫn bình thường mà");
                         }
                     }
                     else
@@ -2790,6 +2886,15 @@ public class MenuController
     public static void showTop(Top top, Player player)
     {
         JArrayList<MenuItemInfo> menuItemInfos = new();
+
+        var myInfoTop = top.getMyInfo(player);
+        if (myInfoTop != null)
+        {
+            MenuItemInfo menuItemInfo = new MenuItemInfo(myInfoTop.title, myInfoTop.desc, myInfoTop.imgPath, false);
+            menuItemInfos.add(menuItemInfo);
+            menuItemInfos.add(new MenuItemInfo("----------TOP----------", "", "npcs/lixi.png", false));
+        }
+
         foreach (TopData data in top.datas)
         {
             MenuItemInfo menuItemInfo = new MenuItemInfo(data.title, data.desc, data.imgPath, false);
@@ -3524,7 +3629,7 @@ public class MenuController
 
                         if (item != null)
                         {
-                            if (!item.getTemp().isCanTrade())
+                            if (!item.getTemp().isCanTrade() || !item.canTrade)
                             {
                                 player.redDialog("Vật phẩm này không thể giao dịch");
                                 return;
@@ -3785,11 +3890,12 @@ public class MenuController
 
                 case INPUT_DIALOG_EXCHANGE_GOLD_TO_COIN:
                     {
+                        /*
                         if (true)
                         {
                             player.redDialog("Cây ATM này hiện đã hết ngọc bạn vui lòng chờ nhân viên ngân hàng nạp thêm ngọc vào cây ATM này!");
                             return;
-                        }
+                        }*/
                         long value = Math.Abs(reader.readlong(0));
                         if (player.checkGold(value))
                         {
@@ -3931,7 +4037,7 @@ public class MenuController
                             int coin = reader.readInt(1);
                             using (var conn = MYSQLManager.createWebMySqlConnection())
                             {
-                                 
+
                                 UserData userData = conn.QueryFirstOrDefault<UserData>("SELECT * from user where username = @username", new { coin = conn, username = name });
                                 if (userData != null)
                                 {
@@ -3976,7 +4082,18 @@ public class MenuController
                         }
                     }
                     break;
-
+                case INPUT_TYPE_NAME_PET_WHEN_BUY_PET:
+                    {
+                        string name = reader.readString(0);
+                        if (name.Length > 30 || name.Length <= 5)
+                        {
+                            player.redDialog("Tên pet không dài quá 30 ký tự và phải lớn hơn 6 ký tự");
+                            return;
+                        }
+                        player.controller.objectPerformed[OBJKEY_NAME_PET_WANT] = name;
+                        selectMenu(player.controller.objectPerformed[OBJKEY_ID_MENU_BUY_PET_TO_NAME], player.controller.objectPerformed[OBJKEY_INDEX_MENU_BUY_PET_TO_NAME], player.controller.objectPerformed[OBJKEY_PAYMENT_INDEX_WANT_TO_NAME_PET], player);
+                        break;
+                    }
                 case INPUT_DIALOG_CREATE_CLAN:
                     {
                         //                    if (true) {
@@ -4080,6 +4197,7 @@ public class MenuController
             case INPUT_DIALOG_CHALLENGE_INVITE:
             case INPUT_DIALOG_KIOSK:
                 return new sbyte[] { InputReader.FIELD_INT };
+            case INPUT_TYPE_NAME_PET_WHEN_BUY_PET:
             case INPUT_TYPE_NAME_TO_BUFF_ENCHANT:
             case INPUT_TYPE_GIFT_CODE:
             case INPUT_DIALOG_CAPTCHA:

@@ -1,4 +1,4 @@
- 
+
 using Gopet.Data.Collections;
 using Gopet.Data.User;
 using Gopet.Util;
@@ -24,8 +24,14 @@ public class Top
 
     public virtual void updateSQLBXH()
     {
-         
+
     }
+
+    public virtual TopData getMyInfo(Player player)
+    {
+        return null;
+    }
+
 
     public virtual CopyOnWriteArrayList<TopData> getTOPData()
     {

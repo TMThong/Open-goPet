@@ -11,6 +11,7 @@ public class MapManager
     public static JArrayList<GopetMap> mapArr = new();
 
     public const int ID_LINH_THU_CITY = 11;
+    public const int ID_MAP_CHALLENGE = 12;
 
     public static void init()
     {

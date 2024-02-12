@@ -8,6 +8,10 @@ public class TaskData {
     public long timeTask;
     public bool wasShowDialog = false;
 
+    public TaskData()
+    {
+    }
+
     public TaskData(TaskTemplate taskTemplate) {
         this.taskTemplateId = taskTemplate.taskId;
         this.taskInfo = taskTemplate.task;

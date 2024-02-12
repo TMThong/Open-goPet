@@ -4,6 +4,7 @@ using Gopet.IO;
 using Gopet.Manager;
 using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -68,6 +69,33 @@ namespace Gopet.APIs
                 sender.Release();
             }
             return Ok(GopetApiExtentsion.CreateOKRepository(Main.server.isRunning));
+        }
+        [HttpGet("gc")]
+        public IActionResult gc()
+        {
+            System.GC.Collect();
+            return Ok(GopetApiExtentsion.CreateOKRepository(Main.server.isRunning));
+        }
+        [HttpGet("socketCount")]
+        public IActionResult socketCount()
+        {
+            return Ok(GopetApiExtentsion.CreateOKRepository(Session.socketCount));
+        }
+        [HttpGet("Server.Exp.Percent")]
+        public IActionResult ServerExpPercent()
+        {
+            return Ok(GopetApiExtentsion.CreateOKRepository(FieldManager.PERCENT_EXP));
+        }
+        [HttpGet("Server.GEM.Percent")]
+        public IActionResult ServerGEMPercent()
+        {
+            return Ok(GopetApiExtentsion.CreateOKRepository(FieldManager.PERCENT_GEM));
+        }
+        [HttpGet("RefreshField")]
+        public IActionResult RefreshField()
+        {
+            FieldManager.Init();
+            return Ok(GopetApiExtentsion.CreateOKRepository(JsonConvert.SerializeObject(FieldManager.Fields, Formatting.Indented)));
         }
 
         [HttpGet("Threads")]

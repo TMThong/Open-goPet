@@ -1,6 +1,8 @@
 using Gopet.Util;
 using Gopet.Data.User;
 using Dapper;
+using System;
+using System.Reflection;
 
 public class TopGold : Top
 {
@@ -15,8 +17,25 @@ public class TopGold : Top
         base.desc = "Chỉ những người chơi giàu có";
     }
 
+    public override TopData getMyInfo(Player player)
+    {
+        var findTop = datas.Where(p => p.id == player.playerData.user_id);
 
-    public void update()
+        if (findTop.Any())
+        {
+            return findTop.First();
+        }
+
+        TopData topData = new TopData();
+        topData.id = player.playerData.user_id;
+        topData.name = player.playerData.name;
+        topData.imgPath = player.playerData.avatarPath;
+        topData.title = topData.name;
+        topData.desc = $"Hạng chưa có : Bạn đang có {Utilities.FormatNumber(player.playerData.gold)} (vang)";
+        return topData;
+    }
+
+    public override void update()
     {
         try
         {
@@ -46,7 +65,7 @@ public class TopGold : Top
             }
             catch (Exception e)
             {
-                e.printStackTrace();    
+                e.printStackTrace();
             }
             updateSQLBXH();
         }

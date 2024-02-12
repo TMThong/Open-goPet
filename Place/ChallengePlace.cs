@@ -128,7 +128,6 @@ public class ChallengePlace : GopetPlace
             foreach (Player player in players)
             {
                 player.controller.getTaskCalculator().onNextChellengePlace(this.turn);
-                player.playerData.AccumulatedPoint += 10;
             }
             placeTime = Utilities.CurrentTimeMillis + TIME_ATTACK;
             this.sendMob();

@@ -28,7 +28,7 @@ namespace Gopet.CommandLine
             switch (args[2])
             {
                 case "summonboss":
-                    (MapManager.maps[mapId].places.Where(p => p.zoneID == zoneId).First() as GopetPlace).numMobDie = int.MaxValue / 2;
+                    (MapManager.maps[mapId].places.Where(p => p.zoneID == zoneId).First() as GopetPlace).numMobDie[0] = int.MaxValue / 2;
                     GopetManager.ServerMonitor.LogWarning("Thao tác thành công bạn vui lòng giết 1 con quái để nó xuất hiện");
                     break;
                 case "okDialog":

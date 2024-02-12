@@ -181,6 +181,12 @@ namespace Gopet.Util
 
         public static string FormatNumber(long number)
         {
+
+            if (number == 0)
+            {
+                return "0";
+            }
+
             return number.ToString("###,###,###", viNumberFormat);
         }
 

@@ -6,6 +6,6 @@ namespace Gopet.Data.Map
         public string name { get; private set; }
         public int[] npc { get; private set; }
         public int[] boss {  get; private set; }
-        public int numPetDie { get; private set; }
+        public int[] numPetDie { get; private set; }
     }
 }

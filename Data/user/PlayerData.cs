@@ -36,7 +36,7 @@ public class PlayerData
     public int star { get; set; } = 0;
     public Item skin { get; set; }
     public Item wing { get; set; }
-    public bool isOnSky { get; set; } = false;
+    public bool isOnSky { get; private set; } = false;
     public BuffExp? buffExp { get; set; } = new BuffExp();
     public int pkPoint { get; set; } = 0;
     public DateTime pkPointTime { get; set; }
@@ -47,6 +47,7 @@ public class PlayerData
     public String avatarPath { get; set; }
 
     public int AccumulatedPoint { get; set; }
+
 
     public Dictionary<int, int> numUseEnergy { get; set; } = new();
 
@@ -143,7 +144,7 @@ public class PlayerData
         CopyOnWriteArrayList<Item> list = getInventoryOrCreate(type);
         if (item.Template.isStackable)
         {
-            var findDupcate = list.Where(p => p.Template.itemId == item.Template.itemId);
+            var findDupcate = list.Where(p => p.Template.itemId == item.Template.itemId && p.canTrade == item.canTrade);
             if (findDupcate.Any())
             {
                 findDupcate.First().count += item.count;

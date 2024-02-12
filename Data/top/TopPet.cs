@@ -17,7 +17,7 @@ public class TopPet : Top
     }
 
 
-    public void update()
+    public override void update()
     {
         try
         {
@@ -27,9 +27,9 @@ public class TopPet : Top
             using (var conn = MYSQLManager.create())
             {
                 conn.Execute("DELETE FROM `top_pet`;");
-                conn.Execute("INSERT INTO `top_pet` (`ownerId`, `ownerName`,`petTemplateId`, `star`, `clanLvl`, `exp`, `maxHp`, `maxMp`, `def`, `atk`) SELECT `player`.`user_id` as `ownerId`, `player`.`name` as` ownerName`, JSON_VALUE(`player`.`pets`, '$[*].petIdTemplate') AS `petIdTemplate`, JSON_VALUE(`player`.`pets`, '$[*].star') AS `star`, JSON_VALUE(`player`.`pets`, '$[*].clanLvl') AS `clanLvl`, JSON_VALUE(`player`.`pets`, '$[*].exp') AS `exp`, JSON_VALUE(`player`.`pets`, '$[*].maxHp') AS `maxHp`, JSON_VALUE(`player`.`pets`, '$[*].maxMp') AS `maxMp`, JSON_VALUE(`player`.`pets`, '$[*].def') AS def, JSON_VALUE(player.pets, '$[*].atk') AS `atk` FROM `player` WHERE `player`.`pets` IS NOT NULL && JSON_VALUE(`player`.`pets`, '$[*].exp') IS NOT NULL;");
-                conn.Execute("INSERT INTO `top_pet` (`ownerId`, `ownerName`,`petTemplateId`, `star`, `clanLvl`, `exp`, `maxHp`, `maxMp`, `def`, `atk`) SELECT `player`.`user_id` as `ownerId`, `player`.`name` as `ownerName`, JSON_VALUE(`player`.`petSelected`, '$.petIdTemplate') AS `petIdTemplate`, JSON_VALUE(`player`.`petSelected`, '$.star') AS `star`, JSON_VALUE(player.petSelected, '$.clanLvl') AS `clanLvl`, JSON_VALUE(player.petSelected, '$.exp') AS `exp`, JSON_VALUE(`player`.`petSelected`, '$.maxHp') AS `maxHp`, JSON_VALUE(`player`.`petSelected`, '$.maxMp') AS `maxMp`, JSON_VALUE(`player`.`petSelected`, '$.def') AS `def`, JSON_VALUE(`player`.`petSelected`, '$.atk') AS `atk` FROM `player` WHERE `player`.`petSelected` IS NOT NULL && NOT `player`.`petSelected` = 'null';");
-                var topDataDynamic = conn.Query("SELECT * FROM `top_pet` ORDER BY clanLvl DESC, exp DESC LIMIT 30");
+                conn.Execute("INSERT INTO `top_pet` (`ownerId`, `ownerName`,`petTemplateId`, `star`, `lvl`, `exp`, `maxHp`, `maxMp`, `def`, `atk`) SELECT `player`.`user_id` as `ownerId`, `player`.`name` as` ownerName`, JSON_VALUE(`player`.`pets`, '$[*].petIdTemplate') AS `petIdTemplate`, JSON_VALUE(`player`.`pets`, '$[*].star') AS `star`, JSON_VALUE(`player`.`pets`, '$[*].lvl') AS `lvl`, JSON_VALUE(`player`.`pets`, '$[*].exp') AS `exp`, JSON_VALUE(`player`.`pets`, '$[*].maxHp') AS `maxHp`, JSON_VALUE(`player`.`pets`, '$[*].maxMp') AS `maxMp`, JSON_VALUE(`player`.`pets`, '$[*].def') AS def, JSON_VALUE(player.pets, '$[*].atk') AS `atk` FROM `player` WHERE `player`.`pets` IS NOT NULL && JSON_VALUE(`player`.`pets`, '$[*].exp') IS NOT NULL;");
+                conn.Execute("INSERT INTO `top_pet` (`ownerId`, `ownerName`,`petTemplateId`, `star`, `lvl`, `exp`, `maxHp`, `maxMp`, `def`, `atk`) SELECT `player`.`user_id` as `ownerId`, `player`.`name` as `ownerName`, JSON_VALUE(`player`.`petSelected`, '$.petIdTemplate') AS `petIdTemplate`, JSON_VALUE(`player`.`petSelected`, '$.star') AS `star`, JSON_VALUE(player.petSelected, '$.lvl') AS `lvl`, JSON_VALUE(player.petSelected, '$.exp') AS `exp`, JSON_VALUE(`player`.`petSelected`, '$.maxHp') AS `maxHp`, JSON_VALUE(`player`.`petSelected`, '$.maxMp') AS `maxMp`, JSON_VALUE(`player`.`petSelected`, '$.def') AS `def`, JSON_VALUE(`player`.`petSelected`, '$.atk') AS `atk` FROM `player` WHERE `player`.`petSelected` IS NOT NULL && NOT `player`.`petSelected` = 'null';");
+                var topDataDynamic = conn.Query("SELECT * FROM `top_pet` ORDER BY lvl DESC, exp DESC LIMIT 30");
                 int index = 1;
                 foreach
                     (dynamic data in topDataDynamic)

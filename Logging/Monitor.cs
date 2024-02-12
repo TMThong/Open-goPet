@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gopet.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,7 +37,7 @@ namespace Gopet.Logging
 
         private void WriteCustom(string message, LogLevel logLevel = LogLevel.Debug)
         {
-            WriteLine($"[{this.LogName} {DateTime.Now}] {message.Replace("\n" , $"\n[{this.LogName} {DateTime.Now}] ")}", logLevel);
+            WriteLine($"[{this.LogName} {DateTime.Now}] {message.Replace("\n", $"\n[{this.LogName} {DateTime.Now}] ")}", logLevel);
         }
 
         static void WriteLine(string message, LogLevel logLevel = LogLevel.Debug)
@@ -68,24 +69,22 @@ namespace Gopet.Logging
 
         static void Write(string message, ConsoleColor consoleColor)
         {
-            Task.Run(() =>
+            mutex.WaitOne();
+            try
             {
-                mutex.WaitOne();
-                try
-                {
 
-                    Console.ForegroundColor = consoleColor;
-                    Console.Write(message);
-                    Console.ResetColor();
-                    var Writer = GopetManager.Writer;
-                    if (Writer != null)
-                    {
-                        Writer.Write(message);
-                        Writer.Flush();
-                    }
+                Console.ForegroundColor = consoleColor;
+                Console.Write(message);
+                Console.ResetColor();
+                var Writer = GopetManager.Writer;
+                if (Writer != null)
+                {
+                    Writer.WriteLineAsync(message);
+                    Writer.FlushAsync();
                 }
-                finally { mutex.ReleaseMutex(); }
-            });
+            }
+            catch (Exception e) { e.printStackTrace(); }
+            finally { mutex.ReleaseMutex(); }
         }
     }
 }

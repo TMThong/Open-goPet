@@ -33,6 +33,8 @@ public class GameController
 
     private long lastTimeTypeGiftCode = 0L;
 
+    public long delayTimeHealPet = 0;
+
     public bool isBuffEnchent { get; private set; } = false;
 
     public bool isHasBattleAndShowDialog()
@@ -229,6 +231,18 @@ public class GameController
                     if (getPetBattle() == null)
                     {
                         int mapId = message.reader().readInt();
+                        if (!CheckSky(mapId))
+                        {
+                            return;
+                        }
+
+
+                        if (player.getPet()?.TimeDie > Utilities.CurrentTimeMillis)
+                        {
+                            player.redDialog($"Bạn đã kiệt sức vui lòng không rời khỏi vùng an toàn !!! Còn {Utilities.FormatNumber(((player.getPet().TimeDie - Utilities.CurrentTimeMillis) / 1000))} giây nữa là hồi phục!");
+                            return;
+                        }
+
                         int index = message.reader().readInt();
                         int mapVersion = message.reader().readInt();
                         player.playerData.waypointIndex = (sbyte)index;
@@ -409,17 +423,17 @@ public class GameController
                 player.loginOK();
                 return;
             }
-            using(var conn = MYSQLManager.create())
+            using (var conn = MYSQLManager.create())
             {
-                var playerData = conn.QueryFirstOrDefault("select user_id from player where name = @name", new {name = name});
-                if(playerData != null)
+                var playerData = conn.QueryFirstOrDefault("select user_id from player where name = @name", new { name = name });
+                if (playerData != null)
                 {
                     player.redDialog("Tên nhân vật đã tồn tại");
                     Thread.Sleep(1000);
                     player.session.Close();
                     return;
                 }
-                
+
             }
             PlayerData.create(player.user.user_id, name, gender);
             player.login(player.user.username, player.user.password, "");
@@ -441,6 +455,7 @@ public class GameController
                 {
                     if (npcIdTemp == npcId)
                     {
+                        getTaskCalculator().onMeetNpc(npcId);
                         MenuController.showNpcOption(npcId, player);
                         break;
                     }
@@ -677,6 +692,9 @@ public class GameController
             case GopetCMD.PET_INVENTORY:
                 requestPetInventory();
                 break;
+            case GopetCMD.SHOW_GEM_INVENTORY:
+                showGemInvenstory();
+                break;
             case GopetCMD.REQUEST_PET_IMG:
                 {
                     requestPetImg(message.reader().readsbyte(), message.reader().readUTF());
@@ -871,6 +889,23 @@ public class GameController
                 break;
             case GopetCMD.INVITE_MATCH:
                 inviteMatch(message.readInt());
+                break;
+            case GopetCMD.SHOW_TATTO_PET_IN_KIOSK:
+                {
+                    int IdMenuItem = message.readInt();
+
+                    var kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_PET);
+                    var sellItems = kiosk.kioskItems.Where(p => p.itemId == IdMenuItem);
+                    if (sellItems.Any())
+                    {
+                        var sellItem = sellItems.First();
+                        showPetTattoUI(sellItem.pet);
+                    }
+                    else
+                    {
+                        player.redDialog("Pet đã được bán hoặc người bán đã hủy kí gửi");
+                    }
+                }
                 break;
         }
     }
@@ -1069,6 +1104,10 @@ public class GameController
                 if (changePlaceDelay < Utilities.CurrentTimeMillis)
                 {
                     int mapId = info[0];
+                    if (!CheckSky(mapId))
+                    {
+                        return;
+                    }
                     int placeId = info[1];
                     if (MapManager.maps.get(mapId) != null)
                     {
@@ -1301,6 +1340,7 @@ public class GameController
                     pet.tiemnang[index]++;
                     pet.applyInfo(player);
                     updateTiemnang();
+                    getTaskCalculator().onPlusGymPoint();
                     HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cộng tìm năng cho pet %s [num =%s,index=%s]", pet.getNameWithoutStar(), num, index)).setObj(pet));
                 }
                 else
@@ -1483,7 +1523,7 @@ public class GameController
 
     public bool checkGoldBar(int count)
     {
-        return checkCount(GopetManager.GOLD_BAR_ID, count , GopetManager.MONEY_INVENTORY);
+        return checkCount(GopetManager.GOLD_BAR_ID, count, GopetManager.MONEY_INVENTORY);
     }
 
     public bool checkSilverBar(int count)
@@ -2661,7 +2701,7 @@ public class GameController
         Pet petActive = selectPetByItemId(petId1);
         Pet petPassive = selectPetByItemId(petId2);
         PetTier petTier = GopetManager.petTier.get(petActive.petIdTemplate);
-        if (Utilities.CheckString(name, "^[()!@#%a-z0-9A-Z_\\x{00C0}-\\x{00FF}\\x{1EA0}-\\x{1EFF}]+$"))
+        if (name.Length > 30 || name.Length <= 5)
         {
             if (petActive.equip.isEmpty() && petPassive.equip.isEmpty())
             {
@@ -2754,7 +2794,7 @@ public class GameController
         }
         else
         {
-            player.redDialog("Không được dùng kí tự đặc biệt");
+            player.redDialog("Tên pet không dài quá 30 ký tự và phải lớn hơn 6 ký tự");
         }
     }
 
@@ -3118,9 +3158,14 @@ public class GameController
         return index;
     }
 
+
     public void showPetTattoUI()
     {
-        Pet pet = player.getPet();
+        showPetTattoUI(player.getPet());
+    }
+
+    public void showPetTattoUI(Pet pet)
+    {
         if (pet != null)
         {
             int indexTatto = getIndexOfPetCanTatto();
@@ -3255,6 +3300,10 @@ public class GameController
                         int itemId = giftInfo[1];
                         int count = giftInfo[2];
                         Item item = new Item(itemId);
+                        if (giftInfo.Length >= 4)
+                        {
+                            item.canTrade = giftInfo[3] == 1;
+                        }
                         if (!item.getTemp().isStackable)
                         {
                             for (int j = 0; j < count; j++)
@@ -3325,14 +3374,14 @@ public class GameController
                                 int[] rand = Utilities.RandomArray(listGiftRandom);
                                 int itemId = rand[1];
                                 int count = rand[0];
-                                switch(itemId)
+                                switch (itemId)
                                 {
                                     case -123:
                                         itemId = Utilities.RandomArray(GopetManager.ID_ITEM_SILVER);
-                                        break; 
+                                        break;
                                     case -124:
                                         itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PET_TIER_ONE);
-                                        break; 
+                                        break;
                                     case -125:
                                         itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PET_TIER_TOW);
                                         break;
@@ -3848,6 +3897,7 @@ public class GameController
         if (olPlayer != null)
         {
             ClanMember clanMember = olPlayer.controller.getClan();
+            if (clanMember == null) return;
             bool canEdit = clanMember.duty == Clan.TYPE_LEADER && user_id == player.user.user_id;
             if (clanMember != null)
             {
@@ -4137,5 +4187,16 @@ public class GameController
     public void notEnoughItem(Item itemSelect, int count)
     {
         player.redDialog($"Không đủ vật phẩm {itemSelect.Template.name} cần số lượng : {count}");
+    }
+
+
+    public bool CheckSky(int mapId)
+    {
+        if (mapId >= 26 && !player.playerData.isOnSky)
+        {
+            player.redDialog("Để lên thượng giới bạn cần 1 con thú cưng có cánh.\n Có nghĩa là bạn cần có 1 con pet trùng sinh!!!");
+            return false;
+        }
+        return true;
     }
 }

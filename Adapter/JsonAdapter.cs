@@ -22,7 +22,7 @@ namespace Gopet.Adapter
         {
             if (value is string text)
             {
-                return JsonConvert.DeserializeObject<T>(text);
+                return JsonConvert.DeserializeObject<T>(text, SerializerSettings);
             }
             else
             {

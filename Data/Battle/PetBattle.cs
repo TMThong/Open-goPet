@@ -4,6 +4,7 @@ using Gopet.Data.GopetItem;
 using Gopet.Data.Mob;
 using Gopet.IO;
 using Gopet.Util;
+using Gopet.Manager;
 
 namespace Gopet.Battle
 {
@@ -656,6 +657,10 @@ namespace Gopet.Battle
                 {
                     if (!(mob is Boss))
                     {
+                        if (this.place.map.mapID == MapManager.ID_MAP_CHALLENGE)
+                        {
+                            activePlayer.playerData.AccumulatedPoint += GopetManager.POINT_WHEN_KILL_MOB_CHALLENGE;
+                        }
                         ClanMember clanMember = activePlayer.controller.getClan();
                         float perExpPlus = 0f;
                         float coinPlus = 0f;
@@ -719,6 +724,10 @@ namespace Gopet.Battle
                     }
                     HistoryManager.addHistory(new History(activePlayer).setLog(Utilities.Format("Tiếu diệt quái %s", mob.getName())).setObj(mob).setSpceialType(History.KILL_MOB));
                     activePlayer.controller.randomCaptcha();
+                }
+                else
+                {
+                    activePlayer.controller.delayTimeHealPet = Utilities.CurrentTimeMillis + GopetManager.TIME_DELAY_HEAL_WHEN_MOB_KILL_PET;
                 }
                 win(petBattleTexts.ToArray(), coin, exp);
                 activePlayer.controller.setLastTimeKillMob(Utilities.CurrentTimeMillis);
@@ -785,7 +794,7 @@ namespace Gopet.Battle
                             exp_sub_winner = 0;
                         }
                     }
-                    winnerPet.subExpPK(exp_sub_winner);
+                    winnerPet.addExp((int)exp_sub_winner);
                     win(petBattleTexts.ToArray(), price, 0);
                     winner.addCoin(Utilities.round(Utilities.GetValueFromPercent(coinPK, 50f)));
                     nonWinner.mineCoin(coinPK);
@@ -794,6 +803,8 @@ namespace Gopet.Battle
                         winner.okDialog(Utilities.Format("Pet của bạn đã bị trừ %s exp", Utilities.FormatNumber(exp_sub_winner)));
                     }
                     nonWinner.okDialog(Utilities.Format("Pet của bạn đã bị trừ %s exp", Utilities.FormatNumber(exp_sub)));
+                    nonPet.TimeDie = Utilities.CurrentTimeMillis + (1000l * 60 * 15);
+                    MapManager.maps.get(MapManager.ID_LINH_THU_CITY).addRandom(nonWinner);
                 }
                 else
                 {
@@ -801,6 +812,7 @@ namespace Gopet.Battle
                     {
                         int totalPrice = Utilities.round(price * 2 - Utilities.GetValueFromPercent(price * 2, GopetManager.BET_PRICE_PLAYER_CHALLENGE));
                         winner.addCoin(totalPrice);
+                        winner.controller.getTaskCalculator().onWinBetBattle();
                         win(petBattleTexts.ToArray(), price, 0);
                     }
                 }
@@ -1017,7 +1029,7 @@ namespace Gopet.Battle
 
         private bool dotmana(PetSkillLv petSkillLv)
         {
-            return ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) > 0 || 
+            return ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) > 0 ||
               ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA_BY_ATK) > 0;
         }
 
@@ -1144,7 +1156,15 @@ namespace Gopet.Battle
                     }
                     Pet pet = getNonPet();
                     int buffDef = ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.DEF);
-                    if (!(mob is Boss))
+                    bool flag = true;
+                    if ((mob is Boss b))
+                    {
+                        if (b.Template.typeBoss == 0)
+                        {
+                            flag = false;
+                        }
+                    }
+                    if (flag)
                     {
                         if (sum - (pet.getDef() + buffDef) < 0)
                         {
@@ -1464,7 +1484,7 @@ namespace Gopet.Battle
             }
             begin = Math.Max(0, (int)Utilities.GetValueFromPercent(begin, 100 - Utilities.nextInt(-10, 10)));
             //        System.out.println("data.battle.PetBattle.genGemWhenMobDie()" + begin);
-            return begin;
+            return Utilities.round(Utilities.GetValueFromPercent(begin, FieldManager.PERCENT_GEM));
         }
 
         public static int genExpWhenMobDie(Player player, Pet p, Mob mob, int exp)
@@ -1494,7 +1514,7 @@ namespace Gopet.Battle
                 }
             }
             begin = Math.Max(0, (int)Utilities.GetValueFromPercent(begin, 100 - Utilities.nextInt(-10, 10)));
-            return begin;
+            return Utilities.round(Utilities.GetValueFromPercent(begin, FieldManager.PERCENT_EXP));
         }
     }
 }

@@ -172,6 +172,7 @@ public class GopetManager
     public const int ITEM_PART_ITEM = 19;
     public const int ITEM_ENERGY = 20;
     public const int ITEM_MATERIAL_ENCHANT_WING = 21;
+    public const int ITEM_PET_PACKAGE = 22;
     public const int GIFT_GOLD = 0;
     public const int GIFT_COIN = 1;
     public const int GIFT_ITEM = 2;
@@ -346,8 +347,8 @@ public class GopetManager
     /**
      * Id các map được dịch chuyển
      */
-    //    public const int[] TeleMapId = new int[]{11, 19, 24, 22, 27, 26, 28};
-    public static int[] TeleMapId = new int[] { 11, 19, 24, 22 };
+    public static int[] TeleMapId = new int[]{11, 19, 24, 22, 27, 26, 28};
+    //public static int[] TeleMapId = new int[] { 11, 19, 24, 22 };
     /**
      * Giá nâng kỹ năng theo từng giai đoạn
      */
@@ -450,14 +451,14 @@ public class GopetManager
     public const int MAX_PK_POINT = 10;
     public const long MIN_PET_EXP_PK = -20000000;
     public const long TIME_DECREASE_PK_POINT = 1000 * 60 * 30;
-    public const long PRICE_REVIVAL_PET_FATER_PK = 5000;
+    public const long PRICE_REVIVAL_PET_FATER_PK = 3000;
     public const float BET_PRICE_PLAYER_CHALLENGE = 10f;
     public const int LVL_PET_PASSIVE_REQUIER_UP_TIER = 10;
     public const int SILVER_BAR_ID = 186;
     public const int GOLD_BAR_ID = 187;
     public const int BLOOD_GEM_ID = 188;
     public static int[] ID_BOSS_CHALLENGE = new int[] { 11, 12, 13, 14, 15 };
-
+    public static int[] ID_BOSS_TASK = new int[] { 16 };
     public static int[] LVL_REQUIRE_PET_TATTO = new int[] { 3, 5, 10, 15, 20, 25, 30, 35 };
     public const int MOB_NEED_CAPTCHA = 125;
     public const long TIME_BOSS_DISPOINTED = 1000 * 60 * 10;
@@ -479,9 +480,10 @@ public class GopetManager
 
     public const int MAX_TIMES_SHOW_CAPTCHA = 5;
 
-    public const int PERCENT_EXCHANGE_GOLD_TO_COIN = 20;
+    public const int PERCENT_EXCHANGE_GOLD_TO_COIN = 1;
     public const int MAX_LVL_ENCHANT_WING = 10;
     public const float PERCENT_ADD_WHEN_ENCHANT_WING = 10f;
+    public const int POINT_WHEN_KILL_MOB_CHALLENGE = 3;
 
     public static readonly Dictionary<int, EnchantWingData> EnchantWingData = new();
 
@@ -490,6 +492,7 @@ public class GopetManager
     public static readonly int[] ID_ITEM_PET_TIER_TOW = new int[] { 740, 742, 744, 746, 748, 750, 756, 760, 762, 764, 766 };
 
     public const int PRICE_ACTIVE_USER = 20000;
+    public const int TIME_DELAY_HEAL_WHEN_MOB_KILL_PET = 10000;
 
     public static readonly Dictionary<sbyte, TradeGiftTemplate[]> TradeGift = new();
 
@@ -911,8 +914,9 @@ public class GopetManager
                 FileInfo fileInfo = new FileInfo(Directory.GetCurrentDirectory() + $"/log/log_{DateTime.Now.Day}_{DateTime.Now.Month}_{DateTime.Now.Year}.txt");
                 fileInfo.Directory.Create();
                 __writer?.Close();
-                
+                Console.WriteLine( fileInfo.FullName );
                 OldDateTime = DateTime.Now;
+                __writer =  new StreamWriter(fileInfo.Open(FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite) , System.Text.Encoding.UTF8);
                 return __writer;
             }
             return __writer;

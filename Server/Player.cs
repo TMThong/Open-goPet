@@ -65,53 +65,61 @@ public class Player : IHandleMessage
 #endif
         try
         {
-            if (!session.clientOK && ms.id != GopetCMD.CLIENT_INFO)
+            try
             {
-                session.Close();
-                return;
-            }
+                if (!session.clientOK && ms.id != GopetCMD.CLIENT_INFO)
+                {
+                    session.Close();
+                    return;
+                }
 
-            switch (ms.id)
-            {
-                case GopetCMD.CLIENT_INFO:
+                switch (ms.id)
+                {
+                    case GopetCMD.CLIENT_INFO:
 
-                    CLIENT_TYPE = ms.reader().readsbyte();
-                    PROVIDER = ms.reader().readInt();
-                    ApplicationVersion = ms.reader().readUTF();
-                    info = ms.reader().readUTF();
-                    displayWidth = ms.reader().readInt();
-                    displayHeight = ms.reader().readInt();
-                    language = ms.reader().readUTF();
-                    Refcode = ms.reader().readUTF();
-                    Console.WriteLine("BEGIN CLIENT INFO");
-                    session.setClientOK(true);
-                    Console.WriteLine("CLIENT INFO");
-                    break;
-
-                case GopetCMD.LOGIN:
-                    {
-                        login(ms.reader().readUTF(), ms.reader().readUTF(), ms.reader().readUTF());
+                        CLIENT_TYPE = ms.reader().readsbyte();
+                        PROVIDER = ms.reader().readInt();
+                        ApplicationVersion = ms.reader().readUTF();
+                        info = ms.reader().readUTF();
+                        displayWidth = ms.reader().readInt();
+                        displayHeight = ms.reader().readInt();
+                        language = ms.reader().readUTF();
+                        Refcode = ms.reader().readUTF();
+                        Console.WriteLine("BEGIN CLIENT INFO");
+                        session.setClientOK(true);
+                        Console.WriteLine("CLIENT INFO");
                         break;
-                    }
-                case GopetCMD.CHANGE_PASSWORD:
-                    requestChangePass(ms.reader().readInt(), ms.reader().readUTF(), ms.reader().readUTF());
-                    break;
-                case GopetCMD.REGISTER:
-                    doRegister(ms.reader().readUTF(), ms.reader().readUTF());
-                    break;
-                case GopetCMD.CHARGE_MONEY_INFO:
-                    MenuController.sendMenu(MenuController.MENU_ATM, this);
-                    break;
-                default:
-                    controller.onMessage(ms);
-                    break;
+
+                    case GopetCMD.LOGIN:
+                        {
+                            login(ms.reader().readUTF(), ms.reader().readUTF(), ms.reader().readUTF());
+                            break;
+                        }
+                    case GopetCMD.CHANGE_PASSWORD:
+                        requestChangePass(ms.reader().readInt(), ms.reader().readUTF(), ms.reader().readUTF());
+                        break;
+                    case GopetCMD.REGISTER:
+                        doRegister(ms.reader().readUTF(), ms.reader().readUTF());
+                        break;
+                    case GopetCMD.CHARGE_MONEY_INFO:
+                        MenuController.sendMenu(MenuController.MENU_ATM, this);
+                        break;
+                    default:
+                        controller.onMessage(ms);
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+
             }
         }
         catch (Exception e)
         {
             e.printStackTrace();
 #if DEBUG
-            throw e;
+            //throw e;
 #elif !DEBUG
 Thread.Sleep(1000);
 #endif
@@ -228,7 +236,7 @@ Thread.Sleep(1000);
 
     private void UpdateHP_MP()
     {
-        if (isPetRecovery && petHpRecovery < Utilities.CurrentTimeMillis && !playerData.petSelected.petDieByPK)
+        if (isPetRecovery && petHpRecovery < Utilities.CurrentTimeMillis && !playerData.petSelected.petDieByPK && Utilities.CurrentTimeMillis > controller.delayTimeHealPet && Utilities.CurrentTimeMillis > playerData.petSelected.TimeDie)
         {
             playerData.petSelected.addHp((int)Utilities.GetValueFromPercent(20f, playerData.petSelected.maxHp));
             playerData.petSelected.addMp((int)Utilities.GetValueFromPercent(20f, playerData.petSelected.maxMp));
@@ -267,18 +275,8 @@ Thread.Sleep(1000);
                 this.user = userData;
                 if (user.role == UserData.ROLE_NON_ACTIVE)
                 {
-                    int coin = userData.getCoin();
-                    if (coin < GopetManager.PRICE_ACTIVE_USER)
-                    {
-                        redDialog($"Tài khoản của bạn chưa kích hoạt vui lòng nạp {Utilities.FormatNumber(GopetManager.PRICE_ACTIVE_USER)}");
-                        return;
-                    }
-                    else
-                    {
-                        user.mineCoin(GopetManager.PRICE_ACTIVE_USER, coin);
-                        user.role = 1;
-                        conn.Execute("UPDATE `user` set `role` = @role WHERE `user`.`user_id` = @user_id", new { role = userData.role , user_id = userData.user_id });
-                    }
+                    redDialog("Tài khoản chưa được kích hoạt");
+                    return;
                 }
 
                 switch (user.isBanned)
@@ -514,7 +512,7 @@ Thread.Sleep(1000);
     {
         playerData.gold += gold;
         controller.updateUserInfo();
-        if (gold < 0 && Utilities.CurrentTimeMillis < 1705330800000L)
+        if (gold < 0)
         {
             playerData.spendGold -= gold;
             TopData topData = TopSpendGold.instance.find(playerData.user_id);
@@ -536,14 +534,11 @@ Thread.Sleep(1000);
         playerData.gold -= gold;
 
         controller.updateUserInfo();
-        if (Utilities.CurrentTimeMillis < 1705330800000L)
+        playerData.spendGold += gold;
+        TopData topData = TopSpendGold.instance.find(playerData.user_id);
+        if (topData != null)
         {
-            playerData.spendGold += gold;
-            TopData topData = TopSpendGold.instance.find(playerData.user_id);
-            if (topData != null)
-            {
-                topData.desc = Utilities.Format("Hạng %s: Đã tiêu %s (vang)", TopSpendGold.instance.datas.indexOf(topData) + 1, Utilities.FormatNumber(playerData.spendGold));
-            }
+            topData.desc = Utilities.Format("Hạng %s: Đã tiêu %s (vang)", TopSpendGold.instance.datas.indexOf(topData) + 1, Utilities.FormatNumber(playerData.spendGold));
         }
     }
 
@@ -600,7 +595,7 @@ Thread.Sleep(1000);
             Item itemFlag = null;
             foreach (Item item1 in playerData.getInventoryOrCreate(inventory))
             {
-                if (item1.itemTemplateId == item.itemTemplateId)
+                if (item1.itemTemplateId == item.itemTemplateId && item.canTrade == item1.canTrade)
                 {
                     itemFlag = item1;
                     break;

@@ -1,6 +1,7 @@
 
 using Gopet.APIs;
 using Gopet.Data.GopetClan;
+using Gopet.Manager;
 using Gopet.Util;
  
 namespace Gopet.App
@@ -38,6 +39,7 @@ namespace Gopet.App
             GopetManager.loadMarket();
             BXHManager.instance.start();
             MenuController.init();
+            FieldManager.Init();
             initRuntime();
             RuntimeServer.instance.start();
             APIServer = new HttpServer(HTTP_PORT);

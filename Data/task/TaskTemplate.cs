@@ -6,7 +6,6 @@ public class TaskTemplate
     public int type;
     public String name;
     public String description;
-    public String guide = "";
     public int[][] task;
     public int[][] gift;
     public int fromNPC;
@@ -31,11 +30,6 @@ public class TaskTemplate
     public void setDescription(String description)
     {
         this.description = description;
-    }
-
-    public void setGuide(String guide)
-    {
-        this.guide = guide;
     }
 
     public void setTask(int[][] task)
@@ -83,11 +77,6 @@ public class TaskTemplate
         return this.description;
     }
 
-    public String getGuide()
-    {
-        return this.guide;
-    }
-
     public int[][] getTask()
     {
         return this.task;
@@ -112,5 +101,4 @@ public class TaskTemplate
     {
         return this.timeTask;
     }
-
 }
