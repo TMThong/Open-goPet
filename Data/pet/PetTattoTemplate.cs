@@ -4,7 +4,6 @@ public class PetTattoTemplate {
     public String name, iconPath;
     public int atk, def, hp, mp;
     public float percent;
-    public int type;
 
     public void setTattooId(int tattooId)
     {
@@ -46,10 +45,6 @@ public class PetTattoTemplate {
         this.percent = percent;
     }
 
-    public void setType(int type)
-    {
-        this.type = type;
-    }
 
     public int getTattooId()
     {
@@ -89,11 +84,6 @@ public class PetTattoTemplate {
     public float getPercent()
     {
         return this.percent;
-    }
-
-    public int getType()
-    {
-        return this.type;
     }
 
 }

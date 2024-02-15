@@ -183,7 +183,7 @@ Thread.Sleep(1000);
         }
     }
 
-    public void requestChangePass(int id, String oldPass, String newPass)
+    public void requestChangePass(int id, string oldPass, string newPass)
     {
         if (oldPass.Equals(user.password))
         {
@@ -199,7 +199,7 @@ Thread.Sleep(1000);
             user.password = newPass;
             using (var conn = MYSQLManager.createWebMySqlConnection())
             {
-                conn.Execute(Utilities.Format("update User set password = '%s' where user_id = %s", newPass, user.user_id));
+                conn.Execute("UPDATE `user` set password = @password where user_id = @user_id", new { password = newPass, user_id = user.user_id });
             }
             Message m = new Message(GopetCMD.CHANGE_PASSWORD);
             m.putUTF("Đổi mật khẩu thành công, vui lòng nhớ kỷ thông tin");

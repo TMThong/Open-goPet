@@ -26,12 +26,20 @@ namespace Gopet.Data.Map
                 }
                 catch (Exception e)
                 {
-                    e.printStackTrace();
+                    try
+                    {
+                        e.printStackTrace();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(e);
+                        Console.WriteLine(ex);
+                    }
                 }
             }
         }
 
-        public virtual void update()
+        public override void update()
         {
             foreach (Place place in places)
             {

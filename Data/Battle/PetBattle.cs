@@ -249,10 +249,11 @@ namespace Gopet.Battle
                 {
                     win();
                 }
+                /*
                 if (petAttackMob)
                 {
                     Thread.Sleep(GopetManager.DELAY_TURN_PET_BATTLE);
-                }
+                }*/
             }
             else
             {
@@ -994,11 +995,11 @@ namespace Gopet.Battle
                             if (hasWinner())
                             {
                                 win();
-                            }
+                            }/*
                             if (petAttackMob)
                             {
                                 Thread.Sleep(GopetManager.DELAY_TURN_PET_BATTLE);
-                            }
+                            }*/
                         }
                         else
                         {

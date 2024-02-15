@@ -1,13 +1,17 @@
 
 using Gopet.Data.Collections;
+using Gopet.Util;
 
-public class PetTatto  {
+public class PetTatto
+{
 
     public int tattooTemplateId;
     public int tattoId;
     public int hp, mp, atk, def;
+    public int lvl = 0;
 
-    public PetTatto(int tattooTemplateId) {
+    public PetTatto(int tattooTemplateId)
+    {
         this.tattooTemplateId = tattooTemplateId;
         PetTattoTemplate tattoTemplate = getTemp();
         setAtk(tattoTemplate.getAtk());
@@ -16,54 +20,74 @@ public class PetTatto  {
         setMp(tattoTemplate.getMp());
     }
 
-    public int getHp() {
-        return hp;
+
+    public static int getInfo(int info, int lvl)
+    {
+        return info + (int)Utilities.GetValueFromPercent(info, lvl * 10f);
     }
 
-    public void setHp(int hp) {
+    public int getHp()
+    {
+        return getInfo(hp, lvl);
+    }
+
+    public void setHp(int hp)
+    {
         this.hp = hp;
     }
 
-    public int getMp() {
-        return mp;
+    public int getMp()
+    {
+        return getInfo(mp, lvl);
     }
 
-    public void setMp(int mp) {
+    public void setMp(int mp)
+    {
         this.mp = mp;
     }
 
-    public int getAtk() {
-        return atk;
+    public int getAtk()
+    {
+        return getInfo(atk, lvl);
     }
 
-    public void setAtk(int atk) {
+    public void setAtk(int atk)
+    {
         this.atk = atk;
     }
 
-    public int getDef() {
-        return def;
+    public int getDef()
+    {
+        return getInfo(def, lvl);
     }
 
-    public void setDef(int def) {
+    public void setDef(int def)
+    {
         this.def = def;
     }
 
-    public PetTattoTemplate getTemp() {
+    public PetTattoTemplate getTemp()
+    {
         return GopetManager.tattos.get(tattooTemplateId);
     }
 
-    public String getName() {
+    public String getName()
+    {
         JArrayList<String> infoStrings = new JArrayList<String>();
-        if (getAtk() > 0) {
+        if (getAtk() > 0)
+        {
             infoStrings.add(getAtk() + " (atk) ");
         }
-        if (getDef() > 0) {
+        if (getDef() > 0)
+        {
             infoStrings.add(getDef() + " (def) ");
         }
-        if (getHp() > 0) {
+        if (getHp() > 0)
+        {
             infoStrings.add(getHp() + " (hp) ");
         }
-        if (getMp() > 0) {
+        if (getMp() > 0)
+        {
             infoStrings.add(getMp() + " (mp) ");
         }
 

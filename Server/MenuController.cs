@@ -93,6 +93,8 @@ public class MenuController
     public const int MENU_SELECT_MATERIAL_TO_ENCAHNT_WING = 1043;
     public const int MENU_SELECT_MONEY_TO_PAY_FOR_ENCHANT_WING = 1044;
     public const int MENU_CHOOSE_PET_FROM_PACKAGE_PET = 1045;
+    public const int MENU_SELECT_MATERIAL1_TO_ENCHANT_TATOO = 1046;
+    public const int MENU_SELECT_MATERIAL2_TO_ENCHANT_TATOO = 1047;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -501,6 +503,7 @@ public class MenuController
 
                     list.add(new Option(0, "Cập nhật", Option.CAN_SELECT));
                     list.add(new Option(1, "Hoàn thành nhiệm vụ", Option.CAN_SELECT));
+                    list.add(new Option(2, "Hủy nhiệm vụ", Option.CAN_SELECT));
 
                     player.controller.sendListOption(MENU_OPTION_TASK, "Tùy chọn nhiệm vụ", "", list);
                 }
@@ -680,6 +683,8 @@ public class MenuController
             case MENU_SKIN_INVENTORY:
                 showInventory(player, GopetManager.SKIN_INVENTORY, menuId, "Tủ quần ảo");
                 break;
+            case MENU_SELECT_MATERIAL1_TO_ENCHANT_TATOO:
+            case MENU_SELECT_MATERIAL2_TO_ENCHANT_TATOO:
             case MENU_SELECT_MATERIAL_TO_ENCAHNT_WING:
             case MENU_SELECT_ENCHANT_MATERIAL1:
             case MENU_SELECT_ENCHANT_MATERIAL2:
@@ -955,6 +960,7 @@ public class MenuController
         JArrayList<int> arrayList = new();
         switch (menuId)
         {
+            case MENU_SELECT_MATERIAL2_TO_ENCHANT_TATOO:
             case MENU_SELECT_GEM_ENCHANT_MATERIAL1:
             case MENU_SELECT_ENCHANT_MATERIAL1:
                 arrayList.add(!player.playerData.isOnSky ? GopetManager.MATERIAL_ENCHANT_ITEM : GopetManager.MATERIAL_ENCHANT_ITEM_SKY);
@@ -1014,6 +1020,9 @@ public class MenuController
                 break;
             case MENU_SELECT_MATERIAL_TO_ENCAHNT_WING:
                 arrayList.add(GopetManager.ITEM_MATERIAL_ENCHANT_WING);
+                break;
+            case MENU_SELECT_MATERIAL1_TO_ENCHANT_TATOO:
+                arrayList.add(GopetManager.ITEM_MATERIAL_ENCHANT_TATOO);
                 break;
         }
         return arrayList;
@@ -1107,7 +1116,7 @@ public class MenuController
                     if (player.controller.objectPerformed.ContainsKey(OBJKEY_ITEM_PACKAGE_PET_TO_USE))
                     {
                         Item item = player.controller.objectPerformed[OBJKEY_ITEM_PACKAGE_PET_TO_USE];
-                        if(index >= 0 && index < item.Template.itemOptionValue.Length && item.count > 0)
+                        if (index >= 0 && index < item.Template.itemOptionValue.Length && item.count > 0)
                         {
                             Pet p = new Pet(item.Template.itemOptionValue[index]);
                             player.playerData.addPet(p, player);
@@ -1206,6 +1215,12 @@ public class MenuController
                                     {
                                         player.redDialog("Bạn chưa đủ điều kiện");
                                     }
+                                    break;
+                                case 2:
+                                    player.playerData.task.remove(taskData);
+                                    player.playerData.tasking.remove(taskData.taskTemplateId);
+                                    player.controller.getTaskCalculator().update();
+                                    player.okDialog("Hủy thành công!");
                                     break;
                             }
                         }
@@ -1687,7 +1702,8 @@ public class MenuController
                     }
                 }
                 break;
-
+            case MENU_SELECT_MATERIAL2_TO_ENCHANT_TATOO:
+            case MENU_SELECT_MATERIAL1_TO_ENCHANT_TATOO:
             case MENU_SELECT_MATERIAL_TO_ENCAHNT_WING:
             case MENU_SELECT_GEM_TO_INLAY:
             case MENU_SELECT_GEM_UP_TIER:
@@ -1824,6 +1840,16 @@ public class MenuController
                                 }
                             }
                             break;
+                        case MENU_SELECT_MATERIAL2_TO_ENCHANT_TATOO:
+                            {
+                                player.controller.sendItemSelectTattoMaterialToEnchant(itemSelect.Template.itemId, itemSelect.Template.iconPath, itemSelect.Template.name);
+                                break;
+                            }
+                        case MENU_SELECT_MATERIAL1_TO_ENCHANT_TATOO:
+                            {
+                                player.controller.sendItemSelectTattoMaterialToEnchant(itemSelect.Template.itemId, itemSelect.Template.iconPath, itemSelect.Template.name);
+                                break;
+                            }
                         case MENU_SELECT_GEM_TO_INLAY:
                             {
                                 player.controller.inlayGem(itemSelect, (int)player.controller.objectPerformed.get(OBJKEY_EQUIP_INLAY_GEM_ID));
@@ -2473,6 +2499,10 @@ public class MenuController
 
     private static PetSkill[] getPetSkills(Player player)
     {
+        if (GopetManager.SPECIAL_PET_TO_LEARN_ALL_SKILL.Contains(player.playerData.petSelected.Template.petId))
+        {
+            return GopetManager.PET_SKILLS.ToArray();
+        }
         JArrayList<PetSkill> petSkills = GopetManager.NCLASS_PETSKILL_HASH_MAP.get(player.playerData.petSelected.getPetTemplate().getNclass());
         return petSkills.ToArray();
     }

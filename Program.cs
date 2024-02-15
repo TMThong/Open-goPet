@@ -1,10 +1,13 @@
-﻿using Gopet.Manager;
+﻿using Google.Protobuf.WellKnownTypes;
+using Gopet.Manager;
+using Gopet.Util;
 using System.Diagnostics;
 
 namespace Gopet
 {
     internal class Program
     {
+        [STAThread]
         static void Main(string[] args)
         {
             Gopet.App.Main.StartServer(args);

@@ -13,6 +13,7 @@ using MySql.Data.MySqlClient;
 using static MenuController;
 using Microsoft.AspNetCore.Mvc;
 using Dapper;
+using System.Collections.Generic;
 
 [NonController]
 public class GameController
@@ -134,13 +135,14 @@ public class GameController
 
     public void randomCaptcha()
     {
+        /*
         killMob++;
         if (killMob > GopetManager.MOB_NEED_CAPTCHA || Utilities.NextFloatPer() < 1f && player.playerData.captcha == null)
         {
             player.playerData.captcha = new GopetCaptcha();
             killMob = 0;
             showCaptchaDialog();
-        }
+        }*/
     }
 
     public String captchaPath = "img/captcha.png";
@@ -1611,11 +1613,96 @@ public class GameController
                         MenuController.sendMenu(MenuController.MENU_SELECT_ITEM_REMOVE_TATTO, player);
                     }
                     break;
+                case GopetCMD.TATTOO_ENCHANT_SELECT_MATERIAL:
+                    {
+                        selectTattoMaterialToEnchant(message.readsbyte());
+                    }
+                    break;
+                case GopetCMD.TATTOO_ENCHANT:
+                    {
+                        sendConfirmEnchantTatto(message.readInt(), message.readInt(), message.readInt());
+                    }
+                    break;
             }
         }
         else
         {
             player.petNotFollow();
+        }
+    }
+
+
+    private void sendConfirmEnchantTatto(int tattotId, int itemId1, int itemId2)
+    {
+        Pet p = player.getPet();
+        if (p != null)
+        {
+            var tatooList = p.tatto.Where(p => p.tattoId == tattotId);
+            if (tatooList.Any())
+            {
+                PetTatto first = tatooList.First();
+
+                Item item1 = selectItemByItemId(itemId1, GopetManager.NORMAL_INVENTORY);
+                Item item2 = selectItemByItemId(itemId2, GopetManager.NORMAL_INVENTORY);
+                if (item1 != null && item2 != null)
+                {
+                    if (checkType(GopetManager.ITEM_MATERIAL_ENCHANT_TATOO, item2) && checkType(GopetManager.MATERIAL_ENCHANT_ITEM, item2))
+                    {
+                        if (first.lvl < 10)
+                        {
+
+                        }
+                        else
+                        {
+                            player.redDialog("Xăm đã đạt cấp tối đa");
+                        }
+                    }
+                    else
+                    {
+                        InvailIitemType();
+                    }
+                }
+                else
+                {
+                    player.redDialog("Thao tác quá nhanh");
+                }
+            }
+            else
+            {
+                player.redDialog("Tính bug xăm?");
+            }
+        }
+        else
+        {
+            player.petNotFollow();
+        }
+    }
+
+
+    public void sendItemSelectTattoMaterialToEnchant(int id, string icon, string name)
+    {
+        Message m = messagePetSerive(GopetCMD.TATTOO);
+        m.putsbyte(7);
+        m.putInt(id);
+        m.putUTF(icon);
+        m.putUTF(name);
+        player.session.sendMessage(m);
+    }
+
+    public void selectTattoMaterialToEnchant(sbyte type)
+    {
+        switch (type)
+        {
+            case GopetCMD.TATTOO_ENCHANT_SELECT_MATERIAL1:
+                {
+                    sendMenu(MENU_SELECT_MATERIAL1_TO_ENCHANT_TATOO, player);
+                    break;
+                }
+            case GopetCMD.TATTOO_ENCHANT_SELECT_MATERIAL2:
+                {
+                    sendMenu(MENU_SELECT_MATERIAL2_TO_ENCHANT_TATOO, player);
+                    break;
+                }
         }
     }
 
@@ -2330,6 +2417,14 @@ public class GameController
                 return;
             }
 
+            if (isGem)
+            {
+                if (!checkGemElementVsPet(itemEuip.Template.element))
+                {
+                    return;
+                }
+            }
+
             if (player.checkCoin(GopetManager.PRICE_ENCHANT[itemEuip.lvl]))
             {
                 if (checkCount(materialCrystal, 1) && checkCount(materialItem, 1))
@@ -2574,6 +2669,25 @@ public class GameController
         }
     }
 
+    private bool checkGemElementVsPet(sbyte elementItem)
+    {
+        Pet pet = player.getPet();
+        if (pet != null)
+        {
+            if (!(pet.Template.element == GopetManager.DARK_ELEMENT || pet.Template.element == GopetManager.LIGHT_ELEMENT || pet.Template.element == elementItem))
+            {
+                player.redDialog($"Bạn cần thú cưng hệ {GopetManager.GetElementDisplay(GopetManager.LIGHT_ELEMENT)} hoặc {GopetManager.GetElementDisplay(GopetManager.DARK_ELEMENT)} để thao tác với tất cả các hệ.\n Còn lại bạn phải có thú cưng cùng hệ với vật phẩm!!!");
+                return false;
+            }
+        }
+        else
+        {
+            player.petNotFollow();
+            return false;
+        }
+        return true;
+    }
+
     public void upTierItem()
     {
         Item itemEuipActive = (Item)objectPerformed.get(MenuController.OBJKEY_ITEM_UP_TIER_ACTIVE);
@@ -2606,6 +2720,11 @@ public class GameController
                     {
                         if (isGem)
                         {
+                            if (!checkGemElementVsPet(tierItem.ItemTemplateTwo.element))
+                            {
+                                return;
+                            }
+
 
                             player.mineCoin(GopetManager.PRICE_UP_TIER_ITEM);
                             if (isKeepGem)
@@ -2619,7 +2738,7 @@ public class GameController
                                     return;
                                 }
                             }
-                            bool isSucces = Utilities.NextFloatPer() < tierItem.getPercent();
+                            bool isSucces = Utilities.NextFloatPer() <= tierItem.percent;
                             if (isSucces)
                             {
                                 itemEuipActive.updateGemOption();
@@ -2631,7 +2750,7 @@ public class GameController
                                     optionValue[i] = Utilities.round(Utilities.GetValueFromPercent(f * 100, GopetManager.PERCENT_ITEM_TIER_INFO));
                                 }
                                 itemEuipActive.lvl = 0;
-                                itemEuipActive.itemTemplateId = tierItem.getItemTemplateIdTier2();
+                                itemEuipActive.itemTemplateId = tierItem.itemTemplateIdTier2;
                                 itemEuipActive.optionValue = optionValue;
                                 itemEuipActive.updateGemOption();
                                 sendGemItemInfo(itemEuipActive);
@@ -2657,7 +2776,7 @@ public class GameController
                                 itemEuipActive.atk = (Utilities.round(Utilities.GetValueFromPercent(itemEuipActive.getAtk() + itemEuipPassive.getAtk(), GopetManager.PERCENT_ITEM_TIER_INFO)));
                                 itemEuipActive.def = (Utilities.round(Utilities.GetValueFromPercent(itemEuipActive.getDef() + itemEuipPassive.getDef(), GopetManager.PERCENT_ITEM_TIER_INFO)));
                                 itemEuipActive.lvl = 0;
-                                itemEuipActive.itemTemplateId = tierItem.getItemTemplateIdTier2();
+                                itemEuipActive.itemTemplateId = tierItem.itemTemplateIdTier2;
                                 resendPetEquipInfo(itemEuipActive);
                                 Pet p = player.getPet();
                                 if (p != null)
@@ -2807,7 +2926,7 @@ public class GameController
         Item itemSelect = (Item)objectPerformed.get(OBJKEY_ITEM_UP_SKILL);
         if (itemSelect.count > 0)
         {
-            if (pet.skill[skillIndex][1] < 8)
+            if (pet.skill[skillIndex][1] < 10)
             {
                 subCountItem(itemSelect, 1, GopetManager.NORMAL_INVENTORY);
                 bool succes = GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]] + itemSelect.getTemp().getOptionValue()[0] > Utilities.NextFloatPer();
@@ -3245,6 +3364,8 @@ public class GameController
 
     public static int randTattoo(int[] listTempId)
     {
+        if (listTempId.Length == 1) return listTempId[0];
+
         while (true)
         {
             int randTatto = Utilities.RandomArray(listTempId);
@@ -3529,6 +3650,10 @@ public class GameController
         Item equipItem = selectItemEquipByItemId(itemId);
         if (gem != null)
         {
+            if (!checkGemElementVsPet(gem.Template.element))
+            {
+                return;
+            }
             if (equipItem != null)
             {
                 if (equipItem.gemInfo == null)
@@ -4198,5 +4323,19 @@ public class GameController
             return false;
         }
         return true;
+    }
+
+    public bool checkType(sbyte type, Item item)
+    {
+        if (item.Template.type == type)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void InvailIitemType()
+    {
+        player.redDialog("Sai loại vật phẩm");
     }
 }

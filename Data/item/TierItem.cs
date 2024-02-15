@@ -3,50 +3,24 @@ namespace Gopet.Data.GopetItem
     public class TierItem
     {
 
-        private int tierId;
-        private int itemTemplateIdTier1;
-        private int itemTemplateIdTier2;
-        private float percent;
+        public int tierId { get; private set; }
+        public int itemTemplateIdTier1 { get; private set; }
+        public int itemTemplateIdTier2 { get; private set; }
+        public float percent { get; private set; }
 
-        public void setTierId(int tierId)
+        public ItemTemplate ItemTemplateOne
         {
-            this.tierId = tierId;
+            get
+            {
+                return GopetManager.itemTemplate[itemTemplateIdTier1];
+            }
         }
-
-        public void setItemTemplateIdTier1(int itemTemplateIdTier1)
+        public ItemTemplate ItemTemplateTwo
         {
-            this.itemTemplateIdTier1 = itemTemplateIdTier1;
+            get
+            {
+                return GopetManager.itemTemplate[itemTemplateIdTier2];
+            }
         }
-
-        public void setItemTemplateIdTier2(int itemTemplateIdTier2)
-        {
-            this.itemTemplateIdTier2 = itemTemplateIdTier2;
-        }
-
-        public void setPercent(float percent)
-        {
-            this.percent = percent;
-        }
-
-        public int getTierId()
-        {
-            return tierId;
-        }
-
-        public int getItemTemplateIdTier1()
-        {
-            return itemTemplateIdTier1;
-        }
-
-        public int getItemTemplateIdTier2()
-        {
-            return itemTemplateIdTier2;
-        }
-
-        public float getPercent()
-        {
-            return percent;
-        }
-
     }
 }

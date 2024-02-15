@@ -67,7 +67,7 @@ public class TaskCalculator
                         {
                             if (!playerData.wasTask.Contains(taskIdNeed))
                             {
-                                flag = false;
+                                //flag = false;
                                 break;
                             }
                         }
@@ -347,7 +347,7 @@ public class TaskCalculator
 
     public void onItemEnchant(Item item)
     {
-        if (!item.wasSell)
+
         {
             this.onAllTaskUpdate(REQUEST_ENCHANT_ITEM, item.lvl);
         }
@@ -375,7 +375,7 @@ public class TaskCalculator
         {
             return;
         }
-        if (!pet.wasSell)
+
         {
             this.onAllTaskUpdate(REQUEST_UP_SKILL_PET, skillLv);
         }
@@ -402,7 +402,7 @@ public class TaskCalculator
         {
             return;
         }
-        if (!pet.wasSell)
+
         {
             this.onAllTaskUpdate(REQUEST_PET_LVL, pet);
         }
@@ -466,32 +466,50 @@ public class TaskCalculator
     {
         foreach (Pet pet in player.playerData.pets)
         {
-            if (!pet.wasSell)
+
+            this.onTaskUpdate(taskData, REQUEST_PET_LVL, pet);
+            if (pet.skill.Length > 0)
             {
-                this.onTaskUpdate(taskData, REQUEST_PET_LVL, pet);
-                if (pet.skill.Length > 0)
+                this.onTaskUpdate(taskData, REQUEST_LEARN_SKILL_PET);
+                for (global::System.Int32 i = 0; i < pet.skill.Length; i++)
                 {
-                    this.onTaskUpdate(taskData, REQUEST_LEARN_SKILL_PET);
+                    this.onTaskUpdate(taskData, REQUEST_UP_SKILL_PET, pet.skill[i][1]);
                 }
+            }
+
+            if (pet.skill.Length > 1)
+            {
+                this.onTaskUpdate(taskData, REQUEST_LEARN_SKILL2_PET);
             }
         }
 
         Pet currentPet = player.getPet();
         if (currentPet != null)
         {
-            if (!currentPet.wasSell)
+
+
+            this.onTaskUpdate(taskData, REQUEST_PET_LVL, currentPet);
+            if (currentPet.skill.Length > 0)
             {
-                this.onTaskUpdate(taskData, REQUEST_PET_LVL, currentPet);
-                if (currentPet.skill.Length > 0)
-                {
-                    this.onTaskUpdate(taskData, REQUEST_LEARN_SKILL_PET);
-                }
+                this.onTaskUpdate(taskData, REQUEST_LEARN_SKILL_PET);
+            }
+            if (currentPet.skill.Length > 1)
+            {
+                this.onTaskUpdate(taskData, REQUEST_LEARN_SKILL2_PET);
             }
         }
 
         foreach (int id in player.playerData.wasTask)
         {
             this.onTaskUpdate(taskData, REQUEST_NEED_TASK, id);
+        }
+
+        foreach (var itemKey in player.playerData.items)
+        {
+            foreach (var item in itemKey.Value)
+            {
+                this.onAllTaskUpdate(REQUEST_ENCHANT_ITEM, item.lvl);
+            }
         }
     }
 

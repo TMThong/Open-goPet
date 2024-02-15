@@ -120,7 +120,7 @@ namespace Gopet.Data.GopetItem
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
-            int info = value + Utilities.round((value * 4 + 50) / 100 * 5 / 2) * lvl;
+            int info = value + Utilities.round((value * 4 + 50f) / 100 * 5 / 2) * lvl;
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_DEF)));
         }
 
@@ -132,7 +132,7 @@ namespace Gopet.Data.GopetItem
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
-            int info = value + Utilities.round((value * 4 + 50) / 100 * 5 / 2) * lvl;
+            int info = value + Utilities.round((value * 4 + 50f) / 100 * 5 / 2) * lvl;
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_ATK)));
         }
 
@@ -144,7 +144,7 @@ namespace Gopet.Data.GopetItem
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
-            int info = value + Utilities.round((value * 4 + 50) / 100 * 5 / 2) * lvl;
+            int info = value + Utilities.round((value * 4 + 50f) / 100 * 5 / 2) * lvl;
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_HP)));
         }
 
@@ -156,7 +156,7 @@ namespace Gopet.Data.GopetItem
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
-            int info = value + Utilities.round((value * 4 + 50) / 100 * 5 / 2) * lvl;
+            int info = value + Utilities.round((value * 4 + 50f) / 100 * 5 / 2) * lvl;
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_MP)));
         }
 

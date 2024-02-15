@@ -63,6 +63,10 @@ public class GopetCMD {
     public const sbyte GET_PET_EQUIP_PLAYER_INFO = 1;
     public const sbyte TATTOO = 90;
     public const sbyte TATTOO_INIT_SCREEN = 1;
+    public const sbyte TATTOO_ENCHANT_SELECT_MATERIAL = 4;
+    public const sbyte TATTOO_ENCHANT = 5;
+    public const sbyte TATTOO_ENCHANT_SELECT_MATERIAL1 = 1;
+    public const sbyte TATTOO_ENCHANT_SELECT_MATERIAL2 = 2;
     public const sbyte CLAN = 91;
     public const sbyte CLAN_INFO_MEMBER = 3;
     public const sbyte CLAN_INFO = 14;

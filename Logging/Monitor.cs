@@ -79,12 +79,18 @@ namespace Gopet.Logging
                 var Writer = GopetManager.Writer;
                 if (Writer != null)
                 {
-                    Writer.WriteLineAsync(message);
-                    Writer.FlushAsync();
+                    Writer.WriteLine(message);
+                    Writer.Flush();
                 }
             }
-            catch (Exception e) { e.printStackTrace(); }
-            finally { mutex.ReleaseMutex(); }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            finally
+            {
+                mutex.ReleaseMutex();
+            }
         }
     }
 }

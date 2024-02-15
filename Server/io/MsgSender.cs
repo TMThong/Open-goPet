@@ -10,7 +10,7 @@ namespace Gopet.IO
         protected Queue<Message> sendingMessage = new Queue<Message>();
 
         public static CopyOnWriteArrayList<MsgSender> msgSenders = new CopyOnWriteArrayList<MsgSender>();
-
+        public static readonly Random random = new Random();
         private bool isClose = false;
 
         public MsgSender(Session session)
@@ -58,7 +58,7 @@ namespace Gopet.IO
                             {
                                 e.printStackTrace();
                             }
-                            Monitor.Wait(sendingMessage);
+                            Monitor.Wait(sendingMessage, random.Next(5000, 30000));
                             continue;
                         }
                     }

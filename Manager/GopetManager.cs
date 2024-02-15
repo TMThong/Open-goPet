@@ -173,6 +173,7 @@ public class GopetManager
     public const int ITEM_ENERGY = 20;
     public const int ITEM_MATERIAL_ENCHANT_WING = 21;
     public const int ITEM_PET_PACKAGE = 22;
+    public const int ITEM_MATERIAL_ENCHANT_TATOO = 23;
     public const int GIFT_GOLD = 0;
     public const int GIFT_COIN = 1;
     public const int GIFT_ITEM = 2;
@@ -347,17 +348,12 @@ public class GopetManager
     /**
      * Id các map được dịch chuyển
      */
-    public static int[] TeleMapId = new int[]{11, 19, 24, 22, 27, 26, 28};
+    public static int[] TeleMapId = new int[] { 11, 19, 24, 22, 27, 26, 28 };
     //public static int[] TeleMapId = new int[] { 11, 19, 24, 22 };
     /**
      * Giá nâng kỹ năng theo từng giai đoạn
      */
     public static int[] PriceUPSkill = new int[] { 3000, 6000, 10000, 14000, 18000, 22000, 26000, 30000, 34000, 38000 };
-
-    /**
-     * Tỷ lệ nâng kỵ năng theo từng giai đoạn
-     */
-    public static float[] PercentUpSkill = new float[] { 90, 80, 70, 60, 50, 40, 30, 20, 10, 0 };
 
     /**
      * Số lượt cần để hồi xong 1 kỹ năng
@@ -460,9 +456,11 @@ public class GopetManager
     public static int[] ID_BOSS_CHALLENGE = new int[] { 11, 12, 13, 14, 15 };
     public static int[] ID_BOSS_TASK = new int[] { 16 };
     public static int[] LVL_REQUIRE_PET_TATTO = new int[] { 3, 5, 10, 15, 20, 25, 30, 35 };
+    public static int[] SPECIAL_PET_TO_LEARN_ALL_SKILL = new int[] { 3091 };
     public const int MOB_NEED_CAPTCHA = 125;
     public const long TIME_BOSS_DISPOINTED = 1000 * 60 * 10;
     public static float[] PERCENT_OF_ENCHANT_GEM = new float[] { 70f, 65f, 60f, 55f, 50f, 40f, 30f, 20f, 10f, 2f };
+    public static float[] PERCENT_OF_ENCHANT_TATOO = new float[] { 60f, 55f, 50f, 40f, 30f, 20f, 15f, 10f, 5f, 2f };
     public const int PRICE_KEEP_GEM = 5000;
     public const int MAX_SLOT_SHOP_ARENA = 6;
     public const int DEFAULT_FREE_RESET_ARENA_SHOP = 2;
@@ -674,6 +672,7 @@ public class GopetManager
                     NCLASS_PETSKILL_HASH_MAP.put(petSkill.nClass, new());
                 }
                 NCLASS_PETSKILL_HASH_MAP.get(petSkill.nClass).add(petSkill);
+                PET_SKILLS.add(petSkill);
             }
 
             ServerMonitor.LogInfo("Tải dữ liệu kỹ năng pet từ cơ sở dữ liệu OK");
@@ -744,7 +743,7 @@ public class GopetManager
             var itemTierList = conn.Query<TierItem>("SELECT * FROM `tier_item`");
             foreach (var tierItem1 in itemTierList)
             {
-                tierItem.put(tierItem1.getItemTemplateIdTier1(), tierItem1);
+                tierItem.put(tierItem1.itemTemplateIdTier1, tierItem1);
             }
 
             var petTierList = conn.Query<PetTier>("SELECT * FROM `pet_tier`");
@@ -848,14 +847,14 @@ public class GopetManager
 
             TierItem val = entry.Value;
 
-            if (tierItemHashMap.ContainsKey(val.getItemTemplateIdTier1()) || tierItemHashMap.ContainsKey(val.getItemTemplateIdTier2()))
+            if (tierItemHashMap.ContainsKey(val.itemTemplateIdTier1) || tierItemHashMap.ContainsKey(val.itemTemplateIdTier2))
             {
                 continue;
             }
 
             JArrayList<int> map = findListTierId(val);
 
-            tierItemHashMap.put(val.getItemTemplateIdTier1(), 1);
+            tierItemHashMap.put(val.itemTemplateIdTier1, 1);
             for (int i = 0; i < map.Count; i++)
             {
                 int get = map.get(i);
@@ -868,14 +867,14 @@ public class GopetManager
     public static JArrayList<int> findListTierId(TierItem tInfo)
     {
         JArrayList<int> list = new();
-        list.add(tInfo.getItemTemplateIdTier2());
+        list.add(tInfo.itemTemplateIdTier2);
 
         foreach (var entry in tierItem)
         {
 
             TierItem val = entry.Value;
 
-            if (val.getItemTemplateIdTier1() == tInfo.getItemTemplateIdTier2())
+            if (val.itemTemplateIdTier1 == tInfo.itemTemplateIdTier2)
             {
                 list.AddRange(findListTierId(val));
             }
@@ -891,11 +890,11 @@ public class GopetManager
         {
             var marketData = conn.QueryFirstOrDefault("SELECT *, UNIX_TIMESTAMP(TimeSave) * 1000 AS milliseconds FROM `market` ORDER BY `market`.`TimeSave` DESC");
 
-            if(marketData != null)
+            if (marketData != null)
             {
                 MarketPlace.setKiosks(JsonConvert.DeserializeObject<Kiosk[]>(marketData.Data));
                 conn.Execute("DELETE FROM `market` WHERE (UNIX_TIMESTAMP(TimeSave) * 1000) + 1000 * 60 * 60 * 24 * 31 < @TimeReigonNeedDetele",
-                  new   { TimeReigonNeedDetele  = marketData.milliseconds });
+                  new { TimeReigonNeedDetele = marketData.milliseconds });
             }
         }
     }
@@ -909,14 +908,14 @@ public class GopetManager
     {
         get
         {
-            if ( __writer == null )
+            if (__writer == null)
             {
                 FileInfo fileInfo = new FileInfo(Directory.GetCurrentDirectory() + $"/log/log_{DateTime.Now.Day}_{DateTime.Now.Month}_{DateTime.Now.Year}.txt");
                 fileInfo.Directory.Create();
                 __writer?.Close();
-                Console.WriteLine( fileInfo.FullName );
+                Console.WriteLine(fileInfo.FullName);
                 OldDateTime = DateTime.Now;
-                __writer =  new StreamWriter(fileInfo.Open(FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite) , System.Text.Encoding.UTF8);
+                __writer = new StreamWriter(fileInfo.Open(FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite), System.Text.Encoding.UTF8);
                 return __writer;
             }
             return __writer;
