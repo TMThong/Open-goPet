@@ -477,7 +477,8 @@ public class GopetManager
     public static readonly long[] PRICE_BET_CHALLENGE = new long[] { 2000l, 10000l, 15000l };
 
     public const int MAX_TIMES_SHOW_CAPTCHA = 5;
-
+    public const int PRICE_COIN_ENCHANT_TATTO = 100000;
+    public const int PRICE_GOLD_ENCHANT_TATTO = 2000;
     public const int PERCENT_EXCHANGE_GOLD_TO_COIN = 1;
     public const int MAX_LVL_ENCHANT_WING = 10;
     public const float PERCENT_ADD_WHEN_ENCHANT_WING = 10f;

@@ -1,6 +1,7 @@
 
 using Gopet.App;
 using Gopet.Util;
+using System.Diagnostics;
 
 public class Maintenance : IRuntime
 {
@@ -37,16 +38,36 @@ public class Maintenance : IRuntime
                 {
                     if (needRestart)
                     {
-                        Main.server.stopServer();
-                        String batchFilePath = PlatformHelper.currentDirectory() + "/run.bat";
-                        /*Runtime.
-                                getRuntime().
-                                exec(new String[]{"cmd.exe", "/c", "start", batchFilePath});*/
+                        reboot();
                     }
-
+                    else
+                    {
+                        Main.shutdown();
+                        Process.GetCurrentProcess().Kill();
+                    }
                 }
             }
         }
+    }
+
+    public void reboot()
+    {
+        Task.Run(() =>
+        {
+            Thread.Sleep(2000);
+            Main.shutdown();
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.FileName = "Gopet.exe"; // Đặt tên của tệp thực thi cần chạy
+            startInfo.UseShellExecute = true; // Đặt thành false để có thể sử dụng cửa sổ dòng lệnh
+            startInfo.CreateNoWindow = true; // Đặt thành false để hiển thị cửa sổ dòng lệnh
+            startInfo.RedirectStandardInput = false; // Không đọc dữ liệu từ đầu vào tiêu chuẩn
+            startInfo.RedirectStandardOutput = false; // Không ghi dữ liệu đầu ra tiêu chuẩn
+            startInfo.RedirectStandardError = false; // Không ghi dữ liệu lỗi ra tiêu chuẩn
+            Process process = new Process();
+            process.StartInfo = startInfo;
+            process.Start();
+            Process.GetCurrentProcess().Kill();
+        });
     }
 
     /**

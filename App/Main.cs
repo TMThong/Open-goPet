@@ -65,6 +65,7 @@ namespace Gopet.App
             MapManager.stopUpdate();
             GopetManager.saveMarket();
             server.stopServer();
+            APIServer.Stop();
             RuntimeServer.isRunning = false;
             Thread.Sleep(1000);
 

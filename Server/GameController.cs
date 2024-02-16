@@ -1650,7 +1650,10 @@ public class GameController
                     {
                         if (first.lvl < 10)
                         {
-
+                            objectPerformed[OBJKEY_ID_TATTO_TO_ENCHANT] = first.tattoId;
+                            objectPerformed[OBJKEY_ID_MATERIAL1_TATTO_TO_ENCHANT] = itemId1;
+                            objectPerformed[OBJKEY_ID_MATERIAL2_TATTO_TO_ENCHANT] = itemId2;
+                            sendMenu(MENU_OPTION_TO_SLECT_TYPE_MONEY_ENCHANT_TATTOO, player);
                         }
                         else
                         {

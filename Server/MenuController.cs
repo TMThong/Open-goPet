@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Gopet.Data.top;
 
 [NonController]
-public class MenuController
+public partial class MenuController
 {
     #region Const
     /**
@@ -95,6 +95,7 @@ public class MenuController
     public const int MENU_CHOOSE_PET_FROM_PACKAGE_PET = 1045;
     public const int MENU_SELECT_MATERIAL1_TO_ENCHANT_TATOO = 1046;
     public const int MENU_SELECT_MATERIAL2_TO_ENCHANT_TATOO = 1047;
+    public const int MENU_OPTION_TO_SLECT_TYPE_MONEY_ENCHANT_TATTOO = 1048;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -301,6 +302,10 @@ public class MenuController
     public const int OBJKEY_NAME_PET_WANT = 38;
     public const int OBJKEY_PAYMENT_INDEX_WANT_TO_NAME_PET = 39;
     public const int OBJKEY_ITEM_PACKAGE_PET_TO_USE = 40;
+    public const int OBJKEY_ID_TATTO_TO_ENCHANT = 41;
+    public const int OBJKEY_ID_MATERIAL1_TATTO_TO_ENCHANT = 42;
+    public const int OBJKEY_ID_MATERIAL2_TATTO_TO_ENCHANT = 43;
+    public const int OBJKEY_TYPE_PRICE_TATTO_TO_ENCHANT = 43;
     public const int DIALOG_CONFIRM_REMOVE_ITEM_EQUIP = 0;
     public const int DIALOG_CONFIRM_BUY_KIOSK_ITEM = 1;
     public const int DIALOG_ENCHANT = 3;
@@ -508,7 +513,16 @@ public class MenuController
                     player.controller.sendListOption(MENU_OPTION_TASK, "Tùy chọn nhiệm vụ", "", list);
                 }
                 break;
+            case MENU_OPTION_TO_SLECT_TYPE_MONEY_ENCHANT_TATTOO:
+                {
+                    JArrayList<Option> list = new();
 
+                    list.add(new Option(0, $"{GopetManager.PRICE_GOLD_ENCHANT_TATTO} (vang)", Option.CAN_SELECT));
+                    list.add(new Option(1, $"{GopetManager.PRICE_COIN_ENCHANT_TATTO} (ngoc)", Option.CAN_SELECT));
+
+                    player.controller.sendListOption(MENU_OPTION_TO_SLECT_TYPE_MONEY_ENCHANT_TATTOO, "Tùy chọn phương thức thanh toán", "", list);
+                    break;
+                }
             case MENU_SHOW_LIST_TASK:
                 {
                     if (player.controller.objectPerformed.ContainsKey(OBJKEY_NPC_ID_FOR_MAIN_TASK))

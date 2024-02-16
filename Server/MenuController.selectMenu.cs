@@ -1,0 +1,1435 @@
+﻿
+using Gopet.Battle;
+using Gopet.Data.GopetClan;
+using Gopet.Data.Collections;
+using Gopet.Data.Dialog;
+using Gopet.Data.GopetItem;
+using Gopet.Data.Map;
+using Gopet.Data.User;
+using Gopet.IO;
+using Gopet.Util;
+using MySql.Data.MySqlClient;
+using Gopet.Data.item;
+using Dapper;
+using Microsoft.AspNetCore.Mvc;
+using Gopet.Data.top;
+
+
+public partial class MenuController
+{
+    public static void selectMenu(int menuId, int index, int paymentIndex, Player player)
+    {
+        switch (menuId)
+        {
+            case MENU_UNEQUIP_SKIN:
+            case MENU_UNEQUIP_PET:
+                {
+                    if (player.getPlace() is ChallengePlace)
+                    {
+                        player.redDialog("Không thể thao tác khi đang đi ải");
+                        return;
+                    }
+
+                    if (player.controller.getPetBattle() != null)
+                    {
+                        player.redDialog("Không thể thao tác khi đang giao chiến");
+                        return;
+                    }
+
+                    Pet p = player.getPet();
+                    GopetPlace place_Lc = (GopetPlace)player.getPlace();
+                    if (place_Lc == null)
+                    {
+                        return;
+                    }
+                    switch (menuId)
+                    {
+                        case MENU_UNEQUIP_PET:
+                            {
+                                if (p != null)
+                                {
+                                    player.playerData.petSelected = null;
+                                    player.playerData.pets.add(p);
+                                    player.controller.unfollowPet(p);
+                                    player.okDialog("Thao tác thành công");
+                                    HistoryManager.addHistory(new History(player).setLog("Tháo pet"));
+                                }
+                                else
+                                {
+                                    player.petNotFollow();
+                                }
+                            }
+                            break;
+                        case MENU_UNEQUIP_SKIN:
+                            {
+                                Item it = player.playerData.skin;
+                                if (it != null)
+                                {
+                                    player.playerData.skin = null;
+                                    player.addItemToInventory(it);
+                                    place_Lc.sendMySkin(player);
+                                    if (p != null)
+                                    {
+                                        p.applyInfo(player);
+                                    }
+                                    player.okDialog("Thao tác thành công");
+                                    HistoryManager.addHistory(new History(player).setLog("Tháo cải trang " + it.getName()).setObj(it));
+                                }
+                                else
+                                {
+                                    player.redDialog("Hiện tại bạn không có mang bất kỳ trang phục nào!");
+                                }
+                            }
+                            break;
+
+
+                    }
+                }
+                break;
+
+            case MENU_ATM:
+                {
+                    switch (index)
+                    {
+                        case 0:
+                            sendMenu(MENU_EXCHANGE_GOLD, player);
+                            break;
+                        case 1:
+                            player.controller.showInputDialog(INPUT_DIALOG_EXCHANGE_GOLD_TO_COIN, Utilities.Format("Tỉ lệ 1 (vang) lấy %s (ngoc)", GopetManager.PERCENT_EXCHANGE_GOLD_TO_COIN), new String[] { "Số gold :" });
+                            break;
+                    }
+                }
+                break;
+            case MENU_CHOOSE_PET_FROM_PACKAGE_PET:
+                {
+                    if (player.controller.objectPerformed.ContainsKey(OBJKEY_ITEM_PACKAGE_PET_TO_USE))
+                    {
+                        Item item = player.controller.objectPerformed[OBJKEY_ITEM_PACKAGE_PET_TO_USE];
+                        if (index >= 0 && index < item.Template.itemOptionValue.Length && item.count > 0)
+                        {
+                            Pet p = new Pet(item.Template.itemOptionValue[index]);
+                            player.playerData.addPet(p, player);
+                            player.controller.subCountItem(item, 1, GopetManager.NORMAL_INVENTORY);
+                            player.okDialog($"Chúc mừng bạn nhận được {p.getNameWithStar()}");
+                        }
+                        else
+                        {
+                            player.redDialog("Tính bug ha gì?");
+                        }
+                    }
+                }
+                break;
+            case MENU_EXCHANGE_GOLD:
+                {
+                    if (index >= 0 && index < EXCHANGE_ITEM_INFOS.Count)
+                    {
+                        ExchangeItemInfo exchangeItemInfo = (ExchangeItemInfo)EXCHANGE_ITEM_INFOS.get(index);
+                        int mycoin = player.user.getCoin();
+                        if (mycoin >= exchangeItemInfo.getExchangeData().getAmount())
+                        {
+                            player.user.mineCoin(exchangeItemInfo.getExchangeData().getAmount(), mycoin);
+                            if (player.user.getCoin() >= 0)
+                            {
+                                player.addGold(exchangeItemInfo.getExchangeData().getGold());
+                                player.okDialog(Utilities.Format("Đổi thành công %s (vang)", Utilities.FormatNumber(exchangeItemInfo.getExchangeData().getGold())));
+                                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Đổi %s vàng trong game thành công", Utilities.FormatNumber(exchangeItemInfo.getExchangeData().getGold()))));
+                            }
+                            else
+                            {
+                                UserData.banBySQL(UserData.BAN_INFINITE, "Bug gold", long.MaxValue, player.user.user_id);
+                                player.session.Close();
+                            }
+                        }
+                        else
+                        {
+                            player.redDialog("Bạn không đủ tiền");
+                        }
+                    }
+                }
+                break;
+
+            case MENU_SHOW_LIST_TASK:
+                {
+                    if (player.controller.objectPerformed.ContainsKey(OBJKEY_NPC_ID_FOR_MAIN_TASK))
+                    {
+                        int npcId = (int)player.controller.objectPerformed.get(OBJKEY_NPC_ID_FOR_MAIN_TASK);
+                        JArrayList<TaskTemplate> taskTemplates = player.controller.getTaskCalculator().getTaskTemplate(npcId);
+                        if (index >= 0 && index < taskTemplates.Count)
+                        {
+                            TaskTemplate taskTemplate = taskTemplates.get(index);
+                            player.playerData.tasking.add(taskTemplate.getTaskId());
+                            player.playerData.task.add(new TaskData(taskTemplate));
+                            player.controller.getTaskCalculator().update();
+                            player.okDialog("Chúc mừng bạn đã nhận thành công nhiệm vụ");
+                        }
+                        else
+                        {
+                            player.redDialog("Trong khi nhận nhiệm vụ bạn vui lòng thao tác chậm lại!");
+                        }
+                    }
+                }
+                break;
+
+            case MENU_SHOW_MY_LIST_TASK:
+                {
+                    player.controller.objectPerformed.put(OBJKEY_INDEX_TASK_IN_MY_LIST, index);
+
+                    sendMenu(MENU_OPTION_TASK, player);
+                }
+                break;
+
+            case MENU_OPTION_TASK:
+                {
+                    if (player.controller.objectPerformed.ContainsKey(OBJKEY_INDEX_TASK_IN_MY_LIST))
+                    {
+                        int indexTask = (int)player.controller.objectPerformed.get(OBJKEY_INDEX_TASK_IN_MY_LIST);
+                        player.controller.objectPerformed.remove(OBJKEY_INDEX_TASK_IN_MY_LIST);
+
+                        if (indexTask >= 0 && indexTask < player.playerData.task.Count)
+                        {
+                            TaskData taskData = player.playerData.task.get(indexTask);
+                            switch (index)
+                            {
+                                case 0:
+                                    player.controller.getTaskCalculator().onUpdateTask(taskData);
+                                    player.okDialog("Cập nhật thành công");
+                                    break;
+                                case 1:
+                                    if (player.controller.getTaskCalculator().taskSuccess(taskData))
+                                    {
+                                        player.controller.getTaskCalculator().onTaskSucces(taskData);
+                                        player.controller.getTaskCalculator().update();
+                                    }
+                                    else
+                                    {
+                                        player.redDialog("Bạn chưa đủ điều kiện");
+                                    }
+                                    break;
+                                case 2:
+                                    player.playerData.task.remove(taskData);
+                                    player.playerData.tasking.remove(taskData.taskTemplateId);
+                                    player.controller.getTaskCalculator().update();
+                                    player.okDialog("Hủy thành công!");
+                                    break;
+                            }
+                        }
+                    }
+                }
+                break;
+
+            case MENU_LIST_PET_FREE:
+                if (index >= 0 && index < PetFreeList.Count)
+                {
+                    PetMenuItemInfo petMenuItemInfo = (PetMenuItemInfo)PetFreeList.get(index);
+                    if (!player.playerData.isFirstFree)
+                    {
+                        player.playerData.isFirstFree = true;
+                        Pet p = new Pet(petMenuItemInfo.getPetTemplate().getPetId());
+                        player.playerData.addPet(p, player);
+                        player.okDialog(Utilities.Format("Nhận pet %s thành công vào túi pet để xem", petMenuItemInfo.getPetTemplate().getName()));
+                        HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Nhận pet %s miễn phí tại NPC trân trân", petMenuItemInfo.getPetTemplate().getName())).setObj(p));
+                    }
+                    else
+                    {
+                        player.redDialog("Trước đó bạn đã nhận rồi");
+                    }
+                }
+                break;
+            case MENU_INTIVE_CHALLENGE:
+                {
+                    if (index >= 0 && index < GopetManager.PRICE_BET_CHALLENGE.Length)
+                    {
+                        int priceChallenge = (int)GopetManager.PRICE_BET_CHALLENGE[index];
+                        if (priceChallenge <= 0)
+                        {
+                            player.redDialog("Tính bug ha gì!");
+                            return;
+                        }
+                        if (priceChallenge > 100000)
+                        {
+                            player.redDialog(Utilities.Format("Giới hạn (ngoc) là %s", Utilities.FormatNumber(100000)));
+                            return;
+                        }
+                        player.controller.sendChallenge((Player)player.controller.objectPerformed.get(OBJKEY_INVITE_CHALLENGE_PLAYER), priceChallenge);
+
+                    }
+                }
+                break;
+            case MENU_LEARN_NEW_SKILL:
+                if (player.checkCoin(GopetManager.PriceLearnSkill))
+                {
+                    PetSkill[] petSkills = getPetSkills(player);
+                    Pet pet = player.playerData.petSelected;
+                    if (index >= 0 && index < petSkills.Length && pet != null)
+                    {
+
+                        foreach (int[] skillInfo in pet.skill)
+                        {
+                            if (skillInfo[0] == petSkills[index].skillID)
+                            {
+                                player.redDialog("Kỹ năng này học rồi");
+                                return;
+                            }
+                        }
+
+                        if (pet.skillPoint > 0 && player.skillId_learn == -1)
+                        {
+                            pet.skillPoint--;
+                            pet.addSkill(petSkills[index].skillID, 1);
+                            player.addCoin(-GopetManager.PriceLearnSkill);
+                            player.controller.magic(GopetCMD.MAGIC_LEARN_SKILL, true);
+                            player.okDialog("Học kỹ năng thành công");
+                            player.controller.getTaskCalculator().onLearnSkillPet();
+                            if (pet.skill.Length >= 2)
+                            {
+                                player.controller.getTaskCalculator().onLearnSkillPet2();
+                            }
+                        }
+                        else if (player.skillId_learn != -1)
+                        {
+                            if (pet.skill.Length > 0)
+                            {
+                                bool flag = false;
+                                int skillIndex = -1;
+                                for (int i = 0; i < pet.skill.Length; i++)
+                                {
+                                    int[] skillInfo = pet.skill[i];
+                                    if (skillInfo[0] == player.skillId_learn)
+                                    {
+                                        flag = true;
+                                        skillIndex = i;
+                                        break;
+                                    }
+                                }
+                                if (flag)
+                                {
+                                    pet.skill[skillIndex][0] = petSkills[index].skillID;
+                                    pet.skill[skillIndex][1] = 1;
+                                    player.addCoin(-GopetManager.PriceLearnSkill);
+                                    player.controller.magic(GopetCMD.MAGIC_LEARN_SKILL, true);
+                                    player.okDialog("Học kỹ năng thành công");
+                                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Học kỹ năng thành công cho pet %s", pet.getNameWithoutStar())).setObj(pet));
+                                }
+                                else
+                                {
+                                    player.redDialog("Không có kỹ năng này");
+                                }
+                            }
+                            else
+                            {
+                                player.redDialog("Pet của bạn phải đạt mốc clanLvl 3, 5, 10 để học skill 1 2 3 nhé");
+                            }
+                        }
+                        else
+                        {
+                            player.redDialog("Pet của bạn phải đạt mốc clanLvl 3, 5, 10 để học skill 1 2 3 nhé");
+                        }
+                    }
+                }
+                else
+                {
+                    player.controller.notEnoughCoin();
+                }
+                break;
+            case MENU_DELETE_TIEM_NANG:
+                if (player.getPet() != null)
+                {
+                    if (index >= 0 && index < gym_options.Length)
+                    {
+                        Pet pet = player.getPet();
+                        if (pet.tiemnang[index] > 0)
+                        {
+                            if (player.checkGold(PriceDeleteTiemNang))
+                            {
+                                player.mineGold(PriceDeleteTiemNang);
+                                pet.tiemnang[index]--;
+                                pet.tiemnang_point++;
+                                pet.applyInfo(player);
+                                player.okDialog("Tẩy thành công");
+                                HistoryManager.addHistory(new History(player).setLog("Tảy tìm năng cho pet" + pet.getNameWithoutStar()).setObj(pet));
+                            }
+                            else
+                            {
+                                player.controller.notEnoughGold();
+                            }
+                        }
+                        else
+                        {
+                            player.redDialog("Chỉ số này đã xóa hết rồi");
+                        }
+                    }
+                }
+                else
+                {
+                    player.petNotFollow();
+                }
+                break;
+            case MENU_PET_INVENTORY:
+                if (index == -1)
+                {
+                    sendMenu(MENU_UNEQUIP_PET, player);
+                    return;
+                }
+
+
+
+                if (index >= 0 && index < player.playerData.pets.Count)
+                {
+                    Pet oldPet = player.playerData.petSelected;
+                    if (oldPet != null)
+                    {
+                        if (oldPet.TimeDie > Utilities.CurrentTimeMillis)
+                        {
+                            player.redDialog("Pet của bạn đang bị thương!!!");
+                            return;
+                        }
+                    }
+                    Pet pet = player.playerData.pets.get(index);
+                    player.playerData.pets.remove(pet);
+                    if (oldPet != null)
+                    {
+                        player.playerData.addPet(oldPet, player);
+                    }
+                    player.playerData.petSelected = pet;
+                    pet.applyInfo(player);
+                    player.controller.updatePetSelected(false);
+                }
+                break;
+            case MENU_SKIN_INVENTORY:
+                if (index == -1)
+                {
+                    sendMenu(MENU_UNEQUIP_SKIN, player);
+                    return;
+                }
+                CopyOnWriteArrayList<Item> listSkinItems = player.playerData.getInventoryOrCreate(GopetManager.SKIN_INVENTORY);
+                if (index >= 0 && index < listSkinItems.Count)
+                {
+                    Item skinItem = listSkinItems.get(index);
+                    Item oldSkinItem = player.playerData.skin;
+                    if (oldSkinItem != null)
+                    {
+                        listSkinItems.add(oldSkinItem);
+                    }
+                    listSkinItems.remove(skinItem);
+                    player.playerData.skin = skinItem;
+                    Pet p = player.getPet();
+                    if (p != null)
+                    {
+                        p.applyInfo(player);
+                    }
+                    player.controller.updateSkin();
+                }
+                break;
+            case MENU_WING_INVENTORY:
+                if (index == -1)
+                {
+                    player.redDialog("Bạn đang sử dụng cành này!!!");
+                    return;
+                }
+                CopyOnWriteArrayList<Item> listWingItems = player.playerData.getInventoryOrCreate(GopetManager.WING_INVENTORY);
+                if (index >= 0 && index < listWingItems.Count)
+                {
+                    Item wingItem = listWingItems.get(index);
+                    Item oldWingItem = player.playerData.wing;
+                    if (oldWingItem != null)
+                    {
+                        listWingItems.add(oldWingItem);
+                    }
+                    listWingItems.remove(wingItem);
+                    player.playerData.wing = wingItem;
+                    Pet p = player.getPet();
+                    if (p != null)
+                    {
+                        p.applyInfo(player);
+                    }
+                    player.controller.updateWing();
+                    player.okDialog("Trang bị thành công");
+                }
+                break;
+            case MENU_SELECT_SKILL_CLAN_TO_RENT:
+                {
+                    int indexSlot = (int)player.controller.objectPerformed.get(OBJKEY_INDEX_SLOT_SKILL_RENT);
+                    ClanMember clanMember = player.controller.getClan();
+                    if (clanMember != null)
+                    {
+                        Clan clan = clanMember.getClan();
+                        bool canEdit = clanMember.duty == Clan.TYPE_LEADER || clanMember.duty == Clan.TYPE_DEPUTY_LEADER;
+                        if (index >= 0 && index < clan.getClanPotentialSkills().Count)
+                        {
+                            ClanPotentialSkill clanPotentialSkill = clan.getClanPotentialSkills().get(index);
+                            ClanBuffTemplate clanBuffTemplate = GopetManager.CLANBUFF_HASH_MAP.get(clanPotentialSkill.getBuffId());
+                            if (canEdit)
+                            {
+                                ClanBuff dup = clan.getBuffByIdBuff(clanBuffTemplate.getBuffId());
+                                if (dup != null)
+                                {
+                                    player.redDialog("Bang hội bạn đã thuê kỹ năng này rồi");
+                                    return;
+                                }
+                                if (clan.checkFund(GopetManager.PRICE_RENT_SKILL[0]) && clan.checkGrowthPoint(GopetManager.PRICE_RENT_SKILL[1]))
+                                {
+                                    clan.mineFund(GopetManager.PRICE_RENT_SKILL[0]);
+                                    clan.mineGrowthPoint(GopetManager.PRICE_RENT_SKILL[1]);
+
+                                    ClanBuff newBUff = new ClanBuff();
+                                    newBUff.setBuffId(clanBuffTemplate.getBuffId());
+                                    newBUff.setValue(clanBuffTemplate.getValuePerLevel() * clanPotentialSkill.getPoint());
+                                    newBUff.setTimeEndBuff(Utilities.TimeDay(30));
+                                    ClanBuff getBuffByIndex = clan.getBuff(indexSlot);
+                                    if (getBuffByIndex != null)
+                                    {
+                                        clan.getClanBuffs().set(indexSlot, newBUff);
+                                    }
+                                    else
+                                    {
+                                        clan.getClanBuffs().add(newBUff);
+                                    }
+                                    player.controller.showSkillClan(player.user.user_id);
+                                    player.okDialog("Thuê thành công");
+                                }
+                                else
+                                {
+                                    player.redDialog("Bang hội không đủ điểm");
+                                }
+                            }
+                            else
+                            {
+                                player.redDialog("Bạn không đủ quyền");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        player.controller.notClan();
+                    }
+                }
+                break;
+            case MENU_PLUS_SKILL_CLAN:
+                {
+                    ClanMember clanMember = player.controller.getClan();
+                    if (clanMember != null)
+                    {
+                        Clan clan = clanMember.getClan();
+                        bool canEdit = clanMember.duty == Clan.TYPE_LEADER || clanMember.duty == Clan.TYPE_DEPUTY_LEADER;
+                        if (index >= 0 && index < GopetManager.CLAN_BUFF_TEMPLATES.Count)
+                        {
+                            ClanBuffTemplate clanBuffTemplate = GopetManager.CLAN_BUFF_TEMPLATES.get(index);
+                            if (clan.getLvl() >= clanBuffTemplate.getLvlClan())
+                            {
+                                if (canEdit)
+                                {
+                                    if (clanBuffTemplate.getPotentialPointNeed() <= clan.getPotentialPoint())
+                                    {
+                                        ClanPotentialSkill clanPotentialSkill = clan.getClanPotentialSkillOrCreate(clanBuffTemplate.getBuffId());
+                                        clanPotentialSkill.addPoint(1);
+                                        clan.addPotentialPoint(-clanBuffTemplate.getPotentialPointNeed());
+                                        player.okDialog("Nâng cấp thành công");
+                                    }
+                                    else
+                                    {
+                                        player.redDialog("không đủ điểm tiềm năng");
+                                    }
+                                }
+                                else
+                                {
+                                    player.redDialog("Bạn không đủ quyền");
+                                }
+                            }
+                            else
+                            {
+                                player.redDialog("Bang của bạn chưa đủ cấp!");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        player.controller.notClan();
+                    }
+                }
+                break;
+            case SHOP_ENERGY:
+            case SHOP_CLAN:
+            case SHOP_WEAPON:
+            case SHOP_HAT:
+            case SHOP_SKIN:
+            case SHOP_ARMOUR:
+            case SHOP_THUONG_NHAN:
+            case SHOP_PET:
+            case SHOP_FOOD:
+            case SHOP_ARENA:
+                ShopTemplate shopTemplate = getShop((sbyte)menuId, player);
+                if ((index >= 0 && index < shopTemplate.getShopTemplateItems().Count && menuId != SHOP_CLAN) || menuId == SHOP_CLAN)
+                {
+                    ShopTemplateItem shopTemplateItem = null;
+                    if (menuId != SHOP_CLAN)
+                    {
+                        shopTemplateItem = shopTemplate.getShopTemplateItems().get(index);
+                    }
+                    else
+                    {
+                        ClanMember clanMember = player.controller.getClan();
+                        if (clanMember != null)
+                        {
+                            shopTemplateItem = clanMember.getClan().getShopClan().getShopTemplateItem(index);
+                        }
+                        else
+                        {
+                            player.controller.notClan();
+                            return;
+                        }
+                    }
+
+                    if (shopTemplateItem == null)
+                    {
+                        player.redDialog("Vật phẩm này đã bị người khác mua");
+                        return;
+                    }
+                    sbyte[] typeMoney = shopTemplateItem.getMoneyType();
+                    int[] price = shopTemplateItem.getPrice();
+                    if (paymentIndex >= 0 && paymentIndex < typeMoney.Length)
+                    {
+                        if (checkMoney(typeMoney[paymentIndex], price[paymentIndex], player))
+                        {
+                            if (shopTemplateItem.isSellItem || player.controller.objectPerformed.ContainsKey(OBJKEY_NAME_PET_WANT))
+                                addMoney(typeMoney[paymentIndex], -price[paymentIndex], player);
+                            if (shopTemplateItem.isNeedRemove())
+                            {
+                                shopTemplate.getShopTemplateItems().remove(shopTemplateItem);
+                            }
+                            if (!shopTemplateItem.isSpceial)
+                            {
+                                if (shopTemplateItem.isSellItem)
+                                {
+                                    Item item = new Item(shopTemplateItem.getItemTempalteId());
+                                    item.count = shopTemplateItem.getCount();
+                                    if (item.getTemp().expire > 0)
+                                    {
+                                        item.expire = Utilities.CurrentTimeMillis + item.getTemp().getExpire();
+                                    }
+                                    player.addItemToInventory(item);
+                                    player.okDialog(Utilities.Format("Bạn đã mua thành công %s", item.getTemp().getName()));
+                                }
+                                else
+                                {
+                                    if (!player.controller.objectPerformed.ContainsKey(OBJKEY_NAME_PET_WANT))
+                                    {
+                                        player.controller.showInputDialog(INPUT_TYPE_NAME_PET_WHEN_BUY_PET, "Nhập tên pet", new string[] { " Tên:" });
+                                        player.controller.objectPerformed[OBJKEY_ID_MENU_BUY_PET_TO_NAME] = menuId;
+                                        player.controller.objectPerformed[OBJKEY_INDEX_MENU_BUY_PET_TO_NAME] = index;
+                                        player.controller.objectPerformed[OBJKEY_PAYMENT_INDEX_WANT_TO_NAME_PET] = paymentIndex;
+                                        return;
+                                    }
+                                    Pet p = new Pet(shopTemplateItem.getPetId());
+                                    p.name = player.controller.objectPerformed[OBJKEY_NAME_PET_WANT];
+                                    player.playerData.addPet(p, player);
+                                    player.okDialog(Utilities.Format("Bạn đã mua thành công %s", p.getNameWithStar()));
+                                    player.controller.objectPerformed.Remove(OBJKEY_ID_MENU_BUY_PET_TO_NAME);
+                                    player.controller.objectPerformed.Remove(OBJKEY_INDEX_MENU_BUY_PET_TO_NAME);
+                                    player.controller.objectPerformed.Remove(OBJKEY_PAYMENT_INDEX_WANT_TO_NAME_PET);
+                                    player.controller.objectPerformed.Remove(OBJKEY_NAME_PET_WANT);
+                                }
+                                if (shopTemplateItem.isCloseScreenAfterClick())
+                                {
+                                    sendMenu(menuId, player);
+                                }
+
+                                if (menuId == SHOP_WEAPON)
+                                {
+                                    player.controller.getTaskCalculator().onBuyRandomWeapon();
+                                }
+                            }
+                            else
+                            {
+                                shopTemplateItem.execute(player);
+                            }
+                        }
+                        else
+                        {
+                            switch (typeMoney[paymentIndex])
+                            {
+                                case GopetManager.MONEY_TYPE_COIN:
+                                    player.controller.notEnoughCoin();
+                                    break;
+                                case GopetManager.MONEY_TYPE_GOLD:
+                                    player.controller.notEnoughGold();
+                                    break;
+                                case GopetManager.MONEY_TYPE_GOLD_BAR:
+                                    player.controller.notEnoughGoldBar();
+                                    break;
+                                case GopetManager.MONEY_TYPE_SILVER_BAR:
+                                    player.controller.notEnoughSilverBar();
+                                    break;
+                                case GopetManager.MONEY_TYPE_BLOOD_GEM:
+                                    player.controller.notEnoughBloodGem();
+                                    break;
+                                case GopetManager.MONEY_TYPE_FUND_CLAN:
+                                    player.controller.notEnoughFundClan();
+                                    break;
+                                case GopetManager.MONEY_TYPE_GROWTH_POINT_CLAN:
+                                    player.controller.notEnoughGrowthPointClan();
+                                    break;
+                            }
+                        }
+                    }
+                }
+                break;
+            case MENU_SELECT_PET_UPGRADE_ACTIVE:
+                {
+                    if (index >= 0 && index < player.playerData.pets.Count)
+                    {
+                        Pet pet = player.playerData.pets.get(index);
+                        player.controller.addPetUpgrade(pet, GopetCMD.PET_UPGRADE_ACTIVE, pet.petId);
+                    }
+                }
+                break;
+            case MENU_SELECT_PET_UPGRADE_PASSIVE:
+                {
+                    if (index >= 0 && index < player.playerData.pets.Count)
+                    {
+                        Pet pet = player.playerData.pets.get(index);
+                        player.controller.addPetUpgrade(pet, GopetCMD.PET_UPGRADE_PASSIVE, pet.petId);
+                    }
+                }
+                break;
+            case MENU_SELECT_MATERIAL2_TO_ENCHANT_TATOO:
+            case MENU_SELECT_MATERIAL1_TO_ENCHANT_TATOO:
+            case MENU_SELECT_MATERIAL_TO_ENCAHNT_WING:
+            case MENU_SELECT_GEM_TO_INLAY:
+            case MENU_SELECT_GEM_UP_TIER:
+            case MENU_SELECT_ENCHANT_MATERIAL1:
+            case MENU_SELECT_ENCHANT_MATERIAL2:
+            case MENU_SELECT_GEM_ENCHANT_MATERIAL1:
+            case MENU_SELECT_GEM_ENCHANT_MATERIAL2:
+            case MENU_MERGE_PART_PET:
+            case MENU_SELECT_ITEM_UP_SKILL:
+            case MENU_SELECT_ITEM_PK:
+            case MENU_SELECT_ITEM_PART_FOR_STAR_PET:
+            case MENU_SELECT_ITEM_GEN_TATTO:
+            case MENU_SELECT_ITEM_REMOVE_TATTO:
+            case MENU_SELECT_ITEM_SUPPORT_PET:
+            case MENU_MERGE_PART_ITEM:
+                CopyOnWriteArrayList<Item> listItems = Item.search(typeSelectItemMaterial(menuId, player), player.playerData.getInventoryOrCreate(getTypeInventorySelect(menuId)));
+                if (index >= 0 && listItems.Count > index)
+                {
+                    Item itemSelect = listItems.get(index);
+                    switch (menuId)
+                    {
+                        case MENU_SELECT_ENCHANT_MATERIAL1:
+                            player.controller.selectMaterialEnchant(itemSelect.getTemp().getItemId(), itemSelect.getTemp().getIconPath(), itemSelect.getTemp().getName(), 1);
+                            break;
+                        case MENU_SELECT_ENCHANT_MATERIAL2:
+                            player.controller.selectMaterialEnchant(itemSelect.getTemp().getItemId(), itemSelect.getTemp().getIconPath(), itemSelect.getTemp().getName(), 2);
+                            break;
+                        case MENU_SELECT_GEM_ENCHANT_MATERIAL1:
+                            {
+                                player.controller.selectMaterialGemEnchant(itemSelect.getTemp().getItemId(), itemSelect.getTemp().getIconPath(), itemSelect.getTemp().getName(), 1);
+                                player.controller.selectGemM1 = true;
+                            }
+                            break;
+                        case MENU_SELECT_GEM_ENCHANT_MATERIAL2:
+                            {
+                                player.controller.selectMaterialGemEnchant(itemSelect.getTemp().getItemId(), itemSelect.getTemp().getIconPath(), itemSelect.getTemp().getName(), 12);
+                                player.controller.selectGemM1 = false;
+                            }
+                            break;
+                        case MENU_MERGE_PART_PET:
+                            {
+                                if (itemSelect.getTemp().itemOptionValue.Length > 0)
+                                {
+                                    if (itemSelect.count >= itemSelect.getTemp().getOptionValue()[1])
+                                    {
+                                        player.controller.subCountItem(itemSelect, itemSelect.getTemp().getOptionValue()[1], GopetManager.NORMAL_INVENTORY);
+                                        int petTemplateId = itemSelect.getTemp().getOptionValue()[0];
+                                        Pet pet = new Pet(petTemplateId);
+                                        player.playerData.addPet(pet, player);
+                                        player.okDialog(Utilities.Format("Chức mừng bạn ghép thành công %s", pet.getNameWithStar()));
+                                    }
+                                    else
+                                    {
+                                        player.redDialog(Utilities.Format("Bạn không đủ", itemSelect.getTemp().getOptionValue()[1]));
+                                    }
+                                }
+                                else
+                                {
+                                    player.redDialog("Lỗi mảnh pet!!!!");
+                                }
+                            }
+                            break;
+                        case MENU_SELECT_ITEM_UP_SKILL:
+                            {
+                                int skillId = (int)player.controller.objectPerformed.get(OBJKEY_SKILL_UP_ID);
+                                Pet pet = player.getPet();
+                                int skillIndex = pet.getSkillIndex(skillId);
+                                PetSkill petSkill = GopetManager.PETSKILL_HASH_MAP.get(skillId);
+                                if (itemSelect.count > 0)
+                                {
+                                    if (pet.skill[skillIndex][1] < 8)
+                                    {
+                                        player.controller.objectPerformed.put(OBJKEY_ITEM_UP_SKILL, itemSelect);
+                                        showYNDialog(DIALOG_UP_SKILL, Utilities.Format("Bạn có chắc muốn nâng cấp kỹ năng %s lên cấp %s \n với tỉ lệ (%s/) + %s/ bằng %s/ không?", petSkill.name, pet.skill[skillIndex][1] + 1, GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]], itemSelect.getTemp().getOptionValue()[0], GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]] + itemSelect.getTemp().getOptionValue()[0]).Replace("/", "%"), player);
+                                    }
+                                    else
+                                    {
+                                        player.redDialog("Kỹ năng đạt cấp tối đa rồi");
+                                    }
+                                }
+                            }
+                            break;
+                        case MENU_SELECT_ITEM_PK:
+                            {
+                                player.controller.objectPerformed.put(OBJKEY_ITEM_PK, itemSelect);
+                                player.controller.confirmpk();
+                            }
+                            break;
+                        case MENU_SELECT_ITEM_PART_FOR_STAR_PET:
+                            {
+                                player.controller.upStarPet(itemSelect);
+                            }
+                            break;
+                        case MENU_SELECT_ITEM_GEN_TATTO:
+                            {
+                                player.controller.genTatto(itemSelect);
+                            }
+                            break;
+                        case MENU_SELECT_ITEM_REMOVE_TATTO:
+                            {
+                                player.controller.removeTatto(itemSelect, (int)player.controller.objectPerformed.get(OBJKEY_TATTO_ID_REMOVE));
+                            }
+                            break;
+                        case MENU_SELECT_ITEM_SUPPORT_PET:
+                            {
+                                PetBattle petBattle = player.controller.getPetBattle();
+                                if (petBattle != null)
+                                {
+                                    petBattle.useItem(player, itemSelect);
+                                }
+                            }
+                            break;
+
+                        case MENU_SELECT_GEM_UP_TIER:
+                            {
+                                player.controller.selectGemUpTier(itemSelect.itemId, itemSelect.getTemp().getIconPath(), itemSelect.getEquipName(), 1, itemSelect.lvl);
+                            }
+                            break;
+
+                        case MENU_MERGE_PART_ITEM:
+                            {
+                                int[] optionValue = itemSelect.getTemp().getOptionValue();
+                                if (player.controller.checkCount(itemSelect.itemTemplateId, optionValue[1], GopetManager.NORMAL_INVENTORY))
+                                {
+                                    player.controller.subCountItem(itemSelect, optionValue[1], GopetManager.NORMAL_INVENTORY);
+                                    Item item = new Item(optionValue[0]);
+                                    item.count = 1;
+                                    player.addItemToInventory(item);
+                                    player.okDialog(Utilities.Format("Đổi thành công\n %s", item.getTemp().getName()));
+                                }
+                                else
+                                {
+                                    player.redDialog(Utilities.Format("Bạn phải đủ %s mảnh mới đổi được", optionValue[1]));
+                                }
+                            }
+                            break;
+                        case MENU_SELECT_MATERIAL2_TO_ENCHANT_TATOO:
+                            {
+                                player.controller.sendItemSelectTattoMaterialToEnchant(itemSelect.Template.itemId, itemSelect.Template.iconPath, itemSelect.Template.name);
+                                break;
+                            }
+                        case MENU_SELECT_MATERIAL1_TO_ENCHANT_TATOO:
+                            {
+                                player.controller.sendItemSelectTattoMaterialToEnchant(itemSelect.Template.itemId, itemSelect.Template.iconPath, itemSelect.Template.name);
+                                break;
+                            }
+                        case MENU_SELECT_GEM_TO_INLAY:
+                            {
+                                player.controller.inlayGem(itemSelect, (int)player.controller.objectPerformed.get(OBJKEY_EQUIP_INLAY_GEM_ID));
+                                player.controller.objectPerformed.remove(OBJKEY_EQUIP_INLAY_GEM_ID);
+                            }
+                            break;
+                        case MENU_SELECT_MATERIAL_TO_ENCAHNT_WING:
+                            {
+                                if (!player.controller.objectPerformed.ContainsKey(OBJKEY_INDEX_WING_WANT_ENCHANT) || itemSelect == null) return;
+                                Item wingItem = player.controller.findWingItemWantEnchant();
+                                if (wingItem != null)
+                                {
+                                    if (wingItem.lvl >= 0 && wingItem.lvl < GopetManager.MAX_LVL_ENCHANT_WING)
+                                    {
+                                        EnchantWingData enchantWingData = GopetManager.EnchantWingData[wingItem.lvl + 1];
+                                        int[] PAYMENT = new int[] { enchantWingData.Coin, enchantWingData.Gold };
+                                        string[] PAYMENT_DISPLAY = new string[] { Utilities.FormatNumber(enchantWingData.Coin) + " (ngoc)", Utilities.FormatNumber(enchantWingData.Gold) + " (vang)" };
+                                        int typePayment = player.controller.objectPerformed[OBJKEY_TYPE_PAY_FOR_ENCHANT_WING];
+                                        if (typePayment >= 0 && typePayment < PAYMENT.Length)
+                                        {
+                                            if (PAYMENT[typePayment] > 0)
+                                            {
+                                                if (player.controller.checkCountItem(itemSelect, enchantWingData.NumItemMaterial))
+                                                {
+                                                    player.controller.objectPerformed[OBJKEY_ID_MATERIAL_ENCHANT_WING] = itemSelect.itemTemplateId;
+                                                    showYNDialog(DIALOG_ASK_ENCHANT_WING, $"Bạn có chắc muốn cường hóa {wingItem.getEquipName()} lên cấp {wingItem.lvl + 1} với giá {PAYMENT_DISPLAY[typePayment]} và tỷ lệ thành công là {enchantWingData.Percent}% không? Và khi thất bại sẽ giảm {enchantWingData.NumDropLevelWing} cấp !!!", player);
+                                                }
+                                                else
+                                                {
+                                                    player.controller.notEnoughItem(itemSelect, enchantWingData.NumItemMaterial);
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            player.redDialog("Tính bug à :)");
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                    }
+                }
+                break;
+            case MENU_SELECT_EQUIP_PET_TIER:
+                CopyOnWriteArrayList<Item> listItemEquip = player.playerData.getInventoryOrCreate(GopetManager.EQUIP_PET_INVENTORY);
+                if (index >= 0 && listItemEquip.Count > index)
+                {
+                    Item itemSelect = listItemEquip.get(index);
+                    player.controller.selectMaterialEnchant(itemSelect.itemId, itemSelect.getTemp().getIconPath(), itemSelect.getEquipName(), int.MaxValue);
+                }
+                break;
+
+            case MENU_SELECT_MONEY_TO_PAY_FOR_ENCHANT_WING:
+                {
+                    player.controller.objectPerformed[OBJKEY_TYPE_PAY_FOR_ENCHANT_WING] = index;
+                    sendMenu(MENU_SELECT_MATERIAL_TO_ENCAHNT_WING, player);
+                }
+                break;
+
+            case MENU_NORMAL_INVENTORY:
+                /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/
+                CopyOnWriteArrayList<Item> listItemNormal = player.playerData.getInventoryOrCreate(GopetManager.NORMAL_INVENTORY);
+                if (index >= 0 && listItemNormal.Count > index)
+                {
+                    Item itemSelect = listItemNormal.get(index);
+                    switch (itemSelect.getTemp().getType())
+                    {
+                        /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/
+                        case GopetManager.ITEM_BUFF_EXP:
+                            {
+                                BuffExp buffExp = player.playerData.buffExp;
+                                if (buffExp.getItemTemplateIdBuff() != itemSelect.itemTemplateId)
+                                {
+                                    buffExp.setBuffExpTime(0);
+                                    buffExp.set_buffPercent(0);
+                                    buffExp.setItemTemplateIdBuff(itemSelect.itemTemplateId);
+                                    buffExp.set_buffPercent(itemSelect.getTemp().getOptionValue()[0]);
+                                }
+                                player.playerData.buffExp.addTime(GopetManager.TIME_BUFF_EXP);
+                                player.okDialog(Utilities.Format("Bạn đang được buff %s/ kinh nghiệm trong %s phút!", buffExp.getPercent(), Utilities.round(buffExp.getBuffExpTime() / 1000 / 60)).Replace("/", "%"));
+                                break;
+                            }
+                        /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/
+                        case GopetManager.ITEM_ADMIN:
+                            {
+                                if (player.checkIsAdmin())
+                                {
+                                    sendMenu(MENU_SELECT_ITEM_ADMIN, player);
+                                    return;
+                                }
+                                else
+                                {
+                                    player.user.ban(UserData.BAN_INFINITE, "Dung VP ADMIN", long.MaxValue);
+                                    player.session.Close();
+                                }
+                                return;
+                            }
+                        /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/
+                        case GopetManager.ITEM_ENERGY:
+                            {
+                                if (itemSelect.Template.itemOptionValue != null)
+                                {
+                                    if (itemSelect.Template.itemOptionValue.Length >= 2)
+                                    {
+                                        int numUse = 0;
+
+                                        if (player.playerData.numUseEnergy.ContainsKey(itemSelect.Template.itemId)) numUse = player.playerData.numUseEnergy[itemSelect.Template.itemId];
+
+                                        if (numUse >= itemSelect.Template.itemOptionValue[1])
+                                        {
+                                            player.redDialog("Bạn đã sử dụng đạt tối đa ngày hôm nay");
+                                            return;
+                                        }
+                                        else
+                                        {
+                                            numUse++;
+                                            player.playerData.star += itemSelect.Template.itemOptionValue[0];
+                                            player.controller.updateUserInfo();
+                                            player.playerData.numUseEnergy[itemSelect.itemTemplateId] = numUse;
+                                            player.okDialog($"Sử dụng thành công và hiện tại bạn đang có {Utilities.FormatNumber(player.playerData.star)} năng lượng");
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+                        case GopetManager.ITEM_PET_PACKAGE:
+                            {
+                                player.controller.objectPerformed[OBJKEY_ITEM_PACKAGE_PET_TO_USE] = itemSelect;
+                                sendMenu(MENU_CHOOSE_PET_FROM_PACKAGE_PET, player);
+                                return;
+                            }
+                        /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/
+                        default:
+                            {
+                                player.redDialog("Không thể sử dụng vật phẩm này");
+                                return;
+                            }
+                    }
+                    player.controller.subCountItem(itemSelect, 1, GopetManager.NORMAL_INVENTORY);
+                }
+                break;
+            case MENU_KIOSK_HAT_SELECT:
+            case MENU_KIOSK_AMOUR_SELECT:
+            case MENU_KIOSK_WEAPON_SELECT:
+            case MENU_KIOSK_GEM_SELECT:
+            case MENU_KIOSK_OHTER_SELECT:
+                {
+                    if (menuId == MENU_KIOSK_OHTER_SELECT)
+                    {
+                        CopyOnWriteArrayList<Item> listEquipItems = player.playerData.getInventoryOrCreate(GopetManager.NORMAL_INVENTORY);
+                        if (listEquipItems.Count > index && index >= 0)
+                        {
+                            Item sItem = listEquipItems.get(index);
+                            player.controller.objectPerformed.put(OBJKEY_SELECT_SELL_ITEM, sItem);
+                            player.controller.objectPerformed.put(OBJKEY_MENU_OF_KIOSK, menuId);
+                            if (sItem.count == 1)
+                            {
+                                player.controller.showInputDialog(INPUT_DIALOG_KIOSK, "Định giá", new String[] { "  " }, new sbyte[] { 0 });
+                                player.controller.objectPerformed.put(OBJKEY_COUNT_OF_ITEM_KIOSK, 1);
+                            }
+                            else if (sItem.count > 1)
+                            {
+                                player.controller.showInputDialog(INPUT_DIALOG_COUNT_OF_KISOK_ITEM, "Số lượng", new String[] { "  " }, new sbyte[] { 0 });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        CopyOnWriteArrayList<Item> listEquipItems = Item.search(typeSelectItemMaterial(menuId, player), player.playerData.getInventoryOrCreate(menuId != MENU_KIOSK_GEM_SELECT ? GopetManager.EQUIP_PET_INVENTORY : GopetManager.GEM_INVENTORY));
+                        if (listEquipItems.Count > index && index >= 0)
+                        {
+                            Item sItem = listEquipItems.get(index);
+                            if (sItem != null)
+                            {
+                                if (sItem.petEuipId <= 0)
+                                {
+                                    if (sItem.gemInfo == null)
+                                    {
+                                        player.controller.objectPerformed.put(OBJKEY_SELECT_SELL_ITEM, sItem);
+                                        player.controller.objectPerformed.put(OBJKEY_MENU_OF_KIOSK, menuId);
+                                        player.controller.showInputDialog(INPUT_DIALOG_KIOSK, "Định giá", new String[] { "  " }, new sbyte[] { 0 });
+                                    }
+                                    else
+                                    {
+                                        player.redDialog("Vui lòng tháo ngọc ra");
+                                    }
+                                }
+                                else
+                                {
+                                    player.redDialog("Vui lòng không treo trang bị đã được pet mang theo");
+                                }
+                            }
+                        }
+                    }
+                }
+                break;
+            case MENU_KIOSK_PET_SELECT:
+                {
+                    if (index >= 0 && index < player.playerData.pets.Count)
+                    {
+                        Pet pet = player.playerData.pets.get(index);
+                        player.controller.objectPerformed.put(OBJKEY_SELECT_SELL_ITEM, pet);
+                        player.controller.objectPerformed.put(OBJKEY_MENU_OF_KIOSK, menuId);
+                        player.controller.showInputDialog(INPUT_DIALOG_KIOSK, "Định giá", new String[] { "  " }, new sbyte[] { 0 });
+                    }
+
+                }
+                break;
+            case MENU_KIOSK_GEM:
+            case MENU_KIOSK_HAT:
+            case MENU_KIOSK_WEAPON:
+            case MENU_KIOSK_AMOUR:
+            case MENU_KIOSK_OHTER:
+            case MENU_KIOSK_PET:
+                MarketPlace marketPlace = (MarketPlace)player.getPlace();
+                Kiosk kiosk = null;
+                switch (menuId)
+                {
+                    case MENU_KIOSK_HAT:
+                        kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_HAT);
+                        break;
+
+                    case MENU_KIOSK_GEM:
+                        kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_GEM);
+                        break;
+                    case MENU_KIOSK_WEAPON:
+                        kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_WEAPON);
+                        break;
+                    case MENU_KIOSK_AMOUR:
+                        kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_AMOUR);
+                        break;
+                    case MENU_KIOSK_OHTER:
+                        kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_OTHER);
+                        break;
+                    case MENU_KIOSK_PET:
+                        kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_PET);
+                        kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_PET);
+                        break;
+                }
+                kiosk.buy(index, player);
+                break;
+
+            case MENU_APPROVAL_CLAN_MEMBER:
+                {
+                    ClanMember clanMember = player.controller.getClan();
+                    if (clanMember != null)
+                    {
+                        Clan clan = clanMember.getClan();
+                        if (clanMember.duty != Clan.TYPE_NORMAL)
+                        {
+                            ClanRequestJoin requestJoin = clan.getJoinRequestByUserId(index);
+                            if (requestJoin != null)
+                            {
+                                player.controller.objectPerformed.put(OBJKEY_JOIN_REQUEST_SELECT, requestJoin.user_id);
+                                sendMenu(MENU_APPROVAL_CLAN_MEM_OPTION, player);
+                            }
+                            else
+                            {
+                                player.redDialog("Yêu cầu này đã được xét duyệt hoặc gỡ bỏ");
+                            }
+                        }
+                        else
+                        {
+                            player.redDialog("Bạn chỉ là thành viên bình thường");
+                        }
+                    }
+                    else
+                    {
+                        player.controller.notClan();
+                    }
+                }
+                break;
+            case MENU_APPROVAL_CLAN_MEM_OPTION:
+                {
+                    int user_id = (int)player.controller.objectPerformed.get(OBJKEY_JOIN_REQUEST_SELECT);
+                    ClanMember clanMember = player.controller.getClan();
+                    if (clanMember != null)
+                    {
+                        Clan clan = clanMember.getClan();
+                        if (clanMember.duty != Clan.TYPE_NORMAL)
+                        {
+                            ClanRequestJoin requestJoin = clan.getJoinRequestByUserId(user_id);
+                            if (requestJoin != null)
+                            {
+                                switch (index)
+                                {
+                                    case 0:
+                                        if (clan.canAddNewMember())
+                                        {
+                                            using (var conn = MYSQLManager.create())
+                                            {
+
+                                            }
+                                            MySqlConnection MySqlConnection = MYSQLManager.create();
+                                            try
+                                            {
+                                                bool hasClan = false;
+                                                Player onlinePlayer = PlayerManager.get(requestJoin.user_id);
+                                                if (onlinePlayer == null)
+                                                {
+                                                    var data = MySqlConnection.QueryFirstOrDefault(Utilities.Format("SELECT * from `player` where user_id = %s AND clanId > 0", requestJoin.user_id));
+                                                    hasClan = data != null;
+                                                }
+                                                else
+                                                {
+                                                    hasClan = onlinePlayer.playerData.clanId > 0;
+                                                }
+                                                if (!hasClan)
+                                                {
+                                                    clan.addMember(user_id, requestJoin.name);
+                                                    clan.getRequestJoin().remove(requestJoin);
+                                                    if (onlinePlayer == null)
+                                                    {
+                                                        MySqlConnection.Execute(Utilities.Format("UPDATE `player` set clanId =%s where user_id =%s;", requestJoin.user_id, clanMember.getClan().getClanId()));
+                                                    }
+                                                    else
+                                                    {
+                                                        onlinePlayer.playerData.clanId = clanMember.getClan().getClanId();
+                                                        onlinePlayer.okDialog("Lời xin vào bang hội của bạn được chấp nhận");
+                                                    }
+                                                    player.okDialog("Duyệt thành công");
+                                                }
+                                                else
+                                                {
+                                                    player.redDialog("Người chơi đã vào bang hội khác");
+                                                }
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                e.printStackTrace();
+                                            }
+                                            finally
+                                            {
+                                                MySqlConnection.Close();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            player.redDialog("Thành viên trong bang hội này đã đủ");
+                                        }
+                                        break;
+                                    case 1:
+                                        clan.getRequestJoin().remove(requestJoin);
+                                        player.okDialog("Xóa thành công");
+                                        break;
+                                    case 2:
+                                        clan.getRequestJoin().remove(requestJoin);
+                                        clan.getBannedJoinRequestId().addIfAbsent(user_id);
+                                        break;
+                                    case 3:
+                                        clan.getRequestJoin().Clear();
+                                        player.okDialog("Xóa tất cả thành công");
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                player.redDialog("Yêu cầu này đã được xét duyệt hoặc gỡ bỏ");
+                            }
+                        }
+                        else
+                        {
+                            player.redDialog("Bạn chỉ là thành viên bình thường");
+                        }
+                    }
+                    else
+                    {
+                        player.controller.notClan();
+                    }
+                }
+                break;
+            case MENU_SELECT_ITEM_ADMIN:
+                GopetPlace place = (GopetPlace)player.getPlace();
+                if (player.checkIsAdmin())
+                {
+                    switch (index)
+                    {
+                        case ADMIN_INDEX_SET_PET_INFO:
+                            player.controller.showInputDialog(INPUT_DIALOG_SET_PET_SELECTED_INFo, "Đặt chỉ số pet đang đi theo", new String[] { "LVL:  ", "STAR:  ", "GYM:  " });
+                            break;
+                        case ADMIN_INDEX_COUNT_PLAYER:
+                            player.okDialog(Utilities.Format("Online player: %s", PlayerManager.players.Count));
+                            break;
+                        case ADMIN_INDEX_COUNT_OF_MAP:
+                            int numPlayerMap = 0;
+                            foreach (Place place1 in place.map.places)
+                            {
+                                numPlayerMap += place1.numPlayer;
+                            }
+                            player.okDialog(Utilities.Format("Online player %s: %s", place.map.mapTemplate.name, numPlayerMap));
+                            break;
+                        case ADMIN_INDEX_TELE_TO_MAP:
+                            sendMenu(MENU_ADMIN_MAP, player);
+                            break;
+                        case ADMIN_INDEX_SELECT_ITEM:
+                            player.controller.showInputDialog(INPUT_DIALOG_ADMIN_GET_ITEM, "Lấy vật phẩm", new String[] { "IdTemplate  :", "Số lượng   :" });
+                            break;
+                        case ADMIN_INDEX_TELE_TO_PLAYER:
+                            player.controller.showInputDialog(INPUT_DIALOG_ADMIN_TELE_TO_PLAYER, "Dịch chuyển tới người chơi", new String[] { "Tên \n người chơi :" });
+                            break;
+                        case ADMIN_INDEX_BAN_PLAYER:
+                            player.controller.showInputDialog(INPUT_DIALOG_ADMIN_LOCK_USER, "Khóa tài khoản người chơi", new String[] { "Tên \n người chơi :", "1 - phút, 2 - vĩnh viễn) :", "Thời gian khóa (phút) :", "Lý do  :" });
+                            break;
+                        case ADMIN_INDEX_UNBAN_PLAYER:
+                            player.controller.showInputDialog(INPUT_DIALOG_ADMIN_UNLOCK_USER, "Gỡ khóa tài khoản người chơi", new String[] { "Tên người chơi :" });
+                            break;
+                        case ADMIN_INDEX_SHOW_BANNER:
+                            player.controller.showInputDialog(INPUT_DIALOG_ADMIN_CHAT_GLOBAL, "Chát thế giới", new String[] { "Văn bản :" });
+                            break;
+                        case ADMIN_INDEX_SHOW_HISTORY:
+                            player.controller.showInputDialog(INPUT_DIALOG_ADMIN_GET_HISTORY, "Lấy lịch sử", new String[] { "Tên nhân vật :", "Ngày/tháng/năm (dd/mm/YYYY) : " });
+                            break;
+                        case ADMIN_INDEX_FIND_ITEM_LVL_10:
+                            sendMenu(MENU_SHOW_ALL_PLAYER_HAVE_ITEM_LVL_10, player);
+                            break;
+                        case ADMIN_INDEX_BUFF_ENCHANT:
+                            player.controller.showInputDialog(INPUT_TYPE_NAME_TO_BUFF_ENCHANT, "Buff đập đồ", new String[] { "Tên nhân vật :" });
+                            break;
+                        case ADMIN_INDEX_COIN:
+                            player.controller.showInputDialog(INPUT_TYPE_NAME_TO_BUFF_COIN, "Cộng từ tiền", new String[] { "Tiền :", "Tài khoản :" });
+                            break;
+                        case ADMIN_INDEX_GET_ZONE_ID:
+                            player.okDialog($"Bạn đang ở khu {player.getPlace().zoneID} của map {player.getPlace().map.mapTemplate.name} mapId = {player.getPlace().map.mapID}");
+                            break;
+                    }
+                }
+                break;
+            case MENU_ADMIN_MAP:
+                if (player.checkIsAdmin())
+                {
+                    MapManager.mapArr.get(index).addRandom(player);
+                }
+                break;
+            case MENU_ITEM_MONEY_INVENTORY:
+                {
+                    player.okDialog("Vật phẩm dùng để đổi phần thưởng");
+                    break;
+                }
+            case MENU_SELECT_TYPE_CHANGE_GIFT:
+                {
+                    int count = 1;
+                    switch (index)
+                    {
+                        case 0:
+                            count = 1;
+                            break;
+                        case 1:
+                            count = 5;
+                            break;
+                    }
+                }
+                break;
+
+            case MENU_SELECT_TYPE_UPGRADE_DUTY:
+                {
+                    ClanMember clanMember = player.controller.getClan();
+                    if (clanMember != null)
+                    {
+                        Clan clan = clanMember.getClan();
+                        ClanMember memberSelect = clan.getMemberByUserId((int)player.controller.objectPerformed.get(OBJKEY_MEM_ID_UPGRADE_DUTY));
+                        if (memberSelect == null)
+                        {
+                            player.redDialog("Người chơi này không còn trong bang hội");
+                        }
+                        else if (clanMember == memberSelect)
+                        {
+                            player.redDialog("Không thể thao tác trên chính bản thân của mình");
+                        }
+                        else
+                        {
+                            player.controller.objectPerformed.put(OBJKEY_INDEX_MENU_UPGRADE_DUTY, index);
+                            switch (index)
+                            {
+                                case 0:
+                                    if (clanMember.duty == Clan.TYPE_LEADER)
+                                    {
+                                        showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, Utilities.Format("Bạn có chắc muốn nhường chúc vụ bang chủ cho người chơi %s không?", memberSelect.name), player);
+                                    }
+                                    else
+                                    {
+                                        player.redDialog("Bạn không phải bang chủ!");
+                                    }
+                                    break;
+                                case 1:
+                                    if (clanMember.duty == Clan.TYPE_LEADER)
+                                    {
+                                        showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, Utilities.Format("Bạn có chắc muốn phong chúc vụ bang phó cho người chơi %s không?", memberSelect.name), player);
+                                    }
+                                    else
+                                    {
+                                        player.redDialog("Bạn không phải bang chủ!");
+                                    }
+                                    break;
+
+                                case 2:
+                                    if (clanMember.duty == Clan.TYPE_LEADER || clanMember.duty == Clan.TYPE_DEPUTY_LEADER)
+                                    {
+                                        showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, Utilities.Format("Bạn có chắc muốn phong chúc vụ trưởng lão cho người chơi %s không?", memberSelect.name), player);
+                                    }
+                                    else
+                                    {
+                                        player.redDialog("Bạn không có quyền này!");
+                                    }
+                                    break;
+
+                                case 3:
+                                    if (clanMember.duty == Clan.TYPE_LEADER || clanMember.duty == Clan.TYPE_DEPUTY_LEADER)
+                                    {
+                                        showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, Utilities.Format("Bạn có chắc muốn phong chúc vụ thành viên cho người chơi %s không?", memberSelect.name), player);
+                                    }
+                                    else
+                                    {
+                                        player.redDialog("Bạn không có quyền này!");
+                                    }
+                                    break;
+
+                                case 4:
+                                    if (clanMember.duty == Clan.TYPE_LEADER || clanMember.duty == Clan.TYPE_DEPUTY_LEADER || clanMember.duty == Clan.TYPE_SENIOR)
+                                    {
+                                        showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, Utilities.Format("Bạn có chắc muốn đuổi người chơi %s không?", memberSelect.name), player);
+                                    }
+                                    else
+                                    {
+                                        player.redDialog("Bạn không có quyền này!");
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        player.controller.notClan();
+                    }
+                }
+                break;
+
+            case MENU_UPGRADE_MEMBER_DUTY:
+                {
+                    ClanMember clanMember = player.controller.getClan();
+                    if (clanMember != null)
+                    {
+                        Clan clan = clanMember.getClan();
+                        ClanMember memberSelect = clan.getMemberByUserId(index);
+                        if (memberSelect == null)
+                        {
+                            player.redDialog("Người chơi này không còn trong bang hội");
+                        }
+                        else if (clanMember == memberSelect)
+                        {
+                            player.redDialog("Không thể thao tác trên chính bản thân của mình");
+                        }
+                        else
+                        {
+                            player.controller.objectPerformed.put(OBJKEY_MEM_ID_UPGRADE_DUTY, index);
+                            JArrayList<Option> list = new();
+                            if (clanMember.duty == Clan.TYPE_LEADER)
+                            {
+                                list.add(new Option(0, "Nhường chức", 1));
+                                list.add(new Option(1, "Phong làm phó bang", 1));
+                                list.add(new Option(2, "Phong làm trưởng lão", 1));
+                                list.add(new Option(3, "Phong làm thành viên", 1));
+                            }
+                            else if (clanMember.duty == Clan.TYPE_DEPUTY_LEADER)
+                            {
+                                list.add(new Option(2, "Phong làm trưởng lão", 1));
+                                list.add(new Option(3, "Phong làm thành viên", 1));
+                            }
+
+                            if (clanMember.duty != Clan.TYPE_NORMAL)
+                            {
+                                list.add(new Option(4, "Đuổi", 1));
+                            }
+
+                            player.controller.sendListOption(MENU_SELECT_TYPE_UPGRADE_DUTY, "Phong tước?", CMD_CENTER_OK, list);
+                        }
+                    }
+                    else
+                    {
+                        player.controller.notClan();
+                    }
+                }
+                break;
+
+            default:
+                {
+                    player.redDialog("KHONG TON TAI MENU NAY");
+                    Thread.Sleep(1000);
+                }
+                break;
+        }
+    }
+}
+

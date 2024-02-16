@@ -48,7 +48,7 @@ namespace Gopet.APIs
         [HttpGet("opensqlweb")]
         public IActionResult opensqlweb()
         {
-            using(var conn = MYSQLManager.createWebMySqlConnection())
+            using (var conn = MYSQLManager.createWebMySqlConnection())
             {
                 return Ok(GopetApiExtentsion.CreateOKRepository(Main.server.isRunning));
             }
@@ -56,7 +56,7 @@ namespace Gopet.APIs
         [HttpGet("opensqlgame")]
         public IActionResult opensqlgame()
         {
-            using(var conn = MYSQLManager.create())
+            using (var conn = MYSQLManager.create())
             {
                 return Ok(GopetApiExtentsion.CreateOKRepository(Main.server.isRunning));
             }
@@ -135,7 +135,7 @@ namespace Gopet.APIs
 
             foreach (ProcessThread p in threads)
             {
-                
+
                 keyValuePairs[p.Id] = new
                 {
                     CPUTime = p?.TotalProcessorTime,
@@ -148,8 +148,19 @@ namespace Gopet.APIs
         }
 
 
+        [HttpGet("/api/maintenance/{min}")]
+        public IActionResult maintenanceStart(int min)
+        {
+            Maintenance.gI().setMaintenanceTime(min);
+            return Ok(GopetApiExtentsion.CreateOKRepository($" {min} phút nữa sẽ bảo trì"));
+        }
 
-
+        [HttpGet("/api/maintenance/reboot")]
+        public IActionResult reboot()
+        {
+            Maintenance.gI().reboot();
+            return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
+        }
 
         private string GetDebuggerDisplay()
         {
