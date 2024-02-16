@@ -3,7 +3,6 @@ using Gopet.APIs;
 using Gopet.Data.GopetClan;
 using Gopet.Manager;
 using Gopet.Util;
- 
 namespace Gopet.App
 {
     public class Main

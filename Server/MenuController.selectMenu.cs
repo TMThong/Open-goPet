@@ -86,7 +86,16 @@ public partial class MenuController
                     }
                 }
                 break;
-
+            case MENU_OPTION_TO_SLECT_TYPE_MONEY_ENCHANT_TATTOO:
+                {
+                    if (index >= 0 && index < 2 && player.controller.objectPerformed.ContainsKey(OBJKEY_ID_TATTO_TO_ENCHANT))
+                    {
+                        PetTatto tatto = player.controller.objectPerformed[OBJKEY_ID_TATTO_TO_ENCHANT];
+                        player.controller.objectPerformed[OBJKEY_TYPE_PRICE_TATTO_TO_ENCHANT] = index;
+                        showYNDialog(DIALOG_ASK_ENCHANT_TATTO, $"Bạn có chắc muốn cường hóa {tatto.getTemp().name} lên cấp {tatto.lvl + 1} với tỉ lệ {GopetManager.PERCENT_OF_ENCHANT_TATOO[tatto.lvl]}% thành công với giá {getMoneyText((sbyte)index, index == 0 ? GopetManager.PRICE_GOLD_ENCHANT_TATTO : GopetManager.PRICE_COIN_ENCHANT_TATTO)} không? Thất bại sẽ rớt {GopetManager.NUM_LVL_DROP_ENCHANT_TATTO_FAILED[tatto.lvl]} cấp !!!", player);
+                    }
+                    break;
+                }
             case MENU_ATM:
                 {
                     switch (index)
@@ -831,12 +840,12 @@ public partial class MenuController
                             break;
                         case MENU_SELECT_MATERIAL2_TO_ENCHANT_TATOO:
                             {
-                                player.controller.sendItemSelectTattoMaterialToEnchant(itemSelect.Template.itemId, itemSelect.Template.iconPath, itemSelect.Template.name);
+                                player.controller.sendItemSelectTattoMaterialToEnchant(itemSelect.itemId, itemSelect.Template.iconPath, itemSelect.Template.name);
                                 break;
                             }
                         case MENU_SELECT_MATERIAL1_TO_ENCHANT_TATOO:
                             {
-                                player.controller.sendItemSelectTattoMaterialToEnchant(itemSelect.Template.itemId, itemSelect.Template.iconPath, itemSelect.Template.name);
+                                player.controller.sendItemSelectTattoMaterialToEnchant(itemSelect.itemId, itemSelect.Template.iconPath, itemSelect.Template.name);
                                 break;
                             }
                         case MENU_SELECT_GEM_TO_INLAY:

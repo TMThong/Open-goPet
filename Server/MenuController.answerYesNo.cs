@@ -1,4 +1,10 @@
-﻿using System;
+﻿using Gopet.Data.GopetClan;
+using Gopet.Data.GopetItem;
+using Gopet.Data.item;
+using Gopet.Data.Map;
+using Gopet.Util;
+using Org.BouncyCastle.Crypto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -393,6 +399,11 @@ public partial class MenuController
                         }
                     }
                     break;
+                case DIALOG_ASK_ENCHANT_TATTO:
+                    {
+                        player.controller.enchantTatto();
+                        break;
+                    }
                 case DIALOG_ASK_UPGRADE_SKILL_HOUSE:
                     {
                         ClanMember clanMember = player.controller.getClan();
@@ -445,6 +456,13 @@ public partial class MenuController
                 case DIALOG_ASK_KEEP_GEM:
                     player.controller.objectPerformed.put(OBJKEY_IS_KEEP_GOLD, false);
                     MenuController.showYNDialog(MenuController.DIALOG_UP_TIER_ITEM, (String)player.controller.objectPerformed.get(OBJKEY_ASK_UP_TIER_GEM_STR), player);
+                    break;
+                case DIALOG_ASK_ENCHANT_TATTO:
+                    {
+                        player.controller.objectPerformed.Remove(OBJKEY_ID_TATTO_TO_ENCHANT);
+                        player.controller.objectPerformed.Remove(OBJKEY_ID_MATERIAL1_TATTO_TO_ENCHANT);
+                        player.controller.objectPerformed.Remove(OBJKEY_ID_MATERIAL2_TATTO_TO_ENCHANT);
+                    }
                     break;
             }
         }

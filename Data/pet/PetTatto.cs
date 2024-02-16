@@ -1,4 +1,4 @@
-
+﻿
 using Gopet.Data.Collections;
 using Gopet.Util;
 
@@ -74,6 +74,12 @@ public class PetTatto
     public String getName()
     {
         JArrayList<String> infoStrings = new JArrayList<String>();
+
+        if (lvl > 0)
+        {
+            infoStrings.add($" cấp {lvl}");
+        }
+
         if (getAtk() > 0)
         {
             infoStrings.add(getAtk() + " (atk) ");

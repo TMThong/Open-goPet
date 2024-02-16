@@ -1632,6 +1632,77 @@ public class GameController
     }
 
 
+    public void enchantTatto()
+    {
+
+        if (!objectPerformed.ContainsKey(OBJKEY_ID_TATTO_TO_ENCHANT, OBJKEY_ID_MATERIAL1_TATTO_TO_ENCHANT, OBJKEY_ID_MATERIAL2_TATTO_TO_ENCHANT, OBJKEY_TYPE_PRICE_TATTO_TO_ENCHANT))
+        {
+            player.redDialog("Thao tác quá nhanh!!!");
+            return;
+        }
+
+        Pet p = player.getPet();
+        if (p != null)
+        {
+            PetTatto first = objectPerformed[OBJKEY_ID_TATTO_TO_ENCHANT];
+            int typeMoney = objectPerformed[OBJKEY_TYPE_PRICE_TATTO_TO_ENCHANT];
+            Item item1 = selectItemByItemId(objectPerformed[OBJKEY_ID_MATERIAL1_TATTO_TO_ENCHANT], GopetManager.NORMAL_INVENTORY);
+            Item item2 = selectItemByItemId(objectPerformed[OBJKEY_ID_MATERIAL2_TATTO_TO_ENCHANT], GopetManager.NORMAL_INVENTORY);
+            if (item1 != null && item2 != null)
+            {
+                if (!(checkCount(item1, 1) && checkCount(item2, 1)))
+                {
+                    player.redDialog("Không đủ nguyên liệu");
+                    return;
+                }
+                if (checkType(GopetManager.ITEM_MATERIAL_ENCHANT_TATOO, item1) && checkType(GopetManager.MATERIAL_ENCHANT_ITEM, item2))
+                {
+                    if (first.lvl < 10)
+                    {
+                        if (typeMoney == 1) player.mineCoin(GopetManager.PRICE_COIN_ENCHANT_TATTO);
+                        else player.mineGold(GopetManager.PRICE_GOLD_ENCHANT_TATTO);
+
+                        subCountItem(item1, 1, GopetManager.NORMAL_INVENTORY);
+                        subCountItem(item2, 1, GopetManager.NORMAL_INVENTORY);
+
+                        bool isSucces = Utilities.NextFloatPer() < GopetManager.PERCENT_OF_ENCHANT_TATOO[first.lvl];
+                        if (isSucces)
+                        {
+                            first.lvl++;
+                            p.applyInfo(player);
+                            showPetTattoUI();
+                            player.okDialog("Cường hóa thành công");
+                        }
+                        else
+                        {
+                            int numDrop = GopetManager.NUM_LVL_DROP_ENCHANT_TATTO_FAILED[first.lvl];
+                            first.lvl -= numDrop;
+                            p.applyInfo(player);
+                            showPetTattoUI();
+                            player.redDialog($"Cường hóa thất bại bị giảm {numDrop} cấp!");
+                        }
+                    }
+                    else
+                    {
+                        player.redDialog("Xăm đã đạt cấp tối đa");
+                    }
+                }
+                else
+                {
+                    InvailIitemType();
+                }
+            }
+            else
+            {
+                player.redDialog("Thao tác quá nhanh");
+            }
+        }
+        else
+        {
+            player.petNotFollow();
+        }
+    }
+
     private void sendConfirmEnchantTatto(int tattotId, int itemId1, int itemId2)
     {
         Pet p = player.getPet();
@@ -1646,11 +1717,11 @@ public class GameController
                 Item item2 = selectItemByItemId(itemId2, GopetManager.NORMAL_INVENTORY);
                 if (item1 != null && item2 != null)
                 {
-                    if (checkType(GopetManager.ITEM_MATERIAL_ENCHANT_TATOO, item2) && checkType(GopetManager.MATERIAL_ENCHANT_ITEM, item2))
+                    if (checkType(GopetManager.ITEM_MATERIAL_ENCHANT_TATOO, item1) && checkType(GopetManager.MATERIAL_ENCHANT_ITEM, item2))
                     {
                         if (first.lvl < 10)
                         {
-                            objectPerformed[OBJKEY_ID_TATTO_TO_ENCHANT] = first.tattoId;
+                            objectPerformed[OBJKEY_ID_TATTO_TO_ENCHANT] = first;
                             objectPerformed[OBJKEY_ID_MATERIAL1_TATTO_TO_ENCHANT] = itemId1;
                             objectPerformed[OBJKEY_ID_MATERIAL2_TATTO_TO_ENCHANT] = itemId2;
                             sendMenu(MENU_OPTION_TO_SLECT_TYPE_MONEY_ENCHANT_TATTOO, player);

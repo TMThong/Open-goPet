@@ -265,5 +265,16 @@ namespace Gopet.Util
         {
             return (int)Math.Round(value);
         }
+
+        public static bool ContainsKey<TKey, TValue>(this IDictionary<TKey, TValue> keyValuePairs, params TKey[] keys)
+        {
+
+            foreach (var item in keys)
+            {
+                if (!keyValuePairs.ContainsKey(item)) return false;
+            }
+
+            return true;
+        }
     }
 }

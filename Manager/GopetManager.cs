@@ -475,7 +475,7 @@ public class GopetManager
     public static readonly sbyte[] LVL_CLAN_NEED_TO_ADD_SLOT_SKILL = new sbyte[] { 3, 5, 7 };
     public static readonly int[] PRICE_RENT_SKILL = new int[] { 550, 100 };
     public static readonly long[] PRICE_BET_CHALLENGE = new long[] { 2000l, 10000l, 15000l };
-
+    public static readonly byte[] NUM_LVL_DROP_ENCHANT_TATTO_FAILED = new byte[] { 0, 0, 0, 0, 1, 1, 1, 2, 2, 3 };
     public const int MAX_TIMES_SHOW_CAPTCHA = 5;
     public const int PRICE_COIN_ENCHANT_TATTO = 100000;
     public const int PRICE_GOLD_ENCHANT_TATTO = 2000;
