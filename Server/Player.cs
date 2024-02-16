@@ -201,16 +201,11 @@ Thread.Sleep(1000);
             {
                 conn.Execute("UPDATE `user` set password = @password where user_id = @user_id", new { password = newPass, user_id = user.user_id });
             }
-            Message m = new Message(GopetCMD.CHANGE_PASSWORD);
-            m.putUTF("Đổi mật khẩu thành công, vui lòng nhớ kỷ thông tin");
-            m.writer().flush();
-            session.sendMessage(m);
+            okDialog("Đổi mật khẩu thành công, vui lòng nhớ kỷ thông tin");
         }
         else
         {
-            Message m = new Message(GopetCMD.CHANGE_PASSWORD);
-            m.writer().flush();
-            session.sendMessage(m);
+            redDialog("Sai mật khẩu");
         }
     }
 
@@ -372,6 +367,17 @@ Thread.Sleep(1000);
                                 return;
                             }
                         }
+
+                        foreach (var taskData in playerData.task)
+                        {
+                            TaskTemplate taskTemp = GopetManager.taskTemplate[taskData.taskTemplateId];
+                            if(!playerData.wasTask.ContainsZ(taskTemp.taskNeed) && taskTemp.type == TaskCalculator.TASK_TYPE_MAIN)
+                            {
+                                playerData.task.remove(taskData);
+                                playerData.tasking.remove(taskData.taskTemplateId);
+                            }
+                        }
+
                         int goldPlus = 0;
                         JArrayList<String> listIdRemove = new();
                         var exhangeGoldData = gameconn.Query("SELECT * FROM `exchange_gold` WHERE `user_id` = @user_id", new { user_id = this.user.user_id });

@@ -22,6 +22,11 @@ public partial class MenuController
                     }
                 }
                 break;
+            case OP_MERGE_WING:
+                {
+                    player.controller.testMsg100();
+                    break;
+                }
             case OP_SHOP_PET:
                 showShop(SHOP_PET, player);
                 break;

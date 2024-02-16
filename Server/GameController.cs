@@ -223,6 +223,24 @@ public class GameController
                     if (place != null)
                     {
                         String text = message.reader().readUTF();
+                        switch (text)
+                        {
+                            case "kiss":
+                                {
+                                    place.petInteract(GopetCMD.ON_PET_INTERACT_KISS, player.playerData.user_id);
+                                    return;
+                                }
+                            case "play":
+                                {
+                                    place.petInteract(GopetCMD.ON_PET_INTERACT_PLAY, player.playerData.user_id);
+                                    return;
+                                }
+                            case "poke":
+                                {
+                                    place.petInteract(GopetCMD.ON_PET_INTERACT_POKE, player.playerData.user_id);
+                                    return;
+                                }
+                        }
                         place.chat(player, text);
                         HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Chat khu vực nội dung là :%s", text)));
                     }
@@ -643,32 +661,7 @@ public class GameController
 
     public void requestChangePass(int id, String oldPass, String newPass)
     {
-        if (oldPass.Equals(player.user.password))
-        {
-            if (!Utilities.CheckString(newPass, "^[a-z0-9]+$")
-                    || newPass.Length < 5)
-            {
-                player.redDialog("Mật khẩu phải có số lượng kí tự lớn hơn 5 và không chứa các kí tự đặc biệt");
-                return;
-            }
-            MySqlConnection MySqlConnection = MYSQLManager.createWebMySqlConnection();
-            try
-            {
-                player.user.password = newPass;
-                MySqlConnection.Execute(Utilities.Format("update User set password = '%s' where user_id = %s", newPass, player.user.user_id));
-                player.okDialog("Đổi mật khẩu thành công, vui lòng nhớ kỷ thông tin");
-                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Đổi mật khẩu từ %s thành %s", oldPass, newPass)));
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-            MySqlConnection.Close();
-        }
-        else
-        {
-            player.redDialog("Mật khẩu không chính xác");
-        }
+        player.requestChangePass(id, oldPass, newPass);
     }
 
     private void processPet(sbyte subCmd, Message message)
@@ -1177,6 +1170,7 @@ public class GameController
             player.session.sendMessage(ms);
             HistoryManager.addHistory(new History(player).setLog("Đăng nhập vào trò chơi và tải nhân vật thành công"));
             checkBugEquipItem();
+            testMsg();
         }
     }
 
@@ -1635,7 +1629,7 @@ public class GameController
     public void enchantTatto()
     {
 
-        if (!objectPerformed.ContainsKey(OBJKEY_ID_TATTO_TO_ENCHANT, OBJKEY_ID_MATERIAL1_TATTO_TO_ENCHANT, OBJKEY_ID_MATERIAL2_TATTO_TO_ENCHANT, OBJKEY_TYPE_PRICE_TATTO_TO_ENCHANT))
+        if (!objectPerformed.ContainsKeyZ(OBJKEY_ID_TATTO_TO_ENCHANT, OBJKEY_ID_MATERIAL1_TATTO_TO_ENCHANT, OBJKEY_ID_MATERIAL2_TATTO_TO_ENCHANT, OBJKEY_TYPE_PRICE_TATTO_TO_ENCHANT))
         {
             player.redDialog("Thao tác quá nhanh!!!");
             return;
@@ -4412,4 +4406,54 @@ public class GameController
     {
         player.redDialog("Sai loại vật phẩm");
     }
+
+    public void testMsg()
+    {
+        Message m = messagePetSerive(95);
+        m.putUTF("anim_characters/-1.png");
+        m.putInt(11);
+        m.putInt(11);
+        m.putlong(Utilities.CurrentTimeMillis);
+        Console.WriteLine(Utilities.CurrentTimeMillis);
+        player.session.sendMessage(m);
+    }
+    public void testMsg100()
+    {
+        Message m = messagePetSerive(100);
+        m.putsbyte(0);
+        m.putInt(11);
+        m.putUTF("Giao diện gì đây?");
+        m.putInt(20);
+        for (int i = 0; i < 20; i++)
+        {
+            m.putsbyte(1);
+            // hide
+            m.putbool(true);
+            m.putUTF($"petFrame3/{i}.png");
+            m.putsbyte(1);
+            if (1 == 1)
+            {
+                m.putbool(true);
+                m.putInt(2);
+                m.putInt(2);
+            }
+            else
+            {
+                m.putsbyte(i);
+            }
+        }
+        m.putInt(3);
+        for (int i = 0; i < 3; i++)
+        {
+            m.putInt(-1);
+            m.putsbyte(i);
+            m.putUTF("Này là cl gì " + i);
+            m.putbool(true);
+            m.putbool(true);
+        }
+        player.session.sendMessage(m);
+    }
+
+
 }
+

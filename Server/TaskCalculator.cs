@@ -67,7 +67,7 @@ public class TaskCalculator
                         {
                             if (!playerData.wasTask.Contains(taskIdNeed))
                             {
-                                //flag = false;
+                                flag = false;
                                 break;
                             }
                         }

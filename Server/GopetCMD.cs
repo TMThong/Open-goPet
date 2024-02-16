@@ -161,4 +161,8 @@ public class GopetCMD {
     public const sbyte WING_TYPE_UNEQUIP = 5;
     public const sbyte WING_TYPE_ENCHANT = 6;
     public const sbyte SHOW_TATTO_PET_IN_KIOSK = 99;
+    public const sbyte ON_PET_INTERACT = 17;
+    public const sbyte ON_PET_INTERACT_KISS = 0;
+    public const sbyte ON_PET_INTERACT_PLAY = 1;
+    public const sbyte ON_PET_INTERACT_POKE = 2;
 }

@@ -192,6 +192,7 @@ public partial class MenuController
     public const int OP_SHOP_ENERGY = 14;
     public const int OP_MERGE_PART_PET = 15;
     public const int OP_PET_TATOO = 16;
+    public const int OP_MERGE_WING = 18;
     public const int OP_MERGE_ITEM = 19;
     public const int OP_SHOW_GEM_INVENTORY = 21;
     public const int OP_REVIVAL_PET_AFTER_PK = 22;
@@ -361,7 +362,7 @@ public partial class MenuController
         }
     }
 
-    
+
 
     static void Trade(sbyte type, Player player)
     {
@@ -394,7 +395,7 @@ public partial class MenuController
             case MENU_SELECT_MATERIAL2_TO_ENCHANT_TATOO:
             case MENU_SELECT_GEM_ENCHANT_MATERIAL1:
             case MENU_SELECT_ENCHANT_MATERIAL1:
-                arrayList.add(!player.playerData.isOnSky ? GopetManager.MATERIAL_ENCHANT_ITEM : GopetManager.MATERIAL_ENCHANT_ITEM_SKY);
+                arrayList.add(GopetManager.MATERIAL_ENCHANT_ITEM);
                 break;
             case MENU_SELECT_ENCHANT_MATERIAL2:
                 arrayList.add(GopetManager.ENCHANT_MATERIAL_CRYSTAL);
@@ -459,7 +460,7 @@ public partial class MenuController
         return arrayList;
     }
 
-   
+
 
     public static void showNpcOption(int npcId, Player player)
     {
@@ -525,7 +526,7 @@ public partial class MenuController
         return petSkills.ToArray();
     }
 
-    
+
 
     public static void showTop(Top top, Player player)
     {
@@ -790,8 +791,8 @@ public partial class MenuController
         player.session.sendMessage(m);
     }
 
-   
-    
+
+
 
     public static void selectImgDialog(int imgId, Player player)
     {

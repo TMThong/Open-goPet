@@ -92,7 +92,7 @@ namespace Gopet.Data.GopetItem
             switch (itemTemplate.getType())
             {
                 case GopetManager.SKIN_ITEM:
-                    return Utilities.Format("+%s (atk) +%s (def) +%s (hp) +%s (mp)", itemTemplate.getAtk(), itemTemplate.getDef(), itemTemplate.getHp(), itemTemplate.getMp()) + " (HSD: " + Utilities.ToDateString(Utilities.GetDate(expire)) + " )";
+                    return Utilities.Format("+%s (atk) +%s (def) +%s (hp) +%s (mp)", atk, def, hp, mp) + " (HSD: " + Utilities.ToDateString(Utilities.GetDate(expire)) + " )";
                 case GopetManager.WING_ITEM:
                     string strExpire = "";
                     if (expire > 0)
@@ -116,11 +116,12 @@ namespace Gopet.Data.GopetItem
         public int getDef()
         {
             int value = def;
+            if(value == 0) return 0;
             if (Template.type == GopetManager.WING_ITEM)
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
-            int info = value + Utilities.round((value * 4 + 50f) / 100 * 5 / 2) * lvl;
+            int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2) * lvl;
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_DEF)));
         }
 
@@ -128,11 +129,12 @@ namespace Gopet.Data.GopetItem
         public int getAtk()
         {
             int value = atk;
-            if(Template.type == GopetManager.WING_ITEM)
+            if (value == 0) return 0;
+            if (Template.type == GopetManager.WING_ITEM)
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
-            int info = value + Utilities.round((value * 4 + 50f) / 100 * 5 / 2) * lvl;
+            int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2) * lvl;
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_ATK)));
         }
 
@@ -140,11 +142,12 @@ namespace Gopet.Data.GopetItem
         public int getHp()
         {
             int value = hp;
+            if (value == 0) return 0;
             if (Template.type == GopetManager.WING_ITEM)
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
-            int info = value + Utilities.round((value * 4 + 50f) / 100 * 5 / 2) * lvl;
+            int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2) * lvl;
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_HP)));
         }
 
@@ -152,11 +155,12 @@ namespace Gopet.Data.GopetItem
         public int getMp()
         {
             int value = mp;
+            if (value == 0) return 0;
             if (Template.type == GopetManager.WING_ITEM)
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
-            int info = value + Utilities.round((value * 4 + 50f) / 100 * 5 / 2) * lvl;
+            int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2) * lvl;
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_MP)));
         }
 

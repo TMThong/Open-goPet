@@ -754,6 +754,14 @@ public class GopetPlace : Place
         }
     }
 
+    public void petInteract(sbyte type, int user_id)
+    {
+        Message m = messagePetSerive(GopetCMD.ON_PET_INTERACT);
+        m.putInt(user_id);
+        m.putsbyte(type);
+        sendMessage(m);
+    }
+
     public void sendClan(Player player, bool isAddToplace)
     {
         ClanMember clanMember = player.controller.getClan();
