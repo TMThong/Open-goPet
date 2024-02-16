@@ -576,6 +576,13 @@ namespace Gopet.Battle
             }
             if (Utilities.CurrentTimeMillis > delaTimeTurn)
             {
+                if (isPetAttackMob())
+                {
+                    if (getUserTurnId() != mob.getMobId())
+                    {
+                        petAttack(activePlayer);
+                    }
+                }
                 nextTurn();
             }
             if (isPetAttackMob())
