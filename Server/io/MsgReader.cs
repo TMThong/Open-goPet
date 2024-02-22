@@ -11,9 +11,6 @@ namespace Gopet.IO
             this.session = session;
         }
 
-
-
-
         public void run()
         {
             while (true)

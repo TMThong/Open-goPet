@@ -198,7 +198,7 @@ public class ShopTemplateItem
             return getItemTemplate().getIconPath();
         }
 
-        return getPetTemplate().getIcon();
+        return getPetTemplate().icon;
     }
 
     public String getDesc(Player player)
@@ -215,7 +215,7 @@ public class ShopTemplateItem
             {
                 throw new NullReferenceException("pet null");
             }
-            return Utilities.Format($"Hệ: {GopetManager.GetElementDisplay(petTemplate.element, petTemplate.nclass)}. Mô tả:   " + " + %s (str) , + %s (agi) , + %s (int) , + %s (hp) , + %s (mp)", petTemplate.getStr(), petTemplate.getAgi(), petTemplate.getInt(), petTemplate.getHp(), petTemplate.getMp());
+            return Utilities.Format($"Hệ: {GopetManager.GetElementDisplay(petTemplate.element, petTemplate.nclass)}. Mô tả:   " + " + %s (str) , + %s (agi) , + %s (int) , + %s (hp) , + %s (mp)", petTemplate.str, petTemplate.agi, petTemplate._int, petTemplate.getHp(), petTemplate.getMp());
         }
 
         ItemTemplate itemTemplate = getItemTemplate();
@@ -241,7 +241,7 @@ public class ShopTemplateItem
 
         if (!isSellItem)
         {
-            return getPetTemplate().getName();
+            return getPetTemplate().name;
         }
         ItemTemplate itemTemplate = getItemTemplate();
 

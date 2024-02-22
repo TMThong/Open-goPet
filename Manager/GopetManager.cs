@@ -184,6 +184,7 @@ public class GopetManager
     public const int GIFT_EXP = 7;
     public const int GIFT_ENERGY = 8;
     public const int GIFT_RANDOM_ITEM = 9;
+    public const int GIFT_ITEM_MAX_OPTION = 10;
 
     /**
      * thời gian chờ lượt đánh (mili giây)
@@ -556,12 +557,12 @@ public class GopetManager
             PET_TEMPLATES.ForEach(petTemplate =>
             {
                 petEnable.add(petTemplate);
-                if (!typePetTemplate.ContainsKey(petTemplate.getType()))
+                if (!typePetTemplate.ContainsKey(petTemplate.type))
                 {
-                    typePetTemplate.put(petTemplate.getType(), new());
+                    typePetTemplate.put(petTemplate.type, new());
                 }
-                typePetTemplate.get(petTemplate.getType()).add(petTemplate);
-                PETTEMPLATE_HASH_MAP.put(petTemplate.getPetId(), petTemplate);
+                typePetTemplate.get(petTemplate.type).add(petTemplate);
+                PETTEMPLATE_HASH_MAP.put(petTemplate.petId, petTemplate);
             });
             ServerMonitor.LogInfo("Tải dữ liệu thú cưng từ cơ sở dữ liệu OK");
             itemTemplates.AddRange(conn.Query<ItemTemplate>("SELECT * FROM `item`"));

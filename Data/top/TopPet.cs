@@ -38,7 +38,7 @@ public class TopPet : Top
                     TopData topData = new TopData();
                     topData.id = data.ownerId;
                     topData.name = data.ownerName;
-                    topData.imgPath = petTemplate.getIcon();
+                    topData.imgPath = petTemplate.icon;
                     topData.title = getNameWithStar(data.star, petTemplate) + " của " + topData.name;
                     topData.desc = Utilities.Format("Hạng %s : Cấp %s  hiện có %s kinh nghiệm (hp) %s (mp) %s (def) %s (atk) %s",
                             index,
@@ -63,7 +63,7 @@ public class TopPet : Top
 
     public String getNameWithStar(int star, PetTemplate petTemplate)
     {
-        String name = petTemplate.getName() + " ";
+        String name = petTemplate.name + " ";
         for (int i = 0; i < star; i++)
         {
             name += "(sao)";

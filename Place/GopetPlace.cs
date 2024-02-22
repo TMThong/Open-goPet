@@ -11,7 +11,7 @@ using Gopet.Util;
 
 public class GopetPlace : Place
 {
-
+    public long placeTime = Utilities.CurrentTimeMillis;
     public CopyOnWriteArrayList<Mob> mobs = new();
     public CopyOnWriteArrayList<PetBattle> petBattles = new();
     public ConcurrentHashMap<MobLocation, long> newMob = new();
@@ -146,8 +146,8 @@ public class GopetPlace : Place
         foreach (Mob mob in gopetMobs)
         {
             message.putInt(mob.getMobId());
-            message.putUTF(mob.getPetTemplate().getFrameImg());
-            message.putUTF(mob.getPetTemplate().getName());
+            message.putUTF(mob.getPetTemplate().frameImg);
+            message.putUTF(mob.getPetTemplate().name);
             message.putInt(mob.getMobLvInfo().lvl);
             message.putInt(mob.getMobLocation().getX());
             message.putInt(mob.getMobLocation().getY());
@@ -166,8 +166,8 @@ public class GopetPlace : Place
         foreach (Mob mob in gopetMobs)
         {
             message.putInt(mob.getMobId());
-            message.putUTF(mob.getPetTemplate().getFrameImg());
-            message.putUTF(mob.getPetTemplate().getName());
+            message.putUTF(mob.getPetTemplate().frameImg);
+            message.putUTF(mob.getPetTemplate().name);
             message.putInt(mob.getMobLvInfo().lvl);
             message.putInt(mob.getMobLocation().getX());
             message.putInt(mob.getMobLocation().getY());
@@ -185,8 +185,8 @@ public class GopetPlace : Place
         foreach (Mob mob in newMobs)
         {
             message.putInt(mob.getMobId());
-            message.putUTF(mob.getPetTemplate().getFrameImg());
-            message.putUTF(mob.getPetTemplate().getName());
+            message.putUTF(mob.getPetTemplate().frameImg);
+            message.putUTF(mob.getPetTemplate().name);
             message.putInt(mob.getMobLvInfo().lvl);
             message.putInt(mob.getMobLocation().getX());
             message.putInt(mob.getMobLocation().getY());
@@ -217,7 +217,7 @@ public class GopetPlace : Place
                 Pet petSelected = entry.Value;
                 message.putInt(player1.user.user_id);
                 message.putInt(petSelected.petIdTemplate);
-                message.putUTF(petSelected.getPetTemplate().getFrameImg());
+                message.putUTF(petSelected.getPetTemplate().frameImg);
                 message.putUTF(petSelected.getNameWithStar());
                 message.putInt(petSelected.lvl);
             }
@@ -797,5 +797,12 @@ public class GopetPlace : Place
             m.cleanup();
             player.session.sendMessage(m);
         }
+    }
+    public void sendTimePlace()
+    {
+        Message message = GopetPlace.messagePetSerive(GopetCMD.TIME_PLACE);
+        message.putInt(Utilities.round(placeTime - Utilities.CurrentTimeMillis) / 1000);
+        message.cleanup();
+        sendMessage(message);
     }
 }

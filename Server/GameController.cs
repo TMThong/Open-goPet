@@ -363,10 +363,10 @@ public class GameController
             message.putsbyte(GopetCMD.MAGIC);
             message.putInt(user_id);
             message.putInt(pet.getPetIdTemplate());
-            message.putsbyte(pet.getPetTemplate().getElement());
-            message.putUTF(pet.getPetTemplate().getFrameImg());
+            message.putsbyte(pet.getPetTemplate().element);
+            message.putUTF(pet.getPetTemplate().frameImg);
             message.putUTF(pet.getNameWithStar());
-            message.putsbyte(pet.getPetTemplate().getNclass());
+            message.putsbyte(pet.getPetTemplate().nclass);
             message.putInt(pet.lvl);
             message.putlong(pet.exp);
             if (GopetManager.PetExp.ContainsKey(pet.lvl))
@@ -1107,6 +1107,11 @@ public class GameController
                     if (MapManager.maps.get(mapId) != null)
                     {
                         GopetMap mapData = MapManager.maps.get(mapId);
+                        if(mapData.CanChangeZone)
+                        {
+                            player.Popup("Không thể đổi khu");
+                            return;
+                        }
                         if (placeId < mapData.numPlace && placeId >= 0)
                         {
                             mapData.places.get(placeId).add(player);
@@ -1279,7 +1284,7 @@ public class GameController
         {
             Message message = messagePetSerive(GopetCMD.GYM);
             message.putInt(pet.getPetIdTemplate());
-            message.putUTF(pet.getPetTemplate().getFrameImg());
+            message.putUTF(pet.getPetTemplate().frameImg);
             message.putUTF(pet.getNameWithStar());
             message.putsbyte(pet.getNClassIcon());
             message.putInt(pet.lvl);
@@ -1392,7 +1397,7 @@ public class GameController
                 Message message = messagePetSerive(GopetCMD.EQUIP_INFO);
                 message.putInt(user_id);
                 message.putInt(pet.petId);
-                message.putUTF(pet.getPetTemplate().getFrameImg());
+                message.putUTF(pet.getPetTemplate().frameImg);
                 message.putUTF(pet.getNameWithStar());
                 message.putInt(pet.lvl);
                 message.putInt(pet.getStr());
@@ -2286,7 +2291,7 @@ public class GameController
         Message m = messagePetSerive(GopetCMD.PET_UPGRADE_PET_INFO);
         m.putsbyte(typePetUpgrade);
         m.putInt(petindex);
-        m.putUTF(pet.getPetTemplate().getFrameImg());
+        m.putUTF(pet.getPetTemplate().frameImg);
         m.putsbyte(0);
         m.cleanup();
         player.session.sendMessage(m);
@@ -3288,7 +3293,7 @@ public class GameController
                         mypet.tiemnang_point += mypet.star;
                         mypet.star++;
                         player.okDialog(Utilities.Format("Chúc mừng bạn đã nâng sao thành công cho\n %s", mypet.getNameWithStar()));
-                        HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Nâng sao thú cưng %s lên %s sao", mypet.getPetTemplate().getName(), mypet.star)));
+                        HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Nâng sao thú cưng %s lên %s sao", mypet.getPetTemplate().name, mypet.star)));
                     }
                     else
                     {
@@ -3600,10 +3605,28 @@ public class GameController
                         }
                     }
                     break;
+                case GopetManager.GIFT_ITEM_MAX_OPTION:
+                    {
+                        int itemId = giftInfo[1];
+                        int count = giftInfo[2];
+                        for (int j = 0; j < count; j++)
+                        {
+                            Item item = new Item(itemId);
+                            item.atk = Item.GetMaxOption(item.Template.atkRange);
+                            item.def = Item.GetMaxOption(item.Template.defRange);
+                            item.hp = Item.GetMaxOption(item.Template.hpRange);
+                            item.mp = Item.GetMaxOption(item.Template.mpRange);
+                            player.addItemToInventory(item);
+                            popups.add(new Popup(item.getName()));
+                        }
+                    }
+                    break;
             }
         }
         return popups;
     }
+
+
 
     public void showImageDialog(
             int id,
@@ -4410,7 +4433,7 @@ public class GameController
     public void testMsg()
     {
         Message m = messagePetSerive(95);
-        m.putUTF("anim_characters/-1.png");
+        m.putUTF("npcs/Thang_He.png");
         m.putInt(11);
         m.putInt(11);
         m.putlong(Utilities.CurrentTimeMillis);

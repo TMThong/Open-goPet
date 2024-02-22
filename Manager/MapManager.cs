@@ -12,6 +12,8 @@ public class MapManager
 
     public const int ID_LINH_THU_CITY = 11;
     public const int ID_MAP_CHALLENGE = 12;
+    public const int ID_MAP_OUTSIDE_ARENA = 19;
+    public const int ID_MAP_INSIDE_ARENA = 20;
 
     public static void init()
     {

@@ -96,6 +96,9 @@ public partial class MenuController
     public const int MENU_SELECT_MATERIAL1_TO_ENCHANT_TATOO = 1046;
     public const int MENU_SELECT_MATERIAL2_TO_ENCHANT_TATOO = 1047;
     public const int MENU_OPTION_TO_SLECT_TYPE_MONEY_ENCHANT_TATTOO = 1048;
+    public const int MENU_SELECT_ITEM_TO_GET_BY_ADMIN = 1049;
+    public const int MENU_SELECT_ITEM_TO_GIVE_BY_ADMIN = 1050;
+    public const int MENU_SELECT_PET_TO_DEF_LEAGUE = 1051;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -115,6 +118,9 @@ public partial class MenuController
         new AdminItemInfo("Buff đập đồ", "Người được chỉ định buff sẽ không cường hóa bị thất bại", "items/4000766.png"),
         new AdminItemInfo("Cộng hoặc trừ tiền", "Cộng hoặc trừ tiền của tài khoản chỉ định", "items/4000766.png"),
         new AdminItemInfo("Lấy Id khu", "Trả về Id của khu vực nhân vật đang đứng", "items/4000766.png"),
+        new AdminItemInfo("Lấy vật phẩm", "Lấy vật phẩm trong hành trang của người chỉ định và đem nó vào hành trang của bạn", "items/4000766.png"),
+        new AdminItemInfo("Chuyển vật phẩm", "Chuyển vật phẩm trong hành trang của bạn đế người chỉ định", "items/4000766.png"),
+        new AdminItemInfo("Dọn hành trang trang bị", "Xóa tất cả vật phẩm là trang bị", "items/4000766.png"),
     };
 
     public const int ADMIN_INDEX_SET_PET_INFO = 0;
@@ -135,6 +141,9 @@ public partial class MenuController
     public const int ADMIN_INDEX_BUFF_ENCHANT = 15;
     public const int ADMIN_INDEX_COIN = 16;
     public const int ADMIN_INDEX_GET_ZONE_ID = 17;
+    public const int ADMIN_INDEX_GET_ITEM_FROM_PLAYER = 18;
+    public const int ADMIN_INDEX_GIVE_ITEM_TO_PLAYER = 19;
+    public const int ADMIN_INDEX_DELETE_ALL_EQUIP_PET_ITEM = 20;
 
     /**
      * Danh sách nhận pet miễn phí
@@ -232,6 +241,9 @@ public partial class MenuController
     public const int OP_NUM_OF_TASK = 61;
     public const int OP_SHOW_ALL_ITEM = 62;
     public const int OP_SHOW_TOP_ACCUMULATED_POINT = 63;
+    public const int OP_PET_LEAGUE_BETA = 64;
+    public const int OP_SELECT_PET_DEF_LEAGUE = 65;
+    public const int OP_TOP_AREAN_POINT = 66;
     public const int OP_TRADE_GIFT_COIN = 1000000000;
     public const int OP_TRADE_GIFT_GOLD = 1000000001;
     /**
@@ -307,6 +319,10 @@ public partial class MenuController
     public const int OBJKEY_ID_MATERIAL1_TATTO_TO_ENCHANT = 42;
     public const int OBJKEY_ID_MATERIAL2_TATTO_TO_ENCHANT = 43;
     public const int OBJKEY_TYPE_PRICE_TATTO_TO_ENCHANT = 44;
+    public const int OBJKEY_PLAYER_GET_ITEM = 45;
+    public const int OBJKEY_PLAYER_GIVE_ITEM = 46;
+    public const int OBJKEY_COUNT_ITEM_TO_GET_BY_ADMIN = 47;
+    public const int OBJKEY_COUNT_ITEM_TO_GIVE_BY_ADMIN = 48;
     public const int DIALOG_CONFIRM_REMOVE_ITEM_EQUIP = 0;
     public const int DIALOG_CONFIRM_BUY_KIOSK_ITEM = 1;
     public const int DIALOG_ENCHANT = 3;
@@ -344,6 +360,8 @@ public partial class MenuController
     public const int INPUT_TYPE_NAME_TO_BUFF_ENCHANT = 18;
     public const int INPUT_TYPE_NAME_TO_BUFF_COIN = 19;
     public const int INPUT_TYPE_NAME_PET_WHEN_BUY_PET = 20;
+    public const int INPUT_TYPE_NAME_PLAYER_TO_GET_ITEM = 21;
+    public const int INPUT_TYPE_NAME_PLAYER_TO_GIVE_ITEM = 22;
     public const int IMGDIALOG_CAPTCHA = 0;
     #endregion
     public static void init()
@@ -520,9 +538,9 @@ public partial class MenuController
     {
         if (GopetManager.SPECIAL_PET_TO_LEARN_ALL_SKILL.Contains(player.playerData.petSelected.Template.petId))
         {
-            return GopetManager.PET_SKILLS.ToArray();
+            return GopetManager.PET_SKILLS.Where(p => p.nClass == GopetManager.Fighter || p.nClass == GopetManager.Assassin || p.nClass == GopetManager.Wizard).ToArray();
         }
-        JArrayList<PetSkill> petSkills = GopetManager.NCLASS_PETSKILL_HASH_MAP.get(player.playerData.petSelected.getPetTemplate().getNclass());
+        JArrayList<PetSkill> petSkills = GopetManager.NCLASS_PETSKILL_HASH_MAP.get(player.playerData.petSelected.getPetTemplate().nclass);
         return petSkills.ToArray();
     }
 
@@ -825,6 +843,7 @@ public partial class MenuController
                 return new sbyte[] { InputReader.FIELD_INT, InputReader.FIELD_INT };
             case INPUT_DIALOG_SET_PET_SELECTED_INFo:
                 return new sbyte[] { InputReader.FIELD_INT, InputReader.FIELD_INT, InputReader.FIELD_INT };
+
             case INPUT_DIALOG_CREATE_CLAN:
             case INPUT_DIALOG_ADMIN_ADD_GOLD:
             case INPUT_DIALOG_ADMIN_ADD_COIN:
@@ -835,8 +854,13 @@ public partial class MenuController
                 return new sbyte[] { InputReader.FIELD_STRING };
             case INPUT_DIALOG_ADMIN_LOCK_USER:
                 return new sbyte[] { InputReader.FIELD_STRING, InputReader.FIELD_sbyte, InputReader.FIELD_INT, InputReader.FIELD_STRING };
+
             case INPUT_TYPE_NAME_TO_BUFF_COIN:
                 return new sbyte[] { InputReader.FIELD_STRING, InputReader.FIELD_INT };
+
+            case INPUT_TYPE_NAME_PLAYER_TO_GET_ITEM:
+            case INPUT_TYPE_NAME_PLAYER_TO_GIVE_ITEM:
+                return new sbyte[] { InputReader.FIELD_INT,InputReader.FIELD_STRING  };
         }
         return null;
     }
@@ -851,5 +875,36 @@ public partial class MenuController
             default:
                 return GopetManager.NORMAL_INVENTORY;
         }
+    }
+
+    private static CopyOnWriteArrayList<Item> getItemByMenuId(int menuId, Player player)
+    {
+        switch (menuId)
+        {
+            case MENU_SELECT_ITEM_TO_GIVE_BY_ADMIN:
+            case MENU_SELECT_ITEM_TO_GET_BY_ADMIN:
+                {
+                    CopyOnWriteArrayList<Item> items = new CopyOnWriteArrayList<Item>();
+                    if (player.controller.objectPerformed.ContainsKey(OBJKEY_PLAYER_GET_ITEM) || player.controller.objectPerformed.ContainsKey(OBJKEY_PLAYER_GIVE_ITEM))
+                    {
+                        Player playerOnline = menuId == MENU_SELECT_ITEM_TO_GET_BY_ADMIN ? player.controller.objectPerformed[OBJKEY_PLAYER_GET_ITEM] : player;
+                        if (PlayerManager.players.Contains(playerOnline))
+                        {
+                            foreach (var inventory in playerOnline.playerData.items)
+                            {
+                                foreach (var item in inventory.Value)
+                                {
+                                    items.Add(item);
+                                }
+                            }
+                        }
+                    }
+                    return items;
+                }
+
+            default:
+                return Item.search(typeSelectItemMaterial(menuId, player), player.playerData.getInventoryOrCreate(getTypeInventorySelect(menuId)));
+        }
+        return new CopyOnWriteArrayList<Item>();
     }
 }

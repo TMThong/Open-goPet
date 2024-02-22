@@ -5,129 +5,24 @@ using System.Diagnostics;
 public class PetTemplate
 {
 
-    public int petId, str, _int, agi;
-    public sbyte type, nclass, element;
-    public string name, icon, frameImg;
+    public int agi { get; private set; }
+    public sbyte element { get; private set; }
+    public sbyte type { get; private set; }
+    public sbyte nclass { get; private set; }
+    public int petId { get; private set; }
+    public int str { get; private set; }
+    public int _int { get; private set; }
 
-    public void setPetId(int petId)
-    {
-        this.petId = petId;
-    }
+    public string frameImg { get; private set; }
+    public string name { get; private set; }
+    public string icon { get; private set; }
 
+    public int gymUpLevel { get; private set; }
 
-    public void setStr(int str)
-    {
-        this.str = str;
-    }
-
-    public void set_int(int _int)
-    {
-        this._int = _int;
-    }
-
-    public void setAgi(int agi)
-    {
-        this.agi = agi;
-    }
-
-    public void setType(sbyte type)
-    {
-        this.type = type;
-    }
-
-    public void setNclass(sbyte nclass)
-    {
-        this.nclass = nclass;
-    }
-
-    public void setElement(sbyte element)
-    {
-        this.element = element;
-    }
-
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
-    public void setIcon(String icon)
-    {
-        this.icon = icon;
-    }
-
-    public void setFrameImg(String frameImg)
-    {
-        this.frameImg = frameImg;
-    }
-
-
-    public int getPetId()
-    {
-        return this.petId;
-    }
-
-
-
-    public int getStr()
-    {
-        return this.str;
-    }
-
-    public int get_int()
-    {
-        return this._int;
-    }
-
-    public int getAgi()
-    {
-        return this.agi;
-    }
-
-    public sbyte getType()
-    {
-        return this.type;
-    }
-
-    public sbyte getNclass()
-    {
-        return this.nclass;
-    }
-
-    public sbyte getElement()
-    {
-        return this.element;
-    }
-
-    public String getName()
-    {
-        return this.name;
-    }
-
-    public String getIcon()
-    {
-        return this.icon;
-    }
-
-    public String getFrameImg()
-    {
-        return this.frameImg;
-    }
-
-
-
-    public void setInt(int i)
-    {
-        this._int = i;
-    }
-
-    public int getInt()
-    {
-        return this._int;
-    }
 
     public String getDesc()
     {
-        return Utilities.Format("(str) %s (int) %s (agi) %s", getStr(), getInt(), getAgi());
+        return Utilities.Format("(str) %s (int) %s (agi) %s", str, _int, agi);
     }
 
     public int getHp()

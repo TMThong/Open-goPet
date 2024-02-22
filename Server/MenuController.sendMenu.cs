@@ -21,6 +21,7 @@ public partial class MenuController
     {
         switch (menuId)
         {
+            case MENU_SELECT_PET_TO_DEF_LEAGUE:
             case MENU_KIOSK_PET_SELECT:
             case MENU_PET_INVENTORY:
             case MENU_SELECT_PET_UPGRADE_ACTIVE:
@@ -320,6 +321,7 @@ public partial class MenuController
                     }
                 }
                 break;
+
             case MENU_DELETE_TIEM_NANG:
                 {
                     JArrayList<MenuItemInfo> menuItemInfos = new();
@@ -354,6 +356,8 @@ public partial class MenuController
             case MENU_SKIN_INVENTORY:
                 showInventory(player, GopetManager.SKIN_INVENTORY, menuId, "Tủ quần ảo");
                 break;
+            case MENU_SELECT_ITEM_TO_GET_BY_ADMIN:
+            case MENU_SELECT_ITEM_TO_GIVE_BY_ADMIN:
             case MENU_SELECT_MATERIAL1_TO_ENCHANT_TATOO:
             case MENU_SELECT_MATERIAL2_TO_ENCHANT_TATOO:
             case MENU_SELECT_MATERIAL_TO_ENCAHNT_WING:
@@ -372,7 +376,7 @@ public partial class MenuController
             case MENU_MERGE_PART_ITEM:
             case MENU_SELECT_GEM_TO_INLAY:
                 {
-                    CopyOnWriteArrayList<Item> listItems = Item.search(typeSelectItemMaterial(menuId, player), player.playerData.getInventoryOrCreate(getTypeInventorySelect(menuId)));
+                    CopyOnWriteArrayList<Item> listItems = getItemByMenuId(menuId, player);
                     JArrayList<MenuItemInfo> menuItemMaterial1Infos = new();
                     foreach (Item item in listItems)
                     {
@@ -584,7 +588,7 @@ public partial class MenuController
                                     MenuItemInfo menuItemInfo = new MenuItemInfo();
                                     menuItemInfo.setCanSelect(true);
                                     menuItemInfo.setTitleMenu(kioskItem.pet.getNameWithStar() + Utilities.Format(" (Mã định danh:%s)", kioskItem.itemId));
-                                    menuItemInfo.setImgPath(kioskItem.pet.getPetTemplate().getIcon());
+                                    menuItemInfo.setImgPath(kioskItem.pet.getPetTemplate().icon);
                                     menuItemInfo.setDesc(Utilities.Format("Giá %s (ngoc) ", Utilities.FormatNumber(kioskItem.price)) + kioskItem.pet.getDesc());
                                     menuItemInfo.setCloseScreenAfterClick(true);
                                     menuItemInfo.setLeftCmdText(CMD_CENTER_OK);

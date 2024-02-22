@@ -14,7 +14,7 @@ namespace Gopet.Data.Map
         public Thread MyThread;
         public GopetMap(int mapId_, bool canUpdate, MapTemplate mapTemplate)
         {
-            if(!GopetManager.dropItem.ContainsKey(mapId_))
+            if (!GopetManager.dropItem.ContainsKey(mapId_))
             {
                 GopetManager.dropItem[mapId_] = new();
             }
@@ -74,7 +74,7 @@ namespace Gopet.Data.Map
                     {
                         e.printStackTrace();
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         Console.WriteLine(e);
                         Console.WriteLine(ex);
@@ -130,5 +130,7 @@ namespace Gopet.Data.Map
             place_L.add(player);
             addPlace(place_L);
         }
+
+        public virtual bool CanChangeZone { get; set; } = true;
     }
 }

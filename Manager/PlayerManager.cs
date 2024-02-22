@@ -1,6 +1,7 @@
 
 using Gopet.Data.Collections;
 using Gopet.Util;
+using MySqlX.XDevAPI;
 
 public class PlayerManager
 {
@@ -63,15 +64,10 @@ public class PlayerManager
 
     public async static void sendMessage(Message ms)
     {
-        Task task = new Task(() =>
+        foreach (Player player in players)
         {
-            foreach (Player player in players)
-            {
-                player.session.sendMessage(ms);
-            }
-        });
-        task.Start();
-        await task;
+            player.session.sendMessage(ms);
+        }
     }
 
     public static void crossChat(String who, String text)
@@ -84,6 +80,15 @@ public class PlayerManager
         ms.putUTF(text);
         ms.cleanup();
         sendMessage(ms);
+    }
+
+    public static void okDialog(String str)
+    {
+        Message m = new Message(71);
+        m.putsbyte(0);
+        m.putUTF(str);
+        m.writer().flush();
+        sendMessage(m);
     }
 
     public static void crossChat(Player player, String text)

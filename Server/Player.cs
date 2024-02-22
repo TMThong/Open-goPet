@@ -222,6 +222,8 @@ Thread.Sleep(1000);
 
         if (playerData != null)
         {
+            if (playerData.buffExp == null) playerData.buffExp = new BuffExp();
+
             playerData.buffExp.update();
             updatePkPoint();
         }
@@ -371,7 +373,7 @@ Thread.Sleep(1000);
                         foreach (var taskData in playerData.task)
                         {
                             TaskTemplate taskTemp = GopetManager.taskTemplate[taskData.taskTemplateId];
-                            if(!playerData.wasTask.ContainsZ(taskTemp.taskNeed) && taskTemp.type == TaskCalculator.TASK_TYPE_MAIN)
+                            if (!playerData.wasTask.ContainsZ(taskTemp.taskNeed) && taskTemp.type == TaskCalculator.TASK_TYPE_MAIN)
                             {
                                 playerData.task.remove(taskData);
                                 playerData.tasking.remove(taskData.taskTemplateId);
@@ -514,11 +516,20 @@ Thread.Sleep(1000);
         controller.updateUserInfo();
     }
 
+
+    public bool CanAddSpendGold
+    {
+        get
+        {
+            return DateTime.Now <= new DateTime(2025, 2, 18);
+        }
+    }
+
     public void addGold(long gold)
     {
         playerData.gold += gold;
         controller.updateUserInfo();
-        if (gold < 0)
+        if (gold < 0 && CanAddSpendGold)
         {
             playerData.spendGold -= gold;
             TopData topData = TopSpendGold.instance.find(playerData.user_id);
@@ -540,11 +551,14 @@ Thread.Sleep(1000);
         playerData.gold -= gold;
 
         controller.updateUserInfo();
-        playerData.spendGold += gold;
-        TopData topData = TopSpendGold.instance.find(playerData.user_id);
-        if (topData != null)
+        if(CanAddSpendGold)
         {
-            topData.desc = Utilities.Format("Hạng %s: Đã tiêu %s (vang)", TopSpendGold.instance.datas.indexOf(topData) + 1, Utilities.FormatNumber(playerData.spendGold));
+            playerData.spendGold += gold;
+            TopData topData = TopSpendGold.instance.find(playerData.user_id);
+            if (topData != null)
+            {
+                topData.desc = Utilities.Format("Hạng %s: Đã tiêu %s (vang)", TopSpendGold.instance.datas.indexOf(topData) + 1, Utilities.FormatNumber(playerData.spendGold));
+            }
         }
     }
 

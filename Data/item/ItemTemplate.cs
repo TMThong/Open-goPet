@@ -163,7 +163,7 @@ namespace Gopet.Data.GopetItem
                             PetTemplate petTemplate = GopetManager.PETTEMPLATE_HASH_MAP.get(petId);
                             if (petTemplate != null)
                             {
-                                return Utilities.Format("Dùng %s mảnh sẽ đổi được pet %s", count, petTemplate.getName());
+                                return Utilities.Format("Dùng %s mảnh sẽ đổi được pet %s", count, petTemplate.name);
                             }
                         }
                         return description;

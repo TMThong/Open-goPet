@@ -475,12 +475,12 @@ namespace Gopet.Battle
         public static void writeMyPetInfo(Pet pet, Message message)
         {
             message.putInt(pet.getPetIdTemplate());
-            message.putUTF(pet.getPetTemplate().getFrameImg());
+            message.putUTF(pet.getPetTemplate().frameImg);
             message.putUTF(pet.getNameWithStar());
             message.putInt(1);
-            message.putInt(pet.getPetTemplate().getStr());
-            message.putInt(pet.getPetTemplate().getAgi());
-            message.putInt(pet.getPetTemplate().getInt());
+            message.putInt(pet.getPetTemplate().str);
+            message.putInt(pet.getPetTemplate().agi);
+            message.putInt(pet.getPetTemplate()._int);
 
             //
             message.putInt(1);
@@ -506,8 +506,8 @@ namespace Gopet.Battle
         public static void writeMobInfo(Mob mob, Message message)
         {
             message.putInt(mob.getMobId());
-            message.putUTF(mob.getPetTemplate().getFrameImg());
-            message.putUTF(mob.getPetTemplate().getName());
+            message.putUTF(mob.getPetTemplate().frameImg);
+            message.putUTF(mob.getPetTemplate().name);
 
             //
             message.putInt(1);
@@ -521,8 +521,8 @@ namespace Gopet.Battle
         public static void writePetPassiveInfo(Pet petPassive, Message message)
         {
             message.putInt(petPassive.getPetIdTemplate());
-            message.putUTF(petPassive.getPetTemplate().getFrameImg());
-            message.putUTF(petPassive.getPetTemplate().getName());
+            message.putUTF(petPassive.getPetTemplate().frameImg);
+            message.putUTF(petPassive.getPetTemplate().name);
 
             //
             message.putInt(petPassive.lvl);
@@ -665,10 +665,7 @@ namespace Gopet.Battle
                 {
                     if (!(mob is Boss))
                     {
-                        if (this.place.map.mapID == MapManager.ID_MAP_CHALLENGE)
-                        {
-                            activePlayer.playerData.AccumulatedPoint += GopetManager.POINT_WHEN_KILL_MOB_CHALLENGE;
-                        }
+                         
                         ClanMember clanMember = activePlayer.controller.getClan();
                         float perExpPlus = 0f;
                         float coinPlus = 0f;
@@ -715,7 +712,7 @@ namespace Gopet.Battle
                                 }
                             }
                         }
-                        activePlayer.controller.getTaskCalculator().onKillMob(mob.getPetTemplate().getPetId());
+                        activePlayer.controller.getTaskCalculator().onKillMob(mob.getPetTemplate().petId);
                     }
                     else
                     {
@@ -1501,7 +1498,7 @@ namespace Gopet.Battle
             int deltaLvl = p.lvl - mob.getMobLvInfo().lvl;
             if (deltaLvl >= 0)
             {
-                if (deltaLvl <= 10)
+                if (deltaLvl <= 15)
                 {
                     begin = (int)Math.Max(0, exp + Utilities.GetValueFromPercent(exp, deltaLvl * 2));
                 }
@@ -1512,7 +1509,7 @@ namespace Gopet.Battle
             }
             else
             {
-                if (deltaLvl >= -10)
+                if (deltaLvl >= -15)
                 {
                     begin = (int)Math.Max(0, exp - Utilities.GetValueFromPercent(exp, deltaLvl * 8));
                 }

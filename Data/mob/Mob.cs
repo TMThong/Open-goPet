@@ -153,7 +153,7 @@ namespace Gopet.Data.Mob
 
         public string getName()
         {
-            return getPetTemplate().getName();
+            return getPetTemplate().name;
         }
 
         public override int getAgi()

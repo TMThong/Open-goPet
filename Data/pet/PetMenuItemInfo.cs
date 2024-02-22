@@ -8,8 +8,8 @@ public class PetMenuItemInfo : MenuItemInfo {
 
     public PetMenuItemInfo(PetTemplate petTemplate) {
         setPetTemplate(petTemplate);
-        setTitleMenu(petTemplate.getName());
-        setImgPath(petTemplate.getIcon());
+        setTitleMenu(petTemplate.name);
+        setImgPath(petTemplate.icon);
         setDesc(petTemplate.getDesc());
         setCanSelect(true);
     }
@@ -18,7 +18,7 @@ public class PetMenuItemInfo : MenuItemInfo {
         this.pet = pet;
         setPetTemplate(pet.getPetTemplate());
         setTitleMenu(pet.getNameWithStar());
-        setImgPath(petTemplate.getIcon());
+        setImgPath(petTemplate.icon);
         setDesc(pet.getDesc());
         setCanSelect(true);
     }

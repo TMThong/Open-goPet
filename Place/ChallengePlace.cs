@@ -6,8 +6,7 @@ using Gopet.Util;
 
 public class ChallengePlace : GopetPlace
 {
-
-    public long placeTime = Utilities.CurrentTimeMillis;
+    
     public const long TIME_WAIT = 60 * 1000;
     public const long TIME_ATTACK = 60 * 3 * 1000;
     public const int MAX_PLAYER_JOIN = 4;
@@ -105,7 +104,7 @@ public class ChallengePlace : GopetPlace
                     int[] XY = MOB_XY[i];
                     PetTemplate petTemplate = Utilities.RandomArray(templates);
                     MobLocation mobLocation = new MobLocation(this.map.mapID, XY[0], XY[1]);
-                    MobLvlMap mobLvlMap = new MobLvlMap(map.mapID, turn, turn, petTemplate.getPetId());
+                    MobLvlMap mobLvlMap = new MobLvlMap(map.mapID, turn, turn, petTemplate.petId);
                     MobLvInfo mobLvInfo = GopetManager.MOBLVLINFO_HASH_MAP.get(turn);
                     Mob mob = new Mob(petTemplate, this, mobLvlMap, mobLocation, mobLvInfo);
                     mob.setMobId(-(i + 1));
@@ -167,11 +166,5 @@ public class ChallengePlace : GopetPlace
         this.mobs.remove(gopetMob);
     }
 
-    public void sendTimePlace()
-    {
-        Message message = GopetPlace.messagePetSerive(GopetCMD.TIME_PLACE);
-        message.putInt(Utilities.round(placeTime - Utilities.CurrentTimeMillis) / 1000);
-        message.cleanup();
-        sendMessage(message);
-    }
+    
 }

@@ -55,7 +55,6 @@ public class TopSpendGold : Top
             datas.Clear();
             try
             {
-                
                 using(var conn = MYSQLManager.create())
                 {
                     var topDataDynamic = conn.Query("SELECT * FROM `player`  WHERE isAdmin = 0 ORDER BY  `spendGold` DESC LIMIT 300;");

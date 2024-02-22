@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace Gopet.Data.top
 {
-    public class TopAccumulatedPoint : Top
+    public class TopArenaPoint : Top
     {
 
-        public static readonly TopAccumulatedPoint Instance = new TopAccumulatedPoint();
+        public static readonly TopArenaPoint Instance = new TopArenaPoint();
 
-        public TopAccumulatedPoint() : base("Top.Accumulated.Point")
+        public TopArenaPoint() : base("Top.Arena.Point")
         {
-            base.name = "Top điểm tích lũy";
+            base.name = "Top đấu trường";
             base.desc = "";
         }
 
@@ -33,7 +33,7 @@ namespace Gopet.Data.top
             topData.name = player.playerData.name;
             topData.imgPath = player.playerData.avatarPath;
             topData.title = topData.name;
-            topData.desc = $"Hạng chưa có : Bạn đang có {Utilities.FormatNumber(player.playerData.AccumulatedPoint)} điểm tích lũy";
+            topData.desc = $"Hạng chưa có : Bạn đang có {Utilities.FormatNumber(player.playerData.ArenaPoint)} (diem)";
             return topData;
         }
 
@@ -41,13 +41,12 @@ namespace Gopet.Data.top
         {
             try
             {
-
                 lastDatas.Clear();
                 lastDatas.AddRange(datas);
                 datas.Clear();
                 using (var conn = MYSQLManager.create())
                 {
-                    var topDataDynamic = conn.Query("SELECT * FROM `player` WHERE  isAdmin = 0 ORDER BY `player`.`AccumulatedPoint` DESC LIMIT 10");
+                    var topDataDynamic = conn.Query("SELECT * FROM `player` WHERE isAdmin = 0 ORDER BY `player`.`ArenaPoint` DESC LIMIT 10");
                     int index = 1;
                     foreach
                         (dynamic data in topDataDynamic)
@@ -57,7 +56,7 @@ namespace Gopet.Data.top
                         topData.name = data.name;
                         topData.imgPath = data.avatarPath;
                         topData.title = topData.name;
-                        topData.desc = Utilities.Format("Hạng %s : đang có %s điểm tích lũy", index, Utilities.FormatNumber(data.AccumulatedPoint));
+                        topData.desc = Utilities.Format("Hạng %s : đang có %s (diem) ", index, Utilities.FormatNumber(data.ArenaPoint));
                         datas.add(topData);
                         index++;
                     }

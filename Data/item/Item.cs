@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Gopet.Data.GopetItem
 {
-    public class Item 
+    public class Item
     {
 
         public int itemId;
@@ -57,7 +57,7 @@ namespace Gopet.Data.GopetItem
             }
         }
 
-        public int RandomInfoItem(int[] range)
+        public static int RandomInfoItem(int[] range)
         {
             if (range != null)
             {
@@ -66,6 +66,22 @@ namespace Gopet.Data.GopetItem
                     if (range.Length >= 2)
                     {
                         return Utilities.nextInt(range[0], range[1]);
+                    }
+                    return range[0];
+                }
+            }
+            return 0;
+        }
+
+        public static int GetMaxOption(int[] range)
+        {
+            if (range != null)
+            {
+                if (range.Length > 0)
+                {
+                    if (range.Length >= 2)
+                    {
+                        return range[1];
                     }
                     return range[0];
                 }
@@ -116,7 +132,7 @@ namespace Gopet.Data.GopetItem
         public int getDef()
         {
             int value = def;
-            if(value == 0) return 0;
+            if (value == 0) return 0;
             if (Template.type == GopetManager.WING_ITEM)
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
@@ -180,6 +196,9 @@ namespace Gopet.Data.GopetItem
 
         public static CopyOnWriteArrayList<Item> search(JArrayList<int> types, CopyOnWriteArrayList<Item> listNeedSearchItems)
         {
+
+            if(types == null) return listNeedSearchItems;
+
             CopyOnWriteArrayList<Item> arrayList = new();
             foreach (Item item in listNeedSearchItems)
             {
@@ -197,7 +216,7 @@ namespace Gopet.Data.GopetItem
             {
                 return getTemp().getName() + " x" + count + (canTrade ? "" : " (Khóa)");
             }
-            if(Template.type == GopetManager.WING_INVENTORY)
+            if (Template.type == GopetManager.WING_INVENTORY)
             {
                 return getTemp().getName() + " cấp " + lvl + (canTrade ? "" : " (Khóa)");
             }
@@ -305,15 +324,15 @@ namespace Gopet.Data.GopetItem
         {
             if (gemInfo != null)
             {
-                if(gemInfo.getOption() != null)
-                for (int i = 0; i < gemInfo.getOption().Length; i++)
-                {
-                    int j = gemInfo.getOption()[i];
-                    if (j == idoption)
+                if (gemInfo.getOption() != null)
+                    for (int i = 0; i < gemInfo.getOption().Length; i++)
                     {
-                        return gemOptionValue[i];
+                        int j = gemInfo.getOption()[i];
+                        if (j == idoption)
+                        {
+                            return gemOptionValue[i];
+                        }
                     }
-                }
             }
             return 0;
         }

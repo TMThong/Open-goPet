@@ -41,6 +41,7 @@ namespace Gopet.App
             FieldManager.Init();
             initRuntime();
             RuntimeServer.instance.start();
+            EventManager.Start();
             APIServer = new HttpServer(HTTP_PORT);
             APIServer.Start();
             server = new Server(PORT_SERVER);

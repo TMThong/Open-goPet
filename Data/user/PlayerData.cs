@@ -48,6 +48,9 @@ public class PlayerData
 
     public int AccumulatedPoint { get; set; }
 
+    public Pet PetDefLeague { get; set; }
+
+    public int ArenaPoint { get; set; }
 
     public Dictionary<int, int> numUseEnergy { get; set; } = new();
 
@@ -103,7 +106,9 @@ public class PlayerData
                             items = @items ,
                             favouriteList = @favouriteList,
                             numUseEnergy = @numUseEnergy,
-                            AccumulatedPoint = @AccumulatedPoint
+                            AccumulatedPoint = @AccumulatedPoint,
+                            PetDefLeague = @PetDefLeague,
+                            ArenaPoint= @ArenaPoint
                             WHERE ID = @ID", playerData);
     }
 

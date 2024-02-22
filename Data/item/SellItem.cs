@@ -56,7 +56,7 @@ namespace Gopet.Data.GopetItem
         {
             if (pet != null)
             {
-                return pet.getPetTemplate().getFrameImg();
+                return pet.getPetTemplate().frameImg;
             }
             return ItemSell.getTemp().getIconPath();
         }

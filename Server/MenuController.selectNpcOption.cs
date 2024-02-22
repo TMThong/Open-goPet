@@ -42,7 +42,11 @@ public partial class MenuController
             case OP_TOP_GEM:
                 showTop(TopGem.instance, player); break;
             case OP_SHOW_TOP_ACCUMULATED_POINT:
-                showTop(TopAccumulatedPoint.Instance, player); break;
+                showTop(TopAccumulatedPoint.Instance, player); 
+                break;
+            case OP_TOP_AREAN_POINT:
+                showTop(TopArenaPoint.Instance, player);
+                break;
             case OP_TOP_SPEND_GOLD:
                 {
                     showTop(TopSpendGold.instance, player);
@@ -415,6 +419,9 @@ public partial class MenuController
                         }
                     }
                 }
+                break;
+            case OP_SELECT_PET_DEF_LEAGUE:
+                sendMenu(MENU_SELECT_PET_TO_DEF_LEAGUE, player);
                 break;
             default:
                 player.redDialog("Tính năng đang được xây dựng"); break;

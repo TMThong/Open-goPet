@@ -1,5 +1,6 @@
 using Gopet.Data.Collections;
 using Gopet.Util;
+using System.Collections.Concurrent;
 
 namespace Gopet.IO
 {
@@ -7,8 +8,8 @@ namespace Gopet.IO
     {
 
         protected Session session;
-        protected Queue<Message> sendingMessage = new Queue<Message>();
-
+        protected ConcurrentQueue<Message> sendingMessage = new ConcurrentQueue<Message>();
+        protected AutoResetEvent messageEvent = new AutoResetEvent(false);
         public static CopyOnWriteArrayList<MsgSender> msgSenders = new CopyOnWriteArrayList<MsgSender>();
         public static readonly Random random = new Random();
         private bool isClose = false;
@@ -25,11 +26,8 @@ namespace Gopet.IO
 
         public void addMessage(Message message)
         {
-            lock (sendingMessage)
-            {
-                sendingMessage.Enqueue(message);
-                Monitor.PulseAll(sendingMessage);
-            }
+            sendingMessage.Enqueue(message);
+            messageEvent.Set();
         }
 
 
@@ -41,32 +39,20 @@ namespace Gopet.IO
                 {
                     if (session.isConnected() && !isClose)
                     {
-                        lock (sendingMessage)
+                        while (sendingMessage.TryDequeue(out Message message))
                         {
-                            try
+                            if (message != null)
                             {
-                                while (sendingMessage.Count != 0)
-                                {
-                                    if (session.isConnected())
-                                    {
-                                        Message m = sendingMessage.Dequeue();
-                                        doSendMessage(m);
-                                    }
-                                }
+                                doSendMessage(message);
                             }
-                            catch (Exception e)
-                            {
-                                e.printStackTrace();
-                            }
-                            Monitor.Wait(sendingMessage, random.Next(5000, 30000));
-                            continue;
                         }
+                        messageEvent.WaitOne(random.Next(5000, 30000));
+                        continue;
                     }
                 }
                 catch (Exception var6)
                 {
                 }
-
                 return;
             }
         }
@@ -100,20 +86,19 @@ namespace Gopet.IO
         public void stop()
         {
             isClose = true;
-            lock (sendingMessage)
-            {
-                sendingMessage.Clear();
-                Monitor.PulseAll(sendingMessage);
-            }
+            sendingMessage.Clear();
             msgSenders.Remove(this);
+            messageEvent.Set();
         }
 
         public void Release()
         {
-            lock (sendingMessage)
-            {
-                Monitor.PulseAll(sendingMessage);
-            }
+            messageEvent.Set();
+        }
+
+        ~MsgSender()
+        {
+            stop();
         }
     }
 }

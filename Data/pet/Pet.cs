@@ -80,9 +80,10 @@ public class Pet : GameObject
         hp = maxHp;
         maxMp = getPetTemplate().getMp();
         mp = maxMp;
-        agi = getPetTemplate().getAgi();
-        str = getPetTemplate().getStr();
-        _int = getPetTemplate().getInt();
+        agi = getPetTemplate().agi;
+        str = getPetTemplate().str;
+        _int = getPetTemplate()._int;
+        pointTiemNangLvl = getPetTemplate().gymUpLevel;
     }
 
     public PetTemplate getPetTemplate()
@@ -196,7 +197,7 @@ public class Pet : GameObject
     {
         this.lvl++;
 
-        this.tiemnang_point += pointTiemNangLvl;
+        this.tiemnang_point += getPetTemplate().gymUpLevel;
 
         if (this.lvl == 3 || this.lvl == 5 || this.lvl == 10)
         {
@@ -206,7 +207,7 @@ public class Pet : GameObject
 
     public sbyte getNClassIcon()
     {
-        switch (getPetTemplate().getNclass())
+        switch (getPetTemplate().nclass)
         {
             case GopetManager.Fighter:
             case GopetManager.Archer:
@@ -233,7 +234,7 @@ public class Pet : GameObject
         {
             return name;
         }
-        return getPetTemplate().getName();
+        return getPetTemplate().name;
     }
 
     public String getNameWithStar()

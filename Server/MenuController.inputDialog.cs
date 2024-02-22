@@ -519,6 +519,36 @@ public partial class MenuController
                         selectMenu(player.controller.objectPerformed[OBJKEY_ID_MENU_BUY_PET_TO_NAME], player.controller.objectPerformed[OBJKEY_INDEX_MENU_BUY_PET_TO_NAME], player.controller.objectPerformed[OBJKEY_PAYMENT_INDEX_WANT_TO_NAME_PET], player);
                         break;
                     }
+                case INPUT_TYPE_NAME_PLAYER_TO_GIVE_ITEM:
+                case INPUT_TYPE_NAME_PLAYER_TO_GET_ITEM:
+                    {
+                        string name = reader.readString(1);
+                        int count = reader.readInt(0);
+                        if (player.checkIsAdmin())
+                        {
+                            Player playerOnline = PlayerManager.get(name);
+                            if (playerOnline != null)
+                            {
+                                if (dialogInputId == INPUT_TYPE_NAME_PLAYER_TO_GET_ITEM)
+                                {
+                                    player.controller.objectPerformed[OBJKEY_PLAYER_GET_ITEM] = playerOnline;
+                                    player.controller.objectPerformed[OBJKEY_COUNT_ITEM_TO_GET_BY_ADMIN] = count;
+                                    sendMenu(MENU_SELECT_ITEM_TO_GET_BY_ADMIN, player);
+                                }
+                                else
+                                {
+                                    player.controller.objectPerformed[OBJKEY_PLAYER_GIVE_ITEM] = playerOnline;
+                                    player.controller.objectPerformed[OBJKEY_COUNT_ITEM_TO_GIVE_BY_ADMIN] = count;
+                                    sendMenu(MENU_SELECT_ITEM_TO_GIVE_BY_ADMIN, player);
+                                }
+                            }
+                            else
+                            {
+                                player.redDialog("Người chơi đã offline");
+                            }
+                        }
+                        break;
+                    }
                 case INPUT_DIALOG_CREATE_CLAN:
                     {
                         //                    if (true) {

@@ -233,10 +233,10 @@ public partial class MenuController
                     if (!player.playerData.isFirstFree)
                     {
                         player.playerData.isFirstFree = true;
-                        Pet p = new Pet(petMenuItemInfo.getPetTemplate().getPetId());
+                        Pet p = new Pet(petMenuItemInfo.getPetTemplate().petId);
                         player.playerData.addPet(p, player);
-                        player.okDialog(Utilities.Format("Nhận pet %s thành công vào túi pet để xem", petMenuItemInfo.getPetTemplate().getName()));
-                        HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Nhận pet %s miễn phí tại NPC trân trân", petMenuItemInfo.getPetTemplate().getName())).setObj(p));
+                        player.okDialog(Utilities.Format("Nhận pet %s thành công vào túi pet để xem", petMenuItemInfo.getPetTemplate().name));
+                        HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Nhận pet %s miễn phí tại NPC trân trân", petMenuItemInfo.getPetTemplate().name)).setObj(p));
                     }
                     else
                     {
@@ -373,8 +373,9 @@ public partial class MenuController
                     player.petNotFollow();
                 }
                 break;
+            case MENU_SELECT_PET_TO_DEF_LEAGUE:
             case MENU_PET_INVENTORY:
-                if (index == -1)
+                if (index == -1 && menuId == MENU_PET_INVENTORY)
                 {
                     sendMenu(MENU_UNEQUIP_PET, player);
                     return;
@@ -384,7 +385,7 @@ public partial class MenuController
 
                 if (index >= 0 && index < player.playerData.pets.Count)
                 {
-                    Pet oldPet = player.playerData.petSelected;
+                    Pet oldPet = menuId == MENU_PET_INVENTORY ? player.playerData.petSelected : player.playerData.PetDefLeague;
                     if (oldPet != null)
                     {
                         if (oldPet.TimeDie > Utilities.CurrentTimeMillis)
@@ -399,9 +400,18 @@ public partial class MenuController
                     {
                         player.playerData.addPet(oldPet, player);
                     }
-                    player.playerData.petSelected = pet;
-                    pet.applyInfo(player);
-                    player.controller.updatePetSelected(false);
+                    if(menuId == MENU_PET_INVENTORY)
+                    {
+                        player.playerData.petSelected = pet;
+                        pet.applyInfo(player);
+                        player.controller.updatePetSelected(false);
+                    }
+                    else
+                    {
+                        player.playerData.PetDefLeague = pet;
+                        pet.applyInfo(player);
+                        player.okDialog($"Đã chọn {pet.getNameWithStar()} phòng thủ thành công!");
+                    }
                 }
                 break;
             case MENU_SKIN_INVENTORY:
@@ -700,6 +710,8 @@ public partial class MenuController
                     }
                 }
                 break;
+            case MENU_SELECT_ITEM_TO_GET_BY_ADMIN:
+            case MENU_SELECT_ITEM_TO_GIVE_BY_ADMIN:
             case MENU_SELECT_MATERIAL2_TO_ENCHANT_TATOO:
             case MENU_SELECT_MATERIAL1_TO_ENCHANT_TATOO:
             case MENU_SELECT_MATERIAL_TO_ENCAHNT_WING:
@@ -717,7 +729,7 @@ public partial class MenuController
             case MENU_SELECT_ITEM_REMOVE_TATTO:
             case MENU_SELECT_ITEM_SUPPORT_PET:
             case MENU_MERGE_PART_ITEM:
-                CopyOnWriteArrayList<Item> listItems = Item.search(typeSelectItemMaterial(menuId, player), player.playerData.getInventoryOrCreate(getTypeInventorySelect(menuId)));
+                CopyOnWriteArrayList<Item> listItems = getItemByMenuId(menuId, player);
                 if (index >= 0 && listItems.Count > index)
                 {
                     Item itemSelect = listItems.get(index);
@@ -854,6 +866,80 @@ public partial class MenuController
                                 player.controller.objectPerformed.remove(OBJKEY_EQUIP_INLAY_GEM_ID);
                             }
                             break;
+                        case MENU_SELECT_ITEM_TO_GET_BY_ADMIN:
+                            {
+                                Player playerOnline = player.controller.objectPerformed[OBJKEY_PLAYER_GET_ITEM];
+                                if (PlayerManager.players.Contains(playerOnline))
+                                {
+                                    sbyte inventory = playerOnline.playerData.items.Where(p => p.Value.Any(ic => ic == itemSelect)).First().Key;
+                                    Item item = itemSelect;
+                                    if(itemSelect.Template.isStackable)
+                                    {
+                                        int count = player.controller.objectPerformed[OBJKEY_COUNT_ITEM_TO_GET_BY_ADMIN];
+                                        if(count > item.count)
+                                        {
+                                            player.redDialog("Sai số lượng");
+                                            return;
+                                        }
+                                        else
+                                        {
+                                            playerOnline.controller.subCountItem(itemSelect, count, inventory);
+                                            item = new Item(itemSelect.Template.itemId, count);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        playerOnline.playerData.removeItem(inventory, itemSelect);
+                                    }
+                                    playerOnline.playerData.save();
+
+                                    player.addItemToInventory(item, inventory);
+                                    player.okDialog($"Bạn đã lấy thành công {item.Template.name}");
+                                    playerOnline.redDialog($"Bạn đã bị lấy mất {item.Template.name}");
+                                }
+                                else
+                                {
+                                    player.redDialog("Người chơi đã offline");
+                                }
+                                break;
+                            }
+                        case MENU_SELECT_ITEM_TO_GIVE_BY_ADMIN:
+                            {
+                                Player playerOnline = player.controller.objectPerformed[OBJKEY_PLAYER_GIVE_ITEM];
+                                if (PlayerManager.players.Contains(playerOnline))
+                                {
+                                    sbyte inventory = player.playerData.items.Where(p => p.Value.Any(ic => ic == itemSelect)).First().Key;
+                                    Item item = itemSelect;
+                                    if (itemSelect.Template.isStackable)
+                                    {
+                                        int count = player.controller.objectPerformed[OBJKEY_COUNT_ITEM_TO_GIVE_BY_ADMIN];
+                                        if (count > item.count)
+                                        {
+                                            player.redDialog("Sai số lượng");
+                                            return;
+                                        }
+                                        else
+                                        {
+                                            player.controller.subCountItem(itemSelect, count, inventory);
+                                            item = new Item(itemSelect.Template.itemId, count);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        player.playerData.removeItem(inventory, itemSelect);
+                                    }
+
+                                    playerOnline.addItemToInventory(item, inventory);
+                                    player.okDialog($"Bạn đã đưa thành công {item.Template.name}");
+                                    playerOnline.okDialog($"Bạn đã nhận được {item.Template.name}");
+                                    playerOnline.playerData.save();
+                                }
+                                else
+                                {
+                                    player.redDialog("Người chơi đã offline");
+                                }
+                                break;
+                            }
                         case MENU_SELECT_MATERIAL_TO_ENCAHNT_WING:
                             {
                                 if (!player.controller.objectPerformed.ContainsKey(OBJKEY_INDEX_WING_WANT_ENCHANT) || itemSelect == null) return;
@@ -1267,12 +1353,24 @@ public partial class MenuController
                         case ADMIN_INDEX_BUFF_ENCHANT:
                             player.controller.showInputDialog(INPUT_TYPE_NAME_TO_BUFF_ENCHANT, "Buff đập đồ", new String[] { "Tên nhân vật :" });
                             break;
+                        case ADMIN_INDEX_GET_ITEM_FROM_PLAYER:
+                            player.controller.showInputDialog(INPUT_TYPE_NAME_PLAYER_TO_GET_ITEM, "Lấy item", new String[] { "Tên nv lấy:" , "Số lượng  :"});
+                            break;
+                        case ADMIN_INDEX_GIVE_ITEM_TO_PLAYER:
+                            player.controller.showInputDialog(INPUT_TYPE_NAME_PLAYER_TO_GIVE_ITEM, "Đưa item", new String[] { "Tên nv đưa :", "Số lượng  :" });
+                            break;
                         case ADMIN_INDEX_COIN:
                             player.controller.showInputDialog(INPUT_TYPE_NAME_TO_BUFF_COIN, "Cộng từ tiền", new String[] { "Tiền :", "Tài khoản :" });
                             break;
                         case ADMIN_INDEX_GET_ZONE_ID:
                             player.okDialog($"Bạn đang ở khu {player.getPlace().zoneID} của map {player.getPlace().map.mapTemplate.name} mapId = {player.getPlace().map.mapID}");
                             break;
+                        case ADMIN_INDEX_DELETE_ALL_EQUIP_PET_ITEM:
+                            {
+                                player.playerData.getInventoryOrCreate(GopetManager.EQUIP_PET_INVENTORY).Clear();
+                                player.okDialog("Dọn thành công");
+                                break;
+                            }
                     }
                 }
                 break;

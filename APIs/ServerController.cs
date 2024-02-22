@@ -124,7 +124,6 @@ namespace Gopet.APIs
                     Data = new
                     {
                         CPUTime = p?.TotalProcessorTime,
-                        StartTime = p?.StartTime,
                         UserProcessorTime = p?.UserProcessorTime
                     },
                 };
@@ -159,6 +158,13 @@ namespace Gopet.APIs
         public IActionResult reboot()
         {
             Maintenance.gI().reboot();
+            return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
+        }
+
+        [HttpGet("/api/dialog/okDialog/{text}")]
+        public IActionResult okDialog(string text)
+        {
+            PlayerManager.okDialog(text);
             return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
         }
 
