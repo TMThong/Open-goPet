@@ -171,14 +171,15 @@ public partial class MenuController
                     player.controller.sendListOption(MENU_OPTION_TASK, "Tùy chọn nhiệm vụ", "", list);
                 }
                 break;
+            case MENU_SELECT_TYPE_PAYMENT_TO_ARENA_JOURNALISM:
             case MENU_OPTION_TO_SLECT_TYPE_MONEY_ENCHANT_TATTOO:
                 {
                     JArrayList<Option> list = new();
 
-                    list.add(new Option(0, $"{GopetManager.PRICE_GOLD_ENCHANT_TATTO} (vang)", Option.CAN_SELECT));
-                    list.add(new Option(1, $"{GopetManager.PRICE_COIN_ENCHANT_TATTO} (ngoc)", Option.CAN_SELECT));
+                    list.add(new Option(0, $"{(menuId == MENU_OPTION_TO_SLECT_TYPE_MONEY_ENCHANT_TATTOO ?  GopetManager.PRICE_GOLD_ENCHANT_TATTO : GopetManager.PRICE_GOLD_ARENA_JOURNALISM)} (vang)", Option.CAN_SELECT));
+                    list.add(new Option(1, $"{(menuId == MENU_OPTION_TO_SLECT_TYPE_MONEY_ENCHANT_TATTOO ? GopetManager.PRICE_COIN_ENCHANT_TATTO : GopetManager.PRICE_COIN_ARENA_JOURNALISM)} (ngoc)", Option.CAN_SELECT));
 
-                    player.controller.sendListOption(MENU_OPTION_TO_SLECT_TYPE_MONEY_ENCHANT_TATTOO, "Tùy chọn phương thức thanh toán", "", list);
+                    player.controller.sendListOption(menuId, "Tùy chọn phương thức thanh toán", "", list);
                     break;
                 }
             case MENU_SHOW_LIST_TASK:

@@ -44,8 +44,8 @@ public partial class MenuController
             case OP_SHOW_TOP_ACCUMULATED_POINT:
                 showTop(TopAccumulatedPoint.Instance, player); 
                 break;
-            case OP_TOP_AREAN_POINT:
-                showTop(TopArenaPoint.Instance, player);
+            case OP_ARENA_JOURNALISM:
+                sendMenu(MENU_SELECT_TYPE_PAYMENT_TO_ARENA_JOURNALISM, player);
                 break;
             case OP_TOP_SPEND_GOLD:
                 {

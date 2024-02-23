@@ -2,7 +2,6 @@ namespace Gopet.Data.GopetItem
 {
     public class ItemGem 
     {
-
         public int element;
         public string name;
         public int[] option;
@@ -31,80 +30,6 @@ namespace Gopet.Data.GopetItem
                     return "(dark)";
             }
             return "";
-
-
         }
-        public void setElement(int element)
-        {
-            this.element = element;
-        }
-
-        public void setName(string name)
-        {
-            this.name = name;
-        }
-
-        public void setOption(int[] option)
-        {
-            this.option = option;
-        }
-
-        public void setOptionValue(int[] optionValue)
-        {
-            this.optionValue = optionValue;
-        }
-
-        public void setLvl(int lvl)
-        {
-            this.lvl = lvl;
-        }
-
-        public void setItemTemplateId(int itemTemplateId)
-        {
-            this.itemTemplateId = itemTemplateId;
-        }
-
-        public void setTimeUnequip(long timeUnequip)
-        {
-            this.timeUnequip = timeUnequip;
-        }
-
-        public int getElement()
-        {
-            return element;
-        }
-
-        public string getName()
-        {
-            return name;
-        }
-
-        public int[] getOption()
-        {
-            return option;
-        }
-
-        public int[] getOptionValue()
-        {
-            return optionValue;
-        }
-
-        public int getLvl()
-        {
-            return lvl;
-        }
-
-        public int getItemTemplateId()
-        {
-            return itemTemplateId;
-        }
-
-        public long getTimeUnequip()
-        {
-            return timeUnequip;
-        }
-
-
-
     }
 }

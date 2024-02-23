@@ -50,7 +50,6 @@ public class PlayerData
 
     public Pet PetDefLeague { get; set; }
 
-    public int ArenaPoint { get; set; }
 
     public Dictionary<int, int> numUseEnergy { get; set; } = new();
 

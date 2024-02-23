@@ -233,6 +233,8 @@ Thread.Sleep(1000);
 
     private void UpdateHP_MP()
     {
+        if (playerData.petSelected == null) return;
+
         if (isPetRecovery && petHpRecovery < Utilities.CurrentTimeMillis && !playerData.petSelected.petDieByPK && Utilities.CurrentTimeMillis > controller.delayTimeHealPet && Utilities.CurrentTimeMillis > playerData.petSelected.TimeDie)
         {
             playerData.petSelected.addHp((int)Utilities.GetValueFromPercent(20f, playerData.petSelected.maxHp));

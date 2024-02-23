@@ -13,7 +13,7 @@ using Gopet.Data.item;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Gopet.Data.top;
-
+using Gopet.Data.Event;
 
 public partial class MenuController
 {
@@ -86,6 +86,30 @@ public partial class MenuController
                     }
                 }
                 break;
+            case MENU_SELECT_TYPE_PAYMENT_TO_ARENA_JOURNALISM:
+                {
+
+                    if(ArenaEvent.Instance.IdPlayerJoin.Contains(player.playerData.user_id))
+                    {
+                        player.okDialog("Bạn đã báo danh rồi!");
+                        return;
+                    }
+
+                    if (index >= 0 && index < 2)
+                    {
+                        if (ArenaEvent.Instance.CanJournalism)
+                        {
+                            addMoney((sbyte)index,- (index == 0 ? GopetManager.PRICE_GOLD_ARENA_JOURNALISM : GopetManager.PRICE_COIN_ARENA_JOURNALISM), player);
+                            ArenaEvent.Instance.IdPlayerJoin.Add(player.playerData.user_id);
+                            player.okDialog("Bạn đã báo danh thành công. Nếu rời khỏi Đấu trường xem như bạn bỏ cuộc!");
+                        }
+                        else
+                        {
+                            player.okDialog("Hết thời gian báo danh mời bạn quay lại sau");
+                        }
+                    }
+                    break;
+                }
             case MENU_OPTION_TO_SLECT_TYPE_MONEY_ENCHANT_TATTOO:
                 {
                     if (index >= 0 && index < 2 && player.controller.objectPerformed.ContainsKey(OBJKEY_ID_TATTO_TO_ENCHANT))
@@ -400,7 +424,7 @@ public partial class MenuController
                     {
                         player.playerData.addPet(oldPet, player);
                     }
-                    if(menuId == MENU_PET_INVENTORY)
+                    if (menuId == MENU_PET_INVENTORY)
                     {
                         player.playerData.petSelected = pet;
                         pet.applyInfo(player);
@@ -873,10 +897,10 @@ public partial class MenuController
                                 {
                                     sbyte inventory = playerOnline.playerData.items.Where(p => p.Value.Any(ic => ic == itemSelect)).First().Key;
                                     Item item = itemSelect;
-                                    if(itemSelect.Template.isStackable)
+                                    if (itemSelect.Template.isStackable)
                                     {
                                         int count = player.controller.objectPerformed[OBJKEY_COUNT_ITEM_TO_GET_BY_ADMIN];
-                                        if(count > item.count)
+                                        if (count > item.count)
                                         {
                                             player.redDialog("Sai số lượng");
                                             return;
@@ -1354,7 +1378,7 @@ public partial class MenuController
                             player.controller.showInputDialog(INPUT_TYPE_NAME_TO_BUFF_ENCHANT, "Buff đập đồ", new String[] { "Tên nhân vật :" });
                             break;
                         case ADMIN_INDEX_GET_ITEM_FROM_PLAYER:
-                            player.controller.showInputDialog(INPUT_TYPE_NAME_PLAYER_TO_GET_ITEM, "Lấy item", new String[] { "Tên nv lấy:" , "Số lượng  :"});
+                            player.controller.showInputDialog(INPUT_TYPE_NAME_PLAYER_TO_GET_ITEM, "Lấy item", new String[] { "Tên nv lấy:", "Số lượng  :" });
                             break;
                         case ADMIN_INDEX_GIVE_ITEM_TO_PLAYER:
                             player.controller.showInputDialog(INPUT_TYPE_NAME_PLAYER_TO_GIVE_ITEM, "Đưa item", new String[] { "Tên nv đưa :", "Số lượng  :" });

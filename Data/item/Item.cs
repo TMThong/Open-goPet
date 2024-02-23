@@ -300,10 +300,10 @@ namespace Gopet.Data.GopetItem
         {
             if (gemInfo != null)
             {
-                gemOptionValue = new float[gemInfo.getOption().Length];
+                gemOptionValue = new float[gemInfo.option.Length];
                 for (int i = 0; i < gemOptionValue.Length; i++)
                 {
-                    gemOptionValue[i] = gemInfo.getOptionValue()[i] / 100f + (gemInfo.getOptionValue()[i] / 100f * 4 + 80) / 100 * 4 / 2 * lvl;
+                    gemOptionValue[i] = gemInfo.optionValue[i] / 100f + (gemInfo.optionValue[i] / 100f * 4 + 80) / 100 * 4 / 2 * lvl;
                 }
             }
             else if (getTemp().getType() == GopetManager.ITEM_GEM)
@@ -324,10 +324,10 @@ namespace Gopet.Data.GopetItem
         {
             if (gemInfo != null)
             {
-                if (gemInfo.getOption() != null)
-                    for (int i = 0; i < gemInfo.getOption().Length; i++)
+                if (gemInfo.option != null)
+                    for (int i = 0; i < gemInfo.option.Length; i++)
                     {
-                        int j = gemInfo.getOption()[i];
+                        int j = gemInfo.option[i];
                         if (j == idoption)
                         {
                             return gemOptionValue[i];

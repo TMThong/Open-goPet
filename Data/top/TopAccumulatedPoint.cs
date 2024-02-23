@@ -33,7 +33,7 @@ namespace Gopet.Data.top
             topData.name = player.playerData.name;
             topData.imgPath = player.playerData.avatarPath;
             topData.title = topData.name;
-            topData.desc = $"Hạng chưa có : Bạn đang có {Utilities.FormatNumber(player.playerData.AccumulatedPoint)} điểm tích lũy";
+            topData.desc = $"Hạng chưa có : Bạn đang có {Utilities.FormatNumber(player.playerData.AccumulatedPoint)} (diem)";
             return topData;
         }
 
@@ -57,7 +57,7 @@ namespace Gopet.Data.top
                         topData.name = data.name;
                         topData.imgPath = data.avatarPath;
                         topData.title = topData.name;
-                        topData.desc = Utilities.Format("Hạng %s : đang có %s điểm tích lũy", index, Utilities.FormatNumber(data.AccumulatedPoint));
+                        topData.desc = Utilities.Format("Hạng %s : đang có %s (diem)", index, Utilities.FormatNumber(data.AccumulatedPoint));
                         datas.add(topData);
                         index++;
                     }

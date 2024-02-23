@@ -22,15 +22,25 @@ namespace Gopet.Data.Event
             get
             {
                 if (IsRunning || IsFighting) return true;
-                return DateTime.Now.Hour == 12;
+                return DateTime.Now.Hour == 12 && DateTime.Now.Minute <= 5;
             }
         }
+
+
+        public bool CanJournalism
+        {
+            get
+            {
+                return timeWaitPlayerJournalism > 0;
+            }
+        }
+
         public override bool NeedRemove => false;
 
         private long timeWaitPlayerJournalism = 0;
         private long lastTimeWait = 0;
         private long timeWaitNextTurn = 0;
-
+        private uint showBanner = 0;
         public const long TIME_WAIT_COST = 60000 * 30;
         public const long TIME_WAIT_TURN_COST = 60000 * 3;
         public CopyOnWriteArrayList<int> IdPlayerJoin = new CopyOnWriteArrayList<int>();
@@ -45,24 +55,26 @@ namespace Gopet.Data.Event
         {
             if (!IsFighting)
             {
-                if (!IsRunning && timeWaitPlayerJournalism < 100)
+                if (!IsRunning)
                 {
                     IsRunning = true;
                     timeWaitPlayerJournalism = TIME_WAIT_COST;
                     lastTimeWait = Utilities.CurrentTimeMillis;
                 }
 
-                if (Utilities.CurrentTimeMillis - lastTimeWait >= 60000)
+                if (Utilities.CurrentTimeMillis - lastTimeWait >= 1000)
                 {
                     timeWaitPlayerJournalism -= Utilities.CurrentTimeMillis - lastTimeWait;
-                    if (timeWaitPlayerJournalism < 0)
+                    lastTimeWait = Utilities.CurrentTimeMillis;
+                    showBanner++;
+                    if (timeWaitPlayerJournalism <= 0)
                     {
                         IsFighting = true;
                         NextTurn();
                     }
-                    else
+                    else if (showBanner % 5 == 0)
                     {
-                        PlayerManager.showBanner($"Các người chơi nhanh chóng đến đấu trường báo danh tham gia lôi đài còn {timeWaitPlayerJournalism / 60000} phút nữa bắt đầu rồi!!!");
+                        PlayerManager.showBanner($"Các người chơi nhanh chóng đến đấu trường báo danh tham gia lôi đài còn {timeWaitPlayerJournalism / 60000l} phút nữa bắt đầu rồi!!! ");
                     }
                 }
             }
@@ -106,7 +118,7 @@ namespace Gopet.Data.Event
                     }
                     else
                     {
-                        if(gopetPlace.map.mapID != MapManager.ID_MAP_INSIDE_ARENA)
+                        if (gopetPlace.map.mapID != MapManager.ID_MAP_OUTSIDE_ARENA)
                         {
                             IdPlayerJoin.remove(id);
                             continue;
@@ -119,13 +131,13 @@ namespace Gopet.Data.Event
             IdPlayerJoin.Clear();
             while (arr.Count > 0)
             {
-                if(arr.Count == 1)
+                if (arr.Count == 1)
                 {
                     Player player = PlayerManager.get(arr[0]);
                     if (player != null)
                     {
                         player.okDialog($"Vòng này đối thủ của bạn đã đầu hàng bạn nhận được 1 (diem)");
-                        player.playerData.ArenaPoint++;
+                        player.playerData.AccumulatedPoint++;
                         IdPlayerJoin.add(arr[0]);
                     }
                 }
@@ -145,13 +157,13 @@ namespace Gopet.Data.Event
                     else if (player2 != null)
                     {
                         player2.okDialog($"Vòng này đối thủ của bạn đã đầu hàng bạn nhận được 1 (diem)");
-                        player2.playerData.ArenaPoint++;
+                        player2.playerData.AccumulatedPoint++;
                         IdPlayerJoin.add(player2.playerData.user_id);
                     }
-                    else if(player1 != null)
+                    else if (player1 != null)
                     {
                         player1.okDialog($"Vòng này đối thủ của bạn đã đầu hàng bạn nhận được 1 (diem)");
-                        player1.playerData.ArenaPoint++;
+                        player1.playerData.AccumulatedPoint++;
                         IdPlayerJoin.add(player1.playerData.user_id);
                     }
                 }

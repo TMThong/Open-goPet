@@ -1794,6 +1794,23 @@ public class GameController
             {
                 if (pet.getAgi() >= item.getTemp().getRequireAgi() && pet.getInt() >= item.getTemp().getRequireInt() && pet.getStr() >= item.getTemp().getRequireStr())
                 {
+                    if(item.gemInfo != null && pet.Template.element != GopetManager.DARK_ELEMENT && pet.Template.element != GopetManager.LIGHT_ELEMENT)
+                    {
+                        ItemGem itemGem = item.gemInfo;
+
+                        ItemTemplate itemTemplate = GopetManager.itemTemplate[itemGem.itemTemplateId];
+
+                        if(itemTemplate.element != GopetManager.DARK_ELEMENT && itemTemplate.element != GopetManager.LIGHT_ELEMENT)
+                        {
+                            if (pet.Template.element != itemTemplate.element)
+                            {
+                                player.redDialog($"Chỉ có pet hệ {GopetManager.GetElementDisplay(itemTemplate.element)} mới mang được");
+                                return;
+                            }
+                        }
+                    }
+
+
                     if (item.petEuipId > 0)
                     {
                         Pet searchPet = selectPetByItemId(item.petEuipId);
@@ -3751,12 +3768,12 @@ public class GameController
                 {
                     player.playerData.getInventoryOrCreate(GopetManager.GEM_INVENTORY).remove(gem);
                     ItemGem itemGem = new ItemGem();
-                    itemGem.setElement(gem.getTemp().getElement());
-                    itemGem.setItemTemplateId(gem.itemTemplateId);
-                    itemGem.setLvl(gem.lvl);
-                    itemGem.setOption(gem.option);
-                    itemGem.setOptionValue(gem.optionValue);
-                    itemGem.setName(gem.getTemp().getName());
+                    itemGem.element = (gem.getTemp().getElement());
+                    itemGem.itemTemplateId = (gem.itemTemplateId);
+                    itemGem.lvl = (gem.lvl);
+                    itemGem.option = (gem.option);
+                    itemGem.optionValue = (gem.optionValue);
+                    itemGem.name = (gem.getTemp().getName());
                     equipItem.gemInfo = itemGem;
                     equipItem.updateGemOption();
                     Pet p = player.getPet();
@@ -3805,7 +3822,7 @@ public class GameController
                 }
                 else
                 {
-                    item.gemInfo.setTimeUnequip(Utilities.CurrentTimeMillis + GopetManager.TIME_UNEQUIP_GEM);
+                    item.gemInfo.timeUnequip = (Utilities.CurrentTimeMillis + GopetManager.TIME_UNEQUIP_GEM);
                     resendPetEquipInfo(item);
                 }
             }
@@ -3835,10 +3852,10 @@ public class GameController
                             p.applyInfo(player);
                         }
                         resendPetEquipInfo(item);
-                        Item recoveryGem = new Item(itemGem.getItemTemplateId());
-                        recoveryGem.lvl = itemGem.getLvl();
-                        recoveryGem.option = itemGem.getOption();
-                        recoveryGem.optionValue = itemGem.getOptionValue();
+                        Item recoveryGem = new Item(itemGem.itemTemplateId);
+                        recoveryGem.lvl = itemGem.lvl;
+                        recoveryGem.option = itemGem.option;
+                        recoveryGem.optionValue = itemGem.optionValue;
                         recoveryGem.updateGemOption();
                         player.playerData.addItem(GopetManager.GEM_INVENTORY, recoveryGem);
                     }
@@ -3867,7 +3884,7 @@ public class GameController
                 if (player.checkGold(GopetManager.PRICE_UNEQUIP_GEM))
                 {
                     player.mineGold(GopetManager.PRICE_UNEQUIP_GEM);
-                    item.gemInfo.setTimeUnequip(1);
+                    item.gemInfo.timeUnequip = (1);
                     onUnEquipGem(itemId);
                 }
                 else

@@ -99,6 +99,7 @@ public partial class MenuController
     public const int MENU_SELECT_ITEM_TO_GET_BY_ADMIN = 1049;
     public const int MENU_SELECT_ITEM_TO_GIVE_BY_ADMIN = 1050;
     public const int MENU_SELECT_PET_TO_DEF_LEAGUE = 1051;
+    public const int MENU_SELECT_TYPE_PAYMENT_TO_ARENA_JOURNALISM = 1052;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -244,6 +245,7 @@ public partial class MenuController
     public const int OP_PET_LEAGUE_BETA = 64;
     public const int OP_SELECT_PET_DEF_LEAGUE = 65;
     public const int OP_TOP_AREAN_POINT = 66;
+    public const int OP_ARENA_JOURNALISM = 67;
     public const int OP_TRADE_GIFT_COIN = 1000000000;
     public const int OP_TRADE_GIFT_GOLD = 1000000001;
     /**
