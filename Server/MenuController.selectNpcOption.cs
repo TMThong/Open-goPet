@@ -139,13 +139,13 @@ public partial class MenuController
                     Pet pet = player.getPet();
                     if (pet != null)
                     {
-                        if (pet.TimeDie > Utilities.CurrentTimeMillis)
+                        if (pet.TimeDieZ > Utilities.CurrentTimeMillis)
                         {
                             if (player.checkGold(GopetManager.PRICE_REVIVAL_PET_FATER_PK))
                             {
                                 player.mineGold(GopetManager.PRICE_REVIVAL_PET_FATER_PK);
                                 pet.petDieByPK = false;
-                                pet.TimeDie = 0;
+                                pet.TimeDieZ = 0;
                                 player.okDialog(Utilities.Format("Hồi sinh %s thành công, nhờ trân trọng nó nhé", pet.getNameWithStar()));
                             }
                             else

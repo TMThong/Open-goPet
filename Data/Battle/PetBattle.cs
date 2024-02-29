@@ -799,7 +799,6 @@ namespace Gopet.Battle
                             exp_sub_winner = 0;
                         }
                     }
-                    winnerPet.addExp((int)exp_sub_winner);
                     win(petBattleTexts.ToArray(), price, 0);
                     winner.addCoin(Utilities.round(Utilities.GetValueFromPercent(coinPK, 50f)));
                     nonWinner.mineCoin(coinPK);
@@ -808,7 +807,7 @@ namespace Gopet.Battle
                         winner.okDialog(Utilities.Format("Pet của bạn đã bị trừ %s exp", Utilities.FormatNumber(exp_sub_winner)));
                     }
                     nonWinner.okDialog(Utilities.Format("Pet của bạn đã bị trừ %s exp", Utilities.FormatNumber(exp_sub)));
-                    nonPet.TimeDie = Utilities.CurrentTimeMillis + (1000l * 60 * 15);
+                    nonPet.TimeDieZ = Utilities.CurrentTimeMillis + (1000l * 60 * 15);
                     MapManager.maps.get(MapManager.ID_LINH_THU_CITY).addRandom(nonWinner);
                 }
                 else

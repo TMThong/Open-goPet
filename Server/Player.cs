@@ -235,7 +235,7 @@ Thread.Sleep(1000);
     {
         if (playerData.petSelected == null) return;
 
-        if (isPetRecovery && petHpRecovery < Utilities.CurrentTimeMillis && !playerData.petSelected.petDieByPK && Utilities.CurrentTimeMillis > controller.delayTimeHealPet && Utilities.CurrentTimeMillis > playerData.petSelected.TimeDie)
+        if (isPetRecovery && petHpRecovery < Utilities.CurrentTimeMillis && !playerData.petSelected.petDieByPK && Utilities.CurrentTimeMillis > controller.delayTimeHealPet && Utilities.CurrentTimeMillis > playerData.petSelected.TimeDieZ)
         {
             playerData.petSelected.addHp((int)Utilities.GetValueFromPercent(20f, playerData.petSelected.maxHp));
             playerData.petSelected.addMp((int)Utilities.GetValueFromPercent(20f, playerData.petSelected.maxMp));

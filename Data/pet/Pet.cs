@@ -11,7 +11,7 @@ public class Pet : GameObject
     public int petIdTemplate;
 
     public bool petDieByPK = false;
-    public long TimeDie { get; set; } = Utilities.CurrentTimeMillis;
+    public long TimeDieZ { get; set; } = Utilities.CurrentTimeMillis;
 
     public int petId;
     public int star = 0;
@@ -475,6 +475,4 @@ public class Pet : GameObject
 
         return desc + Utilities.Format("  clanLvl: %s , ", lvl) + String.Join(" , ", infoStrings) + String.Join(" , ", tattooStrings);
     }
-
-
 }

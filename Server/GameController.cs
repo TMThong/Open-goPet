@@ -257,9 +257,9 @@ public class GameController
                         }
 
 
-                        if (player.getPet()?.TimeDie > Utilities.CurrentTimeMillis)
+                        if (player.getPet()?.TimeDieZ > Utilities.CurrentTimeMillis)
                         {
-                            player.redDialog($"Bạn đã kiệt sức vui lòng không rời khỏi vùng an toàn !!! Còn {Utilities.FormatNumber(((player.getPet().TimeDie - Utilities.CurrentTimeMillis) / 1000))} giây nữa là hồi phục!");
+                            player.redDialog($"Bạn đã kiệt sức vui lòng không rời khỏi vùng an toàn !!! Còn {Utilities.FormatNumber(((player.getPet().TimeDieZ - Utilities.CurrentTimeMillis) / 1000))} giây nữa là hồi phục!");
                             return;
                         }
 
@@ -1107,7 +1107,7 @@ public class GameController
                     if (MapManager.maps.get(mapId) != null)
                     {
                         GopetMap mapData = MapManager.maps.get(mapId);
-                        if(mapData.CanChangeZone)
+                        if(!mapData.CanChangeZone)
                         {
                             player.Popup("Không thể đổi khu");
                             return;

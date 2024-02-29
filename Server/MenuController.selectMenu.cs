@@ -412,7 +412,7 @@ public partial class MenuController
                     Pet oldPet = menuId == MENU_PET_INVENTORY ? player.playerData.petSelected : player.playerData.PetDefLeague;
                     if (oldPet != null)
                     {
-                        if (oldPet.TimeDie > Utilities.CurrentTimeMillis)
+                        if (oldPet.TimeDieZ > Utilities.CurrentTimeMillis)
                         {
                             player.redDialog("Pet của bạn đang bị thương!!!");
                             return;

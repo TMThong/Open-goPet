@@ -23,5 +23,7 @@ namespace Gopet.Data.map
         {
             base.update();
         }
+
+        public override bool CanChangeZone  => false;
     }
 }

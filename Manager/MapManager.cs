@@ -1,6 +1,7 @@
 
 
 using Gopet.Data.Collections;
+using Gopet.Data.map;
 using Gopet.Data.Map;
 
 public class MapManager
@@ -33,6 +34,9 @@ public class MapManager
                     break;
                 case 30:
                     put(mapid, new ClanMap(mapid, true, mapTemplate));
+                    break;
+                case ID_MAP_INSIDE_ARENA:
+                    put(mapid, new ArenaMap(mapid, true, mapTemplate));
                     break;
                 default:
                     put(mapid, new GopetMap(mapid, true, mapTemplate));

@@ -64,6 +64,5 @@ public class BXHManager
         listTop.add(TopLVLClan.instance);
         listTop.add(TopSpendGold.instance);
         listTop.add(TopAccumulatedPoint.Instance);
-        listTop.add(TopArenaPoint.Instance);
     }
 }
