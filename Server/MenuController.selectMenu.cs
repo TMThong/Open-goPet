@@ -808,7 +808,7 @@ public partial class MenuController
                                 PetSkill petSkill = GopetManager.PETSKILL_HASH_MAP.get(skillId);
                                 if (itemSelect.count > 0)
                                 {
-                                    if (pet.skill[skillIndex][1] < 8)
+                                    if (pet.skill[skillIndex][1] < 10)
                                     {
                                         player.controller.objectPerformed.put(OBJKEY_ITEM_UP_SKILL, itemSelect);
                                         showYNDialog(DIALOG_UP_SKILL, Utilities.Format("Bạn có chắc muốn nâng cấp kỹ năng %s lên cấp %s \n với tỉ lệ (%s/) + %s/ bằng %s/ không?", petSkill.name, pet.skill[skillIndex][1] + 1, GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]], itemSelect.getTemp().getOptionValue()[0], GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]] + itemSelect.getTemp().getOptionValue()[0]).Replace("/", "%"), player);

@@ -1649,6 +1649,12 @@ public class GameController
             Item item2 = selectItemByItemId(objectPerformed[OBJKEY_ID_MATERIAL2_TATTO_TO_ENCHANT], GopetManager.NORMAL_INVENTORY);
             if (item1 != null && item2 != null)
             {
+                if(!checkMoney((sbyte)typeMoney, typeMoney == 1 ? GopetManager.PRICE_COIN_ENCHANT_TATTO : GopetManager.PRICE_GOLD_ENCHANT_TATTO, player))
+                {
+                    NotEngouhMoney((sbyte)typeMoney, typeMoney == 1 ? GopetManager.PRICE_COIN_ENCHANT_TATTO : GopetManager.PRICE_GOLD_ENCHANT_TATTO, player);
+                    return;
+                }
+
                 if (!(checkCount(item1, 1) && checkCount(item2, 1)))
                 {
                     player.redDialog("Không đủ nguyên liệu");
@@ -3016,7 +3022,7 @@ public class GameController
         Item itemSelect = (Item)objectPerformed.get(OBJKEY_ITEM_UP_SKILL);
         if (itemSelect.count > 0)
         {
-            if (pet.skill[skillIndex][1] < 10)
+            if (pet.skill[skillIndex][1] < 11)
             {
                 subCountItem(itemSelect, 1, GopetManager.NORMAL_INVENTORY);
                 bool succes = GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]] + itemSelect.getTemp().getOptionValue()[0] > Utilities.NextFloatPer();
@@ -3255,7 +3261,7 @@ public class GameController
     {
         Player playerInvite = (Player)objectPerformed.get(MenuController.OBJKEY_INVITE_CHALLENGE_PLAYER);
         int coinBet = (int)objectPerformed.get(MenuController.OBJKEY_PRICE_BET_CHALLENGE);
-        if (playerInvite != player)
+        if (playerInvite != player && playerInvite != null)
         {
             if (playerInvite.checkCoin(coinBet) && player.checkCoin(coinBet))
             {

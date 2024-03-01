@@ -526,14 +526,9 @@ public class GopetPlace : Place
             if (timeNewMob < Utilities.CurrentTimeMillis)
             {
                 mobLocations_newMob.add(location);
+                newMob.remove(location);
             }
         }
-
-        foreach (MobLocation mobLocation in mobLocations_newMob)
-        {
-            newMob.remove(mobLocation);
-        }
-
         createNewMob(mobLocations_newMob.ToArray());
     }
 

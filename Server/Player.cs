@@ -235,6 +235,12 @@ Thread.Sleep(1000);
     {
         if (playerData.petSelected == null) return;
 
+
+        if (playerData.petSelected.petDieByPK && Utilities.CurrentTimeMillis > playerData.petSelected.TimeDieZ)
+        {
+            playerData.petSelected.petDieByPK = false;
+        }
+
         if (isPetRecovery && petHpRecovery < Utilities.CurrentTimeMillis && !playerData.petSelected.petDieByPK && Utilities.CurrentTimeMillis > controller.delayTimeHealPet && Utilities.CurrentTimeMillis > playerData.petSelected.TimeDieZ)
         {
             playerData.petSelected.addHp((int)Utilities.GetValueFromPercent(20f, playerData.petSelected.maxHp));
@@ -523,7 +529,7 @@ Thread.Sleep(1000);
     {
         get
         {
-            return DateTime.Now <= new DateTime(2025, 2, 18);
+            return DateTime.Now <= new DateTime(2024, 3, 10);
         }
     }
 
