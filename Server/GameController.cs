@@ -1107,7 +1107,7 @@ public class GameController
                     if (MapManager.maps.get(mapId) != null)
                     {
                         GopetMap mapData = MapManager.maps.get(mapId);
-                        if(!mapData.CanChangeZone)
+                        if (!mapData.CanChangeZone)
                         {
                             player.Popup("Không thể đổi khu");
                             return;
@@ -1649,7 +1649,7 @@ public class GameController
             Item item2 = selectItemByItemId(objectPerformed[OBJKEY_ID_MATERIAL2_TATTO_TO_ENCHANT], GopetManager.NORMAL_INVENTORY);
             if (item1 != null && item2 != null)
             {
-                if(!checkMoney((sbyte)typeMoney, typeMoney == 1 ? GopetManager.PRICE_COIN_ENCHANT_TATTO : GopetManager.PRICE_GOLD_ENCHANT_TATTO, player))
+                if (!checkMoney((sbyte)typeMoney, typeMoney == 1 ? GopetManager.PRICE_COIN_ENCHANT_TATTO : GopetManager.PRICE_GOLD_ENCHANT_TATTO, player))
                 {
                     NotEngouhMoney((sbyte)typeMoney, typeMoney == 1 ? GopetManager.PRICE_COIN_ENCHANT_TATTO : GopetManager.PRICE_GOLD_ENCHANT_TATTO, player);
                     return;
@@ -1800,13 +1800,13 @@ public class GameController
             {
                 if (pet.getAgi() >= item.getTemp().getRequireAgi() && pet.getInt() >= item.getTemp().getRequireInt() && pet.getStr() >= item.getTemp().getRequireStr())
                 {
-                    if(item.gemInfo != null && pet.Template.element != GopetManager.DARK_ELEMENT && pet.Template.element != GopetManager.LIGHT_ELEMENT)
+                    if (item.gemInfo != null && pet.Template.element != GopetManager.DARK_ELEMENT && pet.Template.element != GopetManager.LIGHT_ELEMENT)
                     {
                         ItemGem itemGem = item.gemInfo;
 
                         ItemTemplate itemTemplate = GopetManager.itemTemplate[itemGem.itemTemplateId];
 
-                        if(itemTemplate.element != GopetManager.DARK_ELEMENT && itemTemplate.element != GopetManager.LIGHT_ELEMENT)
+                        if (itemTemplate.element != GopetManager.DARK_ELEMENT && itemTemplate.element != GopetManager.LIGHT_ELEMENT)
                         {
                             if (pet.Template.element != itemTemplate.element)
                             {
@@ -2849,6 +2849,7 @@ public class GameController
                                 itemEuipActive.itemTemplateId = tierItem.itemTemplateIdTier2;
                                 itemEuipActive.optionValue = optionValue;
                                 itemEuipActive.updateGemOption();
+                                removeGem(itemEuipPassive.itemId);
                                 sendGemItemInfo(itemEuipActive);
                             }
                             else
@@ -3709,6 +3710,7 @@ public class GameController
     }
 
     private void selectItemEnchantGem(int num)
+    private void selectItemEnchantGem(int num)
     {
         if (selectGemM1)
         {
@@ -3768,6 +3770,13 @@ public class GameController
             {
                 return;
             }
+
+            if (equipItem.petEuipId > -1 && equipItem.petEuipId != player.playerData.petSelected?.petId)
+            {
+                player.redDialog("Gắn ngọc thất bại do pet hiện tại không mang trang bị này");
+                return;
+            }
+
             if (equipItem != null)
             {
                 if (equipItem.gemInfo == null)
