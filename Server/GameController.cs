@@ -3344,6 +3344,7 @@ public class GameController
     {
         int index = 0;
         Pet pet = player.getPet();
+        if (pet == null) return -1;
         for (int i = 0; i < GopetManager.LVL_REQUIRE_PET_TATTO.Length; i++)
         {
             int j = GopetManager.LVL_REQUIRE_PET_TATTO[i];
@@ -3385,6 +3386,11 @@ public class GameController
         if (pet != null)
         {
             int indexTatto = getIndexOfPetCanTatto();
+            if(indexTatto < 0)
+            {
+                player.petNotFollow();
+                return;
+            }
             int indexUnlock = getIndexOfPetCanUnlockTatto();
             Message m = messagePetSerive(GopetCMD.TATTOO);
             m.putsbyte(GopetCMD.TATTOO_INIT_SCREEN);
@@ -3709,7 +3715,6 @@ public class GameController
         player.session.sendMessage(m);
     }
 
-    private void selectItemEnchantGem(int num)
     private void selectItemEnchantGem(int num)
     {
         if (selectGemM1)

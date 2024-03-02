@@ -133,7 +133,6 @@ namespace Gopet.Data.Event
             {
                 if (arr.Count == 1)
                 {
-                    arr.Clear();
                     Player player = PlayerManager.get(arr[0]);
                     if (player != null)
                     {
@@ -142,6 +141,7 @@ namespace Gopet.Data.Event
                         IdPlayerJoin.addIfAbsent(arr[0]);
                         HistoryManager.addHistory(new History(player).setLog($"Thắng  do đối thủ bỏ cuộc nhận 1 điểm hiện tại có {player.playerData.AccumulatedPoint}"));
                     }
+                    arr.Clear();
                 }
                 else
                 {

@@ -97,6 +97,8 @@ public partial class MenuController
 
                     if (index >= 0 && index < 2)
                     {
+                        if (!checkMoney((sbyte)index, -(index == 0 ? GopetManager.PRICE_GOLD_ARENA_JOURNALISM : GopetManager.PRICE_COIN_ARENA_JOURNALISM), player)) return;
+
                         if (ArenaEvent.Instance.CanJournalism)
                         {
                             addMoney((sbyte)index,- (index == 0 ? GopetManager.PRICE_GOLD_ARENA_JOURNALISM : GopetManager.PRICE_COIN_ARENA_JOURNALISM), player);
