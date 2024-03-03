@@ -1,9 +1,11 @@
 
+using Gopet.Data.GopetItem;
 using Gopet.Util;
 
-public class BuffExp  {
+public class BuffExp
+{
 
-     
+
     public long buffExpTime = -1;
 
     public int itemTemplateIdBuff = -1;
@@ -12,36 +14,78 @@ public class BuffExp  {
 
     public long currentTime = Utilities.CurrentTimeMillis;
 
-    public BuffExp() {
+    public int itemBuffId = 0;
+
+
+    public BuffExp()
+    {
 
     }
 
-    public float getPercent() {
-        if (buffExpTime > 0) {
+
+    public ItemTemplate Template
+    {
+        get
+        {
+            if (itemBuffId == 0)
+            {
+                switch ((int)getPercent())
+                {
+                    case 100:
+                        return GopetManager.itemTemplate[198];
+                    case 200:
+                        return GopetManager.itemTemplate[199];
+                    case 300:
+                        return GopetManager.itemTemplate[200];
+                }
+
+
+
+                return null;
+            }
+
+            return GopetManager.itemTemplate[itemBuffId];
+        }
+    }
+
+    public float getPercent()
+    {
+        if (buffExpTime > 0)
+        {
             return _buffPercent;
         }
         return 0;
     }
 
-    public void update() {
-        if (buffExpTime >= 0 && Utilities.CurrentTimeMillis - currentTime > 2000L) {
+    public void update()
+    {
+        if (buffExpTime >= 0 && Utilities.CurrentTimeMillis - currentTime > 2000L)
+        {
             buffExpTime -= (Utilities.CurrentTimeMillis - currentTime);
             currentTime = Utilities.CurrentTimeMillis;
         }
     }
-    
-    public void loadCurrentTime() {
+
+    public void loadCurrentTime()
+    {
         currentTime = Utilities.CurrentTimeMillis;
     }
 
-    public void addTime(long time) {
+    public void addTime(long time)
+    {
         currentTime = Utilities.CurrentTimeMillis;
-        if (buffExpTime + time > GopetManager.MAX_TIME_BUFF_EXP) {
+        if (buffExpTime + time > GopetManager.MAX_TIME_BUFF_EXP)
+        {
             buffExpTime = GopetManager.MAX_TIME_BUFF_EXP;
-        } else {
-            if (buffExpTime <= 0) {
+        }
+        else
+        {
+            if (buffExpTime <= 0)
+            {
                 buffExpTime = time;
-            } else {
+            }
+            else
+            {
                 buffExpTime += time;
             }
         }

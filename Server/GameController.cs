@@ -1175,7 +1175,7 @@ public class GameController
             player.session.sendMessage(ms);
             HistoryManager.addHistory(new History(player).setLog("Đăng nhập vào trò chơi và tải nhân vật thành công"));
             checkBugEquipItem();
-            testMsg();
+            showExp();
         }
     }
 
@@ -3386,7 +3386,7 @@ public class GameController
         if (pet != null)
         {
             int indexTatto = getIndexOfPetCanTatto();
-            if(indexTatto < 0)
+            if (indexTatto < 0)
             {
                 player.petNotFollow();
                 return;
@@ -4467,15 +4467,20 @@ public class GameController
         player.redDialog("Sai loại vật phẩm");
     }
 
-    public void testMsg()
+    public void showExp()
     {
-        Message m = messagePetSerive(95);
-        m.putUTF("npcs/Thang_He.png");
-        m.putInt(11);
-        m.putInt(11);
-        m.putlong(Utilities.CurrentTimeMillis);
-        Console.WriteLine(Utilities.CurrentTimeMillis);
-        player.session.sendMessage(m);
+        if (player.playerData.buffExp != null)
+        {
+            if (player.playerData.buffExp.buffExpTime > 0 && player.playerData.buffExp.Template != null)
+            {
+                Message m = messagePetSerive(GopetCMD.SHOW_EXP);
+                m.putUTF(player.playerData.buffExp.Template.iconPath);
+                m.putInt((int)((player.playerData.buffExp.buffExpTime + Utilities.CurrentTimeMillisJava) / 1000));
+                m.putInt(0);
+                m.putlong(0);
+                player.session.sendMessage(m);
+            }
+        }
     }
     public void testMsg100()
     {

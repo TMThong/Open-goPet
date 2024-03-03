@@ -13,7 +13,7 @@ namespace Gopet
             Gopet.App.Main.StartServer(args);
             CommandManager.StartReadingKeys();
         }
-
+        
         static Program()
         {
             Console.InputEncoding = System.Text.Encoding.UTF8;

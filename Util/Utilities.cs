@@ -242,6 +242,15 @@ namespace Gopet.Util
         }
 
 
+        private static readonly DateTime Jan1st1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        public static long CurrentTimeMillisJava
+        {
+            get
+            {
+                return (long)(DateTime.UtcNow - Jan1st1970).TotalMilliseconds;
+            }
+        }
+
         public static string Format(string value, params object[] objects)
         {
             int num = 0;

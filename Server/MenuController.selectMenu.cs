@@ -1041,6 +1041,7 @@ public partial class MenuController
                                 }
                                 player.playerData.buffExp.addTime(GopetManager.TIME_BUFF_EXP);
                                 player.okDialog(Utilities.Format("Bạn đang được buff %s/ kinh nghiệm trong %s phút!", buffExp.getPercent(), Utilities.round(buffExp.getBuffExpTime() / 1000 / 60)).Replace("/", "%"));
+                                player.controller.showExp();
                                 break;
                             }
                         /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/
