@@ -8,7 +8,7 @@ namespace Gopet.App
     public class Main
     {
 
-        public static Server server;
+        public static Gopet.MServer.Server server;
         public static int PORT_SERVER = ServerSetting.instance.portGopetServer;
         public static bool isNetBeans = true;
         public static int HTTP_PORT = ServerSetting.instance.portHttpServer;
@@ -44,7 +44,7 @@ namespace Gopet.App
             EventManager.Start();
             APIServer = new HttpServer(HTTP_PORT);
             APIServer.Start();
-            server = new Server(PORT_SERVER);
+            server = new Gopet.MServer.Server(PORT_SERVER);
             server.start();
         }
 

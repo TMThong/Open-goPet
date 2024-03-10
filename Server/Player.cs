@@ -17,7 +17,7 @@ public class Player : IHandleMessage
 {
 
     public static readonly String[] BANNAME = new String[] { "admin", "test", "banquantri", "gofarm" };
-    public Session session { get; }
+    public ISession session { get; }
     public sbyte CLIENT_TYPE;
     public int PROVIDER;
     public String version;
@@ -36,7 +36,7 @@ public class Player : IHandleMessage
     public bool isPetRecovery = false;
     public int skillId_learn = -1;
 
-    public Player(Session session_)
+    public Player(ISession session_)
     {
         session = session_;
         if (session_ == null)
@@ -58,7 +58,7 @@ public class Player : IHandleMessage
     }
 
 
-    public void onMessage(Message ms)
+    public virtual void onMessage(Message ms)
     {
 #if DEBUG
         Console.WriteLine("PLAYER:  " + ms.id);
@@ -183,7 +183,7 @@ Thread.Sleep(1000);
         }
     }
 
-    public void requestChangePass(int id, string oldPass, string newPass)
+    public virtual void requestChangePass(int id, string oldPass, string newPass)
     {
         if (oldPass.Equals(user.password))
         {
@@ -216,7 +216,7 @@ Thread.Sleep(1000);
 
     public const long TIME_GEN = 1000 * 60 * 60 * 6;
 
-    public void update()
+    public virtual void update()
     {
         UpdateHP_MP();
 
@@ -250,7 +250,7 @@ Thread.Sleep(1000);
         }
     }
 
-    public void redDialog(String text)
+    public virtual void redDialog(String text)
     {
         Message ms = new Message((sbyte)10);
         ms.putString(text);
@@ -258,7 +258,7 @@ Thread.Sleep(1000);
         session.sendMessage(ms);
     }
 
-    public void login(String username, String password, String version)
+    public virtual void login(String username, String password, String version)
     {
         if (ServerSetting.instance.isShowMessageWhenLogin)
         {
@@ -425,7 +425,7 @@ Thread.Sleep(1000);
         }
     }
 
-    public void loginOK()
+    public virtual void loginOK()
     {
         controller.loginOK();
         if (playerData != null)
@@ -435,7 +435,7 @@ Thread.Sleep(1000);
         HistoryManager.addHistory(new History(this).setLogin());
     }
 
-    public void loginFailed(String text)
+    public virtual void loginFailed(String text)
     {
         Message ms = new Message(GopetCMD.LOGIN_FAILED);
         ms.putString(text);
@@ -443,19 +443,19 @@ Thread.Sleep(1000);
         session.sendMessage(ms);
     }
 
-    public bool hasGift(int NPCID)
+    public virtual bool hasGift(int NPCID)
     {
         return true;
     }
 
-    public bool canNPCHelp(int NPCID)
+    public virtual bool canNPCHelp(int NPCID)
     {
         return true;
     }
 
 
 
-    public void onDisconnected()
+    public virtual void onDisconnected()
     {
         try
         {
@@ -481,7 +481,7 @@ Thread.Sleep(1000);
         }
     }
 
-    public void Popup(String text)
+    public virtual void Popup(String text)
     {
         Message m = new Message(GopetCMD.SERVER_MESSAGE);
         m.putsbyte(GopetCMD.POPUP_MESSAGE);
@@ -490,7 +490,7 @@ Thread.Sleep(1000);
         session.sendMessage(m);
     }
 
-    public void showBanner(String text)
+    public virtual void showBanner(String text)
     {
         Message m = new Message(GopetCMD.SERVER_MESSAGE);
         m.putsbyte(GopetCMD.BANNER_MESSAGE);
@@ -499,7 +499,7 @@ Thread.Sleep(1000);
         session.sendMessage(m);
     }
 
-    public void okDialog(String str)
+    public virtual void okDialog(String str)
     {
         Message m = new Message(71);
         m.putsbyte(0);
@@ -508,32 +508,32 @@ Thread.Sleep(1000);
         session.sendMessage(m);
     }
 
-    public void notEnoughHp()
+    public virtual void notEnoughHp()
     {
         Popup("Bạn không đủ máu");
     }
 
-    public void notEnoughEnergy()
+    public virtual void notEnoughEnergy()
     {
         Popup("Bạn không đủ thể lực");
     }
 
-    public void addCoin(long coin)
+    public virtual void addCoin(long coin)
     {
         playerData.coin += coin;
         controller.updateUserInfo();
     }
 
 
-    public bool CanAddSpendGold
+    public virtual bool CanAddSpendGold
     {
         get
         {
-            return DateTime.Now <= new DateTime(2024, 3, 10);
+            return DateTime.Now <= new DateTime(2023, 3, 10);
         }
     }
 
-    public void addGold(long gold)
+    public virtual void addGold(long gold)
     {
         playerData.gold += gold;
         controller.updateUserInfo();
@@ -548,18 +548,18 @@ Thread.Sleep(1000);
         }
     }
 
-    public void mineCoin(long coin)
+    public virtual void mineCoin(long coin)
     {
         playerData.coin -= coin;
         controller.updateUserInfo();
     }
 
-    public void mineGold(long gold)
+    public virtual void mineGold(long gold)
     {
         playerData.gold -= gold;
 
         controller.updateUserInfo();
-        if(CanAddSpendGold)
+        if (CanAddSpendGold)
         {
             playerData.spendGold += gold;
             TopData topData = TopSpendGold.instance.find(playerData.user_id);
@@ -570,22 +570,22 @@ Thread.Sleep(1000);
         }
     }
 
-    public bool checkCoin(long value)
+    public virtual bool checkCoin(long value)
     {
         return playerData.coin >= value;
     }
 
-    public bool checkGold(long value)
+    public virtual bool checkGold(long value)
     {
         return playerData.gold >= value;
     }
 
-    public bool checkStar(int value)
+    public virtual bool checkStar(int value)
     {
         return playerData.star >= value;
     }
 
-    public void addStar(int star)
+    public virtual void addStar(int star)
     {
         playerData.star += star;
         controller.updateUserInfo();

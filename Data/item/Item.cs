@@ -1,6 +1,7 @@
 using Gopet.Data.Collections;
 using Gopet.Util;
 using Newtonsoft.Json;
+using System.Collections.Concurrent;
 
 namespace Gopet.Data.GopetItem
 {
@@ -40,6 +41,8 @@ namespace Gopet.Data.GopetItem
         public bool wasSell = false;
         public bool canTrade { get; set; } = true;
 
+        public ConcurrentDictionary<int, Tuple<int, int, int, int>> EnchantInfo { get; set; } = new ConcurrentDictionary<int, Tuple<int, int, int, int>>();
+
 
         public Item(int itemTemplateId, int count_ = 0, bool isSkipRandom = false)
         {
@@ -56,6 +59,85 @@ namespace Gopet.Data.GopetItem
                 mp = RandomInfoItem(itemTemplate.mpRange);
             }
         }
+        /// <summary>
+        /// THêm thông tin cho chỉ số trước
+        /// </summary>
+        public void AddEnchantInfo()
+        {
+            Tuple<int, int, int, int> tuple = new Tuple<int, int, int, int>(getHp(), getMp(), getAtk(), getDef());
+            this.EnchantInfo[lvl] = tuple;
+        }
+
+        public virtual int HpItem
+        {
+            get
+            {
+                if (lvl == 0)
+                {
+                    return hp;
+                }
+
+                if (EnchantInfo.ContainsKey(lvl - 1))
+                {
+                    return EnchantInfo[lvl - 1].Item1;
+                }
+
+                return hp;
+            }
+        }
+
+        public virtual int MpItem
+        {
+            get
+            {
+                if (lvl == 0)
+                {
+                    return mp;
+                }
+
+                if (EnchantInfo.ContainsKey(lvl - 1))
+                {
+                    return EnchantInfo[lvl - 1].Item2;
+                }
+
+                return mp;
+            }
+        }
+        public virtual int AtkItem
+        {
+            get
+            {
+                if (lvl == 0)
+                {
+                    return atk;
+                }
+
+                if (EnchantInfo.ContainsKey(lvl - 1))
+                {
+                    return EnchantInfo[lvl - 1].Item3;
+                }
+
+                return atk;
+            }
+        }
+        public virtual int DefItem
+        {
+            get
+            {
+                if (lvl == 0)
+                {
+                    return def;
+                }
+
+                if (EnchantInfo.ContainsKey(lvl - 1))
+                {
+                    return EnchantInfo[lvl - 1].Item4;
+                }
+
+                return def;
+            }
+        }
+
 
         public static int RandomInfoItem(int[] range)
         {
@@ -131,52 +213,51 @@ namespace Gopet.Data.GopetItem
 
         public int getDef()
         {
-            int value = def;
+            int value = DefItem;
             if (value == 0) return 0;
             if (Template.type == GopetManager.WING_ITEM)
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
-            int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2) * lvl;
+            int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2) ;
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_DEF)));
         }
 
-
         public int getAtk()
         {
-            int value = atk;
+            int value = AtkItem;
             if (value == 0) return 0;
             if (Template.type == GopetManager.WING_ITEM)
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
-            int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2) * lvl;
+            int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2) ;
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_ATK)));
         }
 
 
         public int getHp()
         {
-            int value = hp;
+            int value = HpItem;
             if (value == 0) return 0;
             if (Template.type == GopetManager.WING_ITEM)
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
-            int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2) * lvl;
+            int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2) ;
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_HP)));
         }
 
 
         public int getMp()
         {
-            int value = mp;
+            int value = MpItem;
             if (value == 0) return 0;
             if (Template.type == GopetManager.WING_ITEM)
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
-            int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2) * lvl;
+            int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2) ;
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_MP)));
         }
 
@@ -197,7 +278,7 @@ namespace Gopet.Data.GopetItem
         public static CopyOnWriteArrayList<Item> search(JArrayList<int> types, CopyOnWriteArrayList<Item> listNeedSearchItems)
         {
 
-            if(types == null) return listNeedSearchItems;
+            if (types == null) return listNeedSearchItems;
 
             CopyOnWriteArrayList<Item> arrayList = new();
             foreach (Item item in listNeedSearchItems)

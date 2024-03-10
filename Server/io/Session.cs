@@ -5,7 +5,7 @@ using Gopet.Manager;
 using Gopet.Util;
 using System.Net.Sockets;
 
-public class Session 
+public class Session : ISession
 {
     public IHandleMessage messageHandler;
     public BinaryWriter dos;
@@ -128,6 +128,9 @@ public class Session
     }
 
     public static int socketCount = 0;
+
+    bool ISession.clientOK { get => clientOK; set => clientOK = value; }
+    Socket ISession.sc { get => sc; set => sc = value; }
 
     public void Close()
     {

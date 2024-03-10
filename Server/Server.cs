@@ -3,55 +3,58 @@
 using Gopet.Data.Collections;
 using System.Net.Sockets;
 using Gopet.Util;
-public class Server
+namespace Gopet.MServer
 {
-
-    private TcpListener serverSc;
-    public bool isRunning { get; private set; } = false;
-    public CopyOnWriteArrayList<Session> sessions { get; } = new();
-    public Server(int port)
+    public class Server
     {
-        serverSc = new TcpListener(port);
-    }
 
-    public void start()
-    {
-        if (!isRunning)
+        private TcpListener serverSc;
+        public bool isRunning { get; private set; } = false;
+        public CopyOnWriteArrayList<Session> sessions { get; } = new();
+        public Server(int port)
         {
-            isRunning = true;
-            serverSc.Start();
-            for (global::System.Int32 i = 0; i < 20; i++)
+            serverSc = new TcpListener(port);
+        }
+
+        public void start()
+        {
+            if (!isRunning)
             {
-                serverSc.BeginAcceptTcpClient(new AsyncCallback(AcceptCallback), serverSc);
+                isRunning = true;
+                serverSc.Start();
+                for (global::System.Int32 i = 0; i < 20; i++)
+                {
+                    serverSc.BeginAcceptTcpClient(new AsyncCallback(AcceptCallback), serverSc);
+                }
             }
         }
-    }
 
 
-    void AcceptCallback(IAsyncResult ar)
-    {
-        TcpListener listener = (TcpListener)ar.AsyncState;
-        try
+        void AcceptCallback(IAsyncResult ar)
         {
-            if (!listener.Server.IsBound) return;
-            TcpClient client = listener.EndAcceptTcpClient(ar);
-            Session session = new Session(client.Client);
-            session.setHandler(new Player(session));
-            session.run();
-            sessions.add(session);
-            Session.socketCount++;
+            TcpListener listener = (TcpListener)ar.AsyncState;
+            try
+            {
+                if (!listener.Server.IsBound) return;
+                TcpClient client = listener.EndAcceptTcpClient(ar);
+                Session session = new Session(client.Client);
+                session.setHandler(new Player(session));
+                session.run();
+                sessions.add(session);
+                Session.socketCount++;
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            listener.BeginAcceptTcpClient(new AsyncCallback(AcceptCallback), listener);
         }
-        catch (Exception e)
+
+
+        public void stopServer()
         {
-            e.printStackTrace();
+            isRunning = false;
+            serverSc.Stop();
         }
-        listener.BeginAcceptTcpClient(new AsyncCallback(AcceptCallback), listener);
-    }
-
-
-    public void stopServer()
-    {
-        isRunning = false;
-        serverSc.Stop();
     }
 }

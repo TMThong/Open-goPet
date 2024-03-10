@@ -107,7 +107,7 @@ public class GameController
         this.petBattle = petBattle;
     }
 
-    public GameController(Player player, Session session_)
+    public GameController(Player player, ISession session_)
     {
         this.player = player;
     }
@@ -2537,6 +2537,10 @@ public class GameController
                         bool destroyItem = !isSuccec && isGem ? (itemEuip.lvl > 8) : (itemEuip.lvl == 8 || itemEuip.lvl == 9);
                         if (isSuccec)
                         {
+                            if(!isGem)
+                            {
+                                itemEuip.AddEnchantInfo();
+                            }
                             itemEuip.lvl++;
                             if (isGem)
                             {
@@ -2868,6 +2872,7 @@ public class GameController
                             {
                                 removeItemEquip(itemEuipPassive.itemId);
                                 player.mineCoin(GopetManager.PRICE_UP_TIER_ITEM);
+                                itemEuipActive.EnchantInfo.Clear();
                                 itemEuipActive.hp = Utilities.round(Utilities.GetValueFromPercent(itemEuipActive.getHp() + itemEuipPassive.getHp(), GopetManager.PERCENT_ITEM_TIER_INFO));
                                 itemEuipActive.mp = (Utilities.round(Utilities.GetValueFromPercent(itemEuipActive.getMp() + itemEuipPassive.getMp(), GopetManager.PERCENT_ITEM_TIER_INFO)));
                                 itemEuipActive.atk = (Utilities.round(Utilities.GetValueFromPercent(itemEuipActive.getAtk() + itemEuipPassive.getAtk(), GopetManager.PERCENT_ITEM_TIER_INFO)));
