@@ -24,7 +24,7 @@ namespace Gopet.Battle
         private Player ClosePlayer = null;
         private int userInvitePK = -1;
         private long timeCheckplayer = 0;
-
+        private Mutex mutex = new Mutex();
         public PetBattle(GopetPlace place, Player passivePlayer, Player activePlayer)
         {
             this.place = place;
@@ -190,18 +190,26 @@ namespace Gopet.Battle
 
         public void onMessage(Message message, Player player)
         {
-            sbyte subId = message.readsbyte();
-            switch (subId)
+            mutex.WaitOne();
+            try
             {
-                case GopetCMD.PetBattle_ATTACK:
-                    petAttack(player);
-                    break;
-                case GopetCMD.PET_BATTLE_USE_SKILL:
-                    useSkill(player, message.reader().readInt());
-                    break;
-                case GopetCMD.PET_BATTLE_USE_ITEM:
-                    MenuController.sendMenu(MenuController.MENU_SELECT_ITEM_SUPPORT_PET, player);
-                    break;
+                sbyte subId = message.readsbyte();
+                switch (subId)
+                {
+                    case GopetCMD.PetBattle_ATTACK:
+                        petAttack(player);
+                        break;
+                    case GopetCMD.PET_BATTLE_USE_SKILL:
+                        useSkill(player, message.reader().readInt());
+                        break;
+                    case GopetCMD.PET_BATTLE_USE_ITEM:
+                        MenuController.sendMenu(MenuController.MENU_SELECT_ITEM_SUPPORT_PET, player);
+                        break;
+                }
+            }
+            finally
+            {
+                mutex.ReleaseMutex();
             }
         }
 
@@ -556,45 +564,53 @@ namespace Gopet.Battle
 
         public void update()
         {
-            if (hasWinner())
+            mutex.WaitOne();
+            try
             {
-                return;
-            }
-            else
-            {
-                if (petAttackMob)
+                if (hasWinner())
                 {
-                    if (timeCheckplayer < Utilities.CurrentTimeMillis)
+                    return;
+                }
+                else
+                {
+                    if (petAttackMob)
                     {
-                        if (!mob.bound.Contains(activePlayer.playerData.x, activePlayer.playerData.y))
+                        if (timeCheckplayer < Utilities.CurrentTimeMillis)
                         {
-                            activePlayer.user.ban(UserData.BAN_TIME, "Hệ thống thấy bạn dùng auto", Utilities.CurrentTimeMillis + 1000l * 60 * 15);
-                            activePlayer.session.Close();
+                            if (!mob.bound.Contains(activePlayer.playerData.x, activePlayer.playerData.y))
+                            {
+                                activePlayer.user.ban(UserData.BAN_TIME, "Hệ thống thấy bạn dùng auto", Utilities.CurrentTimeMillis + 1000l * 60 * 15);
+                                activePlayer.session.Close();
+                            }
                         }
                     }
                 }
-            }
-            if (Utilities.CurrentTimeMillis > delaTimeTurn)
-            {
+                if (Utilities.CurrentTimeMillis > delaTimeTurn)
+                {
+                    if (isPetAttackMob())
+                    {
+                        if (getUserTurnId() != mob.getMobId())
+                        {
+                            petAttack(activePlayer);
+                        }
+                    }
+                    nextTurn();
+                }
                 if (isPetAttackMob())
                 {
-                    if (getUserTurnId() != mob.getMobId())
+                    if (getUserTurnId() == mob.getMobId())
                     {
-                        petAttack(activePlayer);
+                        mobAttack();
                     }
                 }
-                nextTurn();
-            }
-            if (isPetAttackMob())
-            {
-                if (getUserTurnId() == mob.getMobId())
+                if (hasWinner())
                 {
-                    mobAttack();
+                    win();
                 }
             }
-            if (hasWinner())
+            finally
             {
-                win();
+                mutex.ReleaseMutex();
             }
         }
 
