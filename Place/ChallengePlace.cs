@@ -26,6 +26,8 @@ public class ChallengePlace : GopetPlace
         new int[]{402, 261}
     };
 
+   
+
     public ChallengePlace(GopetMap m, int ID) : base(m, ID)
     {
 

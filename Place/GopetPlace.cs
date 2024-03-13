@@ -17,6 +17,8 @@ public class GopetPlace : Place
     public ConcurrentHashMap<MobLocation, long> newMob = new();
     public const long TIME_NEW_MOB = 25000;
     public int[] numMobDie;
+
+    
     public int[] numMobDieNeed
     {
         get
@@ -56,7 +58,6 @@ public class GopetPlace : Place
         sendNewPlayer(player);
         players.add(player);
         player.setPlace(this);
-        numPlayer++;
         loadInfo(player);
         sendGameObj(player);
         sendMob(player);

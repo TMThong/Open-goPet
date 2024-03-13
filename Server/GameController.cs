@@ -1150,7 +1150,7 @@ public class GameController
             foreach (Place place in mapData.places)
             {
                 message.putInt(place.zoneID);
-                message.putInt(place.numPlayer);
+                message.putInt(place.players.Count);
                 message.putbool(false);
                 message.putInt(0);
             }
@@ -2922,7 +2922,7 @@ public class GameController
         Pet petActive = selectPetByItemId(petId1);
         Pet petPassive = selectPetByItemId(petId2);
         PetTier petTier = GopetManager.petTier.get(petActive.petIdTemplate);
-        if (name.Length > 30 || name.Length <= 5)
+        if (name.Length < 30 && name.Length >= 5)
         {
             if (petActive.equip.isEmpty() && petPassive.equip.isEmpty())
             {

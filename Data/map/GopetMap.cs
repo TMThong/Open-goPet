@@ -120,7 +120,7 @@ namespace Gopet.Data.Map
         {
             foreach (Place place in places)
             {
-                if (place.canAdd(player) && place.numPlayer < place.maxPlayer / 2)
+                if (place.canAdd(player) && place.players.Count < place.maxPlayer / 2)
                 {
                     place.add(player);
                     return;

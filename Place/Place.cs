@@ -8,10 +8,17 @@ using Gopet.IO;
 public abstract class Place {
 
     public CopyOnWriteArrayList<Player> players = new();
-    public int numPlayer = 0;
     public int maxPlayer = 20;
     public GopetMap map;
     public int zoneID;
+
+    public int numPlayer
+    {
+        get
+        {
+            return this.players.Count;
+        }
+    }
 
     public Place(GopetMap m, int ID) {
         map = m;
@@ -25,7 +32,6 @@ public abstract class Place {
         players.remove(player);
         player.setPlace(null);
         sendRemove(player);
-        numPlayer--;
         PetBattle petBattle = player.controller.getPetBattle();
         if (petBattle != null) {
             petBattle.Close(player);
@@ -33,7 +39,7 @@ public abstract class Place {
     }
 
     public virtual bool canAdd(Player player)   {
-        return numPlayer + 1 < maxPlayer;
+        return this.players.Count + 1 < maxPlayer;
     }
 
     public virtual void update()   {
