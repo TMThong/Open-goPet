@@ -65,6 +65,10 @@ namespace Gopet.Battle
 
         private void addWingBuff(Player player, PetBattleInfo petBattleInfo, PetBattleInfo nonpetBattleInfo)
         {
+#if !NEW_SERVER
+            return;
+#endif
+
             Item wing = player.playerData.wing;
             if(wing != null)
             {

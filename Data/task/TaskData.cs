@@ -7,9 +7,12 @@ public class TaskData {
     public int[][] gift;
     public long timeTask;
     public bool wasShowDialog = false;
+    public DateTime? ExpireTask {  get; set; } = null;
+    public bool CanCancelTask { get; set; } = true;
 
     public TaskData()
     {
+
     }
 
     public TaskData(TaskTemplate taskTemplate) {

@@ -33,6 +33,38 @@ public partial class MenuController
             case OP_LIST_PET_FREE:
                 sendMenu(MENU_LIST_PET_FREE, player);
                 break;
+            case OP_EVENT_TASK:
+                {
+                    var listTaskEvent = player.playerData.task.Where(p => p.taskTemplateId >= 38 && p.taskTemplateId <= 49).ToList();
+                    if (listTaskEvent.Count > 0)
+                    {
+                        player.redDialog("Ngươi đã nhận nhiệm vụ thì đi làm đi. \n Tới đây hỏi gì nữa hả?!");
+                    }
+                    else
+                    {
+                        if(player.checkStar(5))
+                        {
+                            player.MineStar(5);
+                            TaskTemplate[] taskTemplates = GopetManager.taskTemplateList.Where(p => p.taskId >= 38 && p.taskId <= 49).ToArray();
+                            TaskTemplate taskTemplate = Utilities.RandomArray(taskTemplates);
+                            TaskData taskData = new TaskData(taskTemplate);
+                            taskData.CanCancelTask = false;
+                            player.playerData.task.add(taskData);
+                            player.playerData.tasking.add(taskData.taskTemplateId);
+                            player.okDialog("Nhận nhiệm vụ thành công");
+                        }
+                        else
+                        {
+                            player.notEnoughStar();
+                        }
+                    }
+                    break;
+                }
+            case OP_TOP_EVENT_TASK:
+                {
+                    showTop(TopEvent.Instance, player);
+                    break;
+                }
             case OP_DELETE_TIEM_NANG:
                 sendMenu(MENU_DELETE_TIEM_NANG, player); break;
             case OP_TOP_PET:
@@ -42,8 +74,9 @@ public partial class MenuController
             case OP_TOP_GEM:
                 showTop(TopGem.instance, player); break;
             case OP_SHOW_TOP_ACCUMULATED_POINT:
-                showTop(TopAccumulatedPoint.Instance, player); 
+                showTop(TopAccumulatedPoint.Instance, player);
                 break;
+
             case OP_ARENA_JOURNALISM:
                 sendMenu(MENU_SELECT_TYPE_PAYMENT_TO_ARENA_JOURNALISM, player);
                 break;

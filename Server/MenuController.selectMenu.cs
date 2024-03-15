@@ -241,6 +241,11 @@ public partial class MenuController
                                     }
                                     break;
                                 case 2:
+                                    if(!taskData.CanCancelTask)
+                                    {
+                                        player.redDialog("Bạn không thể hủy nhiệm vụ này!!!");
+                                        return;
+                                    }
                                     player.playerData.task.remove(taskData);
                                     player.playerData.tasking.remove(taskData.taskTemplateId);
                                     player.controller.getTaskCalculator().update();

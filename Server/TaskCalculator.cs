@@ -7,12 +7,26 @@ using Gopet.Util;
 
 public class TaskCalculator
 {
-
+    /// <summary>
+    /// Nhiệm vụ chính
+    /// </summary>
     public const int TASK_TYPE_MAIN = 0;
+    /// <summary>
+    /// Nhiệm vụ cho phép lập lại nhiều lần
+    /// </summary>
     public const int TASK_TYPE_LOOP = 1;
+    /// <summary>
+    /// Nhiệm vụ bang hội
+    /// </summary>
     public const int TASK_TYPE_CLAN = 2;
+    /// <summary>
+    /// Nhiệm vụ đến hạn là hết ngày
+    /// Qua ngày là xóa
+    /// </summary>
     public const int TASK_TYPE_DAILY = 3;
-
+    /// <summary>
+    /// Nhiệm vụ diệt quái
+    /// </summary>
     public const int REQUEST_KILL_MOB = 0;
     public const int REQUEST_PET_LVL = 1;
     public const int REQUEST_LEARN_SKILL_PET = 2;
@@ -33,7 +47,7 @@ public class TaskCalculator
     public const int REQUEST_KILL_SPECIAL_BOSS = 17;
     public const int REQUEST_WAIT_NEW_TASK = 18;
     public const int REUQEST_BET_PLAYER_WIN = 19;
-    private Player player;
+    public Player player { get; }
 
     private HashMap<int, JArrayList<TaskTemplate>> cacheTask = new();
 
@@ -60,7 +74,7 @@ public class TaskCalculator
             {
                 foreach (TaskTemplate taskTemplate in taskFromNPC)
                 {
-                    if (!playerData.wasTask.Contains(taskTemplate.getTaskId()) && !playerData.tasking.Contains(taskTemplate.getTaskId()))
+                    if (!playerData.wasTask.Contains(taskTemplate.getTaskId()) && !playerData.tasking.Contains(taskTemplate.getTaskId()) && taskTemplate.type == TASK_TYPE_MAIN)
                     {
                         bool flag = true;
                         foreach (int taskIdNeed in taskTemplate.getTaskNeed())

@@ -185,6 +185,10 @@ public class GopetManager
     public const int GIFT_ENERGY = 8;
     public const int GIFT_RANDOM_ITEM = 9;
     public const int GIFT_ITEM_MAX_OPTION = 10;
+    /// <summary>
+    /// Quà là điểm sự kiện
+    /// </summary>
+    public const int GIFT_EVENT_POINT = 11;
 
     /**
      * thời gian chờ lượt đánh (mili giây)

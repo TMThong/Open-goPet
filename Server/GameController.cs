@@ -3656,6 +3656,12 @@ public class GameController
                         }
                     }
                     break;
+                case GopetManager.GIFT_EVENT_POINT:
+                    {
+                        player.playerData.EventPoint += giftInfo[1];
+                        popups.add(new Popup($"{giftInfo[1]} điểm sự kiện"));
+                        break;
+                    }
             }
         }
         return popups;

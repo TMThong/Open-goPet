@@ -246,6 +246,8 @@ public partial class MenuController
     public const int OP_SELECT_PET_DEF_LEAGUE = 65;
     public const int OP_TOP_AREAN_POINT = 66;
     public const int OP_ARENA_JOURNALISM = 67;
+    public const int OP_EVENT_TASK = 68;
+    public const int OP_TOP_EVENT_TASK = 69;
     public const int OP_TRADE_GIFT_COIN = 1000000000;
     public const int OP_TRADE_GIFT_GOLD = 1000000001;
     /**
