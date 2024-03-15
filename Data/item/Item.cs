@@ -1,4 +1,5 @@
 using Gopet.Data.Collections;
+using Gopet.Data.item;
 using Gopet.Util;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
@@ -416,6 +417,28 @@ namespace Gopet.Data.GopetItem
                     }
             }
             return 0;
+        }
+
+        public ItemBattleOptionBuff[] ExtractBattleOptions()
+        {
+            if(this.Template.itemOption.Contains(ItemInfo.OptionType.OPTION_BATTLE))
+            {
+                int flag = 0;
+                ItemBattleOptionBuff[] itemBattleOptionBuffs = new ItemBattleOptionBuff[this.Template.itemOption.Where(p => p == ItemInfo.OptionType.OPTION_BATTLE).Count()];
+                for (global::System.Int32 i = 0; i < this.Template.itemOption.Length;)
+                {
+                    if (this.Template.itemOption[i] == ItemInfo.OptionType.OPTION_BATTLE)
+                    {
+                        itemBattleOptionBuffs[flag] = new ItemBattleOptionBuff(this.optionValue[i], this.optionValue[i + 2], this.optionValue[i + 3] == 1, this.optionValue[i + 1] > 100 ? int.MaxValue - 10: this.optionValue[i + 1]);
+                        i += 3;
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+            }
+            return new ItemBattleOptionBuff[0];
         }
     }
 }

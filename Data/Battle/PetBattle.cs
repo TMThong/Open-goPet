@@ -40,6 +40,8 @@ namespace Gopet.Battle
 
             getActiveBattleInfo().addBuff(new Debuff(new ItemInfo[] { new ItemInfo(10, Utilities.round(GopetManager.MitigatePetData[activePet.Template.element][passivePet.Template.element] * 100)) }, int.MaxValue));
             PassiveBattleInfo.addBuff(new Debuff(new ItemInfo[] { new ItemInfo(10, Utilities.round(GopetManager.MitigatePetData[passivePet.Template.element][activePet.Template.element] * 100)) }, int.MaxValue));
+            addWingBuff(activePlayer, activeBattleInfo, passiveBattleInfo);
+            addWingBuff(passivePlayer, passiveBattleInfo, activeBattleInfo);
             if (place == null) throw new ArgumentNullException(nameof(place));
         }
 
@@ -56,7 +58,22 @@ namespace Gopet.Battle
             getActiveBattleInfo().addBuff(new Debuff(new ItemInfo[] { new ItemInfo(10, Utilities.round(GopetManager.MitigatePetData[activePet.Template.element][mob.Template.element] * 100)) }, int.MaxValue));
             PassiveBattleInfo.addBuff(new Debuff(new ItemInfo[] { new ItemInfo(10, Utilities.round(GopetManager.MitigatePetData[mob.Template.element][activePet.Template.element] * 100)) }, int.MaxValue));
             timeCheckplayer = Utilities.CurrentTimeMillis + 7000L;
+            addWingBuff(activePlayer, activeBattleInfo, passiveBattleInfo);
             if (place == null) throw new ArgumentNullException(nameof(place));
+        }
+
+
+        private void addWingBuff(Player player, PetBattleInfo petBattleInfo, PetBattleInfo nonpetBattleInfo)
+        {
+            Item wing = player.playerData.wing;
+            if(wing != null)
+            {
+                var wingBuffData = wing.ExtractBattleOptions();
+                foreach (var buff in wingBuffData)
+                {
+                    (buff.IsActive ? petBattleInfo : nonpetBattleInfo).addBuff(new Buff(new ItemInfo[] { new ItemInfo(buff.OptionId, buff.OptionValue) }, buff.Turn));
+                }
+            }
         }
 
         public void setUserInvitePK(int userInvitePK)
@@ -681,7 +698,7 @@ namespace Gopet.Battle
                 {
                     if (!(mob is Boss))
                     {
-                         
+
                         ClanMember clanMember = activePlayer.controller.getClan();
                         float perExpPlus = 0f;
                         float coinPlus = 0f;
@@ -1065,7 +1082,7 @@ namespace Gopet.Battle
         private PetDamgeInfo makeDamage(PetBattleInfo petBattleInfo, PetBattleInfo nonPetBattleInfo, PetSkillLv petSkillLv)
         {
             PetDamgeInfo damgeInfo = new PetDamgeInfo();
-            Pet nonPet = getNonPet();
+            GameObject nonPet = PassiveObject;
             int trueDamge = 0;
             Pet myPet = getPet();
             int sum = isPetAttackMob() && nonPet == activePet ? mob.getAtk() : myPet.getAtk();
@@ -1122,8 +1139,15 @@ namespace Gopet.Battle
 
             if (nonPet != null)
             {
-                sum -= nonPet.getDef();
-                sum -= ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.DEF);
+                int def = nonPet.getDef() + ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.DEF);
+
+                if (def > 0 && ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.DEF_PER) > 0)
+                {
+                    def += (int)Utilities.GetValueFromPercent(def, ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.DEF_PER) / 100f);
+                }
+
+                if (def > 0) sum -= def;
+
                 if (ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.PHANDOAN_2_TURN) > 0)
                 {
                     float damagePer = ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.PHANDOAN_2_TURN) / 100f;

@@ -995,7 +995,7 @@ public partial class MenuController
                                         }
                                         else
                                         {
-                                            player.redDialog("Tính bug à :)");
+                                            player.fastAction();
                                         }
                                     }
                                 }

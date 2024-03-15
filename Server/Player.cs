@@ -710,4 +710,10 @@ Thread.Sleep(1000);
         }
         return false;
     }
+
+
+    public void fastAction()
+    {
+        redDialog("Thao tác quá nhanh");
+    }
 }

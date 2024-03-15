@@ -90,33 +90,32 @@ namespace Gopet.Data.GopetItem
 
         public static class Type
         {
-
-            public const int MISS_IN_3_TURN = 25;
-            public const int SKILL_MISS = 26;
-            public const int HP = 4;
-            public const int MP = 5;
-            public const int PERHP = 6;
-            public const int PERMP = 7;
             public const int GENHP = 0;
             public const int GENMP = 1;
             public const int GEN_PERHP = 2;
             public const int GEN_PERMP = 3;
-            public const int LOOTBOX = 14;
-            public const int POWER_DOWN_4_TURN = 19;
-            public const int POWER_DOWN_3_TURN = 22;
-            public const int POWER_DOWN_1_TURN = 29;
-            public const int BUFF_DAMGE = 15;
+            public const int HP = 4;
+            public const int MP = 5;
+            public const int PERHP = 6;
+            public const int PERMP = 7;
             public const int SKILL_BUFF_DAMGE = 8;
-            public const int DOT_MANA = 17;
-            public const int DAMGE_TOXIC_IN_3_TURN_PER = 27;
-            public const int DAMGE_TOXIC_IN_5_TURN = 28;
-            public const int BUFF_STR = 11;
-            public const int SKILL_SKIP_DEF = 21;
-            public const int TRUE_DAMGE = 20;
-            public const int RECOVERY_HP = 24;
             public const int DEF = 9;
             public const int DEF_PER = 10;
+            public const int BUFF_STR = 11;
+            public const int LOOTBOX = 14;
+            public const int BUFF_DAMGE = 15;
+            public const int DOT_MANA = 17;
+            public const int POWER_DOWN_4_TURN = 19;
+            public const int TRUE_DAMGE = 20;
+            public const int SKILL_SKIP_DEF = 21;
+            public const int POWER_DOWN_3_TURN = 22;
             public const int SELECT_DEF_IN_3_TURN = 23;
+            public const int RECOVERY_HP = 24;
+            public const int MISS_IN_3_TURN = 25;
+            public const int SKILL_MISS = 26;
+            public const int DAMGE_TOXIC_IN_3_TURN_PER = 27;
+            public const int DAMGE_TOXIC_IN_5_TURN = 28;
+            public const int POWER_DOWN_1_TURN = 29;
             public const int STUN = 30;
             public const int BUFF_ATK_3_TURN = 31;
             public const int PHANDOAN_2_TURN = 32;
@@ -124,6 +123,7 @@ namespace Gopet.Data.GopetItem
             public const int PER_STUN_1_TURN= 36;
             public const int PER_DEF_BUFF_3_TURN = 37;
             public const int DOT_MANA_BY_ATK = 38;
+            public const int BLOODSUCKING_BASED_ON_DAMAGE_PASSIVE_BUFF = 39;
         }
 
         public static class OptionType
@@ -132,6 +132,13 @@ namespace Gopet.Data.GopetItem
             public const int PERCENT_MP = 10;
             public const int PERCENT_ATK = 11;
             public const int PERCENT_DEF = 12;
+            public const int OPTION_BATTLE = 13;
+            public const int OPTION_BATTLE_TURN = 14;
+            public const int OPTION_BATTLE_VALUE = 15;
+            /// <summary>
+            /// Buff dành cho người mang trang bị hay người đối diện
+            /// </summary>
+            public const int OPTION_BATTLE_IS_FOR_ACTIVE = 16;
         }
     }
 }
