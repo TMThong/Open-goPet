@@ -716,4 +716,16 @@ Thread.Sleep(1000);
     {
         redDialog("Thao tác quá nhanh");
     }
+
+    public void itemError(string where = "")
+    {
+        if(string.IsNullOrEmpty(where))
+        {
+            redDialog("Lỗi vật phẩm");
+        }
+        else
+        {
+            redDialog("Lỗi vật phẩm ở " + where);
+        }
+    }
 }

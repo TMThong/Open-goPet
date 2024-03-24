@@ -196,8 +196,14 @@ public class Pet : GameObject
     public void lvlUP()
     {
         this.lvl++;
-
-        this.tiemnang_point += getPetTemplate().gymUpLevel;
+        if(Template.gymUpLevel > this.pointTiemNangLvl)
+        {
+            this.tiemnang_point += Template.gymUpLevel;
+        }
+        else
+        {
+            this.tiemnang_point += this.pointTiemNangLvl;
+        }
 
         if (this.lvl == 3 || this.lvl == 5 || this.lvl == 10)
         {

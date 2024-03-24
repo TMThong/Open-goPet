@@ -100,6 +100,8 @@ public partial class MenuController
     public const int MENU_SELECT_ITEM_TO_GIVE_BY_ADMIN = 1050;
     public const int MENU_SELECT_PET_TO_DEF_LEAGUE = 1051;
     public const int MENU_SELECT_TYPE_PAYMENT_TO_ARENA_JOURNALISM = 1052;
+    public const int MENU_MERGE_WING = 1053;
+    public const int MENU_SHOW_ALL_TATTO = 1054;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -248,6 +250,7 @@ public partial class MenuController
     public const int OP_ARENA_JOURNALISM = 67;
     public const int OP_EVENT_TASK = 68;
     public const int OP_TOP_EVENT_TASK = 69;
+    public const int OP_SHOW_ALL_TATTO = 70;
     public const int OP_TRADE_GIFT_COIN = 1000000000;
     public const int OP_TRADE_GIFT_GOLD = 1000000001;
     /**
@@ -469,6 +472,7 @@ public partial class MenuController
             case MENU_SELECT_GEM_UP_TIER:
                 arrayList.add(GopetManager.ITEM_GEM);
                 break;
+            case MENU_MERGE_WING:
             case MENU_MERGE_PART_ITEM:
                 arrayList.add(GopetManager.ITEM_PART_ITEM);
                 break;
@@ -881,7 +885,7 @@ public partial class MenuController
         }
     }
 
-    private static CopyOnWriteArrayList<Item> getItemByMenuId(int menuId, Player player)
+    private static CopyOnWriteArrayList<Item> getItemByMenuId(int menuId, Player player, Func<Item, bool> filter = null)
     {
         switch (menuId)
         {
@@ -907,7 +911,7 @@ public partial class MenuController
                 }
 
             default:
-                return Item.search(typeSelectItemMaterial(menuId, player), player.playerData.getInventoryOrCreate(getTypeInventorySelect(menuId)));
+                return Item.search(typeSelectItemMaterial(menuId, player), player.playerData.getInventoryOrCreate(getTypeInventorySelect(menuId)), filter);
         }
         return new CopyOnWriteArrayList<Item>();
     }

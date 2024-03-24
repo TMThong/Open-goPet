@@ -86,6 +86,20 @@ public partial class MenuController
 
                 }
                 break;
+            case MENU_SHOW_ALL_TATTO:
+                {
+                    JArrayList<MenuItemInfo> menuInfos = new();
+
+                    foreach (var tattoKeyPair in GopetManager.tattos)
+                    {
+                        var tatto = tattoKeyPair.Value;
+                        MenuItemInfo menuItemInfo = new MenuItemInfo(tatto.name, $"{tatto.atk} (atk) {tatto.def}(def) {tatto.hp}(hp) {tatto.mp}(mp)", tatto.iconPath, false);
+                        menuInfos.add(menuItemInfo);
+                    }
+
+                    player.controller.showMenuItem(menuId, TYPE_MENU_NONE, "Tất cả xăm", menuInfos);
+                    break;
+                }
             case MENU_SHOW_ALL_ITEM:
                 {
                     JArrayList<MenuItemInfo> menuInfos = new();
@@ -376,8 +390,21 @@ public partial class MenuController
             case MENU_SELECT_GEM_UP_TIER:
             case MENU_MERGE_PART_ITEM:
             case MENU_SELECT_GEM_TO_INLAY:
+            case MENU_MERGE_WING:
                 {
-                    CopyOnWriteArrayList<Item> listItems = getItemByMenuId(menuId, player);
+                    CopyOnWriteArrayList<Item> listItems = null;
+                    switch(menuId)
+                    {
+                        case MENU_MERGE_PART_ITEM:
+                            listItems = getItemByMenuId(menuId, player, (item) => GopetManager.itemTemplate[item.Template.itemOptionValue[0]].type != GopetManager.WING_ITEM);
+                            break;
+                        case MENU_MERGE_WING:
+                            listItems = getItemByMenuId(menuId, player, (item) => GopetManager.itemTemplate[item.Template.itemOptionValue[0]].type == GopetManager.WING_ITEM);
+                            break;
+                        default:
+                            listItems = getItemByMenuId(menuId, player);
+                            break;
+                    }
                     JArrayList<MenuItemInfo> menuItemMaterial1Infos = new();
                     foreach (Item item in listItems)
                     {

@@ -2967,7 +2967,7 @@ public class GameController
                                 {
                                     gym_up_level += 3;
                                 }
-                                gym_add += Utilities.round((petActive.lvl + petPassive.lvl) / 4);
+                                gym_add += Utilities.round((petActive.lvl + petPassive.lvl) / 2);
                                 Pet oldPet = petActive;
                                 petActive = new Pet(petTier.getPetTemplateId2());
                                 player.playerData.pets.add(petActive);
@@ -3583,7 +3583,7 @@ public class GameController
 
                 case GopetManager.GIFT_ENERGY:
                     {
-                        player.playerData.star += giftInfo[1];
+                        player.addStar(giftInfo[1]);
                         popups.add(new Popup(Utilities.FormatNumber(giftInfo[1]) + " năng lượng"));
                     }
                     break;

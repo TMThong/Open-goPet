@@ -22,7 +22,7 @@ namespace Gopet.MServer
             {
                 isRunning = true;
                 serverSc.Start();
-                for (global::System.Int32 i = 0; i < 20; i++)
+                for (global::System.Int32 i = 0; i < 40; i++)
                 {
                     serverSc.BeginAcceptTcpClient(new AsyncCallback(AcceptCallback), serverSc);
                 }
@@ -35,7 +35,6 @@ namespace Gopet.MServer
             TcpListener listener = (TcpListener)ar.AsyncState;
             try
             {
-                if (!listener.Server.IsBound) return;
                 TcpClient client = listener.EndAcceptTcpClient(ar);
                 Session session = new Session(client.Client);
                 session.setHandler(new Player(session));

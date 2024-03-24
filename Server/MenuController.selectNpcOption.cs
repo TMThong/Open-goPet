@@ -24,7 +24,7 @@ public partial class MenuController
                 break;
             case OP_MERGE_WING:
                 {
-                    player.controller.testMsg100();
+                    sendMenu(MENU_MERGE_WING, player);
                     break;
                 }
             case OP_SHOP_PET:
@@ -42,9 +42,9 @@ public partial class MenuController
                     }
                     else
                     {
-                        if(player.checkStar(5))
+                        if(player.checkStar(1))
                         {
-                            player.MineStar(5);
+                            player.MineStar(1);
                             TaskTemplate[] taskTemplates = GopetManager.taskTemplateList.Where(p => p.taskId >= 38 && p.taskId <= 49).ToArray();
                             TaskTemplate taskTemplate = Utilities.RandomArray(taskTemplates);
                             TaskData taskData = new TaskData(taskTemplate);
@@ -455,6 +455,9 @@ public partial class MenuController
                 break;
             case OP_SELECT_PET_DEF_LEAGUE:
                 sendMenu(MENU_SELECT_PET_TO_DEF_LEAGUE, player);
+                break;
+            case OP_SHOW_ALL_TATTO:
+                sendMenu(MENU_SHOW_ALL_TATTO, player);
                 break;
             default:
                 player.redDialog("Tính năng đang được xây dựng"); break;

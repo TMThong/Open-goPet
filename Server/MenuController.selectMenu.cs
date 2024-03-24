@@ -89,7 +89,7 @@ public partial class MenuController
             case MENU_SELECT_TYPE_PAYMENT_TO_ARENA_JOURNALISM:
                 {
 
-                    if(ArenaEvent.Instance.IdPlayerJoin.Contains(player.playerData.user_id))
+                    if (ArenaEvent.Instance.IdPlayerJoin.Contains(player.playerData.user_id))
                     {
                         player.okDialog("Bạn đã báo danh rồi!");
                         return;
@@ -101,7 +101,7 @@ public partial class MenuController
 
                         if (ArenaEvent.Instance.CanJournalism)
                         {
-                            addMoney((sbyte)index,- (index == 0 ? GopetManager.PRICE_GOLD_ARENA_JOURNALISM : GopetManager.PRICE_COIN_ARENA_JOURNALISM), player);
+                            addMoney((sbyte)index, -(index == 0 ? GopetManager.PRICE_GOLD_ARENA_JOURNALISM : GopetManager.PRICE_COIN_ARENA_JOURNALISM), player);
                             ArenaEvent.Instance.IdPlayerJoin.Add(player.playerData.user_id);
                             player.okDialog("Bạn đã báo danh thành công. Nếu rời khỏi Đấu trường xem như bạn bỏ cuộc!");
                         }
@@ -241,7 +241,7 @@ public partial class MenuController
                                     }
                                     break;
                                 case 2:
-                                    if(!taskData.CanCancelTask)
+                                    if (!taskData.CanCancelTask)
                                     {
                                         player.redDialog("Bạn không thể hủy nhiệm vụ này!!!");
                                         return;
@@ -760,7 +760,20 @@ public partial class MenuController
             case MENU_SELECT_ITEM_REMOVE_TATTO:
             case MENU_SELECT_ITEM_SUPPORT_PET:
             case MENU_MERGE_PART_ITEM:
-                CopyOnWriteArrayList<Item> listItems = getItemByMenuId(menuId, player);
+            case MENU_MERGE_WING:
+                CopyOnWriteArrayList<Item> listItems = null;
+                switch (menuId)
+                {
+                    case MENU_MERGE_PART_ITEM:
+                        listItems = getItemByMenuId(menuId, player, (item) => GopetManager.itemTemplate[item.Template.itemOptionValue[0]].type != GopetManager.WING_ITEM);
+                        break;
+                    case MENU_MERGE_WING:
+                        listItems = getItemByMenuId(menuId, player, (item) => GopetManager.itemTemplate[item.Template.itemOptionValue[0]].type == GopetManager.WING_ITEM);
+                        break;
+                    default:
+                        listItems = getItemByMenuId(menuId, player);
+                        break;
+                }
                 if (index >= 0 && listItems.Count > index)
                 {
                     Item itemSelect = listItems.get(index);
@@ -863,7 +876,7 @@ public partial class MenuController
                                 player.controller.selectGemUpTier(itemSelect.itemId, itemSelect.getTemp().getIconPath(), itemSelect.getEquipName(), 1, itemSelect.lvl);
                             }
                             break;
-
+                        case MENU_MERGE_WING:
                         case MENU_MERGE_PART_ITEM:
                             {
                                 int[] optionValue = itemSelect.getTemp().getOptionValue();
@@ -1092,10 +1105,41 @@ public partial class MenuController
                                 }
                                 break;
                             }
+                        /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/
                         case GopetManager.ITEM_PET_PACKAGE:
                             {
                                 player.controller.objectPerformed[OBJKEY_ITEM_PACKAGE_PET_TO_USE] = itemSelect;
                                 sendMenu(MENU_CHOOSE_PET_FROM_PACKAGE_PET, player);
+                                return;
+                            }
+
+                        /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/
+                        case GopetManager.ITEM_PART_PET:
+                            {
+                                if (itemSelect.Template.itemOptionValue.Length == 2)
+                                {
+                                    Pet pet = new Pet(itemSelect.Template.itemOptionValue[0]);
+                                    player.okDialog(pet.getNameWithoutStar() + ": " + pet.getDesc());
+                                    pet = null;
+                                }
+                                else
+                                {
+                                    player.redDialog("Vật phẩm lỗi");
+                                }
+                                return;
+                            }
+                        /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/
+                        case GopetManager.ITEM_PART_ITEM:
+                            {
+                                if (itemSelect.Template.itemOptionValue.Length == 2)
+                                {
+                                    ItemTemplate itemTemplate = GopetManager.itemTemplate[itemSelect.Template.itemOptionValue[0]];
+                                    player.okDialog($"{itemTemplate.name} {itemTemplate.description} ngẫu nhiên chỉ số từ {itemTemplate.getAtk()} {itemTemplate.getDef()} {itemTemplate.getHp()} {itemTemplate.getMp()}");
+                                }
+                                else
+                                {
+                                    player.redDialog("Vật phẩm lỗi");
+                                }
                                 return;
                             }
                         /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/

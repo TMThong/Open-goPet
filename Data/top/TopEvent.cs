@@ -48,7 +48,7 @@ namespace Gopet.Data.top
             topData.name = player.playerData.name;
             topData.imgPath = player.playerData.avatarPath;
             topData.title = topData.name;
-            topData.desc = $"Hạng chưa có : Bạn đang có {Utilities.FormatNumber(player.playerData.coin)} (ngoc)";
+            topData.desc = $"Hạng chưa có : Bạn đang có {Utilities.FormatNumber(player.playerData.EventPoint)} điểm sự kiện";
             return topData;
         }
 

@@ -220,7 +220,7 @@ namespace Gopet.Data.GopetItem
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
-            int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2) ;
+            int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2);
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_DEF)));
         }
 
@@ -232,7 +232,7 @@ namespace Gopet.Data.GopetItem
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
-            int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2) ;
+            int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2);
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_ATK)));
         }
 
@@ -245,7 +245,7 @@ namespace Gopet.Data.GopetItem
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
-            int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2) ;
+            int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2);
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_HP)));
         }
 
@@ -258,25 +258,33 @@ namespace Gopet.Data.GopetItem
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
-            int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2) ;
+            int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2);
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_MP)));
         }
 
 
-        public static CopyOnWriteArrayList<Item> search(int type, CopyOnWriteArrayList<Item> listNeedSearchItems)
+        public static CopyOnWriteArrayList<Item> search(int type, CopyOnWriteArrayList<Item> listNeedSearchItems, Func<Item, bool> filter = null)
         {
             CopyOnWriteArrayList<Item> arrayList = new();
             foreach (Item item in listNeedSearchItems)
             {
                 if (item.getTemp().getType() == type)
                 {
+                    if(filter != null)
+                    {
+                        if(!filter.Invoke(item))
+                        {
+                            continue;
+                        }
+                    }
+
                     arrayList.add(item);
                 }
             }
             return arrayList;
         }
 
-        public static CopyOnWriteArrayList<Item> search(JArrayList<int> types, CopyOnWriteArrayList<Item> listNeedSearchItems)
+        public static CopyOnWriteArrayList<Item> search(JArrayList<int> types, CopyOnWriteArrayList<Item> listNeedSearchItems, Func<Item, bool> filter = null)
         {
 
             if (types == null) return listNeedSearchItems;
@@ -284,8 +292,16 @@ namespace Gopet.Data.GopetItem
             CopyOnWriteArrayList<Item> arrayList = new();
             foreach (Item item in listNeedSearchItems)
             {
+                
                 if (types.Contains(item.getTemp().getType()))
                 {
+                    if (filter != null)
+                    {
+                        if (!filter.Invoke(item))
+                        {
+                            continue;
+                        }
+                    }
                     arrayList.add(item);
                 }
             }
@@ -421,7 +437,7 @@ namespace Gopet.Data.GopetItem
 
         public ItemBattleOptionBuff[] ExtractBattleOptions()
         {
-            if(this.Template.itemOption.Contains(ItemInfo.OptionType.OPTION_BATTLE))
+            if (this.Template.itemOption.Contains(ItemInfo.OptionType.OPTION_BATTLE))
             {
                 int flag = 0;
                 ItemBattleOptionBuff[] itemBattleOptionBuffs = new ItemBattleOptionBuff[this.Template.itemOption.Where(p => p == ItemInfo.OptionType.OPTION_BATTLE).Count()];
@@ -429,7 +445,7 @@ namespace Gopet.Data.GopetItem
                 {
                     if (this.Template.itemOption[i] == ItemInfo.OptionType.OPTION_BATTLE)
                     {
-                        itemBattleOptionBuffs[flag] = new ItemBattleOptionBuff(this.optionValue[i], this.optionValue[i + 2], this.optionValue[i + 3] == 1, this.optionValue[i + 1] > 100 ? int.MaxValue - 10: this.optionValue[i + 1]);
+                        itemBattleOptionBuffs[flag] = new ItemBattleOptionBuff(this.optionValue[i], this.optionValue[i + 2], this.optionValue[i + 3] == 1, this.optionValue[i + 1] > 100 ? int.MaxValue - 10 : this.optionValue[i + 1]);
                         i += 3;
                     }
                     else
