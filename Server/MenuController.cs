@@ -124,6 +124,7 @@ public partial class MenuController
         new AdminItemInfo("Lấy vật phẩm", "Lấy vật phẩm trong hành trang của người chỉ định và đem nó vào hành trang của bạn", "items/4000766.png"),
         new AdminItemInfo("Chuyển vật phẩm", "Chuyển vật phẩm trong hành trang của bạn đế người chỉ định", "items/4000766.png"),
         new AdminItemInfo("Dọn hành trang trang bị", "Xóa tất cả vật phẩm là trang bị", "items/4000766.png"),
+        new AdminItemInfo("Dịch chuyển tất cả người chơi", "Dịch chuyển tất cả người chơi trên server vào chỗ bạn đứng", "items/4000766.png"),
     };
 
     public const int ADMIN_INDEX_SET_PET_INFO = 0;
@@ -147,6 +148,7 @@ public partial class MenuController
     public const int ADMIN_INDEX_GET_ITEM_FROM_PLAYER = 18;
     public const int ADMIN_INDEX_GIVE_ITEM_TO_PLAYER = 19;
     public const int ADMIN_INDEX_DELETE_ALL_EQUIP_PET_ITEM = 20;
+    public const int ADMIN_INDEX_TELEPORT_ALL_PLAYER_TO_ADMIN = 21;
 
     /**
      * Danh sách nhận pet miễn phí

@@ -754,9 +754,7 @@ namespace Gopet.Battle
                     else
                     {
                         Boss boss = (Boss)mob;
-
-
-                        if (Math.Abs(boss.Template.lvl - activePet.lvl) > 10 && boss.Template.typeBoss == 0)
+                        if (Math.Abs(boss.Template.lvl - activePet.lvl) > 20 && boss.Template.typeBoss == 0)
                         {
                             activePlayer.okDialog("Không nhận được gì cả do sự chênh lệch cấp độ đã làm quái không rơi món gì cả");
                         }

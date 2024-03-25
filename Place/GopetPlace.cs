@@ -65,11 +65,11 @@ public class GopetPlace : Place
         sendPetBattleList(player);
         sendWing(player);
         sendSkin(player);
-        sendClan(player, true);
+        sendClan(player, true);/*
         if (this.map.mapID >= 26 && !player.playerData.isOnSky)
         {
             player.user.ban(UserData.BAN_TIME, "Xăm nhập bất hợp pháp", Utilities.CurrentTimeMillis + (1000L * 60 * 30));
-        }
+        }*/
     }
 
 

@@ -1447,6 +1447,18 @@ public partial class MenuController
                                 player.okDialog("Dọn thành công");
                                 break;
                             }
+                        case ADMIN_INDEX_TELEPORT_ALL_PLAYER_TO_ADMIN:
+                            {
+                                foreach(var playerOnline in PlayerManager.players)
+                                {
+                                    if(playerOnline != player)
+                                    {
+                                        place.add(playerOnline);
+                                        playerOnline.okDialog($"{player.playerData.name} đã dịch chuyển bạn đến đấy!");
+                                    }
+                                }
+                                break;
+                            }
                     }
                 }
                 break;
