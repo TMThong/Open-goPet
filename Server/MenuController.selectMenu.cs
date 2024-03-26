@@ -1212,11 +1212,15 @@ public partial class MenuController
                     if (index >= 0 && index < player.playerData.pets.Count)
                     {
                         Pet pet = player.playerData.pets.get(index);
+                        if(pet.Expire != null)
+                        {
+                            player.redDialog("Bạn không thể treo pet dùng thử");
+                            return;
+                        }
                         player.controller.objectPerformed.put(OBJKEY_SELECT_SELL_ITEM, pet);
                         player.controller.objectPerformed.put(OBJKEY_MENU_OF_KIOSK, menuId);
                         player.controller.showInputDialog(INPUT_DIALOG_KIOSK, "Định giá", new String[] { "  " }, new sbyte[] { 0 });
                     }
-
                 }
                 break;
             case MENU_KIOSK_GEM:
@@ -1246,7 +1250,6 @@ public partial class MenuController
                         kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_OTHER);
                         break;
                     case MENU_KIOSK_PET:
-                        kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_PET);
                         kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_PET);
                         break;
                 }

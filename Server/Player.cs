@@ -235,6 +235,15 @@ Thread.Sleep(1000);
     {
         if (playerData.petSelected == null) return;
 
+        if (playerData.petSelected.Expire != null)
+        {
+            if(playerData.petSelected.Expire < DateTime.Now)
+            {
+                controller.unfollowPet(playerData.petSelected);
+                playerData.petSelected = null;
+                Popup("Pet vừa hết thời gian dùng thử");
+            }
+        }
 
         if (playerData.petSelected.petDieByPK && Utilities.CurrentTimeMillis > playerData.petSelected.TimeDieZ)
         {

@@ -16,7 +16,7 @@ public class Pet : GameObject
     public int petId;
     public int star = 0;
 
-
+    public DateTime? Expire { get; set; } = null;
 
     public long exp = 0;
 
@@ -479,6 +479,6 @@ public class Pet : GameObject
         }
         String desc = Utilities.Format("(str) %s (int) %s (agi) %s", getStr(), getInt(), getAgi());
 
-        return desc + Utilities.Format("  clanLvl: %s , ", lvl) + String.Join(" , ", infoStrings) + String.Join(" , ", tattooStrings);
+        return desc + Utilities.Format("  lvl: %s , ", lvl) + String.Join(" , ", infoStrings) + String.Join(" , ", tattooStrings);
     }
 }

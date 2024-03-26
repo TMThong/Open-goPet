@@ -27,8 +27,8 @@ public partial class MenuController
             case MENU_SELECT_PET_UPGRADE_ACTIVE:
             case MENU_SELECT_PET_UPGRADE_PASSIVE:
                 {
+                    player.controller.removePetTrial();
                     CopyOnWriteArrayList<Pet> listPet = (CopyOnWriteArrayList<Pet>)player.playerData.pets.clone();
-
                     JArrayList<MenuItemInfo> petItemInfos = new();
                     int i = 0;
                     if (menuId == MENU_PET_INVENTORY)

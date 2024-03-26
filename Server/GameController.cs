@@ -2921,6 +2921,11 @@ public class GameController
     {
         Pet petActive = selectPetByItemId(petId1);
         Pet petPassive = selectPetByItemId(petId2);
+        if(petActive.Expire != null || petPassive.Expire != null)
+        {
+            player.redDialog("Không thể tiến hóa với pet dùng thử");
+            return;
+        }
         PetTier petTier = GopetManager.petTier.get(petActive.petIdTemplate);
         if (name.Length < 30 && name.Length >= 5)
         {
@@ -4530,6 +4535,15 @@ public class GameController
         player.session.sendMessage(m);
     }
 
-
+    public void removePetTrial()
+    {
+        foreach(var pet in player.playerData.pets.Where(p=> p.Expire != null))
+        {
+            if(pet.Expire < DateTime.Now)
+            {
+                player.playerData.pets.Remove(pet);
+            }
+        }
+    }
 }
 
