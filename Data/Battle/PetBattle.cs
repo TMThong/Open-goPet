@@ -996,7 +996,7 @@ namespace Gopet.Battle
                                 }
                                 else
                                 {
-                                    mpdelta = Utilities.round(Utilities.GetValueFromPercent(mob.mp, ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) / 100f) + Utilities.GetValueFromPercent(damageInfo.getDamge(), ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA_BY_ATK) / 100f));
+                                    mpdelta = Utilities.round(Utilities.GetValueFromPercent(nonPet.mp, ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) / 100f) + Utilities.GetValueFromPercent(damageInfo.getDamge(), ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA_BY_ATK) / 100f));
                                     if (nonPet.mp - mpdelta > 0)
                                     {
                                         nonPet.mp -= mpdelta;
@@ -1141,21 +1141,21 @@ namespace Gopet.Battle
 
             if (nonPet != null)
             {
-                int def = nonPet.getDef() + ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.DEF);
+                int def = nonPet.getDef() + ItemInfo.getValueById(nonPetBattleInfo.getBuff(), ItemInfo.Type.DEF);
 
-                if (def > 0 && ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.DEF_PER) > 0)
+                if (def > 0 && ItemInfo.getValueById(nonPetBattleInfo.getBuff(), ItemInfo.Type.DEF_PER) > 0)
                 {
-                    def += (int)Utilities.GetValueFromPercent(def, ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.DEF_PER) / 100f);
+                    def += (int)Utilities.GetValueFromPercent(def, ItemInfo.getValueById(nonPetBattleInfo.getBuff(), ItemInfo.Type.DEF_PER) / 100f);
                 }
 
                 if (def > 0) sum -= def;
 
-                if (ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.PHANDOAN_2_TURN) > 0)
+                if (ItemInfo.getValueById(nonPetBattleInfo.getBuff(), ItemInfo.Type.PHANDOAN_2_TURN) > 0)
                 {
-                    float damagePer = ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.PHANDOAN_2_TURN) / 100f;
+                    float damagePer = ItemInfo.getValueById(nonPetBattleInfo.getBuff(), ItemInfo.Type.PHANDOAN_2_TURN) / 100f;
                     int valueDg = Utilities.round(Utilities.GetValueFromPercent(sum, damagePer));
                     sum -= valueDg;
-                    getNonUserPetBattleInfo().addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.DAMAGE_PHANDOAN, valueDg) }, 2));
+                    petBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.DAMAGE_PHANDOAN, valueDg) }, 2));
                 }
             }
             else
@@ -1479,7 +1479,7 @@ namespace Gopet.Battle
                     if (pet != null)
                     {
                         int damage = (int)Utilities.GetValueFromPercent(ActiveObject.maxHp, damagePer);
-                        getPet().subHp(damage);
+                        getNonPet().subHp(damage);
                         turnEffects.add(new TurnEffect(TurnEffect.NONE, getFocus(), PetSkill.GetToxicSkill(getNonPet()), -damage, 0));
                     }
                 }

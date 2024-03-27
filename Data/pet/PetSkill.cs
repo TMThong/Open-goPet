@@ -6,7 +6,7 @@ public class PetSkill {
 
     private const int TOXIC = 107;
     private const int TOXIC_SKY = 119;
-    private const int PHANDOAN = 110;
+    public const int PHANDOAN = 110;
     private const int PHANDON_SKY = 118;
 
     public int skillID;
