@@ -14,6 +14,7 @@ using static MenuController;
 using Microsoft.AspNetCore.Mvc;
 using Dapper;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 [NonController]
 public class GameController
@@ -837,7 +838,10 @@ public class GameController
             case GopetCMD.UP_TIER_ITEM:
                 upTierItem(message.readInt(), message.readInt(), false);
                 break;
-            case GopetCMD.PRICE_UP_TIER_PET:
+            case GopetCMD.INFO_UP_TIER_PET:
+                showInfoPetUpTier(message.readInt(), message.readInt());
+                break;
+            case GopetCMD.PRICE_UPGRADE_PET:
                 setPricePetUpgrade(int.MaxValue, GopetManager.PRICE_UP_TIER_PET);
                 break;
             case GopetCMD.PET_UP_TIER:
@@ -904,6 +908,67 @@ public class GameController
                 break;
         }
     }
+
+    private void showInfoPetUpTier(int petId1, int petId2)
+    {
+        Pet petActive = selectPetByItemId(petId1);
+        Pet petPassive = selectPetByItemId(petId2);
+        if (petActive.Expire != null || petPassive.Expire != null)
+        {
+            showDescPetUpTierUI("Không thể tiến hóa với pet dùng thử", null);
+            return;
+        }
+        PetTier petTier = GopetManager.petTier.get(petActive.petIdTemplate);
+        if(petTier == null || petTier.petTemplateIdNeed != petPassive.Template.petId)
+        {
+            showDescPetUpTierUI("2 pet này không thể kết hợp tiến hóa", null);
+        }
+        else
+        {
+            int gym_add = 0;
+            int gym_up_level = 0;
+            if (petActive.star + petPassive.star >= 10)
+            {
+                gym_up_level += 5;
+            }
+            else if (petActive.star + petPassive.star >= 8)
+            {
+                gym_up_level += 4;
+            }
+            else
+            {
+                gym_up_level += 3;
+            }
+            gym_add += Utilities.round((petActive.lvl + petPassive.lvl) / 2);
+            Pet oldPet = petActive;
+            petActive = new Pet(petTier.getPetTemplateId2());
+            petActive._int = oldPet._int + 10;
+            petActive.agi = oldPet.agi + 10;
+            petActive.str = oldPet.str + 10;
+            petActive.tiemnang_point = gym_add;
+            petActive.pointTiemNangLvl = gym_up_level;
+            showDescPetUpTierUI(petActive.Template.name, new string[] { petActive.Template.name, $"{petActive.str}(str) {petActive.agi}(agi) {petActive._int}(int)" , $"Điểm tiềm năng {petActive.pointTiemNangLvl}"});
+        }
+    }
+
+
+    public void showDescPetUpTierUI(string text, string[] line_desc)
+    {
+        if (line_desc == null)
+            line_desc = new string[] { text };
+
+        if (line_desc.Length >= sbyte.MaxValue) throw new UnsupportedOperationException("Chi duoc dung 7bit thoi");
+
+        Message m = messagePetSerive(GopetCMD.INFO_UP_TIER_PET);
+        m.putUTF(text);
+        m.putsbyte(line_desc.Length);
+        for (int i = 0; i < line_desc.Length; i++)
+        {
+            m.putUTF(line_desc[i]);
+        }
+        player.session.sendMessage(m);
+    }
+
 
     public Item findWingItemWantEnchant()
     {
@@ -2537,7 +2602,7 @@ public class GameController
                         bool destroyItem = !isSuccec && isGem ? (itemEuip.lvl > 8) : (itemEuip.lvl == 8 || itemEuip.lvl == 9);
                         if (isSuccec)
                         {
-                            if(!isGem)
+                            if (!isGem)
                             {
                                 itemEuip.AddEnchantInfo();
                             }
@@ -2921,7 +2986,7 @@ public class GameController
     {
         Pet petActive = selectPetByItemId(petId1);
         Pet petPassive = selectPetByItemId(petId2);
-        if(petActive.Expire != null || petPassive.Expire != null)
+        if (petActive.Expire != null || petPassive.Expire != null)
         {
             player.redDialog("Không thể tiến hóa với pet dùng thử");
             return;
@@ -2975,7 +3040,6 @@ public class GameController
                                 gym_add += Utilities.round((petActive.lvl + petPassive.lvl) / 2);
                                 Pet oldPet = petActive;
                                 petActive = new Pet(petTier.getPetTemplateId2());
-                                player.playerData.pets.add(petActive);
                                 petActive._int = oldPet._int + 10;
                                 petActive.agi = oldPet.agi + 10;
                                 petActive.str = oldPet.str + 10;
@@ -2986,6 +3050,7 @@ public class GameController
                                 petActive.isUpTier = true;
                                 petActive.wasSell = oldPet.wasSell;
                                 petActive.pointTiemNangLvl = gym_up_level;
+                                player.playerData.pets.add(petActive);
                                 player.okDialog(Utilities.Format("Chức mừng bạn đã tiến hóa thành công %s và thú cưng của bạn được cộng %s điểm gym", petActive.getNameWithStar(), gym_add));
                                 HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Tiến hóa pet %s thành công", petActive.getNameWithoutStar())).setObj(petActive));
                                 Message message = messagePetSerive(GopetCMD.PET_UP_TIER);
@@ -4537,9 +4602,9 @@ public class GameController
 
     public void removePetTrial()
     {
-        foreach(var pet in player.playerData.pets.Where(p=> p.Expire != null))
+        foreach (var pet in player.playerData.pets.Where(p => p.Expire != null))
         {
-            if(pet.Expire < DateTime.Now)
+            if (pet.Expire < DateTime.Now)
             {
                 player.playerData.pets.Remove(pet);
             }

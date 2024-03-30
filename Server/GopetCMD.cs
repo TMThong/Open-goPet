@@ -106,7 +106,7 @@ public class GopetCMD {
     public const sbyte UP_TIER_ITEM = 49;
     public const sbyte PET_UNEQUIP_GEM_ITEM_INFO = 75;
     public const sbyte NORMAL_INVENTORY = 30;
-    public const sbyte PRICE_UP_TIER_PET = 70;
+    public const sbyte INFO_UP_TIER_PET = 70;
     public const sbyte PET_UP_TIER = 71;
     public const sbyte SELECT_KIOSK_ITEM = 85;
     public const sbyte TYPE_DIALOG_INPUT = 7;
