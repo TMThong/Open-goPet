@@ -42,7 +42,7 @@ public partial class MenuController
                     }
                     else
                     {
-                        if(player.checkStar(1))
+                        if (player.checkStar(1))
                         {
                             player.MineStar(1);
                             TaskTemplate[] taskTemplates = GopetManager.taskTemplateList.Where(p => p.taskId >= 38 && p.taskId <= 49).ToArray();
@@ -458,6 +458,9 @@ public partial class MenuController
                 break;
             case OP_SHOW_ALL_TATTO:
                 sendMenu(MENU_SHOW_ALL_TATTO, player);
+                break;
+            case OP_SHOW_ME_ACHIEVEMENT:
+                sendMenu(MENU_ME_SHOW_ACHIEVEMENT, player);
                 break;
             default:
                 player.redDialog("Tính năng đang được xây dựng"); break;

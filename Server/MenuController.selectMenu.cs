@@ -14,6 +14,7 @@ using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Gopet.Data.top;
 using Gopet.Data.Event;
+using Gopet.Data.user;
 
 public partial class MenuController
 {
@@ -1212,7 +1213,7 @@ public partial class MenuController
                     if (index >= 0 && index < player.playerData.pets.Count)
                     {
                         Pet pet = player.playerData.pets.get(index);
-                        if(pet.Expire != null)
+                        if (pet.Expire != null)
                         {
                             player.redDialog("Bạn không thể treo pet dùng thử");
                             return;
@@ -1452,9 +1453,9 @@ public partial class MenuController
                             }
                         case ADMIN_INDEX_TELEPORT_ALL_PLAYER_TO_ADMIN:
                             {
-                                foreach(var playerOnline in PlayerManager.players)
+                                foreach (var playerOnline in PlayerManager.players)
                                 {
-                                    if(playerOnline != player)
+                                    if (playerOnline != player)
                                     {
                                         place.add(playerOnline);
                                         playerOnline.okDialog($"{player.playerData.name} đã dịch chuyển bạn đến đấy!");
@@ -1462,9 +1463,33 @@ public partial class MenuController
                                 }
                                 break;
                             }
+                        case ADMIN_INDEX_ADD_ACHIEVEMENT:
+                            sendMenu(MENU_ADMIN_SHOW_ALL_ACHIEVEMENT, player);
+                            break;
                     }
                 }
                 break;
+            case MENU_ADMIN_SHOW_ALL_ACHIEVEMENT:
+                {
+                    if (player.checkIsAdmin())
+                    {
+                        if(index >= 0 && index < GopetManager.achievements.Count())
+                        {
+                            var ach = GopetManager.achievements.ElementAt(index);
+                            if(player.playerData.achievements.Where(p => p.IdTemplate == ach.IdTemplate).Any())
+                            {
+                                player.redDialog("Bạn có danh hiệu này rồi");
+                            }
+                            else
+                            {
+                                Achievement achievement = new Achievement(ach.IdTemplate);
+                                player.playerData.achievements.add(achievement);
+                                player.okDialog($"Chúc mừng bạn nhận được danh hiệu {ach.Name}");
+                            }
+                        }
+                    }
+                    break;
+                }
             case MENU_ADMIN_MAP:
                 if (player.checkIsAdmin())
                 {

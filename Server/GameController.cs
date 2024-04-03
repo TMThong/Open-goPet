@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Dapper;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using Gopet.Data.dialog;
 
 [NonController]
 public class GameController
@@ -919,7 +920,7 @@ public class GameController
             return;
         }
         PetTier petTier = GopetManager.petTier.get(petActive.petIdTemplate);
-        if(petTier == null || petTier.petTemplateIdNeed != petPassive.Template.petId)
+        if (petTier == null || petTier.petTemplateIdNeed != petPassive.Template.petId)
         {
             showDescPetUpTierUI("2 pet này không thể kết hợp tiến hóa", null);
         }
@@ -947,7 +948,7 @@ public class GameController
             petActive.str = oldPet.str + 10;
             petActive.tiemnang_point = gym_add;
             petActive.pointTiemNangLvl = gym_up_level;
-            showDescPetUpTierUI(petActive.Template.name, new string[] { petActive.Template.name, $"{petActive.str}(str) {petActive.agi}(agi) {petActive._int}(int)" , $"Điểm tiềm năng {petActive.pointTiemNangLvl}"});
+            showDescPetUpTierUI(petActive.Template.name, new string[] { petActive.Template.name, $"{petActive.str}(str) {petActive.agi}(agi) {petActive._int}(int)", $"Điểm tiềm năng {petActive.pointTiemNangLvl}" });
         }
     }
 
@@ -4563,6 +4564,52 @@ public class GameController
             }
         }
     }
+
+    public void showAnimationMenu(int menuId, AnimationMenu animationMenu)
+    {
+        Message m = messagePetSerive(GopetCMD.ANIMATION_MENU);
+        m.putsbyte(0);
+        m.putInt(menuId);
+        m.putUTF(animationMenu.Title);
+        m.putInt(animationMenu.Elements.Count);
+        for (int i = 0; i < animationMenu.Elements.Count; i++)
+        {
+            var element = animationMenu.Elements[i];
+            m.putsbyte(element is AnimationMenu.Animation ? 1 : 0);
+            m.putbool(element.CanSelect);
+            if (element is AnimationMenu.Animation animation)
+            {
+                m.putUTF(animation.ImagePath);
+                m.putsbyte(animation.Type);
+                m.putbool(true);
+                m.putInt(animation.NumFrame);
+                m.putInt(2);
+            }
+            else if (element is AnimationMenu.Label label)
+            {
+                m.putUTF(label.Text);
+                m.putsbyte(label.Type);
+                m.putsbyte((int)label.Style);
+            }
+            else
+            {
+                throw new UnsupportedOperationException($"This type is null or is " + element.GetType().FullName);
+            }
+        }
+        m.putInt(animationMenu.Commands.Count);
+        for (int i = 0; i < animationMenu.Commands.Count; i++)
+        {
+            var cmd = animationMenu.Commands[i];
+            m.putInt(cmd.Id);
+            m.putsbyte(cmd.Type);
+            m.putUTF(cmd.Name);
+            m.putbool(cmd.IsCloseScreen);
+            m.putbool(cmd.IsRelpyServer);
+        }
+
+        player.session.sendMessage(m);
+    }
+
     public void testMsg100()
     {
         Message m = messagePetSerive(100);
@@ -4575,11 +4622,11 @@ public class GameController
             m.putsbyte(1);
             // hide
             m.putbool(true);
-            m.putUTF($"petFrame3/{i}.png");
-            m.putsbyte(1);
+            m.putUTF($"achievement/dsfg.png");
+            m.putsbyte(0);
             if (1 == 1)
             {
-                m.putbool(true);
+                m.putbool(false);
                 m.putInt(2);
                 m.putInt(2);
             }

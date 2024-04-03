@@ -102,6 +102,8 @@ public partial class MenuController
     public const int MENU_SELECT_TYPE_PAYMENT_TO_ARENA_JOURNALISM = 1052;
     public const int MENU_MERGE_WING = 1053;
     public const int MENU_SHOW_ALL_TATTO = 1054;
+    public const int MENU_ADMIN_SHOW_ALL_ACHIEVEMENT = 1055;
+    public const int MENU_ME_SHOW_ACHIEVEMENT = 1056;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -125,6 +127,7 @@ public partial class MenuController
         new AdminItemInfo("Chuyển vật phẩm", "Chuyển vật phẩm trong hành trang của bạn đế người chỉ định", "items/4000766.png"),
         new AdminItemInfo("Dọn hành trang trang bị", "Xóa tất cả vật phẩm là trang bị", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển tất cả người chơi", "Dịch chuyển tất cả người chơi trên server vào chỗ bạn đứng", "items/4000766.png"),
+        new AdminItemInfo("Thêm danh hiệu", "Thêm thanh hiệu vào nhân vật của bạn nhầm mục đích test", "items/4000766.png"),
     };
 
     public const int ADMIN_INDEX_SET_PET_INFO = 0;
@@ -149,6 +152,7 @@ public partial class MenuController
     public const int ADMIN_INDEX_GIVE_ITEM_TO_PLAYER = 19;
     public const int ADMIN_INDEX_DELETE_ALL_EQUIP_PET_ITEM = 20;
     public const int ADMIN_INDEX_TELEPORT_ALL_PLAYER_TO_ADMIN = 21;
+    public const int ADMIN_INDEX_ADD_ACHIEVEMENT = 22;
 
     /**
      * Danh sách nhận pet miễn phí
@@ -253,6 +257,7 @@ public partial class MenuController
     public const int OP_EVENT_TASK = 68;
     public const int OP_TOP_EVENT_TASK = 69;
     public const int OP_SHOW_ALL_TATTO = 70;
+    public const int OP_SHOW_ME_ACHIEVEMENT = 71;
     public const int OP_TRADE_GIFT_COIN = 1000000000;
     public const int OP_TRADE_GIFT_GOLD = 1000000001;
     /**

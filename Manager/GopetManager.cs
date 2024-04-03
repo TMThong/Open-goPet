@@ -795,6 +795,7 @@ public class GopetManager
             {
                 AchievementMAP[item.IdTemplate] = item;
             }
+            ServerMonitor.LogInfo("Tải dữ liệu danh hiệu từ cơ sở dữ liệu OK");
         }
 
         using (var connWeb = MYSQLManager.createWebMySqlConnection())

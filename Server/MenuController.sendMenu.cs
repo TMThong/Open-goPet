@@ -14,6 +14,7 @@ using Gopet.Data.item;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Gopet.Data.top;
+using Gopet.Data.dialog;
 
 public partial class MenuController
 {
@@ -100,6 +101,34 @@ public partial class MenuController
                     player.controller.showMenuItem(menuId, TYPE_MENU_NONE, "Tất cả xăm", menuInfos);
                     break;
                 }
+            case MENU_ADMIN_SHOW_ALL_ACHIEVEMENT:
+                {
+                    if (player.checkIsAdmin())
+                    {
+                        JArrayList<MenuItemInfo> menuInfos = new();
+                        foreach (var ach in GopetManager.achievements)
+                        {
+                            MenuItemInfo menuItemInfo = new MenuItemInfo(ach.Name, ach.Description, ach.IconPath, true);
+                            menuInfos.add(menuItemInfo);
+                        }
+                        player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Danh hiệu", menuInfos);
+                    }
+                    break;
+                }
+            case MENU_ME_SHOW_ACHIEVEMENT:
+                {
+                    AnimationMenu animationMenu = new AnimationMenu("Danh hiệu");
+                    animationMenu.Commands.Add(AnimationMenu.RightExitCMD);
+                    foreach(var ach in player.playerData.achievements)
+                    {
+                        animationMenu.AddLabel(0, $"Danh hiệu: {ach.Template.Name}", FontStyle.SMALL);
+                        animationMenu.AddImage(0, ach.Template.FramePath, ach.Template.FrameNum);
+                        animationMenu.AddLabel(0, $"Chỉ số: {ach.Template.Atk} (atk) {ach.Template.Def} (def) {ach.Template.Hp} (hp) {ach.Template.Mp} (mp)", FontStyle.SMALL);
+                        animationMenu.AddLabel(0, $"Hạn sử dụng: {(ach.Expire == null ? "Vĩnh viễn" : Utilities.ToDateString(ach.Expire.Value))}", FontStyle.SMALL);
+                    }
+                    player.controller.showAnimationMenu(menuId, animationMenu);
+                }
+                break;
             case MENU_SHOW_ALL_ITEM:
                 {
                     JArrayList<MenuItemInfo> menuInfos = new();

@@ -10,5 +10,23 @@ namespace Gopet.Data.user
     {
         public int IdTemplate { get; set; }
         public DateTime? Expire { get; set; }
+
+        public Achievement(int idTemplate)
+        {
+            IdTemplate = idTemplate;
+            if(this.Template.Expire > 0)
+            {
+                Expire = DateTime.Now;
+                Expire.Value.AddMilliseconds(this.Template.Expire);
+            }
+        }
+
+        public AchievementTemplate Template
+        {
+            get
+            {
+                return GopetManager.AchievementMAP[IdTemplate];
+            }
+        }
     }
 }
