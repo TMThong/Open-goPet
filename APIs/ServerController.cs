@@ -24,7 +24,7 @@ namespace Gopet.APIs
         /// Tắt máy chủ
         /// </summary>
         /// <returns>
-        /// Trả về thành công thì server chưa tắt :))
+        /// Trả về thành công thì server sẽ tắt sau 2 giây
         /// </returns>
         [HttpGet("shutdown")]
         public IActionResult ShutDown()

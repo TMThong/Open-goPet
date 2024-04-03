@@ -2,6 +2,7 @@
 using Dapper;
 using Gopet.Data.Collections;
 using Gopet.Data.GopetItem;
+using Gopet.Data.user;
 using Gopet.Data.User;
 using Gopet.Util;
 using MySql.Data.MySqlClient;
@@ -50,9 +51,11 @@ public class PlayerData
 
     public Pet PetDefLeague { get; set; }
 
-    public int EventPoint { get; set; } 
+    public int EventPoint { get; set; }
 
     public Dictionary<int, int> numUseEnergy { get; set; } = new();
+
+    public CopyOnWriteArrayList<Achievement> achievements { get; set; } = new();
 
     public PlayerData()
     {

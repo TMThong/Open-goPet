@@ -15,6 +15,7 @@ using Org.BouncyCastle.Asn1.Crmf;
 using Gopet.Adapter;
 using Gopet.Data.item;
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Gopet.Data.user;
 
 public class GopetManager
 {
@@ -268,6 +269,9 @@ public class GopetManager
     public static readonly List<ItemTemplate> itemTemplates = new JArrayList<ItemTemplate>();
 
     public static readonly Dictionary<int, string> itemAssetsIcon = new();
+
+    public static readonly Dictionary<int , AchievementTemplate> AchievementMAP = new();
+    public static IEnumerable<AchievementTemplate> achievements = new List<AchievementTemplate>();
 
     public static Gopet.Logging.Monitor ServerMonitor { get; } = new Gopet.Logging.Monitor("Máy chủ");
 
@@ -524,6 +528,7 @@ public class GopetManager
         SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<ClanMember>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<int>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<TaskData>>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<Achievement>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<Pet>());
         SqlMapper.AddTypeHandler(new JsonAdapter<Item>());
         SqlMapper.AddTypeHandler(new JsonAdapter<BuffExp>());
@@ -783,6 +788,12 @@ public class GopetManager
                 }
 
                 taskTemplateByNpcId.get(taskTemp.getFromNpc()).add(taskTemp);
+            }
+
+            achievements = conn.Query<AchievementTemplate>("SELECT * FROM `achievement`");
+            foreach (var item in achievements)
+            {
+                AchievementMAP[item.IdTemplate] = item;
             }
         }
 
