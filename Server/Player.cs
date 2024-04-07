@@ -13,6 +13,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Net.WebSockets;
 using static Gopet.Util.Utilities;
+using Gopet.Data.user;
 public class Player : IHandleMessage
 {
 
@@ -103,6 +104,9 @@ public class Player : IHandleMessage
                         break;
                     case GopetCMD.CHARGE_MONEY_INFO:
                         MenuController.sendMenu(MenuController.MENU_ATM, this);
+                        break;
+                    case GopetCMD.SERVER_LIST:
+                        showNormalServer();
                         break;
                     default:
                         controller.onMessage(ms);
@@ -237,7 +241,7 @@ Thread.Sleep(1000);
 
         if (playerData.petSelected.Expire != null)
         {
-            if(playerData.petSelected.Expire < DateTime.Now)
+            if (playerData.petSelected.Expire < DateTime.Now)
             {
                 controller.unfollowPet(playerData.petSelected);
                 playerData.petSelected = null;
@@ -728,7 +732,7 @@ Thread.Sleep(1000);
 
     public void itemError(string where = "")
     {
-        if(string.IsNullOrEmpty(where))
+        if (string.IsNullOrEmpty(where))
         {
             redDialog("Lỗi vật phẩm");
         }
@@ -736,5 +740,34 @@ Thread.Sleep(1000);
         {
             redDialog("Lỗi vật phẩm ở " + where);
         }
+    }
+
+
+    public void showNormalServer()
+    {
+        showListServer(GopetManager.ServerInfos.Where(p => !p.NeedAdmin).ToArray());
+    }
+
+    public void showListServer(ServerInfo[] serverInfos)
+    {
+        Message m = new Message(GopetCMD.SERVER_LIST);
+        m.putInt(serverInfos.Length);
+        for (int i = 0; i < serverInfos.Length; i++)
+        {
+            ServerInfo serverInfo = serverInfos[i];
+            m.putUTF(serverInfo.Name);
+            m.putUTF(serverInfo.IpAddress);
+            m.putInt(serverInfo.Port);
+            m.putInt(serverInfo.Port);
+            m.putInt(serverInfo.Port);
+        }
+
+        for (int i = 0; i < serverInfos.Length; i++)
+        {
+            ServerInfo serverInfo = serverInfos[i];
+            m.putbool(true);
+            m.putbool(true);
+        }
+        session.sendMessage(m);
     }
 }

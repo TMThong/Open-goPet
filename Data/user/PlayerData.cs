@@ -111,7 +111,8 @@ public class PlayerData
                             numUseEnergy = @numUseEnergy,
                             AccumulatedPoint = @AccumulatedPoint,
                             PetDefLeague = @PetDefLeague,
-                            EventPoint = @EventPoint
+                            EventPoint = @EventPoint,
+                            achievements = @achievements
                             WHERE ID = @ID", playerData);
     }
 

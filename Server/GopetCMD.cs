@@ -167,4 +167,5 @@ public class GopetCMD {
     public const sbyte ON_PET_INTERACT_POKE = 2;
     public const sbyte SHOW_EXP = 95;
     public const sbyte ANIMATION_MENU = 100;
+    public const sbyte SERVER_LIST = 64;
 }

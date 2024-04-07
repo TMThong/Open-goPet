@@ -202,7 +202,45 @@ namespace Gopet.Data.GopetItem
                     {
                         strExpire = "Hạn sử dụng đến : vĩnh viễn .";
                     }
-                    return strExpire + " Chỉ số áp dụng" + Utilities.Format(" +%s (atk) +%s (def) +%s (hp) +%s (mp)", getAtk(), getDef(), getHp(), getMp());
+
+                    string getSign(int value)
+                    {
+                        if (value > 0)
+                            return "+";
+                        return "-";
+                    }
+
+                    string wingBuffDesc = string.Empty;
+
+                    var extractBuff = this.ExtractBattleOptions();
+                    if (extractBuff.Length > 0)
+                    {
+                        foreach (var buff in extractBuff)
+                        {
+                            if (buff.OptionValue != 0)
+                            {
+                                switch (buff.OptionId)
+                                {
+                                    case ItemInfo.Type.BUFF_DAMGE:
+                                        wingBuffDesc += getSign(buff.OptionValue) + Utilities.round(buff.OptionValue / 100f) + "%(atk)";
+                                        break;
+                                    case ItemInfo.Type.DEF_PER:
+                                        wingBuffDesc += getSign(buff.OptionValue) + Utilities.round(buff.OptionValue / 100f) + "%(def)";
+                                        break;
+                                    case ItemInfo.Type.PHANDOAN_2_TURN:
+                                        wingBuffDesc +=  " phản lại" + Utilities.round(buff.OptionValue / 100f) + "% sát thương";
+                                        break;
+                                    case ItemInfo.Type.PER_STUN_1_TURN:
+                                        wingBuffDesc += Utilities.round(buff.OptionValue / 100f) + "% định thân";
+                                        break;
+                                    case ItemInfo.Type.RECOVERY_HP:
+                                        wingBuffDesc += " hút máu " + Utilities.round(buff.OptionValue / 100f) + "%";
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                    return strExpire + " Chỉ số áp dụng" + Utilities.Format(" +%s (atk) +%s (def) +%s (hp) +%s (mp) ", getAtk(), getDef(), getHp(), getMp()) + wingBuffDesc;
             }
 
             if (expire > 0)
@@ -271,9 +309,9 @@ namespace Gopet.Data.GopetItem
             {
                 if (item.getTemp().getType() == type)
                 {
-                    if(filter != null)
+                    if (filter != null)
                     {
-                        if(!filter.Invoke(item))
+                        if (!filter.Invoke(item))
                         {
                             continue;
                         }
@@ -293,7 +331,7 @@ namespace Gopet.Data.GopetItem
             CopyOnWriteArrayList<Item> arrayList = new();
             foreach (Item item in listNeedSearchItems)
             {
-                
+
                 if (types.Contains(item.getTemp().getType()))
                 {
                     if (filter != null)
@@ -454,6 +492,7 @@ namespace Gopet.Data.GopetItem
                         i++;
                     }
                 }
+                return itemBattleOptionBuffs;
             }
             return new ItemBattleOptionBuff[0];
         }

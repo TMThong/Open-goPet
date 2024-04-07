@@ -270,8 +270,10 @@ public class GopetManager
 
     public static readonly Dictionary<int, string> itemAssetsIcon = new();
 
-    public static readonly Dictionary<int , AchievementTemplate> AchievementMAP = new();
+    public static readonly Dictionary<int, AchievementTemplate> AchievementMAP = new();
     public static IEnumerable<AchievementTemplate> achievements = new List<AchievementTemplate>();
+    public static IEnumerable<ServerInfo> ServerInfos = new List<ServerInfo>();
+    public static List<int> ListPetMustntUpTier = new List<int>();
 
     public static Gopet.Logging.Monitor ServerMonitor { get; } = new Gopet.Logging.Monitor("Máy chủ");
 
@@ -440,7 +442,7 @@ public class GopetManager
     public static int[] ENCHANT_INFO = new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 20 };
     public static float[] PERCENT_ENCHANT = new float[] { 90f, 80f, 70f, 60f, 50f, 30f, 20f, 5f, -10f, -20f };
     public static float[] DISPLAY_PERCENT_ENCHANT = new float[] { 90f, 80f, 70f, 60f, 50f, 30f, 20f, 15f, 10f, 5f };
-    public static float[] PERCENT_UP_SKILL = new float[] { 90, 80, 60, 50, 40, 30, 10, 5, 2, 0 , 0};
+    public static float[] PERCENT_UP_SKILL = new float[] { 90, 80, 60, 50, 40, 30, 10, 5, 2, 0, 0 };
     public static int[] PRICE_ENCHANT = new int[] { 5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000, 50000 };
     public const int PERCENT_LVL_ITEM = 5;
     public const int DELAY_TURN_PET_BATTLE = 3000;
@@ -802,7 +804,15 @@ public class GopetManager
         {
             EXCHANGE_DATAS.AddRange(connWeb.Query<ExchangeData>("SELECT * FROM `exchange`"));
             EXCHANGE_DATAS.ForEach(exchangeData => MenuController.EXCHANGE_ITEM_INFOS.add(new ExchangeItemInfo(exchangeData)));
+            ServerInfos = connWeb.Query<ServerInfo>("SELECT * FROM `server`");
+        }
 
+        foreach (var petTemplate in PET_TEMPLATES)
+        {
+            if (!ListPetMustntUpTier.Contains(petTemplate.petId) && petTier.Where(p => p.Value.petTemplateId2 == petTemplate.petId).Any())
+            {
+                ListPetMustntUpTier.Add(petTemplate.petId);
+            }
         }
         /*
         resultSet = MYSQLManager.jquery("SELECT * FROM `shop_clan`");

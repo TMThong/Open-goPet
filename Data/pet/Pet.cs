@@ -352,6 +352,15 @@ public class Pet : GameObject
             this.maxHp += it.getHp();
             this.maxMp += it.getMp();
         }
+
+        foreach(var ach in player.playerData.achievements)
+        {
+            this.atk += ach.Template.Atk;
+            this.def += ach.Template.Def;
+            this.maxHp += ach.Template.Hp;
+            this.maxMp += ach.Template.Mp;
+        }
+
         player.controller.checkExpire();
         player.controller.sendMyPetInfo();
 

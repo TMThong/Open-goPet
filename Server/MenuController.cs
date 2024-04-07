@@ -128,6 +128,7 @@ public partial class MenuController
         new AdminItemInfo("Dọn hành trang trang bị", "Xóa tất cả vật phẩm là trang bị", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển tất cả người chơi", "Dịch chuyển tất cả người chơi trên server vào chỗ bạn đứng", "items/4000766.png"),
         new AdminItemInfo("Thêm danh hiệu", "Thêm thanh hiệu vào nhân vật của bạn nhầm mục đích test", "items/4000766.png"),
+        new AdminItemInfo("Cập nhật máy chủ", "Dùng sẽ hiện những server ẩn đi", "items/4000766.png"),
     };
 
     public const int ADMIN_INDEX_SET_PET_INFO = 0;
@@ -153,6 +154,7 @@ public partial class MenuController
     public const int ADMIN_INDEX_DELETE_ALL_EQUIP_PET_ITEM = 20;
     public const int ADMIN_INDEX_TELEPORT_ALL_PLAYER_TO_ADMIN = 21;
     public const int ADMIN_INDEX_ADD_ACHIEVEMENT = 22;
+    public const int ADMIN_INDEX_SHOW_LIST_SERVER = 23;
 
     /**
      * Danh sách nhận pet miễn phí

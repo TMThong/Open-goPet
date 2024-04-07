@@ -802,10 +802,16 @@ public partial class MenuController
                             {
                                 if (itemSelect.getTemp().itemOptionValue.Length > 0)
                                 {
+                                    int petTemplateId = itemSelect.getTemp().getOptionValue()[0];
+                                    if (GopetManager.ListPetMustntUpTier.Contains(petTemplateId))
+                                    {
+                                        player.redDialog("Không thể ghép mảnh trực tiếp pet đã tiến hóa");
+                                        return;
+                                    }
                                     if (itemSelect.count >= itemSelect.getTemp().getOptionValue()[1])
                                     {
                                         player.controller.subCountItem(itemSelect, itemSelect.getTemp().getOptionValue()[1], GopetManager.NORMAL_INVENTORY);
-                                        int petTemplateId = itemSelect.getTemp().getOptionValue()[0];
+                                        
                                         Pet pet = new Pet(petTemplateId);
                                         player.playerData.addPet(pet, player);
                                         player.okDialog(Utilities.Format("Chức mừng bạn ghép thành công %s", pet.getNameWithStar()));
@@ -1465,6 +1471,9 @@ public partial class MenuController
                             }
                         case ADMIN_INDEX_ADD_ACHIEVEMENT:
                             sendMenu(MENU_ADMIN_SHOW_ALL_ACHIEVEMENT, player);
+                            break;
+                        case ADMIN_INDEX_SHOW_LIST_SERVER:
+                            player.showListServer(GopetManager.ServerInfos.ToArray());
                             break;
                     }
                 }
