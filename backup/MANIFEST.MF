@@ -1,0 +1,15 @@
+MIDlet-Name: goPet TAE 132
+MIDlet-1: goPet 132,/icon.png,MGOMidlet
+Nokia-MIDlet-On-Screen-Keypad: no
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.9.4
+MIDlet-Vendor: Mobile Entertainment
+MicroEdition-Configuration: CLDC-1.0
+Nokia-MIDlet-App-Orientation: landscape
+ProviderId: 4
+RefCode: ref-mcb22qre14br-144706345912071136064
+Hotline: 0346094804
+MicroEdition-Profile: MIDP-2.0
+Created-By: 1.8.0_11-b12 (Oracle Corporation)
+MIDlet-Info-URL: 
+MIDlet-Version: 1.3.2
