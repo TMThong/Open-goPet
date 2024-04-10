@@ -3493,7 +3493,7 @@ public class GameController
                 else
                 {
                     PetTatto petTatto = pet.tatto.get(i);
-                    PetTattoTemplate petTattoTemplate = petTatto.getTemp();
+                    PetTattoTemplate petTattoTemplate = petTatto.Template;
                     m.putInt(petTatto.tattoId);
                     m.putUTF(petTatto.getName());
                     m.putsbyte(i + 1);
@@ -3568,10 +3568,10 @@ public class GameController
                 {
                     p.tatto.remove(tatto);
                     showPetTattoUI();
-                    player.okDialog(Utilities.Format("Xóa thành công %s", tatto.getTemp().getName()));
+                    player.okDialog(Utilities.Format("Xóa thành công %s", tatto.Template.getName()));
                     subCountItem(itemSelect, 1, GopetManager.NORMAL_INVENTORY);
                     objectPerformed.remove(MenuController.OBJKEY_TATTO_ID_REMOVE);
-                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Xóa xăm %s cho pet %s", tatto.getTemp().getName(), p.getNameWithoutStar())));
+                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Xóa xăm %s cho pet %s", tatto.Template.getName(), p.getNameWithoutStar())));
                 }
             }
         }

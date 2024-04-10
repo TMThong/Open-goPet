@@ -88,6 +88,12 @@ namespace Gopet.Data.GopetItem
             return 0;
         }
 
+        public static bool hasId(ItemInfo[] itemInfos, int ID)
+        {
+            return itemInfos.Any(p => p.id == ID);
+        }
+
+
         public static class Type
         {
             public const int GENHP = 0;

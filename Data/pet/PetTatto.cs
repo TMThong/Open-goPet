@@ -7,17 +7,11 @@ public class PetTatto
 
     public int tattooTemplateId;
     public int tattoId;
-    public int hp, mp, atk, def;
     public int lvl = 0;
 
     public PetTatto(int tattooTemplateId)
     {
         this.tattooTemplateId = tattooTemplateId;
-        PetTattoTemplate tattoTemplate = getTemp();
-        setAtk(tattoTemplate.getAtk());
-        setDef(tattoTemplate.getDef());
-        setHp(tattoTemplate.getHp());
-        setMp(tattoTemplate.getMp());
     }
 
 
@@ -28,47 +22,34 @@ public class PetTatto
 
     public int getHp()
     {
-        return getInfo(hp, lvl);
+        return getInfo(Template.hp, lvl);
     }
 
-    public void setHp(int hp)
-    {
-        this.hp = hp;
-    }
 
     public int getMp()
     {
-        return getInfo(mp, lvl);
+        return getInfo(Template.mp, lvl);
     }
 
-    public void setMp(int mp)
-    {
-        this.mp = mp;
-    }
 
     public int getAtk()
     {
-        return getInfo(atk, lvl);
+        return getInfo(Template.atk, lvl);
     }
 
-    public void setAtk(int atk)
-    {
-        this.atk = atk;
-    }
 
     public int getDef()
     {
-        return getInfo(def, lvl);
+        return getInfo(Template.def, lvl);
     }
 
-    public void setDef(int def)
-    {
-        this.def = def;
-    }
 
-    public PetTattoTemplate getTemp()
+    public PetTattoTemplate Template
     {
-        return GopetManager.tattos.get(tattooTemplateId);
+        get
+        {
+            return GopetManager.tattos.get(tattooTemplateId);
+        }
     }
 
     public String getName()
@@ -97,6 +78,6 @@ public class PetTatto
             infoStrings.add(getMp() + " (mp) ");
         }
 
-        return getTemp().getName() + "  " + String.Join(" ", infoStrings);
+        return Template.getName() + "  " + String.Join(" ", infoStrings);
     }
 }

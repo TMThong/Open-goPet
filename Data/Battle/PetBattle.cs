@@ -5,6 +5,8 @@ using Gopet.Data.Mob;
 using Gopet.IO;
 using Gopet.Util;
 using Gopet.Manager;
+using SixLabors.ImageSharp;
+using System.Numerics;
 
 namespace Gopet.Battle
 {
@@ -70,7 +72,7 @@ namespace Gopet.Battle
 #endif
 
             Item wing = player.playerData.wing;
-            if(wing != null)
+            if (wing != null)
             {
                 var wingBuffData = wing.ExtractBattleOptions();
                 foreach (var buff in wingBuffData)
@@ -267,11 +269,13 @@ namespace Gopet.Battle
                     {
                         getNonPet().subHp(damge.getDamge());
                     }
+                    addRecovery(damge, isMiss, activePet, player, turnEffects);
                 }
                 else
                 {
                     turnEffects.add(new TurnEffect(TurnEffect.SKILL_MISS, getFocus(), TurnEffect.SKILL_MISS, 0, 0));
                 }
+
                 sendPetAttack(turnEffects, TurnEffect.createNormalAttack(activePet.mp, 0, getUserTurnId()));
                 nextTurn();
                 if (hasWinner())
@@ -1031,12 +1035,7 @@ namespace Gopet.Battle
                             {
                                 turnEffects.add(new TurnEffect(TurnEffect.SKILL_MISS, getFocus(), TurnEffect.SKILL_MISS, 0, 0));
                             }
-                            if (damageInfo.getHpRecovery() > 0 && !damageInfo.isSkillMiss() && !isMiss)
-                            {
-                                pet.addHp(damageInfo.getHpRecovery());
-                                player.controller.sendMyPetInfo();
-                                turnEffects.add(new TurnEffect(TurnEffect.NONE, player.user.user_id, -1, damageInfo.getHpRecovery(), 0));
-                            }
+                            addRecovery(damageInfo, isMiss, pet, player, turnEffects);
                             sendPetAttack(turnEffects, TurnEffect.createWait(-petSkillLv.mpLost, getUserTurnId()));
                             nextTurn();
                             if (hasWinner())
@@ -1066,6 +1065,16 @@ namespace Gopet.Battle
             else
             {
                 player.redDialog("Không phải lượt của bạn");
+            }
+        }
+
+        private void addRecovery(PetDamgeInfo damageInfo, bool isMiss, Pet pet, Player player, JArrayList<TurnEffect> turnEffects)
+        {
+            if (damageInfo.getHpRecovery() > 0 && !damageInfo.isSkillMiss() && !isMiss)
+            {
+                pet.addHp(damageInfo.getHpRecovery());
+                player.controller.sendMyPetInfo();
+                turnEffects.add(new TurnEffect(TurnEffect.NONE, player.user.user_id, -1, damageInfo.getHpRecovery(), 0));
             }
         }
 
@@ -1118,6 +1127,7 @@ namespace Gopet.Battle
                     }
                 }
                 damgeInfo.setHpRecovery((int)(damgeInfo.getHpRecovery() + Utilities.GetValueFromPercent(sum, ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.RECOVERY_HP) / 100f)));
+
             }
 
 
@@ -1154,7 +1164,10 @@ namespace Gopet.Battle
                 {
                     float damagePer = ItemInfo.getValueById(nonPetBattleInfo.getBuff(), ItemInfo.Type.PHANDOAN_2_TURN) / 100f;
                     int valueDg = Utilities.round(Utilities.GetValueFromPercent(sum, damagePer));
-                    sum -= valueDg;
+                    if (valueDg <= 0)
+                    {
+                        valueDg = 1;
+                    }
                     petBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.DAMAGE_PHANDOAN, valueDg) }, 2));
                 }
             }
@@ -1168,6 +1181,7 @@ namespace Gopet.Battle
                 damgeInfo.setDamge(sum);
             }
             damgeInfo.setTrueDamge(trueDamge);
+            damgeInfo.setHpRecovery((int)(damgeInfo.getHpRecovery() + Utilities.GetValueFromPercent(sum, ItemInfo.getValueById(petBattleInfo.getBuff(), ItemInfo.Type.RECOVERY_HP) / 100f)));
             return damgeInfo;
         }
 

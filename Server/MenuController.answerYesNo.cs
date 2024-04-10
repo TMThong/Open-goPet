@@ -52,6 +52,14 @@ public partial class MenuController
                         {
                             if (wingItem != null)
                             {
+                                if(wingItem.lvl >= 10)
+                                {
+                                    player.redDialog("Cánh đạt cấp tối đa rồi");
+                                    player.controller.objectPerformed.Remove(OBJKEY_ID_MATERIAL_ENCHANT_WING);
+                                    player.controller.objectPerformed.Remove(OBJKEY_INDEX_WING_WANT_ENCHANT);
+                                    player.controller.objectPerformed.Remove(OBJKEY_TYPE_PAY_FOR_ENCHANT_WING);
+                                    return;
+                                }
                                 if (wingItem.lvl >= 0 && wingItem.lvl < GopetManager.MAX_LVL_ENCHANT_WING)
                                 {
                                     EnchantWingData enchantWingData = GopetManager.EnchantWingData[wingItem.lvl + 1];
