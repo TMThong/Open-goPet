@@ -1168,7 +1168,7 @@ namespace Gopet.Battle
                     {
                         valueDg = 1;
                     }
-                    petBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.DAMAGE_PHANDOAN, valueDg) }, 2));
+                    petBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.DAMAGE_PHANDOAN, valueDg) }, 1));
                 }
             }
             else
