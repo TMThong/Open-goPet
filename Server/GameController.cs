@@ -190,7 +190,7 @@ public class GameController
                     {
                         player.playerData.x = points[points.Length - 2];
                         player.playerData.y = points[points.Length - 1];
-                        //                    System.err.println(player.playerData.x + "|" + player.playerData.y + "|" + place.map.mapID);
+                        //GopetManager.ServerMonitor.LogInfo(player.playerData.x + "|" + player.playerData.y + "|" + place.map.mapID);
                         place.sendMove(player.user.user_id, b1, points);
                     }
 

@@ -52,6 +52,8 @@ public class PlayerData
     public Pet PetDefLeague { get; set; }
 
     public int EventPoint { get; set; }
+    public int NumOfUseKiteNormal { get; set; }
+    public int NumOfUseKiteVip { get; set; }
 
     public Dictionary<int, int> numUseEnergy { get; set; } = new();
 
@@ -112,7 +114,9 @@ public class PlayerData
                             AccumulatedPoint = @AccumulatedPoint,
                             PetDefLeague = @PetDefLeague,
                             EventPoint = @EventPoint,
-                            achievements = @achievements
+                            achievements = @achievements,
+                            NumOfUseKiteNormal = @NumOfUseKiteNormal,
+                            NumOfUseKiteVip = @NumOfUseKiteVip
                             WHERE ID = @ID", playerData);
     }
 

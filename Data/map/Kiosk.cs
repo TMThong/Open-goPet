@@ -132,6 +132,12 @@ namespace Gopet.Data.Map
 
         public void confirmBuy(Player player, SellItem sellItem)
         {
+            if(Maintenance.gI().isIsMaintenance())
+            {
+                player.redDialog("Sắp bảo trì không thể mua vật phẩm này");
+                return;
+            }
+
             if (!kioskItems.Contains(sellItem))
             {
                 player.redDialog("Vật phẩm đã bị người khác mua!");

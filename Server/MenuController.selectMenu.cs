@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Gopet.Data.top;
 using Gopet.Data.Event;
 using Gopet.Data.user;
+using Gopet.Manager;
 
 public partial class MenuController
 {
@@ -811,7 +812,7 @@ public partial class MenuController
                                     if (itemSelect.count >= itemSelect.getTemp().getOptionValue()[1])
                                     {
                                         player.controller.subCountItem(itemSelect, itemSelect.getTemp().getOptionValue()[1], GopetManager.NORMAL_INVENTORY);
-                                        
+
                                         Pet pet = new Pet(petTemplateId);
                                         player.playerData.addPet(pet, player);
                                         player.okDialog(Utilities.Format("Chức mừng bạn ghép thành công %s", pet.getNameWithStar()));
@@ -1149,6 +1150,11 @@ public partial class MenuController
                                 }
                                 return;
                             }
+
+                        case GopetManager.ITEM_EVENT:
+                            EventManager.FindAndUseItemEvent(itemSelect.itemTemplateId, player);
+                            return;
+
                         /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/
                         default:
                             {
@@ -1482,10 +1488,10 @@ public partial class MenuController
                 {
                     if (player.checkIsAdmin())
                     {
-                        if(index >= 0 && index < GopetManager.achievements.Count())
+                        if (index >= 0 && index < GopetManager.achievements.Count())
                         {
                             var ach = GopetManager.achievements.ElementAt(index);
-                            if(player.playerData.achievements.Where(p => p.IdTemplate == ach.IdTemplate).Any())
+                            if (player.playerData.achievements.Where(p => p.IdTemplate == ach.IdTemplate).Any())
                             {
                                 player.redDialog("Bạn có danh hiệu này rồi");
                             }

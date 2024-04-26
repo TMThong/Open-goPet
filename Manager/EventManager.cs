@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Gopet.Data.Event.Year2024;
 namespace Gopet.Manager
 {
     public class EventManager
@@ -17,6 +17,7 @@ namespace Gopet.Manager
         static EventManager()
         {
             _events.Add(ArenaEvent.Instance);
+            _events.Add(Summer2024Event.Instance);
         }
 
         public static void Start()
@@ -27,26 +28,39 @@ namespace Gopet.Manager
             thread.Start();
         }
 
+        public static void FindAndUseItemEvent(int itemId, Player player)
+        {
+            var findEvent = _events.Where(p => p.ItemsOfEvent.Contains(itemId));
+            if (findEvent.Any())
+            {
+                findEvent.First().UseItem(itemId, player);
+            }
+            else
+            {
+                player.redDialog("Không tìm thấy sự kiện");
+            }
+        }
+
         private static void Run()
         {
             while (IsRunning)
             {
                 foreach (var item in _events.ToArray())
                 {
-                    if(item.Condition)
+                    if (item.Condition)
                     {
                         try
                         {
                             item.Update();
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             GopetManager.ServerMonitor.LogError(ex.ToString());
                             ResetEvent.WaitOne(1000);
                         }
                     }
 
-                    if(item.NeedRemove)
+                    if (item.NeedRemove)
                     {
                         _events.Remove(item);
                     }

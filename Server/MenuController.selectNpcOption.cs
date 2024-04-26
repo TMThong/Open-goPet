@@ -1,4 +1,5 @@
-﻿using Gopet.Data.GopetClan;
+﻿using Gopet.Data.Event.Year2024;
+using Gopet.Data.GopetClan;
 using Gopet.Data.item;
 using Gopet.Data.top;
 using Gopet.Util;
@@ -461,6 +462,21 @@ public partial class MenuController
                 break;
             case OP_SHOW_ME_ACHIEVEMENT:
                 sendMenu(MENU_ME_SHOW_ACHIEVEMENT, player);
+                break;
+            case OP_EVENT_SUMMER_2024_GUIDE:
+                player.okDialog($"Trong thời gian diễn ra sự kiện khi đánh quái sẽ rớt ra nguyên liệu sự kiện như cuộn vải, giấy, tre, cuộn dây. Màu để làm diều có bán tại Thương nhân nhé các đội viên của ta. Công thức để làm diều giấy là: {Summer2024Event.Instance.RecipeText(Summer2024Event.RECIPE_KITE_NORMAL)}. Công thức để làm diều vải là: {Summer2024Event.Instance.RecipeText(Summer2024Event.RECIPE_KITE_VIP)}. Khi thả diều sẽ nhận được các phần quà nhưng các phần quà này sớ lượng có hạn.");
+                break;
+            case OP_EVENT_SUMMER_2024_MAKE_KITE_NORMAL:
+                Summer2024Event.Instance.MakeKite(Summer2024Event.RECIPE_KITE_NORMAL, player);
+                break;
+            case OP_EVENT_SUMMER_2024_MAKE_KITE_VIP:
+                Summer2024Event.Instance.MakeKite(Summer2024Event.RECIPE_KITE_VIP, player);
+                break;
+            case OP_EVENT_SUMMER_2024_TOP_KITE_NORMAL:
+                showTop(Summer2024Event.TopKiteNormal.Instance, player);
+                break;
+            case OP_EVENT_SUMMER_2024_TOP_KITE_VIP:
+                showTop(Summer2024Event.TopKiteVip.Instance, player);
                 break;
             default:
                 player.redDialog("Tính năng đang được xây dựng"); break;

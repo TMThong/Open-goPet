@@ -260,6 +260,11 @@ public partial class MenuController
     public const int OP_TOP_EVENT_TASK = 69;
     public const int OP_SHOW_ALL_TATTO = 70;
     public const int OP_SHOW_ME_ACHIEVEMENT = 71;
+    public const int OP_EVENT_SUMMER_2024_MAKE_KITE_NORMAL = 72;
+    public const int OP_EVENT_SUMMER_2024_MAKE_KITE_VIP = 73;
+    public const int OP_EVENT_SUMMER_2024_TOP_KITE_NORMAL = 74;
+    public const int OP_EVENT_SUMMER_2024_TOP_KITE_VIP = 75;
+    public const int OP_EVENT_SUMMER_2024_GUIDE = 76;
     public const int OP_TRADE_GIFT_COIN = 1000000000;
     public const int OP_TRADE_GIFT_GOLD = 1000000001;
     /**
@@ -877,7 +882,7 @@ public partial class MenuController
 
             case INPUT_TYPE_NAME_PLAYER_TO_GET_ITEM:
             case INPUT_TYPE_NAME_PLAYER_TO_GIVE_ITEM:
-                return new sbyte[] { InputReader.FIELD_INT,InputReader.FIELD_STRING  };
+                return new sbyte[] { InputReader.FIELD_INT, InputReader.FIELD_STRING };
         }
         return null;
     }

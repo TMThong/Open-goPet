@@ -10,11 +10,32 @@ namespace Gopet.Data.Event
     {
         public virtual string Name { get; set; }
         public virtual bool Condition { get; set; }
-
         public virtual bool NeedRemove { get; set; }
+
+        public virtual int[] ItemsOfEvent { get; set; } = new int[0];
+
         protected EventBase() { }
 
         public virtual void Update()
+        {
+
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns>Trả về true có nghĩa là sự kiện vẫn còn</returns>
+        public virtual bool CheckEventStatus(Player player)
+        {
+            if (NeedRemove)
+            {
+                player.redDialog("Sự kiện đã kết thúc");
+                return false;
+            }
+            return true;
+        }
+
+        public virtual void UseItem(int itemId, Player player)
         {
 
         }

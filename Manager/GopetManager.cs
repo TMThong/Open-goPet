@@ -16,6 +16,7 @@ using Gopet.Adapter;
 using Gopet.Data.item;
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Gopet.Data.user;
+using Gopet.Data.Event.Year2024;
 
 public class GopetManager
 {
@@ -175,6 +176,7 @@ public class GopetManager
     public const int ITEM_MATERIAL_ENCHANT_WING = 21;
     public const int ITEM_PET_PACKAGE = 22;
     public const int ITEM_MATERIAL_ENCHANT_TATOO = 23;
+    public const int ITEM_EVENT = 24;
     public const int GIFT_GOLD = 0;
     public const int GIFT_COIN = 1;
     public const int GIFT_ITEM = 2;
@@ -798,6 +800,8 @@ public class GopetManager
                 AchievementMAP[item.IdTemplate] = item;
             }
             ServerMonitor.LogInfo("Tải dữ liệu danh hiệu từ cơ sở dữ liệu OK");
+
+            Summer2024Event.EventDatas = conn.Query<Summer2024Event.EventData>("SELECT * FROM `summer_2024_event`");
         }
 
         using (var connWeb = MYSQLManager.createWebMySqlConnection())
