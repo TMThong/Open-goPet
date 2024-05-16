@@ -55,6 +55,8 @@ namespace Gopet.IO
 
         public static void Write(this BinaryWriter writer, sbyte[] buffer)
         {
+            if (writer == null)
+                throw new ArgumentNullException();
             for (int i = 0; i < buffer.Length; i++)
             {
                 writer.Write(buffer[i]);
@@ -64,6 +66,8 @@ namespace Gopet.IO
 
         public static void WriteInt(this BinaryWriter writer, int value)
         {
+            if (writer == null)
+                throw new ArgumentNullException();
             sbyte[] buffer = new sbyte[4];
             buffer[0] = (sbyte)((value >> 24) & 0xFF);
             buffer[1] = (sbyte)((value >> 16) & 0xFF);
@@ -74,6 +78,8 @@ namespace Gopet.IO
 
         public static int ReadJavaInt(this BinaryReader reader)
         {
+            if (reader == null)
+                throw new ArgumentNullException();
             int ch1 = reader.ReadByte();
             int ch2 = reader.ReadByte();
             int ch3 = reader.ReadByte();
@@ -85,6 +91,8 @@ namespace Gopet.IO
 
         public static short ReadJavaShort(this BinaryReader reader)
         {
+            if (reader == null)
+                throw new ArgumentNullException();
             int ch1 = reader.ReadByte();
             int ch2 = reader.ReadByte();
             if ((ch1 | ch2) < 0)

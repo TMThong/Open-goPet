@@ -16,7 +16,6 @@ public class PlayerData
     public long coin { get; set; }
     public long spendGold { get; set; }
     public int ID { get; set; }
-
     public int user_id { get; set; }
     public JArrayList<int> friends { get; set; } = new JArrayList<int>();
     public JArrayList<int> favouriteList { get; set; } = new JArrayList<int>();

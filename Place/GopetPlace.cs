@@ -586,7 +586,7 @@ public class GopetPlace : Place
                                         continue;
                                     }
                                 }
-                                Boss boss = new Boss(Utilities.RandomArray(this.map.mapTemplate.boss), mobLocation);
+                                Boss boss = new Boss(map.mapTemplate.boss[i], mobLocation);
                                 boss.isTimeOut = true;
                                 boss.timeoutMilis = Utilities.CurrentTimeMillis + GopetManager.TIME_BOSS_DISPOINTED;
 

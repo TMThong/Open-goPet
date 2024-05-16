@@ -93,7 +93,7 @@ namespace Gopet.Data.Event.Year2024
                                 player.controller.subCountItem(itemEvent, 1, GopetManager.NORMAL_INVENTORY);
                                 randomData.NumOfUse++;
                                 Item item = new Item(randomData.ItemId);
-                                
+                                item.count = 1;
                                 player.okDialog("Chúc mừng bạn nhận được " + item.Template.name);
                                 player.addItemToInventory(item);
                                 if (GetType(itemId) == RECIPE_KITE_NORMAL)

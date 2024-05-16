@@ -17,6 +17,7 @@ using Gopet.Data.item;
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Gopet.Data.user;
 using Gopet.Data.Event.Year2024;
+using System.Diagnostics;
 
 public class GopetManager
 {
@@ -802,6 +803,8 @@ public class GopetManager
             ServerMonitor.LogInfo("Tải dữ liệu danh hiệu từ cơ sở dữ liệu OK");
 
             Summer2024Event.EventDatas = conn.Query<Summer2024Event.EventData>("SELECT * FROM `summer_2024_event`");
+
+           
         }
 
         using (var connWeb = MYSQLManager.createWebMySqlConnection())

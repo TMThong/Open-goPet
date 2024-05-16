@@ -86,9 +86,7 @@ public class Player : IHandleMessage
                         displayHeight = ms.reader().readInt();
                         language = ms.reader().readUTF();
                         Refcode = ms.reader().readUTF();
-                        Console.WriteLine("BEGIN CLIENT INFO");
                         session.setClientOK(true);
-                        Console.WriteLine("CLIENT INFO");
                         break;
 
                     case GopetCMD.LOGIN:
@@ -273,6 +271,11 @@ Thread.Sleep(1000);
 
     public virtual void login(String username, String password, String version)
     {
+        if(this.user != null)
+        {
+            return;
+        }
+
         if (ServerSetting.instance.isShowMessageWhenLogin)
         {
             okDialog(ServerSetting.instance.messageWhenLogin);

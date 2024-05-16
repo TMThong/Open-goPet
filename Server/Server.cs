@@ -46,14 +46,25 @@ namespace Gopet.MServer
             {
                 e.printStackTrace();
             }
-            listener.BeginAcceptTcpClient(new AsyncCallback(AcceptCallback), listener);
+            try
+            {
+                listener.BeginAcceptTcpClient(new AsyncCallback(AcceptCallback), listener);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
 
 
         public void stopServer()
         {
             isRunning = false;
-            serverSc.Stop();
+            Task.Run(() =>
+            {
+                Thread.Sleep(1000);
+                serverSc.Stop();
+            });
         }
     }
 }
