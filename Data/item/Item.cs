@@ -284,7 +284,6 @@ namespace Gopet.Data.GopetItem
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
             int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2);
-            GopetManager.ServerMonitor.LogDebug("PERCENT:" + getPercentGemBuff(ItemInfo.OptionType.PERCENT_HP));
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_HP)));
         }
 

@@ -196,7 +196,7 @@ public class Pet : GameObject
     public void lvlUP()
     {
         this.lvl++;
-        if(Template.gymUpLevel > this.pointTiemNangLvl)
+        if (Template.gymUpLevel > this.pointTiemNangLvl)
         {
             this.tiemnang_point += Template.gymUpLevel;
         }
@@ -351,9 +351,33 @@ public class Pet : GameObject
             this.def += it.getDef();
             this.maxHp += it.getHp();
             this.maxMp += it.getMp();
+            if (it == skinItem)
+            {
+                if (it.Template.itemOption.Length > 0)
+                {
+                    for (int i = 0; i < it.Template.itemOptionValue.Length; i++)
+                    {
+                        switch (it.Template.itemOption[i])
+                        {
+                            case ItemInfo.OptionType.PERCENT_HP:
+                                this.maxHp += (int)Utilities.GetValueFromPercent(this.maxHp, it.Template.itemOptionValue[i] / 100);
+                                break;
+                            case ItemInfo.OptionType.PERCENT_MP:
+                                this.maxMp += (int)Utilities.GetValueFromPercent(this.maxMp, it.Template.itemOptionValue[i] / 100);
+                                break;
+                            case ItemInfo.OptionType.PERCENT_ATK:
+                                this.atk += (int)Utilities.GetValueFromPercent(this.atk, it.Template.itemOptionValue[i] / 100);
+                                break;
+                            case ItemInfo.OptionType.PERCENT_DEF:
+                                this.def += (int)Utilities.GetValueFromPercent(this.def, it.Template.itemOptionValue[i] / 100);
+                                break;
+                        }
+                    }
+                }
+            }
         }
 
-        foreach(var ach in player.playerData.achievements)
+        foreach (var ach in player.playerData.achievements)
         {
             this.atk += ach.Template.Atk;
             this.def += ach.Template.Def;
@@ -363,7 +387,6 @@ public class Pet : GameObject
 
         player.controller.checkExpire();
         player.controller.sendMyPetInfo();
-
     }
 
 

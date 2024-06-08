@@ -514,8 +514,6 @@ namespace Gopet.Battle
             message.putInt(pet.getPetTemplate().str);
             message.putInt(pet.getPetTemplate().agi);
             message.putInt(pet.getPetTemplate()._int);
-
-            //
             message.putInt(1);
             message.putInt(1);
             message.putInt(pet.hp);
@@ -541,8 +539,6 @@ namespace Gopet.Battle
             message.putInt(mob.getMobId());
             message.putUTF(mob.getPetTemplate().frameImg);
             message.putUTF(mob.getPetTemplate().name);
-
-            //
             message.putInt(1);
             message.putInt(mob.hp);
             message.putInt(mob.mp);
@@ -556,8 +552,6 @@ namespace Gopet.Battle
             message.putInt(petPassive.getPetIdTemplate());
             message.putUTF(petPassive.getPetTemplate().frameImg);
             message.putUTF(petPassive.getPetTemplate().name);
-
-            //
             message.putInt(petPassive.lvl);
             message.putInt(petPassive.hp);
             message.putInt(petPassive.mp);
