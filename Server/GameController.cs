@@ -608,6 +608,7 @@ public class GameController
             }
             catch (Exception e)
             {
+
             }
         }
 
