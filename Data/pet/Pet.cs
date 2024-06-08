@@ -285,9 +285,10 @@ public class Pet : GameObject
 
 
 
-    /**
-     * Áp dụng chỉ số sao khi mặc đồ hoặc thay đổi
-     */
+    /// <summary>
+    /// Áp dụng chỉ số sao khi mặc đồ hoặc thay đổi
+    /// </summary>
+    /// <param name="player"></param>
     public void applyInfo(Player player)
     {
         this.atk = 0;

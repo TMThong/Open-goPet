@@ -7,11 +7,11 @@ namespace Gopet.Data.Dialog
     {
 
         public const sbyte FIELD_STRING = 0;
-        public const sbyte FIELD_sbyte = 1;
+        public const sbyte FIELD_SBYTE = 1;
         public const sbyte FIELD_INT = 2;
         public const sbyte FIELD_FLOAT = 3;
         public const sbyte FIELD_DOBUBLE = 4;
-        public const sbyte FIELD_long = 5;
+        public const sbyte FIELD_LONG = 5;
         public const sbyte FIELD_BIGINT = 6;
 
         private sbyte[] inputType;
@@ -34,7 +34,7 @@ namespace Gopet.Data.Dialog
             {
                 switch (inputType[i])
                 {
-                    case FIELD_sbyte:
+                    case FIELD_SBYTE:
                         listField.put(i, sbyte.Parse(strings[i]));
                         break;
                     case FIELD_STRING:
@@ -49,7 +49,7 @@ namespace Gopet.Data.Dialog
                     case FIELD_DOBUBLE:
                         listField.put(i, double.Parse(strings[i]));
                         break;
-                    case FIELD_long:
+                    case FIELD_LONG:
                         listField.put(i, long.Parse(strings[i]));
                         break;
                     case FIELD_BIGINT:

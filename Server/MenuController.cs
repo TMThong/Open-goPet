@@ -849,7 +849,7 @@ public partial class MenuController
         switch (dialogId)
         {
             case INPUT_DIALOG_EXCHANGE_GOLD_TO_COIN:
-                return new sbyte[] { InputReader.FIELD_long };
+                return new sbyte[] { InputReader.FIELD_LONG };
             case INPUT_DIALOG_ADMIN_GET_HISTORY:
                 return new sbyte[] { InputReader.FIELD_STRING, InputReader.FIELD_STRING, InputReader.FIELD_STRING };
             case INPUT_DIALOG_COUNT_OF_KISOK_ITEM:
@@ -875,7 +875,7 @@ public partial class MenuController
             case INPUT_DIALOG_CHANGE_SLOGAN_CLAN:
                 return new sbyte[] { InputReader.FIELD_STRING };
             case INPUT_DIALOG_ADMIN_LOCK_USER:
-                return new sbyte[] { InputReader.FIELD_STRING, InputReader.FIELD_sbyte, InputReader.FIELD_INT, InputReader.FIELD_STRING };
+                return new sbyte[] { InputReader.FIELD_STRING, InputReader.FIELD_SBYTE, InputReader.FIELD_INT, InputReader.FIELD_STRING };
 
             case INPUT_TYPE_NAME_TO_BUFF_COIN:
                 return new sbyte[] { InputReader.FIELD_STRING, InputReader.FIELD_INT };
