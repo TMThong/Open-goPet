@@ -191,56 +191,71 @@ namespace Gopet.Data.GopetItem
             switch (itemTemplate.getType())
             {
                 case GopetManager.SKIN_ITEM:
-                    return Utilities.Format("+%s (atk) +%s (def) +%s (hp) +%s (mp)", atk, def, hp, mp) + " (HSD: " + Utilities.ToDateString(Utilities.GetDate(expire)) + " )";
-                case GopetManager.WING_ITEM:
-                    string strExpire = "";
-                    if (expire > 0)
                     {
-                        strExpire = " (HSD: " + Utilities.GetFormatNumber(expire) + " )";
-                    }
-                    else
-                    {
-                        strExpire = "Hạn sử dụng đến : vĩnh viễn .";
-                    }
-
-                    string getSign(int value)
-                    {
-                        if (value > 0)
-                            return "+";
-                        return "-";
-                    }
-
-                    string wingBuffDesc = string.Empty;
-
-                    var extractBuff = this.ExtractBattleOptions();
-                    if (extractBuff.Length > 0)
-                    {
-                        foreach (var buff in extractBuff)
+                        string strExpire = "";
+                        if (expire > 0)
                         {
-                            if (buff.OptionValue != 0)
+                            strExpire = " (HSD: " + Utilities.ToDateString(Utilities.GetDate(expire)) + " )";
+                        }
+                        else
+                        {
+                            strExpire = " (Hạn sử dụng đến : vĩnh viễn).";
+                        }
+                        return Utilities.Format("+%s (atk) +%s (def) +%s (hp) +%s (mp)", atk, def, hp, mp) + strExpire;
+
+                    }
+                case GopetManager.WING_ITEM:
+                    {
+                        string strExpire = "";
+                        if (expire > 0)
+                        {
+                            strExpire = " (HSD: " + Utilities.GetFormatNumber(expire) + " )";
+                        }
+                        else
+                        {
+                            strExpire = "Hạn sử dụng đến : vĩnh viễn .";
+                        }
+
+                        string getSign(int value)
+                        {
+                            if (value > 0)
+                                return "+";
+                            return "-";
+                        }
+
+                        string wingBuffDesc = string.Empty;
+
+                        var extractBuff = this.ExtractBattleOptions();
+                        if (extractBuff.Length > 0)
+                        {
+                            foreach (var buff in extractBuff)
                             {
-                                switch (buff.OptionId)
+                                if (buff.OptionValue != 0)
                                 {
-                                    case ItemInfo.Type.BUFF_DAMGE:
-                                        wingBuffDesc += getSign(buff.OptionValue) + Utilities.round(buff.OptionValue / 100f) + "%(atk)";
-                                        break;
-                                    case ItemInfo.Type.DEF_PER:
-                                        wingBuffDesc += getSign(buff.OptionValue) + Utilities.round(buff.OptionValue / 100f) + "%(def)";
-                                        break;
-                                    case ItemInfo.Type.PHANDOAN_2_TURN:
-                                        wingBuffDesc +=  " phản lại" + Utilities.round(buff.OptionValue / 100f) + "% sát thương";
-                                        break;
-                                    case ItemInfo.Type.PER_STUN_1_TURN:
-                                        wingBuffDesc += Utilities.round(buff.OptionValue / 100f) + "% định thân";
-                                        break;
-                                    case ItemInfo.Type.RECOVERY_HP:
-                                        wingBuffDesc += " hút máu " + Utilities.round(buff.OptionValue / 100f) + "%";
-                                        break;
+                                    switch (buff.OptionId)
+                                    {
+                                        case ItemInfo.Type.BUFF_DAMGE:
+                                            wingBuffDesc += getSign(buff.OptionValue) + Utilities.round(buff.OptionValue / 100f) + "%(atk)";
+                                            break;
+                                        case ItemInfo.Type.DEF_PER:
+                                            wingBuffDesc += getSign(buff.OptionValue) + Utilities.round(buff.OptionValue / 100f) + "%(def)";
+                                            break;
+                                        case ItemInfo.Type.PHANDOAN_2_TURN:
+                                            wingBuffDesc += " phản lại" + Utilities.round(buff.OptionValue / 100f) + "% sát thương";
+                                            break;
+                                        case ItemInfo.Type.PER_STUN_1_TURN:
+                                            wingBuffDesc += Utilities.round(buff.OptionValue / 100f) + "% định thân";
+                                            break;
+                                        case ItemInfo.Type.RECOVERY_HP:
+                                            wingBuffDesc += " hút máu " + Utilities.round(buff.OptionValue / 100f) + "%";
+                                            break;
+                                    }
                                 }
                             }
                         }
+                        return strExpire + " Chỉ số áp dụng" + Utilities.Format(" +%s (atk) +%s (def) +%s (hp) +%s (mp) ", getAtk(), getDef(), getHp(), getMp()) + wingBuffDesc;
+
                     }
-                    return strExpire + " Chỉ số áp dụng" + Utilities.Format(" +%s (atk) +%s (def) +%s (hp) +%s (mp) ", getAtk(), getDef(), getHp(), getMp()) + wingBuffDesc;
             }
 
             if (expire > 0)

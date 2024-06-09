@@ -22,6 +22,7 @@ public class Pet : GameObject
 
 
     public String name = null;
+
     public int str, agi, _int;
 
     /**
@@ -30,16 +31,14 @@ public class Pet : GameObject
 
     public int tiemnang_point = 0;
 
-    /**
-     * Điểm kỹ năng , dùng để học kỹ năng
-     */
-
+    /// <summary>
+    /// Điểm kỹ năng , dùng để học kỹ năng
+    /// </summary>
     public int skillPoint = 0;
 
-    /**
-     * Dữ liệu về skill skill[*][0] là skillId skill[*][1] là cấp của kỹ năng
-     */
-
+    /// <summary>
+    /// Dữ liệu về skill skill[*][0] là skillId skill[*][1] là cấp của kỹ năng
+    /// </summary>
     public int[][] skill = new int[0][];
 
     /**
