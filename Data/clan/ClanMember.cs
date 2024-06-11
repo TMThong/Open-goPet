@@ -1,9 +1,10 @@
 using Gopet.Data.Collections;
 using Gopet.Util;
+using Newtonsoft.Json;
 
 namespace Gopet.Data.GopetClan
 {
-    public class ClanMember 
+    public class ClanMember
     {
         public string avatarPath;
         public int user_id;
@@ -15,13 +16,14 @@ namespace Gopet.Data.GopetClan
         public long timeResetData = Utilities.CurrentTimeMillis / 2L;
         public int curQuest = 0;
         public CopyOnWriteArrayList<ClanMemberDonateInfo> clanMemberDonateInfos;
-
+        [JsonIgnore]
         public Clan clan;
 
         public void reset()
         {
             timeResetData = Utilities.CurrentTimeMillis;
-            clanMemberDonateInfos = new(new ClanMemberDonateInfo[]{
+            clanMemberDonateInfos = new(new ClanMemberDonateInfo[]
+            {
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_COIN, 10000l, 0, 10, 3),
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_COIN, 100000l, 0, 110, 3),
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 1000l, 20, 100, 3),

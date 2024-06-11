@@ -303,7 +303,7 @@ namespace Gopet.Data.GopetClan
             return String.Join(",", clanInfo.ToArray());
         }
 
-        private void initClan()
+        public void initClan()
         {
             clanPlace = new ClanPlace(MapManager.maps.get(30), this.clanId);
         }
@@ -501,12 +501,12 @@ namespace Gopet.Data.GopetClan
         {
             using(var connection = MYSQLManager.create())
             {
-                connection.Execute(Utilities.Format("INSERT INTO `clan`(`clanId`, `name`, `clanLvl`, `curMember`, `maxMember`, `leaderId`, `members`, `fund`, `growthPoint`, `skillHouseLvl`, `baseMarketLvl`) "
-                    + "VALUES (NULL,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')", name, lvl, curMember, maxMember, leaderId, JsonConvert.SerializeObject(members), fund, growthPoint, skillHouseLvl, baseMarketLvl));
-                var clanData = connection.QueryFirstOrDefault(Utilities.Format("SELECT * FROM `clan` WHERE leaderId = %s", leaderId));
+                connection.Execute("INSERT INTO `clan`( `name`, `curMember`, `maxMember`, `leaderId`, `members`) VALUES (@name, @curMember, @maxMember, @leaderId, @members)", new { name = name, curMember  = curMember, maxMember = maxMember , leaderId  = leaderId , members = members });
+                var clanData = connection.QueryFirstOrDefault("SELECT * FROM `clan` WHERE leaderId = @leaderId", new { leaderId = leaderId });
                 if(clanData != null)
                 {
                     setClanId(clanData.clanId);
+                    setShopClan(new ShopClan(this));
                 }
                 else
                 {
@@ -519,7 +519,7 @@ namespace Gopet.Data.GopetClan
         {
             using(MySqlConnection MySqlConnection = MYSQLManager.create())
             {
-                MySqlConnection.Execute(Utilities.Format("UPDATE `clan` set `clanLvl` = %s , `curMember` = %s , `maxMember` =%s , `leaderId` =%s , `members` = '%s' , `fund` =%s, `growthPoint` =%s , `skillHouseLvl` = %s , `baseMarketLvl` =%s , `joinRequest` = '%s' WHERE `clanId` =%s", lvl, curMember, maxMember, leaderId, JsonConvert.SerializeObject(members), fund, growthPoint, skillHouseLvl, baseMarketLvl, JsonConvert.SerializeObject(requestJoin), this.clanId));
+                MySqlConnection.Execute(Utilities.Format("UPDATE `clan` set `lvl` = %s , `curMember` = %s , `maxMember` =%s , `leaderId` =%s , `members` = '%s' , `fund` =%s, `growthPoint` =%s , `skillHouseLvl` = %s , `baseMarketLvl` =%s , `joinRequest` = '%s' WHERE `clanId` =%s", lvl, curMember, maxMember, leaderId, JsonConvert.SerializeObject(members), fund, growthPoint, skillHouseLvl, baseMarketLvl, JsonConvert.SerializeObject(requestJoin), this.clanId));
             }
         }
 

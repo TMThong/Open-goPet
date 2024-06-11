@@ -413,7 +413,7 @@ public partial class MenuController
                             ClanHouseTemplate clanHouseTemplate = GopetManager.clanSkillHouseTemp.get(marketHouse + 1);
                             if (clanHouseTemplate != null)
                             {
-                                showYNDialog(DIALOG_ASK_UPGRADE_SHOP_HOUSE, Utilities.Format("Bạn có chắc muốn nâng nhà kỹ năng bang hội không ? Cần %s quỹ và %s cống hiến", Utilities.FormatNumber(clanHouseTemplate.getFundNeed()), Utilities.FormatNumber(clanHouseTemplate.getGrowthPointNeed())), player);
+                                showYNDialog(DIALOG_ASK_UPGRADE_SHOP_HOUSE, Utilities.Format("Bạn có chắc muốn nâng nhà kỹ năng bang hội không ? Cần %s quỹ và %s cống hiến", Utilities.FormatNumber(clanHouseTemplate.fundNeed), Utilities.FormatNumber(clanHouseTemplate.growthPointNeed)), player);
                             }
                             else
                             {
@@ -440,7 +440,7 @@ public partial class MenuController
                             ClanHouseTemplate clanHouseTemplate = GopetManager.clanMarketHouseTemp.get(marketHouse + 1);
                             if (clanHouseTemplate != null)
                             {
-                                showYNDialog(DIALOG_ASK_UPGRADE_SHOP_HOUSE, Utilities.Format("Bạn có chắc muốn nâng shop bang hội không ? Cần %s quỹ và %s cống hiến", Utilities.FormatNumber(clanHouseTemplate.getFundNeed()), Utilities.FormatNumber(clanHouseTemplate.getGrowthPointNeed())), player);
+                                showYNDialog(DIALOG_ASK_UPGRADE_SHOP_HOUSE, Utilities.Format("Bạn có chắc muốn nâng shop bang hội không ? Cần %s quỹ và %s cống hiến", Utilities.FormatNumber(clanHouseTemplate.fundNeed), Utilities.FormatNumber(clanHouseTemplate.growthPointNeed)), player);
                             }
                             else
                             {

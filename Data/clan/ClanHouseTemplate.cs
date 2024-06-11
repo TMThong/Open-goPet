@@ -2,10 +2,10 @@ namespace Gopet.Data.GopetClan
 {
     public class ClanHouseTemplate
     {
-        private int lvl;
-        private int fundNeed;
-        private int growthPointNeed;
-        private int needClanLvl = 0;
+        public int lvl;
+        public int fundNeed;
+        public int growthPointNeed;
+        public int needClanLvl = 0;
         public void setLvl(int lvl)
         {
             this.lvl = lvl;

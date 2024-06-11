@@ -376,12 +376,12 @@ public partial class MenuController
                                 ClanHouseTemplate clanHouseTemplate = GopetManager.clanMarketHouseTemp.get(marketHouse + 1);
                                 if (clanHouseTemplate != null)
                                 {
-                                    if (clan.getLvl() >= clanHouseTemplate.getNeedClanLvl())
+                                    if (clan.getLvl() >= clanHouseTemplate.needClanLvl)
                                     {
-                                        if (clan.checkFund(clanHouseTemplate.getFundNeed()) && clan.checkGrowthPoint(clanHouseTemplate.getGrowthPointNeed()))
+                                        if (clan.checkFund(clanHouseTemplate.fundNeed) && clan.checkGrowthPoint(clanHouseTemplate.growthPointNeed))
                                         {
-                                            clan.mineFund(clanHouseTemplate.getFundNeed());
-                                            clan.mineGrowthPoint(clanHouseTemplate.getGrowthPointNeed());
+                                            clan.mineFund(clanHouseTemplate.fundNeed);
+                                            clan.mineGrowthPoint(clanHouseTemplate.growthPointNeed);
                                             clan.setbaseMarketLvl(marketHouse + 1);
                                             player.okDialog(Utilities.Format("Shop của bang hội bạn đã lên cấp: %s", clan.getSkillHouseLvl()));
                                         }
@@ -392,7 +392,7 @@ public partial class MenuController
                                     }
                                     else
                                     {
-                                        player.redDialog(Utilities.Format("Bang hội cần đạt cấp %s", clanHouseTemplate.getNeedClanLvl()));
+                                        player.redDialog(Utilities.Format("Bang hội cần đạt cấp %s", clanHouseTemplate.needClanLvl));
                                     }
                                 }
                                 else
@@ -424,10 +424,10 @@ public partial class MenuController
                                 ClanHouseTemplate clanHouseTemplate = GopetManager.clanSkillHouseTemp.get(skillHouse + 1);
                                 if (clanHouseTemplate != null)
                                 {
-                                    if (clan.checkFund(clanHouseTemplate.getFundNeed()) && clan.checkGrowthPoint(clanHouseTemplate.getGrowthPointNeed()))
+                                    if (clan.checkFund(clanHouseTemplate.fundNeed) && clan.checkGrowthPoint(clanHouseTemplate.growthPointNeed))
                                     {
-                                        clan.mineFund(clanHouseTemplate.getFundNeed());
-                                        clan.mineGrowthPoint(clanHouseTemplate.getGrowthPointNeed());
+                                        clan.mineFund(clanHouseTemplate.fundNeed);
+                                        clan.mineGrowthPoint(clanHouseTemplate.growthPointNeed);
                                         clan.setSkillHouseLvl(skillHouse + 1);
                                         player.okDialog(Utilities.Format("Nhà kỹ năng của bang hội bạn đã lên cấp: %s", clan.getSkillHouseLvl()));
                                     }
