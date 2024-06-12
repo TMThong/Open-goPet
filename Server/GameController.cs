@@ -242,6 +242,8 @@ public class GameController
                                     place.petInteract(GopetCMD.ON_PET_INTERACT_POKE, player.playerData.user_id);
                                     return;
                                 }
+                            default:
+                                break;
                         }
                         place.chat(player, text);
                         HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Chat khu vực nội dung là :%s", text)));
@@ -464,7 +466,6 @@ public class GameController
 
     private void guider(sbyte subCMD, Message message)
     {
-        //System.out.println("server.GameController.guider( ) " + subCMD);
         switch (subCMD)
         {
             case GopetCMD.GUIDER_IMGDIALOG:
@@ -894,7 +895,6 @@ public class GameController
             case GopetCMD.SHOW_TATTO_PET_IN_KIOSK:
                 {
                     int IdMenuItem = message.readInt();
-
                     var kiosk = MarketPlace.getKiosk(GopetManager.KIOSK_PET);
                     var sellItems = kiosk.kioskItems.Where(p => p.itemId == IdMenuItem);
                     if (sellItems.Any())
