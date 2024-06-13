@@ -2,12 +2,12 @@ namespace Gopet.Data.GopetClan
 {
     public class ClanMemberDonateInfo 
     {
-        private sbyte priceType;
-        private long price;
-        private long growthPoint;
-        private long fund;
-        private int curDonate = 0;
-        private int maxDonate;
+        public sbyte priceType;
+        public long price;
+        public long growthPoint;
+        public long fund;
+        public int curDonate = 0;
+        public int maxDonate;
 
         public ClanMemberDonateInfo()
         {

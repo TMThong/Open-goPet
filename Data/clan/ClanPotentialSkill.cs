@@ -3,8 +3,8 @@ namespace Gopet.Data.GopetClan
     public class ClanPotentialSkill
     {
 
-        private int buffId;
-        private int point;
+        public int buffId;
+        public int point;
 
         public void addPoint(int skillpoint)
         {

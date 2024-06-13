@@ -12,8 +12,8 @@ namespace Gopet.Data.GopetClan
         public long fundDonate = 0;
         public long growthPointDonate = 0;
         public sbyte duty = Clan.TYPE_NORMAL;
-        public long timeJoin = Utilities.CurrentTimeMillis;
-        public long timeResetData = Utilities.CurrentTimeMillis / 2L;
+        public DateTime timeJoin = DateTime.Now;
+        public DateTime timeResetData = DateTime.Now;
         public int curQuest = 0;
         public CopyOnWriteArrayList<ClanMemberDonateInfo> clanMemberDonateInfos;
         [JsonIgnore]
@@ -21,7 +21,7 @@ namespace Gopet.Data.GopetClan
 
         public void reset()
         {
-            timeResetData = Utilities.CurrentTimeMillis;
+            timeResetData = DateTime.Now;
             clanMemberDonateInfos = new(new ClanMemberDonateInfo[]
             {
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_COIN, 10000l, 0, 10, 3),
@@ -35,7 +35,7 @@ namespace Gopet.Data.GopetClan
 
         public bool needReset()
         {
-            DateTime resetDateTime = new DateTime(timeResetData);
+            DateTime resetDateTime =  timeResetData;
             DateTime serer = Utilities.GetCurrentDate();
             return resetDateTime.Day != serer.Day || resetDateTime.Month != serer.Month || resetDateTime.Year != serer.Year;
         }
