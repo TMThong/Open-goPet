@@ -500,7 +500,7 @@ public partial class MenuController
                 break;
             case MENU_SELECT_SKILL_CLAN_TO_RENT:
                 {
-                    int indexSlot = (int)player.controller.objectPerformed.get(OBJKEY_INDEX_SLOT_SKILL_RENT);
+                    /*int indexSlot = (int)player.controller.objectPerformed.get(OBJKEY_INDEX_SLOT_SKILL_RENT);
                     ClanMember clanMember = player.controller.getClan();
                     if (clanMember != null)
                     {
@@ -529,7 +529,7 @@ public partial class MenuController
                     else
                     {
                         player.controller.notClan();
-                    }
+                    }*/
                 }
                 break;
             case MENU_PLUS_SKILL_CLAN:

@@ -502,7 +502,7 @@ public partial class MenuController
                 break;
             case MENU_SELECT_SKILL_CLAN_TO_RENT:
                 {
-                    ClanMember clanMember = player.controller.getClan();
+                    /*ClanMember clanMember = player.controller.getClan();
                     if (clanMember != null)
                     {
                         Clan clan = clanMember.getClan();
@@ -529,12 +529,12 @@ public partial class MenuController
                     else
                     {
                         player.controller.notClan();
-                    }
+                    }*/
                 }
                 break;
             case MENU_PLUS_SKILL_CLAN:
                 {
-                    ClanMember clanMember = player.controller.getClan();
+                   /* ClanMember clanMember = player.controller.getClan();
                     if (clanMember != null)
                     {
                         JArrayList<MenuItemInfo> skillMenuItemInfos = new();
@@ -552,7 +552,7 @@ public partial class MenuController
                     else
                     {
                         player.controller.notClan();
-                    }
+                    }*/
                 }
                 break;
             case MENU_INTIVE_CHALLENGE:

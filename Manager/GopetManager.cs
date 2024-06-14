@@ -251,15 +251,6 @@ public class GopetManager
 
     public static HashMap<int, JArrayList<TaskTemplate>> taskTemplateByNpcId = new();
 
-    public static JArrayList<ClanBuffTemplate> CLAN_BUFF_TEMPLATES = new();
-
-    public static HashMap<int, ClanBuffTemplate> CLANBUFF_HASH_MAP = new();
-
-    public static HashMap<int, ClanHouseTemplate> clanSkillHouseTemp = new();
-
-
-    public static HashMap<int, JArrayList<ShopClanTemplate>> shopClanByLvl = new();
-
     public static HashMap<int, int> tierItemHashMap = new();
 
 
@@ -808,51 +799,6 @@ public class GopetManager
             ServerMonitor.LogInfo("Tải dữ liệu danh hiệu từ cơ sở dữ liệu OK");
 
             Summer2024Event.EventDatas = conn.Query<Summer2024Event.EventData>("SELECT * FROM `summer_2024_event`");
-
-            var shopClans = conn.Query("SELECT * FROM `shop_clan`");
-            foreach (var shopClanData in shopClans)
-            {
-                ShopClanTemplate shopTemplate1 = new ShopClanTemplate();
-                shopTemplate1.setId(shopClanData.Id);
-                shopTemplate1.setNeedShopClanLvl(shopClanData.needShopClanLvl);
-                shopTemplate1.setComment(shopClanData.comment);
-                shopTemplate1.setPercent(shopClanData.percent);
-                if (shopClanData.itemOptionValue != null)
-                {
-                    shopTemplate1.setOption(JsonConvert.DeserializeObject<int[][]>(shopClanData.itemOptionValue));
-                }
-                if (!shopClanByLvl.ContainsKey(shopTemplate1.getNeedShopClanLvl()))
-                {
-                    shopClanByLvl.put(shopTemplate1.getNeedShopClanLvl(), new());
-                }
-                shopClanByLvl.get(shopTemplate1.getNeedShopClanLvl()).add(shopTemplate1);
-            }
-            ServerMonitor.LogInfo("Tải dữ liệu cửa hàng bang hội từ cơ sở dữ liệu OK");
-            var clanBuffTemplates = conn.Query("SELECT * FROM `clan_buff_template`");
-            foreach (var template in clanBuffTemplates)
-            {
-                ClanBuffTemplate clanBuffTemplate = new ClanBuffTemplate();
-                clanBuffTemplate.setBuffId(template.buffId);
-                clanBuffTemplate.setPotentialPointNeed(template.potentialPointNeed);
-                clanBuffTemplate.setValuePerLevel(template.valuePerLvl);
-                clanBuffTemplate.setLvlClan(template.lvlClan);
-                clanBuffTemplate.setPercent(template.isPercent);
-                clanBuffTemplate.setName(template.name);
-                clanBuffTemplate.setDesc(template.descBuff);
-                clanBuffTemplate.setComment(template.comment);
-                CLAN_BUFF_TEMPLATES.add(clanBuffTemplate);
-                CLANBUFF_HASH_MAP.put(clanBuffTemplate.getBuffId(), clanBuffTemplate);
-            }
-            ServerMonitor.LogInfo("Tải dữ liệu buff mẫu của bang hội từ cơ sở dữ liệu OK");
-            var clanSKillTemplates = conn.Query("SELECT * FROM `clan_skill_house`");
-            foreach (var clanSkill in clanSKillTemplates)
-            {
-                ClanHouseTemplate clanHouseTemplate = new ClanHouseTemplate();
-                clanHouseTemplate.setLvl(clanSkill.lvl);
-                clanHouseTemplate.setFundNeed(clanSkill.fundNeed);
-                clanHouseTemplate.setGrowthPointNeed(clanSkill.growthPoint);
-                clanSkillHouseTemp.put(clanHouseTemplate.getLvl(), clanHouseTemplate);
-            }
         }
 
         using (var connWeb = MYSQLManager.createWebMySqlConnection())
@@ -869,64 +815,6 @@ public class GopetManager
                 ListPetMustntUpTier.Add(petTemplate.petId);
             }
         }
-        /*
-        resultSet = MYSQLManager.jquery("SELECT * FROM `shop_clan`");
-        while (resultSet.next())
-        {
-            ShopClanTemplate shopTemplate1 = new ShopClanTemplate();
-            shopTemplate1.setId(resultSet.getInt("Id"));
-            shopTemplate1.setNeedShopClanLvl(resultSet.getInt("needShopClanLvl"));
-            shopTemplate1.setComment(resultSet.getString("comment"));
-            shopTemplate1.setPercent(resultSet.getFloat("percent"));
-            shopTemplate1.setOption(JsonConvert.DeserializeObject<int[][]>(resultSet.getString("itemOptionValue")));
-            if (!shopClanByLvl.ContainsKey(shopTemplate1.getNeedShopClanLvl()))
-            {
-                shopClanByLvl.put(shopTemplate1.getNeedShopClanLvl(), new());
-            }
-            shopClanByLvl.get(shopTemplate1.getNeedShopClanLvl()).add(shopTemplate1);
-        }
-
-
-        resultSet = MYSQLManager.jquery("SELECT * FROM `clan_buff_template`");
-        while (resultSet.next())
-        {
-            ClanBuffTemplate clanBuffTemplate = new ClanBuffTemplate();
-            clanBuffTemplate.setBuffId(resultSet.getInt("buffId"));
-            clanBuffTemplate.setPotentialPointNeed(resultSet.getInt("potentialPointNeed"));
-            clanBuffTemplate.setValuePerLevel(resultSet.getInt("valuePerlvl"));
-            clanBuffTemplate.setLvlClan(resultSet.getInt("lvlClan"));
-            clanBuffTemplate.setPercent(resultSet.getsbyte("isPercent") == 1);
-            clanBuffTemplate.setName(resultSet.getString("name"));
-            clanBuffTemplate.setDesc(resultSet.getString("descBuff"));
-            clanBuffTemplate.setComment(resultSet.getString("comment"));
-            CLAN_BUFF_TEMPLATES.add(clanBuffTemplate);
-            CLANBUFF_HASH_MAP.put(clanBuffTemplate.getBuffId(), clanBuffTemplate);
-        }
-        resultSet.Close();
-
-        resultSet = MYSQLManager.jquery("SELECT * FROM `clan_market_house`");
-        while (resultSet.next())
-        {
-            ClanHouseTemplate clanHouseTemplate = new ClanHouseTemplate();
-            clanHouseTemplate.setLvl(resultSet.getInt("clanLvl"));
-            clanHouseTemplate.setFundNeed(resultSet.getInt("fundNeed"));
-            clanHouseTemplate.setGrowthPointNeed(resultSet.getInt("growthPoint"));
-            clanHouseTemplate.setNeedClanLvl(resultSet.getInt("needClanLvl"));
-            clanMarketHouseTemp.put(clanHouseTemplate.getLvl(), clanHouseTemplate);
-        }
-        resultSet.Close();
-
-        resultSet = MYSQLManager.jquery("SELECT * FROM `clan_skill_house`");
-        while (resultSet.next())
-        {
-            ClanHouseTemplate clanHouseTemplate = new ClanHouseTemplate();
-            clanHouseTemplate.setLvl(resultSet.getInt("clanLvl"));
-            clanHouseTemplate.setFundNeed(resultSet.getInt("fundNeed"));
-            clanHouseTemplate.setGrowthPointNeed(resultSet.getInt("growthPoint"));
-            clanSkillHouseTemp.put(clanHouseTemplate.getLvl(), clanHouseTemplate);
-        }
-        resultSet.Close();
-        */
         foreach (var entry in tierItem)
         {
 

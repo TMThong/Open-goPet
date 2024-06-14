@@ -3261,31 +3261,14 @@ public class GameController
                         {
                             if (!ownPet.petDieByPK)
                             {
-                                bool autoGoBack = false;
-                                if (passiveClanMember != null)
+                                if (checkCount(cardPK, 1))
                                 {
-                                    if (Utilities.NextFloatPer() < passiveClanMember.getClan().getBuffByIdBuff(ClanBuff.BUFF_AUTO_GO_BACK_WHEN_INVITE_PK).getPercent())
-                                    {
-                                        autoGoBack = true;
-                                    }
-                                }
-                                if (autoGoBack)
-                                {
-                                    MapManager.maps.get(11).addRandom(playerPassive);
-                                    playerPassive.okDialog("Buff bang hội kích hoạt tự động dịch chuyển tới khu an toàn");
-                                    player.okDialog("Người chơi bạn PK đã được bang hội đưa về khu an toàn");
-                                }
-                                else
-                                {
-                                    if (checkCount(cardPK, 1))
-                                    {
-                                        subCountItem(cardPK, 1, GopetManager.NORMAL_INVENTORY);
-                                        player.playerData.pkPoint++;
-                                        GopetPlace place = (GopetPlace)player.getPlace();
-                                        place.startFightPlayer(user_id, player, true, 0);
-                                        HistoryManager.addHistory(new History(playerPassive).setLog(Utilities.Format("Bị người chơi %s PK", player.playerData.name)));
-                                        HistoryManager.addHistory(new History(player).setLog(Utilities.Format("PK người chơi %s", playerPassive.playerData.name)));
-                                    }
+                                    subCountItem(cardPK, 1, GopetManager.NORMAL_INVENTORY);
+                                    player.playerData.pkPoint++;
+                                    GopetPlace place = (GopetPlace)player.getPlace();
+                                    place.startFightPlayer(user_id, player, true, 0);
+                                    HistoryManager.addHistory(new History(playerPassive).setLog(Utilities.Format("Bị người chơi %s PK", player.playerData.name)));
+                                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("PK người chơi %s", playerPassive.playerData.name)));
                                 }
                             }
                             else
@@ -4219,7 +4202,7 @@ public class GameController
 
     public void showSkillClan(int user_id)
     {
-        Player olPlayer = PlayerManager.get(user_id);
+        /*Player olPlayer = PlayerManager.get(user_id);
         if (olPlayer != null)
         {
             ClanMember clanMember = olPlayer.controller.getClan();
@@ -4284,7 +4267,7 @@ public class GameController
         else
         {
             player.redDialog("Người chơi offline");
-        }
+        }*/
     }
 
     public void updateAvatar()
