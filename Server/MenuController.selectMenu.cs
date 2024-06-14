@@ -518,31 +518,7 @@ public partial class MenuController
                                     player.redDialog("Bang hội bạn đã thuê kỹ năng này rồi");
                                     return;
                                 }
-                                if (clan.checkFund(GopetManager.PRICE_RENT_SKILL[0]) && clan.checkGrowthPoint(GopetManager.PRICE_RENT_SKILL[1]))
-                                {
-                                    clan.mineFund(GopetManager.PRICE_RENT_SKILL[0]);
-                                    clan.mineGrowthPoint(GopetManager.PRICE_RENT_SKILL[1]);
-
-                                    ClanBuff newBUff = new ClanBuff();
-                                    newBUff.setBuffId(clanBuffTemplate.getBuffId());
-                                    newBUff.setValue(clanBuffTemplate.getValuePerLevel() * clanPotentialSkill.getPoint());
-                                    newBUff.setTimeEndBuff(Utilities.TimeDay(30));
-                                    ClanBuff getBuffByIndex = clan.getBuff(indexSlot);
-                                    if (getBuffByIndex != null)
-                                    {
-                                        clan.getClanBuffs().set(indexSlot, newBUff);
-                                    }
-                                    else
-                                    {
-                                        clan.getClanBuffs().add(newBUff);
-                                    }
-                                    player.controller.showSkillClan(player.user.user_id);
-                                    player.okDialog("Thuê thành công");
-                                }
-                                else
-                                {
-                                    player.redDialog("Bang hội không đủ điểm");
-                                }
+                                 
                             }
                             else
                             {
@@ -558,45 +534,7 @@ public partial class MenuController
                 break;
             case MENU_PLUS_SKILL_CLAN:
                 {
-                    ClanMember clanMember = player.controller.getClan();
-                    if (clanMember != null)
-                    {
-                        Clan clan = clanMember.getClan();
-                        bool canEdit = clanMember.duty == Clan.TYPE_LEADER || clanMember.duty == Clan.TYPE_DEPUTY_LEADER;
-                        if (index >= 0 && index < GopetManager.CLAN_BUFF_TEMPLATES.Count)
-                        {
-                            ClanBuffTemplate clanBuffTemplate = GopetManager.CLAN_BUFF_TEMPLATES.get(index);
-                            if (clan.getLvl() >= clanBuffTemplate.getLvlClan())
-                            {
-                                if (canEdit)
-                                {
-                                    if (clanBuffTemplate.getPotentialPointNeed() <= clan.getPotentialPoint())
-                                    {
-                                        ClanPotentialSkill clanPotentialSkill = clan.getClanPotentialSkillOrCreate(clanBuffTemplate.getBuffId());
-                                        clanPotentialSkill.addPoint(1);
-                                        clan.addPotentialPoint(-clanBuffTemplate.getPotentialPointNeed());
-                                        player.okDialog("Nâng cấp thành công");
-                                    }
-                                    else
-                                    {
-                                        player.redDialog("không đủ điểm tiềm năng");
-                                    }
-                                }
-                                else
-                                {
-                                    player.redDialog("Bạn không đủ quyền");
-                                }
-                            }
-                            else
-                            {
-                                player.redDialog("Bang của bạn chưa đủ cấp!");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        player.controller.notClan();
-                    }
+                    player.redDialog(GopetManager.OldFeatures);
                 }
                 break;
             case SHOP_ENERGY:

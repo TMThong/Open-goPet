@@ -15,29 +15,19 @@ namespace Gopet.Data.GopetClan
         public DateTime timeJoin = DateTime.Now;
         public DateTime timeResetData = DateTime.Now;
         public int curQuest = 0;
-        public CopyOnWriteArrayList<ClanMemberDonateInfo> clanMemberDonateInfos;
         [JsonIgnore]
         public Clan clan;
 
         public void reset()
         {
             timeResetData = DateTime.Now;
-            clanMemberDonateInfos = new(new ClanMemberDonateInfo[]
-            {
-            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_COIN, 10000l, 0, 10, 3),
-            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_COIN, 100000l, 0, 110, 3),
-            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 1000l, 20, 100, 3),
-            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 5000l, 100, 550, 3)
-
-        });
             curQuest = 0;
         }
 
         public bool needReset()
         {
-            DateTime resetDateTime =  timeResetData;
-            DateTime serer = Utilities.GetCurrentDate();
-            return resetDateTime.Day != serer.Day || resetDateTime.Month != serer.Month || resetDateTime.Year != serer.Year;
+            DateTime dateTime = timeResetData.AddDays(1);
+            return dateTime < DateTime.Now;
         }
 
         public string getDutyName()

@@ -21,7 +21,7 @@ using System.Diagnostics;
 
 public class GopetManager
 {
-
+    public const string OldFeatures = "Chức năng cũ, đã bị xóa";
     /**
      * Chỉ số của quái từng cấp độ
      */
@@ -257,7 +257,6 @@ public class GopetManager
 
     public static HashMap<int, ClanHouseTemplate> clanSkillHouseTemp = new();
 
-    public static HashMap<int, ClanHouseTemplate> clanMarketHouseTemp = new();
 
     public static HashMap<int, JArrayList<ShopClanTemplate>> shopClanByLvl = new();
 
@@ -520,6 +519,11 @@ public class GopetManager
     public const int NPC_TRAN_CHAN = -1;
     public const int NPC_TIEN_NU = -2;
 
+    public static readonly CopyOnWriteArrayList<ClanMemberDonateInfo> clanMemberDonateInfos = new(new ClanMemberDonateInfo[]
+            {new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 10, 1),
+            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 100, 10),
+            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 1000, 100),
+            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 10000,  1000)});
     static GopetManager()
     {
         SqlMapper.AddTypeHandler(new JsonAdapter<int[]>());
@@ -813,7 +817,7 @@ public class GopetManager
                 shopTemplate1.setNeedShopClanLvl(shopClanData.needShopClanLvl);
                 shopTemplate1.setComment(shopClanData.comment);
                 shopTemplate1.setPercent(shopClanData.percent);
-                if(shopClanData.itemOptionValue != null)
+                if (shopClanData.itemOptionValue != null)
                 {
                     shopTemplate1.setOption(JsonConvert.DeserializeObject<int[][]>(shopClanData.itemOptionValue));
                 }
@@ -840,17 +844,6 @@ public class GopetManager
                 CLANBUFF_HASH_MAP.put(clanBuffTemplate.getBuffId(), clanBuffTemplate);
             }
             ServerMonitor.LogInfo("Tải dữ liệu buff mẫu của bang hội từ cơ sở dữ liệu OK");
-            var clanMarketTemplates = conn.Query("SELECT * FROM `clan_market_house`");
-            foreach (var clanMarket in clanMarketTemplates)
-            {
-                ClanHouseTemplate clanHouseTemplate = new ClanHouseTemplate();
-                clanHouseTemplate.setLvl(clanMarket.lvl);
-                clanHouseTemplate.setFundNeed(clanMarket.fundNeed);
-                clanHouseTemplate.setGrowthPointNeed(clanMarket.growthPoint);
-                clanHouseTemplate.setNeedClanLvl(clanMarket.needClanLvl);
-                clanMarketHouseTemp.put(clanHouseTemplate.getLvl(), clanHouseTemplate);
-            }
-            ServerMonitor.LogInfo("Tải dữ liệu mẫu của bang hội từ cơ sở dữ liệu OK");
             var clanSKillTemplates = conn.Query("SELECT * FROM `clan_skill_house`");
             foreach (var clanSkill in clanSKillTemplates)
             {

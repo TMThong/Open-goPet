@@ -10,18 +10,13 @@ namespace Gopet.Data.GopetClan
 {
     public class Clan
     {
-
         public int clanId;
         public int curMember;
         public int maxMember;
         public String name;
         public int leaderId;
         public long fund = 0;
-        public long growthPoint = 0;
         public int lvl = 1;
-        public int skillHouseLvl = 1;
-        public int baseMarketLvl = 0;
-        public int potentialPoint = 0;
         public CopyOnWriteArrayList<ClanMember> members = new CopyOnWriteArrayList<ClanMember>();
         public CopyOnWriteArrayList<ClanRequestJoin> requestJoin = new();
         public CopyOnWriteArrayList<ClanBuff> clanBuffs = new();
@@ -89,30 +84,19 @@ namespace Gopet.Data.GopetClan
             this.fund = fund;
         }
 
-        public void setGrowthPoint(long growthPoint)
-        {
-            this.growthPoint = growthPoint;
-        }
-
+      
         public void setLvl(int lvl)
         {
             this.lvl = lvl;
         }
 
-        public void setSkillHouseLvl(int skillHouseLvl)
-        {
-            this.skillHouseLvl = skillHouseLvl;
-        }
-
+       
         public void setSuperMarketLvl(int superMarketLvl)
         {
             this.superMarketLvl = superMarketLvl;
         }
 
-        public void setPotentialPoint(int potentialPoint)
-        {
-            this.potentialPoint = potentialPoint;
-        }
+
 
         public void setMembers(CopyOnWriteArrayList<ClanMember> members)
         {
@@ -194,29 +178,17 @@ namespace Gopet.Data.GopetClan
             return this.fund;
         }
 
-        public long getGrowthPoint()
-        {
-            return this.growthPoint;
-        }
+     
 
         public int getLvl()
         {
             return this.lvl;
         }
 
-        public int getSkillHouseLvl()
-        {
-            return this.skillHouseLvl;
-        }
 
         public int getSuperMarketLvl()
         {
             return this.superMarketLvl;
-        }
-
-        public int getPotentialPoint()
-        {
-            return this.potentialPoint;
         }
 
         public CopyOnWriteArrayList<ClanMember> getMembers()
@@ -276,11 +248,7 @@ namespace Gopet.Data.GopetClan
             return GopetManager.clanTemp.get(lvl);
         }
 
-        public void addPotentialPoint(int value)
-        {
-            this.potentialPoint += value;
-        }
-
+      
         public void sendMessage(Message m)
         {
             foreach (ClanMember member in members)
@@ -298,8 +266,6 @@ namespace Gopet.Data.GopetClan
             JArrayList<String> clanInfo = new();
             clanInfo.add(Utilities.Format(" Cấp: %s ", lvl));
             clanInfo.add(Utilities.Format(" Thành viên: %s/%s ", curMember, maxMember));
-            clanInfo.add(Utilities.Format(" Shop bảo vật cấp: %s ", baseMarketLvl));
-            clanInfo.add(Utilities.Format(" Nhà kỹ năng bang hội cấp: %s ", skillHouseLvl));
             return String.Join(",", clanInfo.ToArray());
         }
 
@@ -317,34 +283,19 @@ namespace Gopet.Data.GopetClan
             }
         }
 
-        public void addGrowthPoint(long value, ClanMember clanMember)
-        {
-            if (members.Contains(clanMember))
-            {
-                this.growthPoint += value;
-                clanMember.growthPointDonate += value;
-            }
-        }
 
         public bool checkFund(long value)
         {
             return this.fund >= value;
         }
 
-        public bool checkGrowthPoint(long value)
-        {
-            return this.growthPoint >= value;
-        }
+
 
         public void mineFund(long value)
         {
             this.fund -= value;
         }
 
-        public void mineGrowthPoint(long value)
-        {
-            this.growthPoint -= value;
-        }
 
         public void notEnoughFund(Player player)
         {
@@ -358,7 +309,8 @@ namespace Gopet.Data.GopetClan
 
         public bool checkDuty(sbyte typeDuty)
         {
-            int maxOfDutye = getTemp().getPermission()[typeDuty];
+            int[] permission = new int[] { 1, 1, 5, this.getTemp().maxMember - 7};
+            int maxOfDutye = permission[typeDuty];
             int cur = 0;
             foreach (ClanMember member in members)
             {
@@ -519,7 +471,7 @@ namespace Gopet.Data.GopetClan
         {
             using(MySqlConnection MySqlConnection = MYSQLManager.create())
             {
-                MySqlConnection.Execute(Utilities.Format("UPDATE `clan` set `lvl` = %s , `curMember` = %s , `maxMember` =%s , `leaderId` =%s , `members` = '%s' , `fund` =%s, `growthPoint` =%s , `skillHouseLvl` = %s , `baseMarketLvl` =%s , `joinRequest` = '%s' WHERE `clanId` =%s", lvl, curMember, maxMember, leaderId, JsonConvert.SerializeObject(members), fund, growthPoint, skillHouseLvl, baseMarketLvl, JsonConvert.SerializeObject(requestJoin), this.clanId));
+                
             }
         }
 
@@ -612,20 +564,9 @@ namespace Gopet.Data.GopetClan
             return new ClanBuff(buffId, 0, long.MaxValue);
         }
 
-        public void notEngouhPermission(Player player)
+        public static void notEngouhPermission(Player player)
         {
             player.redDialog("Bạn không đủ quyền");
         }
-
-        internal int getbaseMarketLvl()
-        {
-            return this.baseMarketLvl;
-        }
-
-        internal void setbaseMarketLvl(int v)
-        {
-            this.baseMarketLvl = v;
-        }
     }
-
 }

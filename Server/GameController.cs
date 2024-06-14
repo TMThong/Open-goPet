@@ -2108,7 +2108,6 @@ public class GameController
             listInfoClan.add(Utilities.Format("Thành viên: %s/%s", clan.getCurMember(), clan.getMaxMember()));
             listInfoClan.add("Khẩu hiệu: " + clan.getSlogan());
             listInfoClan.add(Utilities.Format("Quỹ: %s", Utilities.FormatNumber(clan.getFund())));
-            listInfoClan.add(Utilities.Format("Điểm cống hiến: %s", Utilities.FormatNumber(clan.getGrowthPoint())));
             Message message = clanMessage(GopetCMD.CLAN_INFO);
             message.putInt(clan.getClanId());
             message.putsbyte(listInfoClan.Count);
@@ -2130,14 +2129,14 @@ public class GameController
         ClanMember clanMember = getClan();
         if (clanMember != null)
         {
-            CopyOnWriteArrayList<ClanMemberDonateInfo> donateInfos = (CopyOnWriteArrayList<ClanMemberDonateInfo>)clanMember.clanMemberDonateInfos.clone();
+            CopyOnWriteArrayList<ClanMemberDonateInfo> donateInfos = GopetManager.clanMemberDonateInfos;
             Message message = clanMessage(GopetCMD.DONATE_CLAN);
             message.putInt(donateInfos.Count);
             for (int i = 0; i < donateInfos.Count; i++)
             {
                 ClanMemberDonateInfo get = donateInfos.get(i);
                 message.putInt(i);
-                message.putUTF("Mốc " + (i + 1) + Utilities.Format(": Quyên góp %s để nhận %s quỹ và %s điểm cống hiến (Còn %s lần)", MenuController.getMoneyText(get.getPriceType(), get.getPrice()), Utilities.FormatNumber(get.getFund()), Utilities.FormatNumber(get.getGrowthPoint()), (get.getMaxDonate() - get.getCurDonate())));
+                message.putUTF("Mốc " + (i + 1) + Utilities.Format(": Quyên góp %s để nhận %s điểm cống hiến", MenuController.getMoneyText(get.getPriceType(), get.getPrice()), Utilities.FormatNumber(get.getFund())));
             }
             message.cleanup();
             player.session.sendMessage(message);
@@ -2153,28 +2152,19 @@ public class GameController
         ClanMember clanMember = getClan();
         if (clanMember != null)
         {
-            CopyOnWriteArrayList<ClanMemberDonateInfo> donateInfos = (CopyOnWriteArrayList<ClanMemberDonateInfo>)clanMember.clanMemberDonateInfos.clone();
+            CopyOnWriteArrayList<ClanMemberDonateInfo> donateInfos = GopetManager.clanMemberDonateInfos;
             if (menuId >= 0 && menuId < donateInfos.Count)
             {
                 ClanMemberDonateInfo clanMemberDonateInfo = donateInfos.get(menuId);
-                if (clanMemberDonateInfo.getMaxDonate() > clanMemberDonateInfo.getCurDonate())
+                if (MenuController.checkMoney(clanMemberDonateInfo.getPriceType(), clanMemberDonateInfo.getPrice(), player))
                 {
-                    if (MenuController.checkMoney(clanMemberDonateInfo.getPriceType(), clanMemberDonateInfo.getPrice(), player))
-                    {
-                        MenuController.addMoney(clanMemberDonateInfo.getPriceType(), -(int)clanMemberDonateInfo.getPrice(), player);
-                        clanMemberDonateInfo.setCurDonate(clanMemberDonateInfo.getCurDonate() + 1);
-                        clanMember.getClan().addFund(clanMemberDonateInfo.getFund(), clanMember);
-                        clanMember.getClan().addGrowthPoint(clanMemberDonateInfo.getGrowthPoint(), clanMember);
-                        player.okDialog("Quyên góp thành công");
-                    }
-                    else
-                    {
-                        player.redDialog("Không đủ tiền");
-                    }
+                    MenuController.addMoney(clanMemberDonateInfo.getPriceType(), -(int)clanMemberDonateInfo.getPrice(), player);
+                    clanMember.getClan().addFund(clanMemberDonateInfo.getFund(), clanMember);
+                    player.okDialog("Quyên góp thành công");
                 }
                 else
                 {
-                    player.redDialog("Số lần quyên góp trong ngày hôm nay hết rồi");
+                    player.redDialog("Không đủ tiền");
                 }
             }
             else
@@ -4240,7 +4230,8 @@ public class GameController
                 Clan clan = clanMember.getClan();
                 Message m = clanMessage(GopetCMD.GUILD_CLAN_SKILL);
                 m.putsbyte(canEdit ? 0 : 1);
-                m.putInt(clanMember.getClan().getPotentialPoint());
+                //m.putInt(clanMember.getClan().getPotentialPoint());
+                m.putInt(123);
                 for (int i = 0; i < 3; i++)
                 {
                     bool hasSlot = clan.getLvl() >= GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[i];

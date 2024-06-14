@@ -403,55 +403,13 @@ public partial class MenuController
 
             case OP_UPGRADE_SKILL_HOUSE:
                 {
-                    ClanMember clanMember = player.controller.getClan();
-                    if (clanMember != null)
-                    {
-                        Clan clan = clanMember.getClan();
-                        if (clanMember.duty == Clan.TYPE_LEADER)
-                        {
-                            int marketHouse = clan.getbaseMarketLvl();
-                            ClanHouseTemplate clanHouseTemplate = GopetManager.clanSkillHouseTemp.get(marketHouse + 1);
-                            if (clanHouseTemplate != null)
-                            {
-                                showYNDialog(DIALOG_ASK_UPGRADE_SHOP_HOUSE, Utilities.Format("Bạn có chắc muốn nâng nhà kỹ năng bang hội không ? Cần %s quỹ và %s cống hiến", Utilities.FormatNumber(clanHouseTemplate.fundNeed), Utilities.FormatNumber(clanHouseTemplate.growthPointNeed)), player);
-                            }
-                            else
-                            {
-                                player.redDialog("Nhà kỹ năng đã đạt cấp tối đa");
-                            }
-                        }
-                        else
-                        {
-                            clan.notEngouhPermission(player);
-                        }
-                    }
+                    player.redDialog(GopetManager.OldFeatures);
                 }
                 break;
 
             case OP_UPGRADE_SHOP_CLAN:
                 {
-                    ClanMember clanMember = player.controller.getClan();
-                    if (clanMember != null)
-                    {
-                        Clan clan = clanMember.getClan();
-                        if (clanMember.duty == Clan.TYPE_LEADER)
-                        {
-                            int marketHouse = clan.getbaseMarketLvl();
-                            ClanHouseTemplate clanHouseTemplate = GopetManager.clanMarketHouseTemp.get(marketHouse + 1);
-                            if (clanHouseTemplate != null)
-                            {
-                                showYNDialog(DIALOG_ASK_UPGRADE_SHOP_HOUSE, Utilities.Format("Bạn có chắc muốn nâng shop bang hội không ? Cần %s quỹ và %s cống hiến", Utilities.FormatNumber(clanHouseTemplate.fundNeed), Utilities.FormatNumber(clanHouseTemplate.growthPointNeed)), player);
-                            }
-                            else
-                            {
-                                player.redDialog("Shop đã đạt cấp tối đa");
-                            }
-                        }
-                        else
-                        {
-                            clan.notEngouhPermission(player);
-                        }
-                    }
+                    player.redDialog(GopetManager.OldFeatures);
                 }
                 break;
             case OP_SELECT_PET_DEF_LEAGUE:

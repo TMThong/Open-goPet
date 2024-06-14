@@ -321,90 +321,12 @@ public partial class MenuController
                     break;
                 case DIALOG_ASK_REQUEST_UPGRADE_MAIN_HOUSE:
                     {
-                        ClanMember clanMember = player.controller.getClan();
-                        if (clanMember != null)
-                        {
-                            if (clanMember.duty == Clan.TYPE_LEADER)
-                            {
-                                Clan clan = clanMember.getClan();
-                                if (clan.getLvl() < GopetManager.CLAN_MAX_LVL)
-                                {
-                                    ClanTemplate clanTemplate = GopetManager.clanTemp.get(clan.getLvl() + 1);
-                                    if (clanTemplate != null)
-                                    {
-                                        if (clan.checkFund(clanTemplate.getFundNeed()) && clan.checkGrowthPoint(clanTemplate.getGrowthPointNeed()))
-                                        {
-                                            clan.mineFund(clanTemplate.getFundNeed());
-                                            clan.mineGrowthPoint(clanTemplate.getGrowthPointNeed());
-                                            clan.setTemplate(clanTemplate);
-                                        }
-                                        else
-                                        {
-                                            player.redDialog("Không đủ điểm");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        player.redDialog("ERROR AT UPGRADE MAIN HOUSE , PLEASE SEND THIS MESSAGE TO DEV OF GOPET");
-                                    }
-                                }
-                                else
-                                {
-                                    player.redDialog("Nhà chính đạt cấp tối đa");
-                                }
-                            }
-                            else
-                            {
-                                player.redDialog("Bạn không có quyền này, chỉ có bang chủ mới thao tác được.");
-                            }
-                        }
-                        else
-                        {
-                            player.controller.notClan();
-                        }
+                        player.redDialog(GopetManager.OldFeatures);
                     }
                     break;
                 case DIALOG_ASK_UPGRADE_SHOP_HOUSE:
                     {
-                        ClanMember clanMember = player.controller.getClan();
-                        if (clanMember != null)
-                        {
-                            Clan clan = clanMember.getClan();
-                            if (clanMember.duty == Clan.TYPE_LEADER)
-                            {
-                                int marketHouse = clan.getbaseMarketLvl();
-                                ClanHouseTemplate clanHouseTemplate = GopetManager.clanMarketHouseTemp.get(marketHouse + 1);
-                                if (clanHouseTemplate != null)
-                                {
-                                    if (clan.getLvl() >= clanHouseTemplate.needClanLvl)
-                                    {
-                                        if (clan.checkFund(clanHouseTemplate.fundNeed) && clan.checkGrowthPoint(clanHouseTemplate.growthPointNeed))
-                                        {
-                                            clan.mineFund(clanHouseTemplate.fundNeed);
-                                            clan.mineGrowthPoint(clanHouseTemplate.growthPointNeed);
-                                            clan.setbaseMarketLvl(marketHouse + 1);
-                                            player.okDialog(Utilities.Format("Shop của bang hội bạn đã lên cấp: %s", clan.getSkillHouseLvl()));
-                                        }
-                                        else
-                                        {
-                                            player.redDialog("Bang hội không đủ điểm");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        player.redDialog(Utilities.Format("Bang hội cần đạt cấp %s", clanHouseTemplate.needClanLvl));
-                                    }
-                                }
-                                else
-                                {
-                                    player.redDialog("Shop đã đạt cấp tối đa");
-                                }
-                            }
-                            else
-                            {
-                                clan.notEngouhPermission(player);
-                            }
-                        }
+                        player.redDialog(GopetManager.OldFeatures);
                     }
                     break;
                 case DIALOG_ASK_ENCHANT_TATTO:
@@ -414,38 +336,7 @@ public partial class MenuController
                     }
                 case DIALOG_ASK_UPGRADE_SKILL_HOUSE:
                     {
-                        ClanMember clanMember = player.controller.getClan();
-                        if (clanMember != null)
-                        {
-                            Clan clan = clanMember.getClan();
-                            if (clanMember.duty == Clan.TYPE_LEADER)
-                            {
-                                int skillHouse = clan.getSkillHouseLvl();
-                                ClanHouseTemplate clanHouseTemplate = GopetManager.clanSkillHouseTemp.get(skillHouse + 1);
-                                if (clanHouseTemplate != null)
-                                {
-                                    if (clan.checkFund(clanHouseTemplate.fundNeed) && clan.checkGrowthPoint(clanHouseTemplate.growthPointNeed))
-                                    {
-                                        clan.mineFund(clanHouseTemplate.fundNeed);
-                                        clan.mineGrowthPoint(clanHouseTemplate.growthPointNeed);
-                                        clan.setSkillHouseLvl(skillHouse + 1);
-                                        player.okDialog(Utilities.Format("Nhà kỹ năng của bang hội bạn đã lên cấp: %s", clan.getSkillHouseLvl()));
-                                    }
-                                    else
-                                    {
-                                        player.redDialog("Bang hội không đủ điểm");
-                                    }
-                                }
-                                else
-                                {
-                                    player.redDialog("Nhà kỹ năng đã đạt cấp tối đa");
-                                }
-                            }
-                            else
-                            {
-                                clan.notEngouhPermission(player);
-                            }
-                        }
+                        player.redDialog(GopetManager.OldFeatures);
                     }
                     break;
 

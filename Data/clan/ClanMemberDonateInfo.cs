@@ -4,23 +4,18 @@ namespace Gopet.Data.GopetClan
     {
         public sbyte priceType;
         public long price;
-        public long growthPoint;
         public long fund;
-        public int curDonate = 0;
-        public int maxDonate;
 
         public ClanMemberDonateInfo()
         {
         }
 
 
-        public ClanMemberDonateInfo(sbyte priceType, long price, long growthPoint, long fund, int maxDonate)
+        public ClanMemberDonateInfo(sbyte priceType, long price, long fund)
         {
             this.priceType = priceType;
             this.price = price;
-            this.growthPoint = growthPoint;
             this.fund = fund;
-            this.maxDonate = maxDonate;
         }
         public void setPriceType(sbyte priceType)
         {
@@ -32,25 +27,13 @@ namespace Gopet.Data.GopetClan
             this.price = price;
         }
 
-        public void setGrowthPoint(long growthPoint)
-        {
-            this.growthPoint = growthPoint;
-        }
 
         public void setFund(long fund)
         {
             this.fund = fund;
         }
 
-        public void setCurDonate(int curDonate)
-        {
-            this.curDonate = curDonate;
-        }
-
-        public void setMaxDonate(int maxDonate)
-        {
-            this.maxDonate = maxDonate;
-        }
+       
 
         public sbyte getPriceType()
         {
@@ -62,26 +45,11 @@ namespace Gopet.Data.GopetClan
             return price;
         }
 
-        public long getGrowthPoint()
-        {
-            return growthPoint;
-        }
 
         public long getFund()
         {
             return fund;
         }
-
-        public int getCurDonate()
-        {
-            return curDonate;
-        }
-
-        public int getMaxDonate()
-        {
-            return maxDonate;
-        }
-
 
     }
 }

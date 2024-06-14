@@ -5,8 +5,6 @@ namespace Gopet.Data.GopetClan
         public int maxMember;
         public int tiemnangPoint;
         public long fundNeed;
-        public long growthPointNeed;
-        public int[] permission;
         public int clanLvl;
 
         public void setMaxMember(int maxMember)
@@ -22,16 +20,6 @@ namespace Gopet.Data.GopetClan
         public void setFundNeed(long fundNeed)
         {
             this.fundNeed = fundNeed;
-        }
-
-        public void setGrowthPointNeed(long growthPointNeed)
-        {
-            this.growthPointNeed = growthPointNeed;
-        }
-
-        public void setPermission(int[] permission)
-        {
-            this.permission = permission;
         }
 
         public void setLvl(int lvl)
@@ -54,15 +42,6 @@ namespace Gopet.Data.GopetClan
             return fundNeed;
         }
 
-        public long getGrowthPointNeed()
-        {
-            return growthPointNeed;
-        }
-
-        public int[] getPermission()
-        {
-            return permission;
-        }
 
         public int getLvl()
         {
