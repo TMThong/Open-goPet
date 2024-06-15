@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Gopet.Data.user;
 using Gopet.Data.Event.Year2024;
 using System.Diagnostics;
+using Gopet.Data.Clan;
 
 public class GopetManager
 {
@@ -253,6 +254,14 @@ public class GopetManager
 
     public static HashMap<int, int> tierItemHashMap = new();
 
+    /// <summary>
+    /// Danh sách mẫu kỹ năng bang hội theo cấp bang
+    /// </summary>
+    public static readonly Dictionary<int, ClanSkillTemplate> clanSkillViaLvl = new();
+    /// <summary>
+    /// Danh sách mẫu kỹ năng bang hội
+    /// </summary>
+    public static readonly List<ClanSkillTemplate> clanSkillTemplateList = new();
 
     public static JArrayList<ExchangeData> EXCHANGE_DATAS = new();
 
@@ -268,12 +277,16 @@ public class GopetManager
     public static IEnumerable<ServerInfo> ServerInfos = new List<ServerInfo>();
     public static List<int> ListPetMustntUpTier = new List<int>();
 
+    /// <summary>
+    /// Ghi nhật ký máy chủ
+    /// Có hỗ trợ màu sắc
+    /// </summary>
     public static Gopet.Logging.Monitor ServerMonitor { get; } = new Gopet.Logging.Monitor("Máy chủ");
 
-    /*
-     * Truyền vào là pet của mình
-     * Rồi sau đó là pet của đối phương
-     */
+    /// <summary>
+    /// Truyền vào là pet của mình
+    /// Rồi sau đó là pet của đối phương
+    /// </summary>
     public static Dictionary<sbyte, Dictionary<sbyte, float>> MitigatePetData = new()
     {
         [FIRE_ELEMENT] = new()
@@ -495,7 +508,9 @@ public class GopetManager
     public static readonly int[] ID_ITEM_SILVER = new int[] { 392, 395, 398, 401, 405, 408, 411, 414, 417 };
     public static readonly int[] ID_ITEM_PET_TIER_ONE = new int[] { 726, 728, 730, 732, 734, 738 };
     public static readonly int[] ID_ITEM_PET_TIER_TOW = new int[] { 740, 742, 744, 746, 748, 750, 756, 760, 762, 764, 766 };
-
+    /// <summary>
+    /// Giá tiền kích hoạt tài khoản
+    /// </summary>
     public const int PRICE_ACTIVE_USER = 20000;
     public const int TIME_DELAY_HEAL_WHEN_MOB_KILL_PET = 10000;
 
@@ -506,10 +521,17 @@ public class GopetManager
         [TradeGiftTemplate.TYPE_COIN] = new Tuple<int[], int[], int>(new int[] { GopetManager.MONEY_TYPE_SILVER_BAR, GopetManager.MONEY_TYPE_COIN }, new int[] { 3, 200 }, MenuController.OP_TRADE_GIFT_COIN),
         [TradeGiftTemplate.TYPE_GOLD] = new Tuple<int[], int[], int>(new int[] { GopetManager.MONEY_TYPE_GOLD_BAR, GopetManager.MONEY_TYPE_GOLD }, new int[] { 3, 100 }, MenuController.OP_TRADE_GIFT_GOLD)
     };
-
+    /// <summary>
+    /// Id npc trần chân
+    /// </summary>
     public const int NPC_TRAN_CHAN = -1;
+    /// <summary>
+    /// Id npc tiên nữ
+    /// </summary>
     public const int NPC_TIEN_NU = -2;
-
+    /// <summary>
+    /// Dữ liệu góp quỹ bang
+    /// </summary>
     public static readonly CopyOnWriteArrayList<ClanMemberDonateInfo> clanMemberDonateInfos = new(new ClanMemberDonateInfo[]
             {new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 10, 1),
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 100, 10),
@@ -562,7 +584,6 @@ public class GopetManager
 
     public static void init()
     {
-
         using (var conn = MYSQLManager.create())
         {
             PET_TEMPLATES.AddRange(conn.Query<PetTemplate>("SELECT * FROM `gopet_pet`"));
@@ -855,7 +876,9 @@ public class GopetManager
 
         return list;
     }
-
+    /// <summary>
+    /// Tải dữ liệu chợ
+    /// </summary>
     public static void loadMarket()
     {
 
@@ -894,7 +917,11 @@ public class GopetManager
             return __writer;
         }
     }
-
+    /// <summary>
+    /// Lấy icon hiển thị nguyên tố
+    /// </summary>
+    /// <param name="typeE">Loại nguyên tố</param>
+    /// <returns>Trả về icon text để client render</returns>
     public static string GetElementDisplay(sbyte typeE)
     {
         switch (typeE)
@@ -930,6 +957,9 @@ public class GopetManager
     {
         return string.Concat(GetClassDisplay(nClass), " ", GetElementDisplay(typeE));
     }
+    /// <summary>
+    /// Lưu dữ liệu chợ
+    /// </summary>
     public static void saveMarket()
     {
         using (var conn = MYSQLManager.create())

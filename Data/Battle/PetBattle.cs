@@ -706,8 +706,7 @@ namespace Gopet.Battle
                         float coinPlus = 0f;
                         if (clanMember != null)
                         {
-                            perExpPlus += clanMember.getClan().getBuffByIdBuff(ClanBuff.BUFF_EXP).getPercent();
-                            coinPlus += clanMember.getClan().getBuffByIdBuff(ClanBuff.BUFF_GEM).getPercent();
+                            
                         }
                         exp = genExpWhenMobDie(activePlayer, activePet, mob, mob.getMobLvInfo().exp);
                         exp = Math.Max(0, exp + Utilities.round(Utilities.GetValueFromPercent(exp, activePlayer.playerData.buffExp.getPercent() + perExpPlus)));
@@ -807,40 +806,9 @@ namespace Gopet.Battle
                     {
                         exp_sub_winner = Utilities.round(Utilities.GetValueFromPercent(expCurrentLvl, 3f));
                     }
-                    if (nonPlayerClanMember != null)
-                    {
-                        ClanBuff minBuff = nonPlayerClanMember.getClan().getBuffByIdBuff(ClanBuff.BUFF_DESCREASE_EXP_WHEN_PK);
-                        if (!(minBuff.getPercent() >= 100f))
-                        {
-                            exp_sub -= (int)Utilities.GetValueFromPercent(exp_sub, minBuff.getPercent());
-                        }
-                        else
-                        {
-                            exp_sub = 0;
-                        }
-                        ClanBuff minBuffSkipDie = nonPlayerClanMember.getClan().getBuffByIdBuff(ClanBuff.BUFF_SKIP_PET_DIE_WHEN_PK);
-                        if (!(Utilities.NextFloatPer() < minBuffSkipDie.getPercent()))
-                        {
-                            nonPet.petDieByPK = true;
-                        }
-                    }
-                    else
-                    {
-                        nonPet.petDieByPK = true;
-                    }
+                    
                     nonPet.subExpPK(exp_sub);
-                    if (winPlayerClanMember != null)
-                    {
-                        ClanBuff minBuff = nonPlayerClanMember.getClan().getBuffByIdBuff(ClanBuff.BUFF_DESCREASE_EXP_WHEN_PK);
-                        if (!(minBuff.getPercent() >= 100f))
-                        {
-                            exp_sub_winner -= (int)Utilities.GetValueFromPercent(exp_sub_winner, minBuff.getPercent());
-                        }
-                        else
-                        {
-                            exp_sub_winner = 0;
-                        }
-                    }
+                    
                     win(petBattleTexts.ToArray(), price, 0);
                     winner.addCoin(Utilities.round(Utilities.GetValueFromPercent(coinPK, 50f)));
                     nonWinner.mineCoin(coinPK);

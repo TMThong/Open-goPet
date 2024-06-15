@@ -52,7 +52,7 @@ public partial class MenuController
                         {
                             if (wingItem != null)
                             {
-                                if(wingItem.lvl >= 10)
+                                if (wingItem.lvl >= 10)
                                 {
                                     player.redDialog("Cánh đạt cấp tối đa rồi");
                                     player.controller.objectPerformed.Remove(OBJKEY_ID_MATERIAL_ENCHANT_WING);
@@ -321,7 +321,56 @@ public partial class MenuController
                     break;
                 case DIALOG_ASK_REQUEST_UPGRADE_MAIN_HOUSE:
                     {
-                        player.redDialog(GopetManager.OldFeatures);
+                        if (player.HaveClan)
+                        {
+                            ClanMember member = player.controller.getClan();
+                            if (member == null)
+                            {
+                                player.controller.notClan();
+                                return;
+                            }
+                            else
+                            {
+                                member.clan.LOCKObject.WaitOne();
+                                try
+                                {
+                                    if (member.IsLeader)
+                                    {
+                                        if (GopetManager.clanTemp.ContainsKey(member.clan.lvl + 1))
+                                        {
+                                            var temp = GopetManager.clanTemp[member.clan.lvl + 1];
+                                            if (member.clan.checkFund(temp.fundNeed))
+                                            {
+                                                member.clan.mineFund(temp.fundNeed);
+                                                member.clan.lvl++;
+                                                member.clan.potentialSkill += temp.tiemnangPoint;
+                                                player.okDialog("Nâng cấp bang hội thành công");
+                                            }
+                                            else
+                                            {
+                                                Clan.notEnoughFund(player);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            player.redDialog("Bang hội đạt cấp tối đa");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Clan.notEngouhPermission(player);
+                                    }
+                                }
+                                finally
+                                {
+                                    member.clan.LOCKObject.ReleaseMutex();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            player.controller.notClan();
+                        }
                     }
                     break;
                 case DIALOG_ASK_UPGRADE_SHOP_HOUSE:

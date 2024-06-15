@@ -5,27 +5,7 @@ namespace Gopet.Data.GopetClan
         public int maxMember;
         public int tiemnangPoint;
         public long fundNeed;
-        public int clanLvl;
-
-        public void setMaxMember(int maxMember)
-        {
-            this.maxMember = maxMember;
-        }
-
-        public void setTiemnangPoint(int tiemnangPoint)
-        {
-            this.tiemnangPoint = tiemnangPoint;
-        }
-
-        public void setFundNeed(long fundNeed)
-        {
-            this.fundNeed = fundNeed;
-        }
-
-        public void setLvl(int lvl)
-        {
-            this.clanLvl = lvl;
-        }
+        public int clanLvl;   
 
         public int getMaxMember()
         {

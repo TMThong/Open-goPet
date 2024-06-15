@@ -36,6 +36,16 @@ public class Player : IHandleMessage
     public const long TIME_PET_RECOVERY = 1000l * 3;
     public bool isPetRecovery = false;
     public int skillId_learn = -1;
+    /// <summary>
+    /// Có bang hội
+    /// </summary>
+    public bool HaveClan
+    {
+        get
+        {
+            return this.playerData.clanId > 0;
+        }
+    }
 
     public Player(ISession session_)
     {
@@ -138,7 +148,7 @@ Thread.Sleep(1000);
         /*
         if (true)
         {
-            redDialog("Chức năng này bị khóa. Để đăng ký tài khoản vui lòng vào trang web\n gopetvn.me vào mục diễn đàn.");
+            redDialog("Chức năng này bị khóa. Để đăng ký tài khoản vui lòng vào trang web\n gopettae.com vào mục diễn đàn.");
             return;
         }*/
         if (CheckString(username, "^[a-z0-9]+$") && CheckString(password, "^[a-z0-9]+$"))
@@ -271,7 +281,7 @@ Thread.Sleep(1000);
 
     public virtual void login(String username, String password, String version)
     {
-        if(this.user != null)
+        if (this.user != null)
         {
             return;
         }
@@ -773,4 +783,5 @@ Thread.Sleep(1000);
         }
         session.sendMessage(m);
     }
+
 }

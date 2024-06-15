@@ -43,8 +43,18 @@ namespace Gopet.Data.GopetClan
                 case Clan.TYPE_SENIOR:
                     return "Trưởng lão";
             }
-            return "";
+            return $"Không xác định <{duty}>";
         }
+
+        [JsonIgnore]
+        public bool IsLeader
+        {
+            get
+            {
+                return duty == Clan.TYPE_LEADER || duty == Clan.TYPE_DEPUTY_LEADER;
+            }
+        }
+
 
         public string getAvatar()
         {

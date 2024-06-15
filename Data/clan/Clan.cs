@@ -17,17 +17,16 @@ namespace Gopet.Data.GopetClan
         public int leaderId;
         public long fund = 0;
         public int lvl = 1;
+        public int potentialSkill = 0;
         public CopyOnWriteArrayList<ClanMember> members = new CopyOnWriteArrayList<ClanMember>();
         public CopyOnWriteArrayList<ClanRequestJoin> requestJoin = new();
-        public CopyOnWriteArrayList<ClanBuff> clanBuffs = new();
         public CopyOnWriteArrayList<int> bannedJoinRequestId = new();
         public CopyOnWriteArrayList<ClanChat> clanChats = new();
         public CopyOnWriteArrayList<ClanPotentialSkill> clanPotentialSkills = new();
         public ClanPlace clanPlace;
         public String slogan = "GOPET T";
         public ShopClan shopClan;
-        public Object LOCKObject = new Object();
-        public int superMarketLvl;
+        public Mutex LOCKObject = new Mutex();
         public const sbyte TYPE_LEADER = 0;
         public const sbyte TYPE_DEPUTY_LEADER = 1;
         public const sbyte TYPE_SENIOR = 2;
@@ -91,11 +90,7 @@ namespace Gopet.Data.GopetClan
         }
 
        
-        public void setSuperMarketLvl(int superMarketLvl)
-        {
-            this.superMarketLvl = superMarketLvl;
-        }
-
+      
 
 
         public void setMembers(CopyOnWriteArrayList<ClanMember> members)
@@ -108,10 +103,6 @@ namespace Gopet.Data.GopetClan
             this.requestJoin = requestJoin;
         }
 
-        public void setClanBuffs(CopyOnWriteArrayList<ClanBuff> clanBuffs)
-        {
-            this.clanBuffs = clanBuffs;
-        }
 
         public void setBannedJoinRequestId(CopyOnWriteArrayList<int> bannedJoinRequestId)
         {
@@ -143,10 +134,6 @@ namespace Gopet.Data.GopetClan
             this.shopClan = shopClan;
         }
 
-        public void setLOCKObject(Object LOCKObject)
-        {
-            this.LOCKObject = LOCKObject;
-        }
 
         public int getClanId()
         {
@@ -186,10 +173,7 @@ namespace Gopet.Data.GopetClan
         }
 
 
-        public int getSuperMarketLvl()
-        {
-            return this.superMarketLvl;
-        }
+     
 
         public CopyOnWriteArrayList<ClanMember> getMembers()
         {
@@ -201,10 +185,7 @@ namespace Gopet.Data.GopetClan
             return this.requestJoin;
         }
 
-        public CopyOnWriteArrayList<ClanBuff> getClanBuffs()
-        {
-            return this.clanBuffs;
-        }
+
 
         public CopyOnWriteArrayList<int> getBannedJoinRequestId()
         {
@@ -297,12 +278,12 @@ namespace Gopet.Data.GopetClan
         }
 
 
-        public void notEnoughFund(Player player)
+        public static void notEnoughFund(Player player)
         {
             player.redDialog("Quỹ không đủ");
         }
 
-        public void mineGrowthPoint(Player player)
+        public static void mineGrowthPoint(Player player)
         {
             player.redDialog("Điểm phát triển không đủ không đủ");
         }
@@ -435,13 +416,7 @@ namespace Gopet.Data.GopetClan
                 }
             }
 
-            foreach (ClanBuff clanBuff in clanBuffs)
-            {
-                if (clanBuff.GetTimeMillisEndBuff() < Utilities.CurrentTimeMillis)
-                {
-                    clanBuffs.remove(clanBuff);
-                }
-            }
+           
 
             if (shopClan.GetTimeMillisRefresh() + (1000l * 60 * 60 * 24 * 7) <= Utilities.CurrentTimeMillis)
             {
@@ -541,27 +516,6 @@ namespace Gopet.Data.GopetClan
             this.clanPotentialSkills.Sort(new ClanPotentialSkillComparer());
 
             return clanPotentialSkill;
-        }
-
-        public ClanBuff getBuff(int index)
-        {
-            if (index >= 0 && index < clanBuffs.Count)
-            {
-                return clanBuffs.get(index);
-            }
-            return null;
-        }
-
-        public ClanBuff getBuffByIdBuff(int buffId)
-        {
-            foreach (ClanBuff clanBuff in clanBuffs)
-            {
-                if (clanBuff.getBuffId() == buffId)
-                {
-                    return clanBuff;
-                }
-            }
-            return new ClanBuff(buffId, 0, long.MaxValue);
         }
 
         public static void notEngouhPermission(Player player)
