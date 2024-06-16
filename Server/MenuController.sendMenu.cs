@@ -560,7 +560,7 @@ public partial class MenuController
                     if (clanMember != null)
                     {
                         JArrayList<MenuItemInfo> skillMenuItemInfos = new();
-                        foreach (var clanSkill in GopetManager.clanSkillTemplateList)
+                        foreach (var clanSkill in GopetManager.clanSkillTemplateList.Where(p =>  clanMember.clan.lvl >= p.lvlClanRequire))
                         {
                             MenuItemInfo menuItemInfo = new MenuItemInfo(clanSkill.name, clanSkill.description, "npcs/gopet.png", true);
                             menuItemInfo.setShowDialog(true);

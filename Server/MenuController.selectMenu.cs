@@ -574,9 +574,10 @@ public partial class MenuController
                             {
                                 if (clanMember.clan.potentialSkill > 0)
                                 {
-                                    if (index >= 0 && index < GopetManager.clanSkillTemplateList.Count)
+                                    var clanSKillFillter = GopetManager.clanSkillTemplateList.Where(p => clanMember.clan.lvl >= p.lvlClanRequire).AsList();
+                                    if (index >= 0 && index < clanSKillFillter.Count)
                                     {
-                                        ClanSkillTemplate clanSkillTemplate = GopetManager.clanSkillTemplateList[index];
+                                        ClanSkillTemplate clanSkillTemplate = clanSKillFillter[index];
                                         if (clanMember.clan.SkillInfo.ContainsKey(clanSkillTemplate.id))
                                         {
                                             if (clanMember.clan.SkillInfo[clanSkillTemplate.id] >= clanSkillTemplate.clanSkillLvlTemplates.Length)
