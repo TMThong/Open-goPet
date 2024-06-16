@@ -104,6 +104,7 @@ public partial class MenuController
     public const int MENU_SHOW_ALL_TATTO = 1054;
     public const int MENU_ADMIN_SHOW_ALL_ACHIEVEMENT = 1055;
     public const int MENU_ME_SHOW_ACHIEVEMENT = 1056;
+    public const int MENU_SELECT_TYPE_MONEY_TO_RENT_SKILL_CLAN = 1057;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -344,6 +345,10 @@ public partial class MenuController
     public const int OBJKEY_PLAYER_GIVE_ITEM = 46;
     public const int OBJKEY_COUNT_ITEM_TO_GET_BY_ADMIN = 47;
     public const int OBJKEY_COUNT_ITEM_TO_GIVE_BY_ADMIN = 48;
+    /// <summary>
+    /// Kỹ năng mẫu mà người dùng muốn thuê
+    /// </summary>
+    public const int OBJKEY_CLAN_SKILL_TEMPLATE_RENT = 49;
     public const int DIALOG_CONFIRM_REMOVE_ITEM_EQUIP = 0;
     public const int DIALOG_CONFIRM_BUY_KIOSK_ITEM = 1;
     public const int DIALOG_ENCHANT = 3;

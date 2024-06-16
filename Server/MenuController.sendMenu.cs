@@ -501,6 +501,24 @@ public partial class MenuController
                     player.controller.sendListOption(menuId, "Duyệt thành viên", "", approvalOptions);
                 }
                 break;
+            case MENU_SELECT_TYPE_MONEY_TO_RENT_SKILL_CLAN:
+                {
+                    if(player.controller.objectPerformed.ContainsKey(OBJKEY_CLAN_SKILL_TEMPLATE_RENT))
+                    {
+                        ClanSkillTemplate clanSkillTemplate = player.controller.objectPerformed[OBJKEY_CLAN_SKILL_TEMPLATE_RENT];
+                        JArrayList<Option> approvalOptions = new();
+                        for (global::System.Int32 i = 0; i < clanSkillTemplate.moneyType.Length; i++)
+                        {
+                            approvalOptions.add(new Option(i, getMoneyText(clanSkillTemplate.moneyType[i], clanSkillTemplate.price[i]), (sbyte)1));
+                        }
+                        player.controller.sendListOption(menuId, "Thuê kỹ năng bang hội", "", approvalOptions);
+                    }
+                    else
+                    {
+                        player.fastAction();
+                    }
+                }
+                break;
             case MENU_SELECT_SKILL_CLAN_TO_RENT:
                 {
                     ClanMember clanMember = player.controller.getClan();

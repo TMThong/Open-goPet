@@ -499,6 +499,7 @@ public partial class MenuController
                     player.okDialog("Trang bị thành công");
                 }
                 break;
+            case MENU_SELECT_TYPE_MONEY_TO_RENT_SKILL_CLAN:
             case MENU_SELECT_SKILL_CLAN_TO_RENT:
                 {
                     int indexSlot = (int)player.controller.objectPerformed.get(OBJKEY_INDEX_SLOT_SKILL_RENT);
@@ -506,16 +507,14 @@ public partial class MenuController
                     if (clanMember != null)
                     {
                         Clan clan = clanMember.getClan();
-                        if (index >= 0 && index < clan.SkillInfo.Count)
+                        if (index >= 0 && index < clan.SkillInfo.Count || menuId == MENU_SELECT_TYPE_MONEY_TO_RENT_SKILL_CLAN)
                         {
                             if (clanMember.IsLeader)
                             {
                                 clanMember.clan.LOCKObject.WaitOne();
                                 try
                                 {
-
-
-                                    ClanSkillTemplate clanSkillTemplate = GopetManager.ClanSkillViaId[clan.SkillInfo.ElementAt(index).Key];
+                                    ClanSkillTemplate clanSkillTemplate = menuId == MENU_SELECT_TYPE_MONEY_TO_RENT_SKILL_CLAN ? player.controller.objectPerformed[MenuController.OBJKEY_CLAN_SKILL_TEMPLATE_RENT] : GopetManager.ClanSkillViaId[clan.SkillInfo.ElementAt(index).Key];
                                     if (clanSkillTemplate != null)
                                     {
                                         if (clan.SkillRent.Any(p => p.SkillId == clanSkillTemplate.id))
@@ -524,7 +523,28 @@ public partial class MenuController
                                         }
                                         else
                                         {
-
+                                            if (menuId == MENU_SELECT_TYPE_MONEY_TO_RENT_SKILL_CLAN)
+                                            {
+                                                if(index >= 0 && index < clanSkillTemplate.price.Length)
+                                                {
+                                                    if (checkMoney(clanSkillTemplate.moneyType[index], clanSkillTemplate.price[index], player))
+                                                    {
+                                                        addMoney(clanSkillTemplate.moneyType[index], -clanSkillTemplate.price[index], player);
+                                                        ClanSkill clanSkill = new ClanSkill(clanSkillTemplate.id, DateTime.Now.AddMilliseconds(clanSkillTemplate.expire), clan.SkillInfo[clanSkillTemplate.id]);
+                                                        clan.SkillRent.add(clanSkill);
+                                                        player.okDialog("Thuê thành công");
+                                                    }
+                                                    else
+                                                    {
+                                                        NotEngouhMoney(clanSkillTemplate.moneyType[index], clanSkillTemplate.price[index], player);
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                player.controller.objectPerformed[MenuController.OBJKEY_CLAN_SKILL_TEMPLATE_RENT] = clanSkillTemplate;
+                                                MenuController.sendMenu(MenuController.MENU_SELECT_TYPE_MONEY_TO_RENT_SKILL_CLAN, player);
+                                            }
                                         }
                                     }
                                 }
