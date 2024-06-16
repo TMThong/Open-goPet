@@ -5,17 +5,16 @@ using Gopet.Util;
 
 public class AutoSave : IRuntime
 {
-
-    public static long lastTime = Utilities.CurrentTimeMillis + 60 * 1000;
-    public static long lastTimeSaveClan = Utilities.CurrentTimeMillis + (60 * 1000 * 30);
-    public static long lastTimeSaveMarket = Utilities.CurrentTimeMillis + (60 * 1000 * 2);
+    public static DateTime lastTimeSaveClan = DateTime.Now.AddMinutes(1);
+    public static DateTime lastTimeSaveMarket = DateTime.Now.AddMinutes(2);
+    public static DateTime lastTimeSavePlayer = DateTime.Now.AddMinutes(10);
 
 
     public void update()
     {
-        if (lastTime < Utilities.CurrentTimeMillis)
+        if (lastTimeSavePlayer < DateTime.Now)
         {
-            using(var conn = MYSQLManager.create())
+            using (var conn = MYSQLManager.create())
             {
                 foreach (Player player in PlayerManager.players)
                 {
@@ -34,28 +33,32 @@ public class AutoSave : IRuntime
                     }
                 }
             }
-            lastTime = Utilities.CurrentTimeMillis + 60 * 1000;
+            lastTimeSavePlayer = DateTime.Now.AddMinutes(10);
         }
-        if (lastTimeSaveClan < Utilities.CurrentTimeMillis)
+        if (lastTimeSaveClan < DateTime.Now)
         {
-            foreach (Clan clan in ClanManager.clans)
+
+            using (var conn = MYSQLManager.create())
             {
-                try
+                foreach (Clan clan in ClanManager.clans)
                 {
-                    clan.save();
+                    try
+                    {
+                        clan.save(conn);
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
                 }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+                lastTimeSaveClan = DateTime.Now.AddMinutes(3);
             }
-            lastTimeSaveClan = Utilities.CurrentTimeMillis + (60 * 1000 * 30);
         }
 
-        if (lastTimeSaveMarket < Utilities.CurrentTimeMillis)
+        if (lastTimeSaveMarket < DateTime.Now)
         {
             GopetManager.saveMarket();
-            lastTimeSaveMarket = Utilities.CurrentTimeMillis + (60 * 1000 * 2);
+            lastTimeSaveMarket = DateTime.Now.AddMinutes(2);
         }
     }
 }

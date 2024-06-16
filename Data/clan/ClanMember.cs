@@ -10,8 +10,7 @@ namespace Gopet.Data.GopetClan
         public int user_id;
         public string name;
         public long fundDonate = 0;
-        public long growthPointDonate = 0;
-        public sbyte duty = Clan.TYPE_NORMAL;
+        public sbyte duty;
         public DateTime timeJoin = DateTime.Now;
         public DateTime timeResetData = DateTime.Now;
         public int curQuest = 0;

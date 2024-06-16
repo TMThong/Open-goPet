@@ -16,6 +16,7 @@ using Dapper;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Gopet.Data.dialog;
+using Gopet.Data.Clan;
 
 [NonController]
 public class GameController
@@ -1589,6 +1590,11 @@ public class GameController
         player.redDialog("Không đủ huyết ngọc");
     }
 
+    public void notEnoughCrystal ()
+    {
+        player.redDialog("Không đủ tinh thạch");
+    }
+
     public bool checkGoldBar(int count)
     {
         return checkCount(GopetManager.GOLD_BAR_ID, count, GopetManager.MONEY_INVENTORY);
@@ -1602,6 +1608,11 @@ public class GameController
     public bool checkBloodGem(int count)
     {
         return checkCount(GopetManager.BLOOD_GEM_ID, count, GopetManager.MONEY_INVENTORY);
+    }
+
+    public bool checkCrystal (int count)
+    {
+        return checkCount(GopetManager.CRYSTAL_ID, count, GopetManager.MONEY_INVENTORY);
     }
 
     public bool checkCount(int tempId, int count, sbyte inventory)
@@ -1642,6 +1653,13 @@ public class GameController
         player.addItemToInventory(item, GopetManager.MONEY_INVENTORY);
     }
 
+    public void addCrystal(int crystal)
+    {
+        Item item = new Item(GopetManager.CRYSTAL_ID);
+        item.count = crystal;
+        player.addItemToInventory(item, GopetManager.MONEY_INVENTORY);
+    }
+
     public void mineGoldBar(int gold)
     {
         subCountItem(selectItemsbytemp(GopetManager.GOLD_BAR_ID, GopetManager.MONEY_INVENTORY), gold, GopetManager.MONEY_INVENTORY);
@@ -1655,6 +1673,11 @@ public class GameController
     public void mineBloodGem(int blood)
     {
         subCountItem(selectItemsbytemp(GopetManager.BLOOD_GEM_ID, GopetManager.MONEY_INVENTORY), blood, GopetManager.MONEY_INVENTORY);
+    }
+
+    public void mineCrystal(int crystal)
+    {
+        subCountItem(selectItemsbytemp(GopetManager.CRYSTAL_ID, GopetManager.MONEY_INVENTORY), crystal, GopetManager.MONEY_INVENTORY);
     }
 
     private void tatto(sbyte type, Message message)
@@ -2046,7 +2069,9 @@ public class GameController
 
     public void clan(sbyte subCMD, Message message)
     {
-        // System.out.println("server.GameController.clan() " + subCMD);
+#if DEBUG
+        GopetManager.ServerMonitor.LogWarning("Bang hội MSG: " + subCMD);
+#endif
         switch (subCMD)
         {
             case GopetCMD.CLAN_INFO:
@@ -2070,7 +2095,7 @@ public class GameController
                 break;
 
             case GopetCMD.GUILD_TOP_GROWTH_POINT:
-                showTopGrowthPoint();
+                showTopFund();
                 break;
             case GopetCMD.GUILD_REQUEST_JOIN:
                 requestJoinClanById(message.readInt());
@@ -2103,10 +2128,11 @@ public class GameController
         {
             Clan clan = clanMember.getClan();
             JArrayList<String> listInfoClan = new();
-            listInfoClan.add("Tên bang hội: " + clan.getName());
+            listInfoClan.add("Tên bang hội: " + clan.name);
+            listInfoClan.add("Cấp: " + clan.lvl);
             listInfoClan.add("Bang chủ: " + clan.getMemberByUserId(clan.getLeaderId()).name);
-            listInfoClan.add(Utilities.Format("Thành viên: %s/%s", clan.getCurMember(), clan.getMaxMember()));
-            listInfoClan.add("Khẩu hiệu: " + clan.getSlogan());
+            listInfoClan.add(Utilities.Format("Thành viên: %s/%s", clan.curMember, clan.maxMember));
+            listInfoClan.add("Khẩu hiệu: " + clan.slogan);
             listInfoClan.add(Utilities.Format("Quỹ: %s", Utilities.FormatNumber(clan.getFund())));
             Message message = clanMessage(GopetCMD.CLAN_INFO);
             message.putInt(clan.getClanId());
@@ -2199,7 +2225,7 @@ public class GameController
                 m.putInt(member.user_id);
                 m.putUTF(member.getAvatar());
                 m.putUTF(member.name + Utilities.Format(" (Chức vụ: %s)", member.getDutyName()));
-                m.putUTF(Utilities.Format("Đóng góp quỹ: %s , điểm cống hiến: %s", Utilities.FormatNumber(member.fundDonate), Utilities.FormatNumber(member.growthPointDonate)));
+                m.putUTF(Utilities.Format("Đóng góp quỹ: %s", Utilities.FormatNumber(member.fundDonate)));
             }
             m.putbool(false);
             player.session.sendMessage(m);
@@ -4048,7 +4074,7 @@ public class GameController
                 m.putInt(clanMember1.user_id);
                 m.putUTF(clanMember1.getAvatar());
                 m.putUTF(clanMember1.name + Utilities.Format(" (Chức vụ: %s)", clanMember1.getDutyName()));
-                m.putUTF(Utilities.Format("Đóng góp quỹ: %s ,đóng góp điểm cống hiến: %s", Utilities.FormatNumber(clanMember1.fundDonate), Utilities.FormatNumber(clanMember1.growthPointDonate)));
+                m.putUTF(Utilities.Format("Đóng góp quỹ: %s", Utilities.FormatNumber(clanMember1.fundDonate)));
             }
             m.cleanup();
             player.session.sendMessage(m);
@@ -4059,41 +4085,6 @@ public class GameController
         }
     }
 
-    sealed class ClanMemberComparerViaGrowthPointDonate : IComparer<ClanMember>
-    {
-        public int Compare(ClanMember? o1, ClanMember? o2)
-        {
-            return Utilities.round(o2.growthPointDonate - o1.growthPointDonate);
-        }
-    }
-
-    private void showTopGrowthPoint()
-    {
-        ClanMember clanMember = getClan();
-        if (clanMember != null)
-        {
-            Clan clan = clanMember.getClan();
-            CopyOnWriteArrayList<ClanMember> listMember = (CopyOnWriteArrayList<ClanMember>)clan.getMembers().clone();
-            listMember.Sort(new ClanMemberComparerViaGrowthPointDonate());
-            Message m = clanMessage(GopetCMD.GUILD_TOP_GROWTH_POINT);
-            m.putsbyte(0);
-            m.putsbyte(0);
-            m.putsbyte(listMember.Count);
-            foreach (ClanMember clanMember1 in listMember)
-            {
-                m.putInt(clanMember1.user_id);
-                m.putUTF(clanMember1.getAvatar());
-                m.putUTF(clanMember1.name + Utilities.Format(" (Chức vụ: %s)", clanMember1.getDutyName()));
-                m.putUTF(Utilities.Format("Đóng góp quỹ: %s ,đóng góp điểm cống hiến: %s", Utilities.FormatNumber(clanMember1.fundDonate), Utilities.FormatNumber(clanMember1.growthPointDonate)));
-            }
-            m.cleanup();
-            player.session.sendMessage(m);
-        }
-        else
-        {
-            showListClan();
-        }
-    }
 
     public void requestJoinClan(String clanname)
     {
@@ -4111,7 +4102,7 @@ public class GameController
                 {
                     player.redDialog("Bang hội này không cho phép bạn gửi đơn xin vào bang");
                 }
-                else if (clan.getCurMember() >= clan.getMaxMember())
+                else if (clan.curMember >= clan.maxMember)
                 {
                     player.redDialog("Bang hội đã đủ thành viên.");
                 }
@@ -4202,7 +4193,7 @@ public class GameController
 
     public void showSkillClan(int user_id)
     {
-        /*Player olPlayer = PlayerManager.get(user_id);
+        Player olPlayer = PlayerManager.get(user_id);
         if (olPlayer != null)
         {
             ClanMember clanMember = olPlayer.controller.getClan();
@@ -4213,23 +4204,22 @@ public class GameController
                 Clan clan = clanMember.getClan();
                 Message m = clanMessage(GopetCMD.GUILD_CLAN_SKILL);
                 m.putsbyte(canEdit ? 0 : 1);
-                //m.putInt(clanMember.getClan().getPotentialPoint());
-                m.putInt(123);
+                m.putInt(clanMember.clan.potentialSkill);
                 for (int i = 0; i < 3; i++)
                 {
-                    bool hasSlot = clan.getLvl() >= GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[i];
+                    bool hasSlot = clan.getLvl() >= GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[i] && clan.slotSkill > i;
                     if (hasSlot)
                     {
-                        CopyOnWriteArrayList<ClanBuff> clanBuffs = (CopyOnWriteArrayList<ClanBuff>)clan.getClanBuffs().clone();
+                        var clanBuffs = clan.SkillRent;
                         bool slotHasSkill = clanBuffs.Count > i;
                         if (slotHasSkill)
                         {
-                            ClanBuff clanBuff = clanBuffs.get(i);
+                            ClanSkill clanBuff = clanBuffs.get(i);
                             m.putInt(GopetCMD.SKILL_CLAN_CHANGE);
                             m.putInt(i);
-                            m.putUTF(clanBuff.getDesc());
-                            m.putUTF(clanBuff.getDesc());
-                            m.putUTF(clanBuff.getDesc());
+                            m.putUTF(clanBuff.SkillTemplate.description);
+                            m.putUTF(clanBuff.SkillTemplate.description);
+                            m.putUTF(clanBuff.SkillTemplate.description);
                         }
                         else
                         {
@@ -4267,7 +4257,7 @@ public class GameController
         else
         {
             player.redDialog("Người chơi offline");
-        }*/
+        }
     }
 
     public void updateAvatar()
@@ -4299,23 +4289,20 @@ public class GameController
         if (clanMember != null)
         {
             Clan clan = clanMember.getClan();
-            if (clan.getLvl() >= GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL.Length - 1])
+            if(clan.slotSkill >= GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN.Length)
             {
-                player.redDialog("Bang hội của bạng đã mở hết ô rồi");
+                player.redDialog("Mở khóa hết các ô rồi");
             }
             else
             {
-                int clanLvlNeed = 0;
-                for (int i = 0; i < GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL.Length; i++)
+                if(clan.lvl >= GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[clan.slotSkill] && clan.fund >= GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN[clan.slotSkill])
                 {
-                    sbyte b = GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[i];
-                    if (b > clan.getLvl())
-                    {
-                        clanLvlNeed = b;
-                        break;
-                    }
+                    MenuController.showYNDialog(MenuController.DIALOG_ASK_UNLOCK_SLOT_SKILL_CLAN, $"Bạn có chắc muốn mở khóa ô kỹ năng bang hội tiếp theo cho bang với giá {Utilities.FormatNumber(GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN[clan.slotSkill])} quỹ", player);
                 }
-                player.okDialog(Utilities.Format("Bang hội của bạn cần đạt cấp %s để mở khóa ô tiếp theo\n Lưu ý: Khi đạt được yêu cầu hệ thống sẽ tự mở ô", clanLvlNeed));
+                else
+                {
+                    player.redDialog($"Không đủ điều kiện mở ô\n Bang cần đạt cấp {GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[clan.slotSkill]} và có {Utilities.FormatNumber(GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN[clan.slotSkill])} quỹ");
+                }
             }
         }
         else

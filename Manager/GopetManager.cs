@@ -257,7 +257,7 @@ public class GopetManager
     /// <summary>
     /// Danh sách mẫu kỹ năng bang hội theo cấp bang
     /// </summary>
-    public static readonly Dictionary<int, ClanSkillTemplate> clanSkillViaLvl = new();
+    public static readonly Dictionary<int, ClanSkillTemplate> ClanSkillViaId = new();
     /// <summary>
     /// Danh sách mẫu kỹ năng bang hội
     /// </summary>
@@ -424,6 +424,7 @@ public class GopetManager
     public const sbyte MONEY_TYPE_FUND_CLAN = 5;
 
     public const sbyte MONEY_TYPE_GROWTH_POINT_CLAN = 6;
+    public const sbyte MONEY_TYPE_CRYSTAL_ITEM = 7;
 
     public const int DAILY_STAR = 20;
 
@@ -470,6 +471,7 @@ public class GopetManager
     public const int SILVER_BAR_ID = 186;
     public const int GOLD_BAR_ID = 187;
     public const int BLOOD_GEM_ID = 188;
+    public const int CRYSTAL_ID = 318;
     public static int[] ID_BOSS_CHALLENGE = new int[] { 11, 12, 13, 14, 15 };
     public static int[] ID_BOSS_TASK = new int[] { 16 };
     public static int[] LVL_REQUIRE_PET_TATTO = new int[] { 3, 5, 10, 15, 20, 25, 30, 35 };
@@ -513,6 +515,10 @@ public class GopetManager
     /// </summary>
     public const int PRICE_ACTIVE_USER = 20000;
     public const int TIME_DELAY_HEAL_WHEN_MOB_KILL_PET = 10000;
+    /// <summary>
+    /// Giá mở khóa ô kỹ năng bang hội
+    /// </summary>
+    public static readonly int[] PRICE_UNLOCK_SLOT_SKILL_CLAN = new int[] { 1000000, 2000000, 3000000 };
 
     public static readonly Dictionary<sbyte, TradeGiftTemplate[]> TradeGift = new();
 
@@ -536,7 +542,11 @@ public class GopetManager
             {new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 10, 1),
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 100, 10),
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 1000, 100),
-            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 10000,  1000)});
+            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 10000,  1000),
+            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_CRYSTAL_ITEM, 10, 1),
+            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_CRYSTAL_ITEM, 100, 10),
+            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_CRYSTAL_ITEM, 1000, 100),
+            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_CRYSTAL_ITEM, 10000,  1000)});
     static GopetManager()
     {
         SqlMapper.AddTypeHandler(new JsonAdapter<int[]>());
@@ -552,6 +562,7 @@ public class GopetManager
         SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<TaskData>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<Achievement>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<ClanMember>>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<ClanSkill>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<Pet>());
         SqlMapper.AddTypeHandler(new JsonAdapter<Item>());
         SqlMapper.AddTypeHandler(new JsonAdapter<BuffExp>());
@@ -559,6 +570,7 @@ public class GopetManager
         SqlMapper.AddTypeHandler(new JsonAdapter<ShopArena>());
         SqlMapper.AddTypeHandler(new JsonAdapter<Dictionary<int, int>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<Waypoint[]>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<PetSkillInfo[]>());
         shopTemplate.put(MenuController.SHOP_ARMOUR, new ShopTemplate(MenuController.SHOP_ARMOUR));
         shopTemplate.put(MenuController.SHOP_SKIN, new ShopTemplate(MenuController.SHOP_SKIN));
         shopTemplate.put(MenuController.SHOP_HAT, new ShopTemplate(MenuController.SHOP_HAT));
@@ -820,6 +832,14 @@ public class GopetManager
             ServerMonitor.LogInfo("Tải dữ liệu danh hiệu từ cơ sở dữ liệu OK");
 
             Summer2024Event.EventDatas = conn.Query<Summer2024Event.EventData>("SELECT * FROM `summer_2024_event`");
+
+            var clanSKillTemplates = conn.Query<ClanSkillTemplate>("SELECT * FROM `clan_skill`");
+            clanSkillTemplateList.AddRange(clanSKillTemplates);
+            foreach (var template in clanSKillTemplates)
+            {
+                ClanSkillViaId[template.id] = template;
+                template.clanSkillLvlTemplates = conn.Query<ClanSkillLvlTemplate>("SELECT * FROM `clan_skill_lvl` WHERE skillId = @skillId ORDER BY `clan_skill_lvl`.`lvl` ASC" , new { skillId = template.id }).ToArray();
+            }
         }
 
         using (var connWeb = MYSQLManager.createWebMySqlConnection())

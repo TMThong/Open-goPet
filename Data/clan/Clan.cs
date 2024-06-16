@@ -1,4 +1,5 @@
 using Dapper;
+using Gopet.Data.Clan;
 using Gopet.Data.Collections;
 using Gopet.Data.User;
 using Gopet.IO;
@@ -11,20 +12,20 @@ namespace Gopet.Data.GopetClan
     public class Clan
     {
         public int clanId;
-        public int curMember;
-        public int maxMember;
         public String name;
         public int leaderId;
         public long fund = 0;
         public int lvl = 1;
+        public int slotSkill = 0;
         public int potentialSkill = 0;
         public CopyOnWriteArrayList<ClanMember> members = new CopyOnWriteArrayList<ClanMember>();
-        public CopyOnWriteArrayList<ClanRequestJoin> requestJoin = new();
+        public CopyOnWriteArrayList<ClanRequestJoin> joinRequest = new();
         public CopyOnWriteArrayList<int> bannedJoinRequestId = new();
         public CopyOnWriteArrayList<ClanChat> clanChats = new();
-        public CopyOnWriteArrayList<ClanPotentialSkill> clanPotentialSkills = new();
+        public CopyOnWriteArrayList<ClanSkill> SkillRent = new CopyOnWriteArrayList<ClanSkill>();
+        public Dictionary<int, int> SkillInfo = new Dictionary<int, int>();
         public ClanPlace clanPlace;
-        public String slogan = "GOPET T";
+        public String slogan = "GOPET TAE";
         public ShopClan shopClan;
         public Mutex LOCKObject = new Mutex();
         public const sbyte TYPE_LEADER = 0;
@@ -42,7 +43,6 @@ namespace Gopet.Data.GopetClan
             this.name = name;
             this.leaderId = leaderId;
             ClanTemplate clanTemplate = GopetManager.clanTemp.get(lvl);
-            this.maxMember = clanTemplate.getMaxMember();
             addMember(leaderId, leaderName);
             initClan();
         }
@@ -58,15 +58,6 @@ namespace Gopet.Data.GopetClan
             this.clanId = clanId;
         }
 
-        public void setCurMember(int curMember)
-        {
-            this.curMember = curMember;
-        }
-
-        public void setMaxMember(int maxMember)
-        {
-            this.maxMember = maxMember;
-        }
 
         public void setName(String name)
         {
@@ -83,14 +74,14 @@ namespace Gopet.Data.GopetClan
             this.fund = fund;
         }
 
-      
+
         public void setLvl(int lvl)
         {
             this.lvl = lvl;
         }
 
-       
-      
+
+
 
 
         public void setMembers(CopyOnWriteArrayList<ClanMember> members)
@@ -100,7 +91,7 @@ namespace Gopet.Data.GopetClan
 
         public void setRequestJoin(CopyOnWriteArrayList<ClanRequestJoin> requestJoin)
         {
-            this.requestJoin = requestJoin;
+            this.joinRequest = requestJoin;
         }
 
 
@@ -114,10 +105,6 @@ namespace Gopet.Data.GopetClan
             this.clanChats = clanChats;
         }
 
-        public void setClanPotentialSkills(CopyOnWriteArrayList<ClanPotentialSkill> clanPotentialSkills)
-        {
-            this.clanPotentialSkills = clanPotentialSkills;
-        }
 
         public void setClanPlace(ClanPlace clanPlace)
         {
@@ -140,14 +127,21 @@ namespace Gopet.Data.GopetClan
             return this.clanId;
         }
 
-        public int getCurMember()
+        public int curMember
         {
-            return this.curMember;
+            get
+            {
+                return this.members.Count;
+            }
         }
 
-        public int getMaxMember()
+
+        public int maxMember
         {
-            return this.maxMember;
+            get
+            {
+                return this.getTemp().maxMember;
+            }
         }
 
         public String getName()
@@ -165,7 +159,7 @@ namespace Gopet.Data.GopetClan
             return this.fund;
         }
 
-     
+
 
         public int getLvl()
         {
@@ -173,7 +167,7 @@ namespace Gopet.Data.GopetClan
         }
 
 
-     
+
 
         public CopyOnWriteArrayList<ClanMember> getMembers()
         {
@@ -182,7 +176,7 @@ namespace Gopet.Data.GopetClan
 
         public CopyOnWriteArrayList<ClanRequestJoin> getRequestJoin()
         {
-            return this.requestJoin;
+            return this.joinRequest;
         }
 
 
@@ -195,11 +189,6 @@ namespace Gopet.Data.GopetClan
         public CopyOnWriteArrayList<ClanChat> getClanChats()
         {
             return this.clanChats;
-        }
-
-        public CopyOnWriteArrayList<ClanPotentialSkill> getClanPotentialSkills()
-        {
-            return this.clanPotentialSkills;
         }
 
         public ClanPlace getClanPlace()
@@ -229,7 +218,7 @@ namespace Gopet.Data.GopetClan
             return GopetManager.clanTemp.get(lvl);
         }
 
-      
+
         public void sendMessage(Message m)
         {
             foreach (ClanMember member in members)
@@ -283,6 +272,11 @@ namespace Gopet.Data.GopetClan
             player.redDialog("Quỹ không đủ");
         }
 
+        public static void notEnoughFund(Player player, long value)
+        {
+            player.redDialog($"Quỹ không đủ, cần {value.ToString("###,###")} điểm!");
+        }
+
         public static void mineGrowthPoint(Player player)
         {
             player.redDialog("Điểm phát triển không đủ không đủ");
@@ -290,7 +284,7 @@ namespace Gopet.Data.GopetClan
 
         public bool checkDuty(sbyte typeDuty)
         {
-            int[] permission = new int[] { 1, 1, 5, this.getTemp().maxMember - 7};
+            int[] permission = new int[] { 1, 1, 5, this.getTemp().maxMember - 7 };
             int maxOfDutye = permission[typeDuty];
             int cur = 0;
             foreach (ClanMember member in members)
@@ -316,14 +310,13 @@ namespace Gopet.Data.GopetClan
             clanMember.name = name;
             clanMember.user_id = user_id;
             clanMember.fundDonate = 0l;
-            clanMember.growthPointDonate = 0l;
             clanMember.duty = (user_id == leaderId ? TYPE_LEADER : TYPE_NORMAL);
+
             if (player != null)
             {
                 clanMember.avatarPath = player.playerData.avatarPath;
             }
             members.add(clanMember);
-            curMember++;
 
             members.Sort(new ClanMemeberComparer());
         }
@@ -331,11 +324,11 @@ namespace Gopet.Data.GopetClan
         public ClanRequestJoin getJoinRequestByUserId(int user_id)
         {
             int left = 0;
-            int right = requestJoin.Count - 1;
+            int right = joinRequest.Count - 1;
             while (left <= right)
             {
                 int mid = left + (right - left) / 2;
-                ClanRequestJoin midRequest = requestJoin.get(mid);
+                ClanRequestJoin midRequest = joinRequest.get(mid);
                 if (midRequest.user_id == user_id)
                 {
                     return midRequest;
@@ -356,8 +349,8 @@ namespace Gopet.Data.GopetClan
         {
             ClanRequestJoin clanRequestJoin = new ClanRequestJoin(user_id, name, Utilities.CurrentTimeMillis);
             clanRequestJoin.avatarPath = avatarPath;
-            requestJoin.add(clanRequestJoin);
-            requestJoin.Sort(new ClanRequestJoinComparer());
+            joinRequest.add(clanRequestJoin);
+            joinRequest.Sort(new ClanRequestJoinComparer());
         }
 
         public void kick(int user_id)
@@ -366,7 +359,6 @@ namespace Gopet.Data.GopetClan
             if (clanMember != null)
             {
                 members.remove(clanMember);
-                curMember--;
             }
 
             Player player = PlayerManager.get(user_id);
@@ -415,22 +407,15 @@ namespace Gopet.Data.GopetClan
                     member.reset();
                 }
             }
-
-           
-
-            if (shopClan.GetTimeMillisRefresh() + (1000l * 60 * 60 * 24 * 7) <= Utilities.CurrentTimeMillis)
-            {
-                shopClan.refresh();
-            }
         }
 
         public void create()
         {
-            using(var connection = MYSQLManager.create())
+            using (var connection = MYSQLManager.create())
             {
-                connection.Execute("INSERT INTO `clan`( `name`, `curMember`, `maxMember`, `leaderId`, `members`) VALUES (@name, @curMember, @maxMember, @leaderId, @members)", new { name = name, curMember  = curMember, maxMember = maxMember , leaderId  = leaderId , members = members });
+                connection.Execute("INSERT INTO `clan`( `name`, `leaderId`, `members`) VALUES (@name, @leaderId, @members)", new { name = name, leaderId = leaderId, members = members });
                 var clanData = connection.QueryFirstOrDefault("SELECT * FROM `clan` WHERE leaderId = @leaderId", new { leaderId = leaderId });
-                if(clanData != null)
+                if (clanData != null)
                 {
                     setClanId(clanData.clanId);
                     setShopClan(new ShopClan(this));
@@ -442,26 +427,26 @@ namespace Gopet.Data.GopetClan
             }
         }
 
+        public void save(MySqlConnection conn)
+        {
+            conn.Execute("UPDATE `clan` SET `lvl`=@lvl,`leaderId`=@leaderId,`members`=@members,`fund`=@fund,`slogan`=@slogan,`joinRequest`=@joinRequest, `potentialSkill` = @potentialSkill, `SkillRent` = @SkillRent, `SkillInfo` = @SkillInfo , `slotSkill` = @slotSkill WHERE clanId= @clanId",
+                new { lvl = lvl, leaderId = leaderId, members = members, fund = fund, slogan = slogan, joinRequest = joinRequest, potentialSkill = potentialSkill, SkillRent = SkillRent, SkillInfo = SkillInfo, clanId = clanId , slotSkill  = slotSkill }  );
+        }
+
         public void save()
         {
-            using(MySqlConnection MySqlConnection = MYSQLManager.create())
+            using (MySqlConnection MySqlConnection = MYSQLManager.create())
             {
-                
+                save(MySqlConnection);
             }
         }
 
-        public void setTemplate(ClanTemplate clanTemplate)
-        {
-            this.lvl = clanTemplate.getLvl();
-            this.maxMember = clanTemplate.getMaxMember();
-        }
 
         public void outClan(ClanMember clanMember)
         {
             if (members.Contains(clanMember))
             {
                 members.remove(clanMember);
-                this.curMember = members.Count;
             }
         }
 
@@ -485,37 +470,6 @@ namespace Gopet.Data.GopetClan
             {
                 return o1.getBuffId() - o2.getBuffId();
             }
-        }
-
-        public ClanPotentialSkill getClanPotentialSkillOrCreate(int buffId)
-        {
-            int left = 0;
-            int right = clanPotentialSkills.Count - 1;
-            while (left <= right)
-            {
-                int mid = left + (right - left) / 2;
-                ClanPotentialSkill midP = clanPotentialSkills.get(mid);
-                if (midP.getBuffId() == buffId)
-                {
-                    return midP;
-                }
-                if (midP.getBuffId() < buffId)
-                {
-                    left = mid + 1;
-                }
-                else
-                {
-                    right = mid - 1;
-                }
-            }
-
-            ClanPotentialSkill clanPotentialSkill = new ClanPotentialSkill();
-            clanPotentialSkill.setBuffId(buffId);
-            clanPotentialSkill.setPoint(0);
-            this.clanPotentialSkills.addIfAbsent(clanPotentialSkill);
-            this.clanPotentialSkills.Sort(new ClanPotentialSkillComparer());
-
-            return clanPotentialSkill;
         }
 
         public static void notEngouhPermission(Player player)

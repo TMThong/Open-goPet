@@ -15,6 +15,7 @@ using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Gopet.Data.top;
 using Gopet.Data.dialog;
+using Gopet.Data.Clan;
 
 public partial class MenuController
 {
@@ -330,7 +331,7 @@ public partial class MenuController
                         JArrayList<MenuItemInfo> approvalElements = new();
                         foreach (ClanMember clanMemberSelect in clan.getMembers())
                         {
-                            MenuItemInfo menuItemInfo = new MenuItemInfo(clanMemberSelect.name + "(Chức vụ: " + clanMemberSelect.getDutyName() + ")", Utilities.Format("Đóng góp quỹ :%s và %s điểm cống hiến", Utilities.FormatNumber(clanMemberSelect.fundDonate), Utilities.FormatNumber(clanMember.growthPointDonate)), "", true);
+                            MenuItemInfo menuItemInfo = new MenuItemInfo(clanMemberSelect.name + "(Chức vụ: " + clanMemberSelect.getDutyName() + ")", Utilities.Format("Đóng góp quỹ :%s", Utilities.FormatNumber(clanMemberSelect.fundDonate)), "", true);
                             menuItemInfo.setImgPath(clanMemberSelect.getAvatar());
                             menuItemInfo.setShowDialog(true);
                             menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", clanMemberSelect.name));
@@ -502,22 +503,25 @@ public partial class MenuController
                 break;
             case MENU_SELECT_SKILL_CLAN_TO_RENT:
                 {
-                    /*ClanMember clanMember = player.controller.getClan();
+                    ClanMember clanMember = player.controller.getClan();
                     if (clanMember != null)
                     {
                         Clan clan = clanMember.getClan();
-                        if (clan.getClanPotentialSkills().Count > 0)
+                        if (clan.SkillInfo.Count > 0)
                         {
                             JArrayList<MenuItemInfo> skillMenuItemInfos = new();
-                            foreach (ClanPotentialSkill clanPotentialSkill in clan.getClanPotentialSkills())
+                            foreach(var skill in clan.SkillInfo)
                             {
-                                ClanBuffTemplate clanBuffTemplate = GopetManager.CLANBUFF_HASH_MAP.get(clanPotentialSkill.getBuffId());
-                                MenuItemInfo menuItemInfo = new MenuItemInfo(ClanBuff.getName(clanBuffTemplate.getValuePerLevel() * clanPotentialSkill.getPoint(), clanPotentialSkill.getBuffId()), ClanBuff.getDesc(clanBuffTemplate.getValuePerLevel() * clanPotentialSkill.getPoint(), clanPotentialSkill.getBuffId()), "npcs/gopet.png", true);
-                                menuItemInfo.setShowDialog(true);
-                                menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", menuItemInfo.getTitleMenu()));
-                                menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
-                                menuItemInfo.setCloseScreenAfterClick(true);
-                                skillMenuItemInfos.add(menuItemInfo);
+                                if(skill.Value > 0)
+                                {
+                                    ClanSkillTemplate clanSkillTemplate = GopetManager.ClanSkillViaId[skill.Key];
+                                    MenuItemInfo menuItemInfo = new MenuItemInfo(clanSkillTemplate.name, clanSkillTemplate.description, "npcs/gopet.png", true);
+                                    menuItemInfo.setShowDialog(true);
+                                    menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", menuItemInfo.getTitleMenu()));
+                                    menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
+                                    menuItemInfo.setCloseScreenAfterClick(true);
+                                    skillMenuItemInfos.add(menuItemInfo);
+                                }
                             }
                             player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Chọn kỹ năng bang hội", skillMenuItemInfos);
                         }
@@ -529,18 +533,18 @@ public partial class MenuController
                     else
                     {
                         player.controller.notClan();
-                    }*/
+                    }
                 }
                 break;
             case MENU_PLUS_SKILL_CLAN:
                 {
-                   /* ClanMember clanMember = player.controller.getClan();
+                    ClanMember clanMember = player.controller.getClan();
                     if (clanMember != null)
                     {
                         JArrayList<MenuItemInfo> skillMenuItemInfos = new();
-                        foreach (ClanBuffTemplate clanBuffTemplate in GopetManager.CLAN_BUFF_TEMPLATES)
+                        foreach (var clanSkill in GopetManager.clanSkillTemplateList)
                         {
-                            MenuItemInfo menuItemInfo = new MenuItemInfo(ClanBuff.getName(clanBuffTemplate.getValuePerLevel() * 1, clanBuffTemplate.getBuffId()) + " Yêu cấu bang cấp: " + clanBuffTemplate.getLvlClan(), ClanBuff.getDesc(clanBuffTemplate.getValuePerLevel() * 1, clanBuffTemplate.getBuffId()), "npcs/gopet.png", true);
+                            MenuItemInfo menuItemInfo = new MenuItemInfo(clanSkill.name, clanSkill.description, "npcs/gopet.png", true);
                             menuItemInfo.setShowDialog(true);
                             menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", menuItemInfo.getTitleMenu()));
                             menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
@@ -552,7 +556,7 @@ public partial class MenuController
                     else
                     {
                         player.controller.notClan();
-                    }*/
+                    }
                 }
                 break;
             case MENU_INTIVE_CHALLENGE:

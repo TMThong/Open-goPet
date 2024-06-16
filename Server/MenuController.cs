@@ -361,6 +361,7 @@ public partial class MenuController
     public const int DIALOG_ASK_UPGRADE_SHOP_HOUSE = 15;
     public const int DIALOG_ASK_ENCHANT_WING = 16;
     public const int DIALOG_ASK_ENCHANT_TATTO = 17;
+    public const int DIALOG_ASK_UNLOCK_SLOT_SKILL_CLAN = 18;
     public const int INPUT_DIALOG_KIOSK = 0;
     public const int INPUT_DIALOG_CHALLENGE_INVITE = 2;
     public const int INPUT_DIALOG_COUNT_OF_KISOK_ITEM = 3;
@@ -665,9 +666,8 @@ public partial class MenuController
                 str += " huyết ngọc"; break;
             case GopetManager.MONEY_TYPE_FUND_CLAN:
                 str += " điểm góp quỹ cá nhân"; break;
-
-            case GopetManager.MONEY_TYPE_GROWTH_POINT_CLAN:
-                str += " điểm cống hiến cá nhân"; break;
+            case GopetManager.MONEY_TYPE_CRYSTAL_ITEM:
+                str += " tinh thạch"; break;
         }
         return str;
     }
@@ -703,25 +703,17 @@ public partial class MenuController
                     return player.controller.checkBloodGem((int)value);
                 }
 
+            case GopetManager.MONEY_TYPE_CRYSTAL_ITEM:
+                {
+                    return player.controller.checkCrystal((int)value);
+                }
+
             case GopetManager.MONEY_TYPE_FUND_CLAN:
                 {
                     ClanMember clanMember = player.controller.getClan();
                     if (clanMember != null)
                     {
                         return clanMember.fundDonate >= value;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-
-            case GopetManager.MONEY_TYPE_GROWTH_POINT_CLAN:
-                {
-                    ClanMember clanMember = player.controller.getClan();
-                    if (clanMember != null)
-                    {
-                        return clanMember.growthPointDonate >= value;
                     }
                     else
                     {
@@ -746,22 +738,14 @@ public partial class MenuController
                 player.controller.addGoldBar(value); break;
             case GopetManager.MONEY_TYPE_BLOOD_GEM:
                 player.controller.addBloodGem(value); break;
-
+            case GopetManager.MONEY_TYPE_CRYSTAL_ITEM:
+                player.controller.addGoldBar(value); break;
             case GopetManager.MONEY_TYPE_FUND_CLAN:
                 {
                     ClanMember clanMember = player.controller.getClan();
                     if (clanMember != null)
                     {
                         clanMember.fundDonate += value;
-                    }
-                }
-                break;
-            case GopetManager.MONEY_TYPE_GROWTH_POINT_CLAN:
-                {
-                    ClanMember clanMember = player.controller.getClan();
-                    if (clanMember != null)
-                    {
-                        clanMember.growthPointDonate += value;
                     }
                 }
                 break;

@@ -25,7 +25,7 @@ namespace Gopet.Data.Map
         {
             try
             {
-                foreach (Clan clan in ClanManager.clans)
+                foreach (var clan in ClanManager.clans)
                 {
                     clan.update();
                 }

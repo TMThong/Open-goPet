@@ -16,6 +16,7 @@ using Gopet.Data.top;
 using Gopet.Data.Event;
 using Gopet.Data.user;
 using Gopet.Manager;
+using Gopet.Data.Clan;
 
 public partial class MenuController
 {
@@ -500,41 +501,102 @@ public partial class MenuController
                 break;
             case MENU_SELECT_SKILL_CLAN_TO_RENT:
                 {
-                    /*int indexSlot = (int)player.controller.objectPerformed.get(OBJKEY_INDEX_SLOT_SKILL_RENT);
+                    int indexSlot = (int)player.controller.objectPerformed.get(OBJKEY_INDEX_SLOT_SKILL_RENT);
                     ClanMember clanMember = player.controller.getClan();
                     if (clanMember != null)
                     {
                         Clan clan = clanMember.getClan();
-                        bool canEdit = clanMember.duty == Clan.TYPE_LEADER || clanMember.duty == Clan.TYPE_DEPUTY_LEADER;
-                        if (index >= 0 && index < clan.getClanPotentialSkills().Count)
+                        if (index >= 0 && index < clan.SkillInfo.Count)
                         {
-                            ClanPotentialSkill clanPotentialSkill = clan.getClanPotentialSkills().get(index);
-                            ClanBuffTemplate clanBuffTemplate = GopetManager.CLANBUFF_HASH_MAP.get(clanPotentialSkill.getBuffId());
-                            if (canEdit)
+                            if (clanMember.IsLeader)
                             {
-                                ClanBuff dup = clan.getBuffByIdBuff(clanBuffTemplate.getBuffId());
-                                if (dup != null)
+                                clanMember.clan.LOCKObject.WaitOne();
+                                try
                                 {
-                                    player.redDialog("Bang hội bạn đã thuê kỹ năng này rồi");
-                                    return;
+
+
+                                    ClanSkillTemplate clanSkillTemplate = GopetManager.ClanSkillViaId[clan.SkillInfo.ElementAt(index).Key];
+                                    if (clanSkillTemplate != null)
+                                    {
+                                        if (clan.SkillRent.Any(p => p.SkillId == clanSkillTemplate.id))
+                                        {
+                                            player.redDialog("Kỹ năng đã thuê rồi");
+                                        }
+                                        else
+                                        {
+
+                                        }
+                                    }
                                 }
-                                 
+                                finally
+                                {
+                                    clanMember.clan.LOCKObject.ReleaseMutex();
+                                }
                             }
-                            else
-                            {
-                                player.redDialog("Bạn không đủ quyền");
-                            }
+                            else Clan.notEngouhPermission(player);
                         }
                     }
                     else
                     {
                         player.controller.notClan();
-                    }*/
+                    }
                 }
                 break;
             case MENU_PLUS_SKILL_CLAN:
                 {
-                    player.redDialog(GopetManager.OldFeatures);
+                    ClanMember clanMember = player.controller.getClan();
+                    if (clanMember != null)
+                    {
+                        if (clanMember.IsLeader)
+                        {
+                            clanMember.clan.LOCKObject.WaitOne();
+                            try
+                            {
+                                if (clanMember.clan.potentialSkill > 0)
+                                {
+                                    if (index >= 0 && index < GopetManager.clanSkillTemplateList.Count)
+                                    {
+                                        ClanSkillTemplate clanSkillTemplate = GopetManager.clanSkillTemplateList[index];
+                                        if (clanMember.clan.SkillInfo.ContainsKey(clanSkillTemplate.id))
+                                        {
+                                            if (clanMember.clan.SkillInfo[clanSkillTemplate.id] >= clanSkillTemplate.clanSkillLvlTemplates.Length)
+                                            {
+                                                player.redDialog("Kỹ năng đạt cấp cao nhất rồi");
+                                            }
+                                            else
+                                            {
+                                                clanMember.clan.SkillInfo[clanSkillTemplate.id]++;
+                                                clanMember.clan.potentialSkill--;
+                                                player.okDialog("Nâng cấp thành công");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            clanMember.clan.SkillInfo[clanSkillTemplate.id] = 1;
+                                            clanMember.clan.potentialSkill--;
+                                            player.okDialog("Nâng cấp thành công");
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    player.redDialog("Điểm kỹ năng bang hội không đủ");
+                                }
+                            }
+                            finally
+                            {
+                                clanMember.clan.LOCKObject.ReleaseMutex();
+                            }
+                        }
+                        else
+                        {
+                            Clan.notEngouhPermission(player);
+                        }
+                    }
+                    else
+                    {
+                        player.controller.notClan();
+                    }
                 }
                 break;
             case SHOP_ENERGY:

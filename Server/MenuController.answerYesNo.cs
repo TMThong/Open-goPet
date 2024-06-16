@@ -348,7 +348,7 @@ public partial class MenuController
                                             }
                                             else
                                             {
-                                                Clan.notEnoughFund(player);
+                                                Clan.notEnoughFund(player, temp.fundNeed);
                                             }
                                         }
                                         else
@@ -388,7 +388,49 @@ public partial class MenuController
                         player.redDialog(GopetManager.OldFeatures);
                     }
                     break;
-
+                case DIALOG_ASK_UNLOCK_SLOT_SKILL_CLAN:
+                    {
+                        ClanMember clanMember = player.controller.getClan();
+                        if(clanMember != null)
+                        {
+                            if (clanMember.IsLeader)
+                            {
+                                clanMember.clan.LOCKObject.WaitOne();
+                                try
+                                {
+                                    Clan clan = clanMember.getClan();
+                                    if (clan.slotSkill >= GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN.Length)
+                                    {
+                                        player.redDialog("Mở khóa hết các ô rồi");
+                                    }
+                                    else
+                                    {
+                                        if (clan.lvl >= GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[clan.slotSkill] && clan.fund >= GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN[clan.slotSkill])
+                                        {
+                                            clan.mineFund(GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN[clan.slotSkill]);
+                                            clan.slotSkill++;
+                                            player.controller.showSkillClan(player.user.user_id);
+                                            player.okDialog("Mở khóa ô tiếp theo thành công");
+                                        }
+                                        else
+                                        {
+                                            player.redDialog($"Không đủ điều kiện mở ô\n Bang cần đạt cấp {GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[clan.slotSkill]} và có {Utilities.FormatNumber(GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN[clan.slotSkill])} quỹ");
+                                        }
+                                    }
+                                }
+                                finally
+                                {
+                                    clanMember.clan.LOCKObject.ReleaseMutex();
+                                }
+                            }
+                            else Clan.notEngouhPermission(player);
+                        }
+                        else
+                        {
+                            player.controller.notClan();
+                        }
+                    }
+                    break;
                 default:
                     {
                         player.redDialog("khong ton tai dialog nay");

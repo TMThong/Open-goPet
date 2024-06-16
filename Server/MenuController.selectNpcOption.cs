@@ -255,7 +255,7 @@ public partial class MenuController
                     ClanMember clanMember = player.controller.getClan();
                     if (clanMember != null)
                     {
-                        player.okDialog(Utilities.Format("Bạn đã quyên góp quỹ được:%s\n Điểm cống hiến:%s", Utilities.FormatNumber(clanMember.fundDonate), Utilities.FormatNumber(clanMember.growthPointDonate)));
+                        player.okDialog(Utilities.Format("Bạn đã quyên góp quỹ được:%s", Utilities.FormatNumber(clanMember.fundDonate)));
                     }
                     else
                     {
@@ -310,7 +310,7 @@ public partial class MenuController
                     ClanMember clanMember = player.controller.getClan();
                     if (clanMember != null)
                     {
-                        if (clanMember.duty == Clan.TYPE_LEADER)
+                        if (clanMember.IsLeader)
                         {
                             showYNDialog(DIALOG_ASK_REQUEST_UPGRADE_MAIN_HOUSE, Utilities.Format("Bạn có muốn năng cấp nhà chính lên cấp %s không?", clanMember.getClan().getLvl() + 1), player);
                         }
@@ -379,19 +379,13 @@ public partial class MenuController
                     if (clanMember != null)
                     {
                         Clan clan = clanMember.getClan();
-                        if (clan.getLvl() >= 1)
+                        if (clan.getLvl() >= 15)
                         {
-                            //                        Calendar calendar = new GregorianCalendar();
-                            //                        calendar.setTimeInMillis(Utilities.CurrentTimeMillis);
-                            //                        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY && calendar.get(Calendar.HOUR_OF_DAY) >= 20 && calendar.get(Calendar.HOUR_OF_DAY) < 24) {
-                            showShop(SHOP_CLAN, player);
-                            //                        } else {
-                            //                            player.redDialog("Cửa hàng bang hội chỉ mở vào thứ 7 từ 20-24h");
-                            //                        }
+                              showShop(SHOP_CLAN, player);                     
                         }
                         else
                         {
-                            player.redDialog("Cửa hàng bang hội chưa đạt cấp 1 trở lên");
+                            player.redDialog("Bang hội chưa đạt cấp 15 trở lên");
                         }
                     }
                     else

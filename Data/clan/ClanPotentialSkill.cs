@@ -30,7 +30,5 @@ namespace Gopet.Data.GopetClan
         {
             return point;
         }
-
-
     }
 }

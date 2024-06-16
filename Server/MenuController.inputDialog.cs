@@ -551,12 +551,8 @@ public partial class MenuController
                     }
                 case INPUT_DIALOG_CREATE_CLAN:
                     {
-                        //                    if (true) {
-                        //                        player.redDialog("Tính tăng đã bị dẹp do chưa làm xong, toàn ib báo lỗi (star)");
-                        //                        return;
-                        //                    }
                         String clanName = reader.readString(0);
-                        if (player.playerData.clanId > 0)
+                        if (player.HaveClan)
                         {
                             player.redDialog("Bạn đã có bang hội rồi");
                             return;
