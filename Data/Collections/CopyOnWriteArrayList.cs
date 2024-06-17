@@ -35,7 +35,17 @@ namespace Gopet.Data.Collections
         }
 
 
-        public T this[int index] => get(index);
+        public T this[int index]
+        {
+            get
+            {
+                return get(index);
+            }
+            set
+            {
+                set(index, value);
+            }
+        }
         public void Add(T item)
         {
             mutex.WaitOne();

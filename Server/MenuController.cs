@@ -130,6 +130,8 @@ public partial class MenuController
         new AdminItemInfo("Dịch chuyển tất cả người chơi", "Dịch chuyển tất cả người chơi trên server vào chỗ bạn đứng", "items/4000766.png"),
         new AdminItemInfo("Thêm danh hiệu", "Thêm thanh hiệu vào nhân vật của bạn nhầm mục đích test", "items/4000766.png"),
         new AdminItemInfo("Cập nhật máy chủ", "Dùng sẽ hiện những server ẩn đi", "items/4000766.png"),
+        new AdminItemInfo("Xóa tất cả cánh", "Dùng sẽ hiện xóa tất cả cánh trong túi đồ", "items/4000766.png"),
+        new AdminItemInfo("Buff cường hóa xăm", "Dùng sẽ khiến người chỉ định luôn cường hóa xăm thành công", "items/4000766.png"),
     };
 
     public const int ADMIN_INDEX_SET_PET_INFO = 0;
@@ -156,6 +158,8 @@ public partial class MenuController
     public const int ADMIN_INDEX_TELEPORT_ALL_PLAYER_TO_ADMIN = 21;
     public const int ADMIN_INDEX_ADD_ACHIEVEMENT = 22;
     public const int ADMIN_INDEX_SHOW_LIST_SERVER = 23;
+    public const int ADMIN_INDEX_DELETE_ALL_WING = 24;
+    public const int ADMIN_INDEX_BUFF_ENCHANT_TATTOO = 25;
 
     /**
      * Danh sách nhận pet miễn phí
@@ -389,6 +393,7 @@ public partial class MenuController
     public const int INPUT_TYPE_NAME_PET_WHEN_BUY_PET = 20;
     public const int INPUT_TYPE_NAME_PLAYER_TO_GET_ITEM = 21;
     public const int INPUT_TYPE_NAME_PLAYER_TO_GIVE_ITEM = 22;
+    public const int INPUT_TYPE_NAME_BUFF_ENCHANT_TATTOO= 23;
     public const int IMGDIALOG_CAPTCHA = 0;
     #endregion
     public static void init()
@@ -820,9 +825,6 @@ public partial class MenuController
         player.session.sendMessage(m);
     }
 
-
-
-
     public static void selectImgDialog(int imgId, Player player)
     {
         switch (imgId)
@@ -845,6 +847,7 @@ public partial class MenuController
             case INPUT_DIALOG_CHALLENGE_INVITE:
             case INPUT_DIALOG_KIOSK:
                 return new sbyte[] { InputReader.FIELD_INT };
+            case INPUT_TYPE_NAME_BUFF_ENCHANT_TATTOO:
             case INPUT_TYPE_NAME_PET_WHEN_BUY_PET:
             case INPUT_TYPE_NAME_TO_BUFF_ENCHANT:
             case INPUT_TYPE_GIFT_CODE:

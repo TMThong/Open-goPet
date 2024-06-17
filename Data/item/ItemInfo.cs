@@ -130,6 +130,9 @@ namespace Gopet.Data.GopetItem
             public const int PER_DEF_BUFF_3_TURN = 37;
             public const int DOT_MANA_BY_ATK = 38;
             public const int BLOODSUCKING_BASED_ON_DAMAGE_PASSIVE_BUFF = 39;
+            public const int PERCENT_EXP = 40;
+            public const int PERCENT_GEM = 41;
+            public const int PERCENT_ALL_INFO = 42;
         }
 
         public static class OptionType

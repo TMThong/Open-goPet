@@ -507,7 +507,7 @@ public partial class MenuController
                     if (clanMember != null)
                     {
                         Clan clan = clanMember.getClan();
-                        if (index >= 0 && index < clan.SkillInfo.Count || menuId == MENU_SELECT_TYPE_MONEY_TO_RENT_SKILL_CLAN)
+                        if ((index >= 0 && index < clan.SkillInfo.Count || menuId == MENU_SELECT_TYPE_MONEY_TO_RENT_SKILL_CLAN) && indexSlot < clan.slotSkill)
                         {
                             if (clanMember.IsLeader)
                             {
@@ -531,7 +531,14 @@ public partial class MenuController
                                                     {
                                                         addMoney(clanSkillTemplate.moneyType[index], -clanSkillTemplate.price[index], player);
                                                         ClanSkill clanSkill = new ClanSkill(clanSkillTemplate.id, DateTime.Now.AddMilliseconds(clanSkillTemplate.expire), clan.SkillInfo[clanSkillTemplate.id]);
-                                                        clan.SkillRent.add(clanSkill);
+                                                        if (clan.SkillRent.Count > indexSlot)
+                                                        {
+                                                            clan.SkillRent[indexSlot] = clanSkill;
+                                                        }
+                                                        else
+                                                        {
+                                                            clan.SkillRent.add(clanSkill);
+                                                        }
                                                         player.okDialog("Thuê thành công");
                                                     }
                                                     else
@@ -1501,6 +1508,13 @@ public partial class MenuController
                             break;
                         case ADMIN_INDEX_SHOW_LIST_SERVER:
                             player.showListServer(GopetManager.ServerInfos.ToArray());
+                            break;
+                        case ADMIN_INDEX_DELETE_ALL_WING:
+                            player.playerData.getInventoryOrCreate(GopetManager.WING_INVENTORY).Clear();
+                            player.okDialog("Dọn thành công");
+                            break;
+                        case ADMIN_INDEX_BUFF_ENCHANT_TATTOO:
+                            player.controller.showInputDialog(INPUT_TYPE_NAME_BUFF_ENCHANT_TATTOO, "Buff cường hóa xăm", new String[] { "Tên nhân vật :" });
                             break;
                     }
                 }

@@ -125,6 +125,7 @@ public partial class MenuController
                     break;
                 case INPUT_TYPE_GIFT_CODE:
                     {
+                        ClanMember clanMember = player.controller.getClan();
                         if (!player.controller.canTypeGiftCode())
                         {
                             player.redDialog("Thao tác quá nhanh vui lòng chờ tí!");
@@ -154,44 +155,63 @@ public partial class MenuController
                                                 GiftCodeData giftCodeData = MySqlConnection.QuerySingleOrDefault<GiftCodeData>(Utilities.Format("SELECT * FROM `gift_code` WHERE `gift_code`.`code` = '%s';", code));
                                                 if (giftCodeData != null)
                                                 {
-                                                    if (giftCodeData.getUsersOfUseThis().Contains(player.user.user_id))
+                                                    if (clanMember == null && giftCodeData.isClanCode)
                                                     {
-                                                        player.redDialog("Bạn đã sử dụng mã quà tặng này rồi");
+                                                        player.controller.notClan();
+                                                        goto EndGiftCode;
+                                                    }
+                                                    if (!giftCodeData.isClanCode)
+                                                    {
+                                                        if (giftCodeData.getUsersOfUseThis().Contains(player.user.user_id))
+                                                        {
+                                                            player.redDialog("Bạn đã sử dụng mã quà tặng này rồi");
+                                                            goto EndGiftCode;
+                                                        }
                                                     }
                                                     else
                                                     {
-                                                        if (giftCodeData.getCurUser() >= giftCodeData.getMaxUser())
+                                                        if (giftCodeData.getUsersOfUseThis().Contains(clanMember.clan.clanId))
                                                         {
-                                                            player.redDialog("Số người dùng mã quà tặng này đã đạt giới hạn!");
+                                                            player.redDialog("Bang hội của bạn đã sử dụng mã quà tặng này rồi");
+                                                            goto EndGiftCode;
+                                                        }
+                                                    }
+                                                    if (giftCodeData.getCurUser() >= giftCodeData.getMaxUser())
+                                                    {
+                                                        player.redDialog("Số người dùng mã quà tặng này đã đạt giới hạn!");
+                                                    }
+                                                    else
+                                                    {
+                                                        if (giftCodeData.getExpire().GetTimeMillis() < Utilities.CurrentTimeMillis)
+                                                        {
+                                                            player.redDialog("Mã quà tặng đã hết hạn");
                                                         }
                                                         else
                                                         {
-                                                            if (giftCodeData.getExpire().GetTimeMillis() < Utilities.CurrentTimeMillis)
+                                                            if(giftCodeData.isClanCode)
+                                                                giftCodeData.getUsersOfUseThis().add(clanMember.clan.clanId);
+                                                            else
+                                                                giftCodeData.getUsersOfUseThis().add(player.user.user_id);
+                                                            giftCodeData.currentUser++; ;
+                                                            if (giftCodeData.getGift_data().Length <= 0)
                                                             {
-                                                                player.redDialog("Mã quà tặng đã hết hạn");
+                                                                player.redDialog("Mã quà tặng này chả tặng bạn được cái gì :)");
                                                             }
                                                             else
                                                             {
-                                                                giftCodeData.getUsersOfUseThis().add(player.user.user_id);
-                                                                giftCodeData.setCurUser(giftCodeData.getCurUser() + 1);
-                                                                if (giftCodeData.getGift_data().Length <= 0)
+                                                                JArrayList<Popup> popups = player.controller.onReiceiveGift(giftCodeData.getGift_data());
+                                                                JArrayList<String> textInfo = new();
+                                                                foreach (Popup popup in popups)
                                                                 {
-                                                                    player.redDialog("Mã quà tặng này chả tặng bạn được cái gì :)");
+                                                                    textInfo.add(popup.getText());
                                                                 }
-                                                                else
-                                                                {
-                                                                    JArrayList<Popup> popups = player.controller.onReiceiveGift(giftCodeData.getGift_data());
-                                                                    JArrayList<String> textInfo = new();
-                                                                    foreach (Popup popup in popups)
-                                                                    {
-                                                                        textInfo.add(popup.getText());
-                                                                    }
-                                                                    player.okDialog(Utilities.Format("Chức mừng bạn nhận được: %s", String.Join(",", textInfo)));
-                                                                }
-                                                                MySqlConnection.Execute("UPDATE `gift_code` SET `currentUser` = @currentUser , `usersOfUseThis` = @usersOfUseThis WHERE `id` =  @id;", giftCodeData);
+                                                                player.okDialog(Utilities.Format("Chức mừng bạn nhận được: %s", String.Join(",", textInfo)));
                                                             }
+                                                            MySqlConnection.Execute("UPDATE `gift_code` SET `currentUser` = @currentUser , `usersOfUseThis` = @usersOfUseThis WHERE `id` =  @id;", giftCodeData);
                                                         }
                                                     }
+
+                                                EndGiftCode:;
                                                 }
                                                 else
                                                 {
@@ -434,7 +454,7 @@ public partial class MenuController
                         }
                     }
                     break;
-
+                case INPUT_TYPE_NAME_BUFF_ENCHANT_TATTOO:
                 case INPUT_TYPE_NAME_TO_BUFF_ENCHANT:
                     {
                         if (player.checkIsAdmin())
@@ -443,8 +463,16 @@ public partial class MenuController
                             Player playerOnline = PlayerManager.get(name);
                             if (playerOnline != null)
                             {
-                                playerOnline.controller.setBuffEnchent(true);
-                                player.okDialog(Utilities.Format("Buff cho người chơi đập không thất bại thành công!", name));
+                                if (dialogInputId == INPUT_TYPE_NAME_TO_BUFF_ENCHANT)
+                                {
+                                    playerOnline.controller.setBuffEnchent(true);
+                                    player.okDialog(Utilities.Format("Buff cho người chơi đập không thất bại thành công!", name));
+                                }
+                                else
+                                {
+                                    playerOnline.controller.IsBuffEnchantTatto = true;
+                                    player.okDialog(Utilities.Format("Buff cho người chơi cường hóa xăm không thất bại thành công!", name));
+                                }
                             }
                             else
                             {
@@ -453,7 +481,6 @@ public partial class MenuController
                         }
                     }
                     break;
-
                 case INPUT_TYPE_NAME_TO_BUFF_COIN:
                     {
                         if (player.checkIsAdmin())

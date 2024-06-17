@@ -706,7 +706,8 @@ namespace Gopet.Battle
                         float coinPlus = 0f;
                         if (clanMember != null)
                         {
-                            
+                            perExpPlus += clanMember.clan.Search(ItemInfo.Type.PERCENT_EXP).value / 100f;
+                            coinPlus += clanMember.clan.Search(ItemInfo.Type.PERCENT_GEM).value / 100f;
                         }
                         exp = genExpWhenMobDie(activePlayer, activePet, mob, mob.getMobLvInfo().exp);
                         exp = Math.Max(0, exp + Utilities.round(Utilities.GetValueFromPercent(exp, activePlayer.playerData.buffExp.getPercent() + perExpPlus)));

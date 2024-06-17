@@ -407,6 +407,12 @@ namespace Gopet.Data.GopetClan
                     member.reset();
                 }
             }
+
+            foreach (var skillRent_ in SkillRent)
+            {
+                if (skillRent_.Expire < DateTime.Now)
+                    this.SkillRent.Remove(skillRent_);
+            }
         }
 
         public void create()
@@ -430,7 +436,7 @@ namespace Gopet.Data.GopetClan
         public void save(MySqlConnection conn)
         {
             conn.Execute("UPDATE `clan` SET `lvl`=@lvl,`leaderId`=@leaderId,`members`=@members,`fund`=@fund,`slogan`=@slogan,`joinRequest`=@joinRequest, `potentialSkill` = @potentialSkill, `SkillRent` = @SkillRent, `SkillInfo` = @SkillInfo , `slotSkill` = @slotSkill WHERE clanId= @clanId",
-                new { lvl = lvl, leaderId = leaderId, members = members, fund = fund, slogan = slogan, joinRequest = joinRequest, potentialSkill = potentialSkill, SkillRent = SkillRent, SkillInfo = SkillInfo, clanId = clanId , slotSkill  = slotSkill }  );
+                new { lvl = lvl, leaderId = leaderId, members = members, fund = fund, slogan = slogan, joinRequest = joinRequest, potentialSkill = potentialSkill, SkillRent = SkillRent, SkillInfo = SkillInfo, clanId = clanId, slotSkill = slotSkill });
         }
 
         public void save()
@@ -475,6 +481,43 @@ namespace Gopet.Data.GopetClan
         public static void notEngouhPermission(Player player)
         {
             player.redDialog("Bạn không đủ quyền");
+        }
+
+        public PetSkillInfo[] getAllSkillRent
+        {
+            get
+            {
+                List<PetSkillInfo> petSkillInfos = new List<PetSkillInfo>();
+
+                foreach (var skill in this.SkillRent)
+                {
+                    if (skill.Expire < DateTime.Now)
+                        continue;
+                    foreach (var item1 in skill.PetSkillInfos)
+                    {
+                        var queryList = petSkillInfos.Where(p => p.id == item1.id);
+                        if (queryList.Any())
+                        {
+                            queryList.First().value += item1.value;
+                        }
+                        else
+                        {
+                            petSkillInfos.Add(new PetSkillInfo(item1.id, item1.value));
+                        }
+                    }
+                }
+
+                return petSkillInfos.ToArray();
+            }
+        }
+
+        public PetSkillInfo Search(int Id)
+        {
+            var queryList = this.getAllSkillRent.Where(p => p.id == Id);
+            if (queryList.Any())
+                return queryList.First();
+
+            return new PetSkillInfo(Id, 0);
         }
     }
 }

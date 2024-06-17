@@ -1,5 +1,6 @@
 
 using Gopet.Data.Collections;
+using Gopet.Data.GopetClan;
 using Gopet.Data.GopetItem;
 using Gopet.Util;
 using Newtonsoft.Json;
@@ -383,6 +384,17 @@ public class Pet : GameObject
             this.def += ach.Template.Def;
             this.maxHp += ach.Template.Hp;
             this.maxMp += ach.Template.Mp;
+        }
+
+        ClanMember clanMember = player.controller.getClan();
+        if(clanMember != null)
+        {
+            int valueBuff = clanMember.clan.Search(ItemInfo.Type.PERCENT_ALL_INFO).value;
+
+            this.atk += (int)Utilities.GetValueFromPercent(this.atk, valueBuff / 100);
+            this.def += (int)Utilities.GetValueFromPercent(this.def, valueBuff / 100);
+            this.maxHp += (int)Utilities.GetValueFromPercent(this.maxHp, valueBuff / 100);
+            this.maxMp += (int)Utilities.GetValueFromPercent(this.maxMp, valueBuff / 100);
         }
 
         player.controller.checkExpire();

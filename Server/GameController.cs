@@ -40,6 +40,7 @@ public class GameController
     public long delayTimeHealPet = 0;
 
     public bool isBuffEnchent { get; private set; } = false;
+    public bool IsBuffEnchantTatto { get; set; } = false;
 
     public bool isHasBattleAndShowDialog()
     {
@@ -1760,7 +1761,8 @@ public class GameController
                         subCountItem(item1, 1, GopetManager.NORMAL_INVENTORY);
                         subCountItem(item2, 1, GopetManager.NORMAL_INVENTORY);
 
-                        bool isSucces = Utilities.NextFloatPer() < GopetManager.PERCENT_OF_ENCHANT_TATOO[first.lvl];
+                        bool isSucces = Utilities.NextFloatPer() < GopetManager.PERCENT_OF_ENCHANT_TATOO[first.lvl] || IsBuffEnchantTatto;
+
                         if (isSucces)
                         {
                             first.lvl++;
@@ -3731,6 +3733,17 @@ public class GameController
                     {
                         player.playerData.EventPoint += giftInfo[1];
                         popups.add(new Popup($"{giftInfo[1]} điểm sự kiện"));
+                        break;
+                    }
+                case GopetManager.GIFT_FUND_CLAN:
+                    {
+                        ClanMember clanMember = getClan();
+                        if(clanMember != null)
+                        {
+                            clanMember.clan.addFund(giftInfo[1], clanMember);
+                            player.okDialog($"Bang hội của bạng được cộng {Utilities.FormatNumber(giftInfo[1])} quỹ bang");
+                            popups.add(new Popup($"{Utilities.FormatNumber(giftInfo[1])} quỹ bang"));
+                        }
                         break;
                     }
             }
