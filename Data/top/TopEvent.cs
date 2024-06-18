@@ -52,7 +52,7 @@ namespace Gopet.Data.top
             return topData;
         }
 
-        public override void update()
+        public override void Update()
         {
             try
             {

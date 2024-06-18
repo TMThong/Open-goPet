@@ -7,7 +7,7 @@ using MySql.Data.MySqlClient;
 public class TopPet : Top
 {
 
-    public static TopPet instance = new TopPet();
+    public static TopPet Instance = new TopPet();
 
     public TopPet() : base("top_pet")
     {
@@ -17,7 +17,7 @@ public class TopPet : Top
     }
 
 
-    public override void update()
+    public override void Update()
     {
         try
         {

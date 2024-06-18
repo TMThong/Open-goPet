@@ -6,7 +6,7 @@ using Gopet.Util;
 public class TopGem : Top
 {
 
-    public static readonly TopGem instance = new TopGem();
+    public static readonly TopGem Instance = new TopGem();
 
     public TopGem() : base("top_gem")
     {
@@ -33,7 +33,7 @@ public class TopGem : Top
         return topData;
     }
 
-    public override void update()
+    public override void Update()
     {
         try
         {

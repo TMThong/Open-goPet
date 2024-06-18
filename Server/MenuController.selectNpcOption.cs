@@ -69,11 +69,11 @@ public partial class MenuController
             case OP_DELETE_TIEM_NANG:
                 sendMenu(MENU_DELETE_TIEM_NANG, player); break;
             case OP_TOP_PET:
-                showTop(TopPet.instance, player); break;
+                showTop(TopPet.Instance, player); break;
             case OP_TOP_GOLD:
-                showTop(TopGold.instance, player); break;
+                showTop(TopGold.Instance, player); break;
             case OP_TOP_GEM:
-                showTop(TopGem.instance, player); break;
+                showTop(TopGem.Instance, player); break;
             case OP_SHOW_TOP_ACCUMULATED_POINT:
                 showTop(TopAccumulatedPoint.Instance, player);
                 break;
@@ -83,7 +83,7 @@ public partial class MenuController
                 break;
             case OP_TOP_SPEND_GOLD:
                 {
-                    showTop(TopSpendGold.instance, player);
+                    showTop(TopSpendGold.Instance, player);
                 }
                 break;
             case OP_CHALLENGE:
@@ -221,7 +221,7 @@ public partial class MenuController
                 break;
             case OP_TOP_LVL_CLAN:
                 {
-                    showTop(TopLVLClan.instance, player);
+                    showTop(TopLVLClan.Instance, player);
                 }
                 break;
             case OP_ENTER_CLAN_PLACE:

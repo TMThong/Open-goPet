@@ -566,10 +566,10 @@ Thread.Sleep(1000);
         if (gold < 0 && CanAddSpendGold)
         {
             playerData.spendGold -= gold;
-            TopData topData = TopSpendGold.instance.find(playerData.user_id);
+            TopData topData = TopSpendGold.Instance.find(playerData.user_id);
             if (topData != null)
             {
-                topData.desc = Utilities.Format("Hạng %s: Đã tiêu %s (vang)", TopSpendGold.instance.datas.indexOf(topData) + 1, Utilities.FormatNumber(playerData.spendGold));
+                topData.desc = Utilities.Format("Hạng %s: Đã tiêu %s (vang)", TopSpendGold.Instance.datas.indexOf(topData) + 1, Utilities.FormatNumber(playerData.spendGold));
             }
         }
     }
@@ -588,10 +588,10 @@ Thread.Sleep(1000);
         if (CanAddSpendGold)
         {
             playerData.spendGold += gold;
-            TopData topData = TopSpendGold.instance.find(playerData.user_id);
+            TopData topData = TopSpendGold.Instance.find(playerData.user_id);
             if (topData != null)
             {
-                topData.desc = Utilities.Format("Hạng %s: Đã tiêu %s (vang)", TopSpendGold.instance.datas.indexOf(topData) + 1, Utilities.FormatNumber(playerData.spendGold));
+                topData.desc = Utilities.Format("Hạng %s: Đã tiêu %s (vang)", TopSpendGold.Instance.datas.indexOf(topData) + 1, Utilities.FormatNumber(playerData.spendGold));
             }
         }
     }

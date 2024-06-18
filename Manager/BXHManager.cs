@@ -46,7 +46,7 @@ public class BXHManager
             {
                 foreach (Top next in listTop)
                 {
-                    next.update();
+                    next.Update();
                 }
                 lastTime = Utilities.CurrentTimeMillis + 1000 * 60 * 15;
             }
@@ -58,11 +58,11 @@ public class BXHManager
 
     static BXHManager()
     {
-        listTop.Add(TopGold.instance);
-        listTop.Add(TopPet.instance);
-        listTop.Add(TopGem.instance);
-        listTop.Add(TopLVLClan.instance);
-        listTop.Add(TopSpendGold.instance);
+        listTop.Add(TopGold.Instance);
+        listTop.Add(TopPet.Instance);
+        listTop.Add(TopGem.Instance);
+        listTop.Add(TopLVLClan.Instance);
+        listTop.Add(TopSpendGold.Instance);
         listTop.Add(TopAccumulatedPoint.Instance);
         listTop.Add(TopEvent.Instance);
     }

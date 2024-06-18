@@ -4,10 +4,9 @@ using Gopet.Data.User;
 using Gopet.Util;
 using MySql.Data.MySqlClient;
 
-public class History {
-
+public class History 
+{
     public const int KILL_MOB = 1;
-
     public Object obj;
     public String log;
     public DateTime DateTime;
@@ -29,7 +28,7 @@ public class History {
         setUser_id(user_id);
     }
 
-    public String charName(MySqlConnection MySqlConnection) {
+    public string charName(MySqlConnection MySqlConnection) {
         if (this.player == null) {
             using(var conn = MYSQLManager.create())
             {
@@ -130,6 +129,4 @@ public class History {
     public int getSpceialType() {
         return spceialType;
     }
-
- 
 }

@@ -213,7 +213,7 @@ namespace Gopet.Data.Event.Year2024
                 return topData;
             }
 
-            public override void update()
+            public override void Update()
             {
                 try
                 {
@@ -273,7 +273,7 @@ namespace Gopet.Data.Event.Year2024
                 return topData;
             }
 
-            public override void update()
+            public override void Update()
             {
                 try
                 {

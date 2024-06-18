@@ -7,7 +7,7 @@ using MySql.Data.MySqlClient;
 public class HistoryManager
 {
 
-    public static HistoryManager instance = new HistoryManager();
+    public static HistoryManager Instance = new HistoryManager();
     private CopyOnWriteArrayList<History> historys = new();
     public Thread HistoryThread;
     public HistoryManager()
@@ -29,7 +29,7 @@ public class HistoryManager
 
     public static void addHistory(History history)
     {
-        instance.add(history);
+        Instance.add(history);
     }
 
 

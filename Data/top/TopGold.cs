@@ -8,7 +8,7 @@ public class TopGold : Top
 {
 
     private String[] topNameStrings = new String[] { "Phú hộ", "Bá hộ", "Chủ nông" };
-    public static TopGold instance = new TopGold();
+    public static TopGold Instance = new TopGold();
 
     public TopGold() : base("top_gold")
     {
@@ -35,7 +35,7 @@ public class TopGold : Top
         return topData;
     }
 
-    public override void update()
+    public override void Update()
     {
         try
         {

@@ -32,7 +32,7 @@ namespace Gopet.App
             //        autoMaintenance.start(ServerSetting.instance.getHourMaintenance(), ServerSetting.instance.getMinMaintenance());
             MYSQLManager.init();
             GopetManager.init();
-            HistoryManager.instance.start();
+            HistoryManager.Instance.start();
             MapManager.init();
             ClanManager.init();
             GopetManager.loadMarket();

@@ -6,7 +6,7 @@ using Gopet.Util;
 public class TopSpendGold : Top
 {
 
-    public static readonly TopSpendGold instance = new TopSpendGold();
+    public static readonly TopSpendGold Instance = new TopSpendGold();
 
     public TopSpendGold() : base("top_spendgold")
     {
@@ -46,7 +46,7 @@ public class TopSpendGold : Top
     }
 
 
-    public override void update()
+    public override void Update()
     {
         try
         {

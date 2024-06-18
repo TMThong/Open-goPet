@@ -17,7 +17,7 @@ public class Top
         top_id = top_idString;
     }
 
-    public virtual void update()
+    public virtual void Update()
     {
 
     }

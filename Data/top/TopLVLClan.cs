@@ -5,7 +5,7 @@ using Gopet.Util;
 
 public class TopLVLClan : Top {
 
-    public static readonly TopLVLClan instance = new TopLVLClan();
+    public static readonly TopLVLClan Instance = new TopLVLClan();
 
     public TopLVLClan() : base("top_clan")
     {
@@ -15,7 +15,7 @@ public class TopLVLClan : Top {
     }
 
     
-    public override void update() {
+    public override void Update() {
         try {
             lastDatas.Clear();
             lastDatas.AddRange(datas);
