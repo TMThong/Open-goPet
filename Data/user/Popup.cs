@@ -1,14 +1,6 @@
 
-public class Popup
+
+public record Popup(String text)
 {
-
-    public String text { get; set; }
-
-    public Popup(String text)
-    {
-        this.text = text;
-    }
-
-
     public string getText() => text;
 }

@@ -78,6 +78,6 @@ public class PetTatto
             infoStrings.add(getMp() + " (mp) ");
         }
 
-        return Template.getName() + "  " + String.Join(" ", infoStrings);
+        return Template.name + "  " + String.Join(" ", infoStrings);
     }
 }

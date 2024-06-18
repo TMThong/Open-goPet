@@ -4,15 +4,6 @@ namespace Gopet.Battle
 {
     public class Debuff : Buff
     {
-
-        public Debuff()
-        {
-        }
-
-        public Debuff(ItemInfo[] infos, int turn) : base(infos, turn)
-        {
-
-        }
-
+        public Debuff(ItemInfo[] infos, int turn) : base(infos, turn) { }
     }
 }

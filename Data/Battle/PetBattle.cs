@@ -1510,12 +1510,9 @@ namespace Gopet.Battle
             bool minus = Math.Abs(p.lvl - mob.getMobLvInfo().lvl) >= 5;
             if (minus)
             {
-                //            System.out.println("data.battle.PetBattle.genGemWhenMobDie()" + begin);
                 begin = (int)Utilities.GetValueFromPercent(begin, Math.Max(0, 100 - Math.Abs(p.lvl - mob.getMobLvInfo().lvl) * 3));
-                //            System.out.println("data.battle.PetBattle.genGemWhenMobDie()" + begin);
             }
             begin = Math.Max(0, (int)Utilities.GetValueFromPercent(begin, 100 - Utilities.nextInt(-10, 10)));
-            //        System.out.println("data.battle.PetBattle.genGemWhenMobDie()" + begin);
             return Utilities.round(Utilities.GetValueFromPercent(begin, FieldManager.PERCENT_GEM));
         }
 

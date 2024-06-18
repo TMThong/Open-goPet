@@ -2876,9 +2876,9 @@ public class GameController
     public void upTierItem()
     {
         Item itemEuipActive = (Item)objectPerformed.get(MenuController.OBJKEY_ITEM_UP_TIER_ACTIVE);
-        objectPerformed.remove(MenuController.OBJKEY_ITEM_UP_TIER_ACTIVE);
+        objectPerformed.Remove(MenuController.OBJKEY_ITEM_UP_TIER_ACTIVE);
         Item itemEuipPassive = (Item)objectPerformed.get(MenuController.OBJKEY_ITEM_UP_TIER_PASSIVE);
-        objectPerformed.remove(MenuController.OBJKEY_ITEM_UP_TIER_PASSIVE);
+        objectPerformed.Remove(MenuController.OBJKEY_ITEM_UP_TIER_PASSIVE);
         bool isGem = (bool)objectPerformed.get(MenuController.OBJKEY_IS_ENCHANT_GEM);
         bool isKeepGem = false;
         if (objectPerformed.ContainsKey(MenuController.OBJKEY_IS_KEEP_GOLD))
@@ -3272,8 +3272,8 @@ public class GameController
         //        }
         int user_id = (int)objectPerformed.get(MenuController.OBJKEY_USER_ID_PK);
         Item cardPK = (Item)objectPerformed.get(MenuController.OBJKEY_ITEM_PK);
-        objectPerformed.remove(MenuController.OBJKEY_ITEM_PK);
-        objectPerformed.remove(MenuController.OBJKEY_USER_ID_PK);
+        objectPerformed.Remove(MenuController.OBJKEY_ITEM_PK);
+        objectPerformed.Remove(MenuController.OBJKEY_USER_ID_PK);
         Player playerPassive = PlayerManager.get(user_id);
         ClanMember passiveClanMember = playerPassive.controller.getClan();
         if (playerPassive != player && playerPassive != null)
@@ -3499,7 +3499,7 @@ public class GameController
                     m.putInt(petTatto.tattoId);
                     m.putUTF(petTatto.getName());
                     m.putsbyte(i + 1);
-                    m.putUTF(petTattoTemplate.getIconPath());
+                    m.putUTF(petTattoTemplate.iconPath);
                 }
             }
             m.cleanup();
@@ -3551,7 +3551,7 @@ public class GameController
         {
             int randTatto = Utilities.RandomArray(listTempId);
             PetTattoTemplate petTattoTemplate = GopetManager.tattos.get(randTatto);
-            if (petTattoTemplate.getPercent() > Utilities.NextFloatPer())
+            if (petTattoTemplate.percent > Utilities.NextFloatPer())
             {
                 return randTatto;
             }
@@ -3570,10 +3570,10 @@ public class GameController
                 {
                     p.tatto.remove(tatto);
                     showPetTattoUI();
-                    player.okDialog(Utilities.Format("Xóa thành công %s", tatto.Template.getName()));
+                    player.okDialog(Utilities.Format("Xóa thành công %s", tatto.Template.name));
                     subCountItem(itemSelect, 1, GopetManager.NORMAL_INVENTORY);
-                    objectPerformed.remove(MenuController.OBJKEY_TATTO_ID_REMOVE);
-                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Xóa xăm %s cho pet %s", tatto.Template.getName(), p.getNameWithoutStar())));
+                    objectPerformed.Remove(MenuController.OBJKEY_TATTO_ID_REMOVE);
+                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Xóa xăm %s cho pet %s", tatto.Template.name, p.getNameWithoutStar())));
                 }
             }
         }

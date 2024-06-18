@@ -4,14 +4,14 @@ namespace Gopet.Data.Dialog
     {
 
 
-        public string name = "";
-        public string iconImgPath;
-        public bool enable = true;
-        public string urlForDownload = "";
+        public string name { get; set; } = "";
+        public string iconImgPath { get; set; }
+        public bool enable { get; set; } = true;
+        public string urlForDownload { get; set; } = "";
 
 
-        public string desc = "";
-        public string subIconImgPath = "";
+        public string desc { get; set; } = "";
+        public string subIconImgPath { get; set; } = "";
 
         public virtual void doSelect(Player player)
         {

@@ -26,7 +26,7 @@ public partial class MenuController
                         if (obj != null)
                         {
                             player.controller.removeItemEquip((int)obj);
-                            player.controller.objectPerformed.remove(OBJKEY_REMOVE_ITEM_EQUIP);
+                            player.controller.objectPerformed.Remove(OBJKEY_REMOVE_ITEM_EQUIP);
                         }
                     }
                     break;
@@ -36,7 +36,7 @@ public partial class MenuController
                         if (obj != null)
                         {
                             var objENtry = (KeyValuePair<Kiosk, SellItem>)obj;
-                            player.controller.objectPerformed.remove(OBJKEY_KIOSK_ITEM);
+                            player.controller.objectPerformed.Remove(OBJKEY_KIOSK_ITEM);
                             objENtry.Key.confirmBuy(player, objENtry.Value);
                         }
                     }
@@ -171,20 +171,20 @@ public partial class MenuController
                 case DIALOG_ASK_REMOVE_GEM:
                     {
                         player.controller.confirmUnequipGem((int)player.controller.objectPerformed.get(OBJKEY_ID_ITEM_REMOVE_GEM));
-                        player.controller.objectPerformed.remove(OBJKEY_ID_ITEM_REMOVE_GEM);
+                        player.controller.objectPerformed.Remove(OBJKEY_ID_ITEM_REMOVE_GEM);
                     }
                     break;
 
                 case DIALOG_ASK_FAST_REMOVE_GEM:
                     {
                         player.controller.confirmUnequipFastGem((int)player.controller.objectPerformed.get(OBJKEY_ID_ITEM_FAST_REMOVE_GEM));
-                        player.controller.objectPerformed.remove(OBJKEY_ID_ITEM_FAST_REMOVE_GEM);
+                        player.controller.objectPerformed.Remove(OBJKEY_ID_ITEM_FAST_REMOVE_GEM);
                     }
                     break;
                 case DIALOG_ASK_REQUEST_JOIN_CLAN:
                     {
                         player.controller.requestJoinClan((String)player.controller.objectPerformed.get(OBJKEY_CLAN_NAME_REQUEST));
-                        player.controller.objectPerformed.remove(OBJKEY_CLAN_NAME_REQUEST);
+                        player.controller.objectPerformed.Remove(OBJKEY_CLAN_NAME_REQUEST);
                     }
                     break;
                 case DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN:

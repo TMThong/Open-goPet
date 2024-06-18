@@ -50,10 +50,6 @@ namespace Gopet.Data.Collections
             base[key] = value;
         }
 
-        public bool ContainsKey(TKey key)
-        {
-            return base.ContainsKey(key);
-        }
 
         public Tvalue get(TKey key)
         {
@@ -67,11 +63,6 @@ namespace Gopet.Data.Collections
         public void Clear()
         {
             base.Clear();
-        }
-
-        public void remove(TKey key)
-        {
-              base.Remove(key);
         }
     }
 }

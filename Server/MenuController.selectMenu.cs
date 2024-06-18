@@ -221,7 +221,7 @@ public partial class MenuController
                     if (player.controller.objectPerformed.ContainsKey(OBJKEY_INDEX_TASK_IN_MY_LIST))
                     {
                         int indexTask = (int)player.controller.objectPerformed.get(OBJKEY_INDEX_TASK_IN_MY_LIST);
-                        player.controller.objectPerformed.remove(OBJKEY_INDEX_TASK_IN_MY_LIST);
+                        player.controller.objectPerformed.Remove(OBJKEY_INDEX_TASK_IN_MY_LIST);
 
                         if (indexTask >= 0 && indexTask < player.playerData.task.Count)
                         {
@@ -943,7 +943,7 @@ public partial class MenuController
                         case MENU_SELECT_GEM_TO_INLAY:
                             {
                                 player.controller.inlayGem(itemSelect, (int)player.controller.objectPerformed.get(OBJKEY_EQUIP_INLAY_GEM_ID));
-                                player.controller.objectPerformed.remove(OBJKEY_EQUIP_INLAY_GEM_ID);
+                                player.controller.objectPerformed.Remove(OBJKEY_EQUIP_INLAY_GEM_ID);
                             }
                             break;
                         case MENU_SELECT_ITEM_TO_GET_BY_ADMIN:

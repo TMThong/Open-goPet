@@ -42,6 +42,7 @@ public class ClanManager
                 }
                 clan.setShopClan(new ShopClan(clan));
                 clan.initClan();
+                clan.removeClanMemberDuplicate();
                 addClan(clan);
             }
         }

@@ -304,6 +304,8 @@ namespace Gopet.Data.GopetClan
 
         public void addMember(int user_id, String name)
         {
+            if (this.members.Where(p => p.user_id == user_id).Any())
+                return;
             Player player = PlayerManager.get(user_id);
             ClanMember clanMember = new ClanMember();
             clanMember.clan = this;
@@ -319,6 +321,21 @@ namespace Gopet.Data.GopetClan
             members.add(clanMember);
 
             members.Sort(new ClanMemeberComparer());
+        }
+
+        public void removeClanMemberDuplicate()
+        {
+            foreach (var mem in members)
+            {
+                var listQuery = members.Where(p => p.user_id == mem.user_id);
+                if (listQuery.Count() > 1)
+                {
+                    for (global::System.Int32 i = 1; i < listQuery.Count(); i++)
+                    {
+                        members.remove(listQuery.ElementAt(i));
+                    }
+                }
+            }
         }
 
         public ClanRequestJoin getJoinRequestByUserId(int user_id)

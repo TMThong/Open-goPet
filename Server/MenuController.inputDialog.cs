@@ -61,8 +61,8 @@ public partial class MenuController
                             }
                         }
 
-                        player.controller.objectPerformed.remove(OBJKEY_SELECT_SELL_ITEM);
-                        player.controller.objectPerformed.remove(OBJKEY_MENU_OF_KIOSK);
+                        player.controller.objectPerformed.Remove(OBJKEY_SELECT_SELL_ITEM);
+                        player.controller.objectPerformed.Remove(OBJKEY_MENU_OF_KIOSK);
                         int count = 1;
                         if (player.controller.objectPerformed.ContainsKey(OBJKEY_COUNT_OF_ITEM_KIOSK))
                         {

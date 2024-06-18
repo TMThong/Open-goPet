@@ -2,7 +2,6 @@ namespace Gopet.Data.Dialog
 {
     public class MenuItemInfo
     {
-
         private string titleMenu, desc, imgPath, dialogText, leftCmdText, rightCmdText;
         private bool canSelect = false;
         private bool showDialog = false;
@@ -174,12 +173,11 @@ namespace Gopet.Data.Dialog
             return paymentOptions;
         }
 
-
         public class PaymentOption
         {
-            int paymentOptionsId;
-            string moneyText;
-            sbyte isPaymentEnable;
+            public int paymentOptionsId;
+            public string moneyText;
+            public sbyte isPaymentEnable;
 
             public PaymentOption(int paymentOptionsId, string moneyText, sbyte isPaymentEnable)
             {
@@ -217,7 +215,6 @@ namespace Gopet.Data.Dialog
             {
                 return isPaymentEnable;
             }
-
         }
     }
 }

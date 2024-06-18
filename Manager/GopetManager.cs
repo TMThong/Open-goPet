@@ -772,7 +772,7 @@ public class GopetManager
             var tattoList = conn.Query<PetTattoTemplate>("SELECT * FROM `tattoo`");
             foreach (var petTattoTemplate in tattoList)
             {
-                tattos.put(petTattoTemplate.getTattooId(), petTattoTemplate);
+                tattos.put(petTattoTemplate.tattooId , petTattoTemplate);
             }
 
             var dropItemList = conn.Query<DropItem>("SELECT * FROM `drop_item`");

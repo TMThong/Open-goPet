@@ -1,11 +1,7 @@
 namespace Gopet.Battle
 {
-    public class PetBattleText : Popup
+    public record PetBattleText : Popup
     {
-
-        public PetBattleText(string text) : base(text)
-        {
-
-        }
+        public PetBattleText(string text) : base(text) { }
     }
 }
