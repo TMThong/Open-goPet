@@ -178,8 +178,8 @@ namespace Gopet.Data.Event.Year2024
 
         static Summer2024Event()
         {
-            BXHManager.listTop.add(TopKiteNormal.Instance);
-            BXHManager.listTop.add(TopKiteVip.Instance);
+            BXHManager.listTop.Add(TopKiteNormal.Instance);
+            BXHManager.listTop.Add(TopKiteVip.Instance);
         }
 
 
@@ -233,7 +233,7 @@ namespace Gopet.Data.Event.Year2024
                             topData.imgPath = data.avatarPath;
                             topData.title = topData.name;
                             topData.desc = Utilities.Format("Hạng %s : đang có %s lần sử dụng diều giấy", index, Utilities.FormatNumber(data.NumOfUseKiteNormal));
-                            datas.add(topData);
+                            datas.Add(topData);
                             index++;
                         }
                     }
@@ -294,7 +294,7 @@ namespace Gopet.Data.Event.Year2024
                             topData.imgPath = data.avatarPath;
                             topData.title = topData.name;
                             topData.desc = Utilities.Format("Hạng %s : đang có %s lần sử dụng diều vải", index, Utilities.FormatNumber(data.NumOfUseKiteVip));
-                            datas.add(topData);
+                            datas.Add(topData);
                             index++;
                         }
                     }

@@ -24,7 +24,7 @@ public class HistoryManager
 
     public void add(History history)
     {
-        historys.add(history);
+        historys.Add(history);
     }
 
     public static void addHistory(History history)

@@ -21,7 +21,7 @@ namespace Gopet.IO
             {
                 throw new ArgumentNullException();
             }
-            msgSenders.add(this);
+            msgSenders.Add(this);
         }
 
         public void addMessage(Message message)

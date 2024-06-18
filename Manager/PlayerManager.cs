@@ -29,7 +29,7 @@ public class PlayerManager
     public static void put(Player player)
     {
 
-        players.add(player);
+        players.Add(player);
         player_ID.put(player.user.user_id, player);
         player_name.put(player.playerData.name, player);
 

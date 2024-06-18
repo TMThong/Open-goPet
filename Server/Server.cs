@@ -40,7 +40,7 @@ namespace Gopet.MServer
                 Session session = new Session(client.Client);
                 session.setHandler(new Player(session));
                 session.run();
-                sessions.add(session);
+                sessions.Add(session);
                 Session.socketCount++;
             }
             catch (Exception e)

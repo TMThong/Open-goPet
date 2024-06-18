@@ -56,7 +56,7 @@ public class GopetPlace : Place
         }
         player.controller.setLastTimeKillMob(0L);
         sendNewPlayer(player);
-        players.add(player);
+        players.Add(player);
         player.setPlace(this);
         loadInfo(player);
         sendGameObj(player);
@@ -101,7 +101,7 @@ public class GopetPlace : Place
             if (!hasId)
             {
                 gopetMob.setMobId(mobId);
-                mobs.add(gopetMob);
+                mobs.Add(gopetMob);
                 return;
             }
         }
@@ -535,7 +535,7 @@ public class GopetPlace : Place
 
     public void addPetBattle(PetBattle petBattle)
     {
-        petBattles.add(petBattle);
+        petBattles.Add(petBattle);
     }
 
     private void createNewMob(MobLocation[] locations)

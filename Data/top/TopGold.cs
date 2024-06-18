@@ -58,7 +58,7 @@ public class TopGold : Top
                         topData.imgPath = data.avatarPath;
                         topData.title = topData.name;
                         topData.desc = Utilities.Format("Hạng %s : đang có %s (vang)", index, Utilities.FormatNumber(data.gold));
-                        datas.add(topData);
+                        datas.Add(topData);
                         index++;
                     }
                 }

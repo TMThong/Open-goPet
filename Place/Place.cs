@@ -26,7 +26,7 @@ public abstract class Place {
 
     }
 
-    public abstract void add(Player player)  ;
+    public abstract void add(Player player);
 
     public virtual void remove(Player player)   {
         players.remove(player);

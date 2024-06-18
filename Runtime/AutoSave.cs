@@ -10,7 +10,7 @@ public class AutoSave : IRuntime
     public static DateTime lastTimeSavePlayer = DateTime.Now.AddMinutes(10);
 
 
-    public void update()
+    public void Update()
     {
         if (lastTimeSavePlayer < DateTime.Now)
         {

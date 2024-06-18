@@ -60,11 +60,6 @@ namespace Gopet.Data.Collections
             }
         }
 
-        public void add(T item)
-        {
-            this.Add(item);
-        }
-
         public bool Contains(T item)
         {
             return this.values.Contains(item);

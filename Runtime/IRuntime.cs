@@ -2,5 +2,5 @@
 
 public interface IRuntime
 {
-    void update();
+    void Update();
 }

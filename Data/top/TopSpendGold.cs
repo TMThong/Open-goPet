@@ -68,7 +68,7 @@ public class TopSpendGold : Top
                         topData.imgPath = data.avatarPath;
                         topData.title = topData.name;
                         topData.desc = Utilities.Format("Hạng %s: Đã tiêu %s (vang)", index, Utilities.FormatNumber(data.spendGold));
-                        datas.add(topData);
+                        datas.Add(topData);
                         index++;
                     }
                 }

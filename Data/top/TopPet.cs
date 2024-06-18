@@ -48,7 +48,7 @@ public class TopPet : Top
                             data.maxMp,
                             data.def,
                             data.atk);
-                    datas.add(topData);
+                    datas.Add(topData);
                     index++;
                 }
             }

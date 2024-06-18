@@ -48,7 +48,7 @@ namespace Gopet.Manager
 
         public static void AddThread(Thread thread)
         {
-            THREADS.add(thread);
+            THREADS.Add(thread);
         }
 
         public static void RemoveThread(Thread thread)

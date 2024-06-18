@@ -2458,7 +2458,7 @@ public class GameController
                     kiosk.kioskItems.remove(sellItem);
                     if (sellItem.pet != null)
                     {
-                        player.playerData.pets.add(sellItem.pet);
+                        player.playerData.pets.Add(sellItem.pet);
                     }
                     else
                     {
@@ -3070,7 +3070,7 @@ public class GameController
                                 petActive.isUpTier = true;
                                 petActive.wasSell = oldPet.wasSell;
                                 petActive.pointTiemNangLvl = gym_up_level;
-                                player.playerData.pets.add(petActive);
+                                player.playerData.pets.Add(petActive);
                                 player.okDialog(Utilities.Format("Chức mừng bạn đã tiến hóa thành công %s và thú cưng của bạn được cộng %s điểm gym", petActive.getNameWithStar(), gym_add));
                                 HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Tiến hóa pet %s thành công", petActive.getNameWithoutStar())).setObj(petActive));
                                 Message message = messagePetSerive(GopetCMD.PET_UP_TIER);

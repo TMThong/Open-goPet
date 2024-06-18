@@ -7,9 +7,9 @@ public class SettingsFile
 
     public dynamic Data { get; set; }
 
-    public SettingsFile(string v)
+    public SettingsFile(string nameFileConfig)
     {
-        this.Name = v;
+        this.Name = nameFileConfig;
         init();
     }
 

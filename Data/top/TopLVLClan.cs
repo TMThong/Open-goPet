@@ -34,7 +34,7 @@ public class TopLVLClan : Top {
                         topData.imgPath = "npcs/gopet.png";
                         topData.title = topData.name;
                         topData.desc = Utilities.Format("Hạng %s : bang lvl %s", index, data.lvl);
-                        datas.add(topData);
+                        datas.Add(topData);
                         index++;
                     }
                 }

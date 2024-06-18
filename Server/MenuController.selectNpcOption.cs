@@ -50,8 +50,8 @@ public partial class MenuController
                             TaskTemplate taskTemplate = Utilities.RandomArray(taskTemplates);
                             TaskData taskData = new TaskData(taskTemplate);
                             taskData.CanCancelTask = false;
-                            player.playerData.task.add(taskData);
-                            player.playerData.tasking.add(taskData.taskTemplateId);
+                            player.playerData.task.Add(taskData);
+                            player.playerData.tasking.Add(taskData.taskTemplateId);
                             player.okDialog("Nhận nhiệm vụ thành công");
                         }
                         else

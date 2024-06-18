@@ -57,7 +57,7 @@ public class TopGem : Top
                         topData.imgPath = data.avatarPath;
                         topData.title = topData.name;
                         topData.desc = Utilities.Format("Hạng %s : đang có %s (ngoc)", index, Utilities.FormatNumber(data.coin));
-                        datas.add(topData);
+                        datas.Add(topData);
                         index++;
                     }
                 }

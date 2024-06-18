@@ -42,7 +42,7 @@ public class RuntimeServer
         {
             try
             {
-                r.update();
+                r.Update();
             }
             catch (Exception e)
             {

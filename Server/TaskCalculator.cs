@@ -452,7 +452,7 @@ public class TaskCalculator
         switch (taskData.getTemplate().getType())
         {
             case TASK_TYPE_MAIN:
-                player.playerData.wasTask.add(taskData.taskTemplateId);
+                player.playerData.wasTask.Add(taskData.taskTemplateId);
                 break;
         }
         getTaskDatas().remove(taskData);

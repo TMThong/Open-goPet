@@ -58,7 +58,7 @@ namespace Gopet.Data.top
                         topData.imgPath = data.avatarPath;
                         topData.title = topData.name;
                         topData.desc = Utilities.Format("Hạng %s : đang có %s (diem)", index, Utilities.FormatNumber(data.AccumulatedPoint));
-                        datas.add(topData);
+                        datas.Add(topData);
                         index++;
                     }
                 }

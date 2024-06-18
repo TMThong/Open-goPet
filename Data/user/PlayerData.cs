@@ -163,7 +163,7 @@ public class PlayerData
                 return;
             }
         }
-        list.add(item);
+        list.Add(item);
         while (true)
         {
             item.itemId = Utilities.nextInt(10, int.MaxValue - 2);
@@ -193,7 +193,7 @@ public class PlayerData
 
     public void addPet(Pet pet, Player player)
     {
-        pets.add(pet);
+        pets.Add(pet);
         bool flagId = false;
         while (true)
         {

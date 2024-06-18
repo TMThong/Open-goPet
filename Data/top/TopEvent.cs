@@ -76,7 +76,7 @@ namespace Gopet.Data.top
                             topData.imgPath = data.avatarPath;
                             topData.title = topData.name + (index - 1 > TOP_MASK.Length - 1 ? string.Empty : $" (Biệt hiệu: {TOP_MASK[index - 1]})");
                             topData.desc = Utilities.Format("Hạng %s : Đang có %s điểm sự kiện", index, Utilities.FormatNumber(data.EventPoint));
-                            datas.add(topData);
+                            datas.Add(topData);
                             index++;
                         }
                     }

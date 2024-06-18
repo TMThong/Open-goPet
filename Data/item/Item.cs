@@ -331,7 +331,7 @@ namespace Gopet.Data.GopetItem
                         }
                     }
 
-                    arrayList.add(item);
+                    arrayList.Add(item);
                 }
             }
             return arrayList;
@@ -355,7 +355,7 @@ namespace Gopet.Data.GopetItem
                             continue;
                         }
                     }
-                    arrayList.add(item);
+                    arrayList.Add(item);
                 }
             }
             return arrayList;

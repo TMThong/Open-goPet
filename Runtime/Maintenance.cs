@@ -13,13 +13,10 @@ public class Maintenance : IRuntime
     private bool needExit = true;
     private bool needRestart = false;
 
-    /**
-     * Cập nhật đến số phút yêu cầu sẽ tạm dừng máy chủ
-     *
-     * @ 
-     */
-
-    public void update()
+    /// <summary>
+    /// Cập nhật đến số phút yêu cầu sẽ tạm dừng máy chủ
+    /// </summary>
+    public void Update()
     {
         if (isMaintenance)
         {
@@ -70,11 +67,10 @@ public class Maintenance : IRuntime
         });
     }
 
-    /**
-     * Bảo trì
-     *
-     * @param minute phút
-     */
+    /// <summary>
+    /// Bảo trì
+    /// </summary>
+    /// <param name="minute">Phút</param>
     public void setMaintenanceTime(int minute)
     {
         if (!isMaintenance)

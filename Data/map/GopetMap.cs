@@ -106,7 +106,7 @@ namespace Gopet.Data.Map
 
         public virtual void addPlace(Place place)
         {
-            places.add(place);
+            places.Add(place);
             numPlace++;
         }
 

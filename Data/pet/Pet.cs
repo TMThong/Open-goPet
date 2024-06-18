@@ -463,7 +463,7 @@ public class Pet : GameObject
 
     public void addTatto(PetTatto petTatto)
     {
-        tatto.add(petTatto);
+        tatto.Add(petTatto);
         while (true)
         {
             petTatto.tattoId = Utilities.nextInt(1, int.MaxValue - 2);

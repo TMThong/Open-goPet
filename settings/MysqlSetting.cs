@@ -2,17 +2,17 @@
 public class MysqlSetting : Settings
 {
 
-    public String host {  get; protected set; }
+    public string host {  get; protected set; }
     public int port { get; protected set; }
-    public String database { get; protected set; }
-    public String username { get; protected set; }
-    public String password { get; protected set; }
+    public string database { get; protected set; }
+    public string username { get; protected set; }
+    public string password { get; protected set; }
 
-    public String host_web { get; protected set; }
+    public string host_web { get; protected set; }
     public int port_web { get; protected set; }
-    public String database_web { get; protected set; }
-    public String username_web { get; protected set; }
-    public String password_web { get; protected set; }
+    public string database_web { get; protected set; }
+    public string username_web { get; protected set; }
+    public string password_web { get; protected set; }
 
     public MysqlSetting()
     {
@@ -33,12 +33,12 @@ public class MysqlSetting : Settings
         password_web = settingsFile.Data.password_web;
     }
 
-    public String getUrl()
+    public string getUrl()
     {
         return "jdbc:mysql://" + host + ":" + port + "/" + database;
     }
 
-    public String getUrlWeb()
+    public string getUrlWeb()
     {
         return "jdbc:mysql://" + host_web + ":" + port_web + "/" + database_web;
     }
@@ -55,7 +55,7 @@ public class MysqlSetting : Settings
     }
 
 
-    public String toString()
+    public string toString()
     {
         return "MysqlSetting{" + "host=" + host + ", port=" + port + ", database=" + database + ", username=" + username + ", password=" + password + ", host_web=" + host_web + ", port_web=" + port_web + ", database_web=" + database_web + ", username_web=" + username_web + ", password_web=" + password_web + '}';
     }

@@ -318,7 +318,7 @@ namespace Gopet.Data.GopetClan
             {
                 clanMember.avatarPath = player.playerData.avatarPath;
             }
-            members.add(clanMember);
+            members.Add(clanMember);
 
             members.Sort(new ClanMemeberComparer());
         }
@@ -366,7 +366,7 @@ namespace Gopet.Data.GopetClan
         {
             ClanRequestJoin clanRequestJoin = new ClanRequestJoin(user_id, name, Utilities.CurrentTimeMillis);
             clanRequestJoin.avatarPath = avatarPath;
-            joinRequest.add(clanRequestJoin);
+            joinRequest.Add(clanRequestJoin);
             joinRequest.Sort(new ClanRequestJoinComparer());
         }
 
@@ -484,7 +484,7 @@ namespace Gopet.Data.GopetClan
             {
                 clanChats.removeAt(0);
             }
-            clanChats.add(clanChat);
+            clanChats.Add(clanChat);
         }
 
         sealed class ClanPotentialSkillComparer : IComparer<ClanPotentialSkill>

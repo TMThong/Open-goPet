@@ -52,7 +52,7 @@ public partial class MenuController
                                 if (p != null)
                                 {
                                     player.playerData.petSelected = null;
-                                    player.playerData.pets.add(p);
+                                    player.playerData.pets.Add(p);
                                     player.controller.unfollowPet(p);
                                     player.okDialog("Thao tác thành công");
                                     HistoryManager.addHistory(new History(player).setLog("Tháo pet"));
@@ -195,8 +195,8 @@ public partial class MenuController
                         if (index >= 0 && index < taskTemplates.Count)
                         {
                             TaskTemplate taskTemplate = taskTemplates.get(index);
-                            player.playerData.tasking.add(taskTemplate.getTaskId());
-                            player.playerData.task.add(new TaskData(taskTemplate));
+                            player.playerData.tasking.Add(taskTemplate.getTaskId());
+                            player.playerData.task.Add(new TaskData(taskTemplate));
                             player.controller.getTaskCalculator().update();
                             player.okDialog("Chúc mừng bạn đã nhận thành công nhiệm vụ");
                         }
@@ -461,7 +461,7 @@ public partial class MenuController
                     Item oldSkinItem = player.playerData.skin;
                     if (oldSkinItem != null)
                     {
-                        listSkinItems.add(oldSkinItem);
+                        listSkinItems.Add(oldSkinItem);
                     }
                     listSkinItems.remove(skinItem);
                     player.playerData.skin = skinItem;
@@ -486,7 +486,7 @@ public partial class MenuController
                     Item oldWingItem = player.playerData.wing;
                     if (oldWingItem != null)
                     {
-                        listWingItems.add(oldWingItem);
+                        listWingItems.Add(oldWingItem);
                     }
                     listWingItems.remove(wingItem);
                     player.playerData.wing = wingItem;
@@ -537,7 +537,7 @@ public partial class MenuController
                                                         }
                                                         else
                                                         {
-                                                            clan.SkillRent.add(clanSkill);
+                                                            clan.SkillRent.Add(clanSkill);
                                                         }
                                                         player.okDialog("Thuê thành công");
                                                     }
@@ -1533,7 +1533,7 @@ public partial class MenuController
                             else
                             {
                                 Achievement achievement = new Achievement(ach.IdTemplate);
-                                player.playerData.achievements.add(achievement);
+                                player.playerData.achievements.Add(achievement);
                                 player.okDialog($"Chúc mừng bạn nhận được danh hiệu {ach.Name}");
                             }
                         }

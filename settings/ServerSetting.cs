@@ -6,17 +6,17 @@ public class ServerSetting : Settings
 
     public int portGopetServer { get; protected set; }
     public int portHttpServer { get; protected set; }
-    public String webDomainName { get; protected set; }
+    public string webDomainName { get; protected set; }
     public bool initLog { get; protected set; }
-    public String outputFileName { get; protected set; }
-    public String errorFileName { get; protected set; }
+    public string outputFileName { get; protected set; }
+    public string errorFileName { get; protected set; }
     public int hourMaintenance { get; protected set; }
     public int minMaintenance { get; protected set; }
     public bool isOnlyAdminLogin { get; protected set; }
     public bool isServerTest { get; protected set; }
     public bool isShowMessageWhenLogin { get; protected set; } = false;
-    public String messageWhenLogin { get; protected set; }
-    public String apiKey { get; protected set; }
+    public string messageWhenLogin { get; protected set; }
+    public string apiKey { get; protected set; }
 
     public ServerSetting()
     {
@@ -44,7 +44,7 @@ public class ServerSetting : Settings
     }
 
 
-    public String toString()
+    public string toString()
     {
         return "ServerSetting{" + "portGopetServer=" + portGopetServer + ", portHttpServer=" + portHttpServer + ", webDomainName=" + webDomainName + ", initLog=" + initLog + ", outputFileName=" + outputFileName + ", errorFileName=" + errorFileName + ", hourMaintenance=" + hourMaintenance + ", minMaintenance=" + minMaintenance + ", isOnlyAdminLogin=" + isOnlyAdminLogin + ", isServerTest=" + isServerTest + ", isShowMessageWhenLogin=" + isShowMessageWhenLogin + ", messageWhenLogin=" + messageWhenLogin + ", apiKey=" + apiKey + '}';
     }

@@ -14,7 +14,7 @@ public class ClanManager
 
     public static void addClan(Clan clan)
     {
-        clans.add(clan);
+        clans.Add(clan);
         clanHashMap.put(clan.getClanId(), clan);
         clanHashMapName.put(clan.getName(), clan);
     }

@@ -58,12 +58,12 @@ public class BXHManager
 
     static BXHManager()
     {
-        listTop.add(TopGold.instance);
-        listTop.add(TopPet.instance);
-        listTop.add(TopGem.instance);
-        listTop.add(TopLVLClan.instance);
-        listTop.add(TopSpendGold.instance);
-        listTop.add(TopAccumulatedPoint.Instance);
-        listTop.add(TopEvent.Instance);
+        listTop.Add(TopGold.instance);
+        listTop.Add(TopPet.instance);
+        listTop.Add(TopGem.instance);
+        listTop.Add(TopLVLClan.instance);
+        listTop.Add(TopSpendGold.instance);
+        listTop.Add(TopAccumulatedPoint.Instance);
+        listTop.Add(TopEvent.Instance);
     }
 }

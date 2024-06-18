@@ -61,7 +61,7 @@ namespace Gopet.Data.Map
         private void addKioskItem(SellItem item, Player player)
         {
             item.user_id = player.user.user_id;
-            kioskItems.add(item);
+            kioskItems.Add(item);
             while (true)
             {
                 item.itemId = Utilities.nextInt(1, int.MaxValue - 2);
