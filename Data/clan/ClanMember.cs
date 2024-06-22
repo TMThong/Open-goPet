@@ -13,6 +13,7 @@ namespace Gopet.Data.GopetClan
         public sbyte duty;
         public DateTime timeJoin = DateTime.Now;
         public DateTime timeResetData = DateTime.Now;
+        public Dictionary<int, DateTime> shopData = new Dictionary<int, DateTime>();
         public int curQuest = 0;
         [JsonIgnore]
         public Clan clan;

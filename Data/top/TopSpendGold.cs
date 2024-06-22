@@ -5,12 +5,9 @@ using Gopet.Util;
 
 public class TopSpendGold : Top
 {
-
     public static readonly TopSpendGold Instance = new TopSpendGold();
-
     public TopSpendGold() : base("top_spendgold")
     {
-
         base.name = "Top Đại gia xuống núi";
         base.desc = "Chỉ người nạp số tiền cao nhất";
     }
@@ -18,12 +15,10 @@ public class TopSpendGold : Top
     public override TopData getMyInfo(Player player)
     {
         var findTop = datas.Where(p => p.id == player.playerData.user_id);
-
         if (findTop.Any())
         {
             return findTop.First();
         }
-
         TopData topData = new TopData();
         topData.id = player.playerData.user_id;
         topData.name = player.playerData.name;
@@ -35,17 +30,8 @@ public class TopSpendGold : Top
 
     public TopData find(int user_id)
     {
-        foreach (TopData data in datas)
-        {
-            if (data.id == user_id)
-            {
-                return data;
-            }
-        }
-        return null;
+        return this.datas.Where(data => data.id == user_id).FirstOrDefault();
     }
-
-
     public override void Update()
     {
         try
@@ -55,12 +41,11 @@ public class TopSpendGold : Top
             datas.Clear();
             try
             {
-                using(var conn = MYSQLManager.create())
+                using (var conn = MYSQLManager.create())
                 {
                     var topDataDynamic = conn.Query("SELECT * FROM `player`  WHERE isAdmin = 0 ORDER BY  `spendGold` DESC LIMIT 300;");
                     int index = 1;
-                    foreach
-                        (dynamic data in topDataDynamic)
+                    foreach (dynamic data in topDataDynamic)
                     {
                         TopData topData = new TopData();
                         topData.id = data.user_id;

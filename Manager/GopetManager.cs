@@ -572,6 +572,7 @@ public class GopetManager
         SqlMapper.AddTypeHandler(new JsonAdapter<GopetCaptcha>());
         SqlMapper.AddTypeHandler(new JsonAdapter<ShopArena>());
         SqlMapper.AddTypeHandler(new JsonAdapter<Dictionary<int, int>>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<Dictionary<int, DateTime>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<Waypoint[]>());
         SqlMapper.AddTypeHandler(new JsonAdapter<PetSkillInfo[]>());
         shopTemplate.put(MenuController.SHOP_ARMOUR, new ShopTemplate(MenuController.SHOP_ARMOUR));

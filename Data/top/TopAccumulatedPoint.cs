@@ -22,12 +22,10 @@ namespace Gopet.Data.top
         public override TopData getMyInfo(Player player)
         {
             var findTop = datas.Where(p => p.id == player.playerData.user_id);
-
             if (findTop.Any())
             {
                 return findTop.First();
             }
-
             TopData topData = new TopData();
             topData.id = player.playerData.user_id;
             topData.name = player.playerData.name;
@@ -41,7 +39,6 @@ namespace Gopet.Data.top
         {
             try
             {
-
                 lastDatas.Clear();
                 lastDatas.AddRange(datas);
                 datas.Clear();
