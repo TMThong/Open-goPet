@@ -507,12 +507,13 @@ public class GopetManager
     public const int MAX_LVL_ENCHANT_WING = 10;
     public const float PERCENT_ADD_WHEN_ENCHANT_WING = 10f;
     public const int POINT_WHEN_KILL_MOB_CHALLENGE = 3;
-
     public static readonly Dictionary<int, EnchantWingData> EnchantWingData = new();
-
     public static readonly int[] ID_ITEM_SILVER = new int[] { 392, 395, 398, 401, 405, 408, 411, 414, 417 };
     public static readonly int[] ID_ITEM_PET_TIER_ONE = new int[] { 726, 728, 730, 732, 734, 738 };
     public static readonly int[] ID_ITEM_PET_TIER_TOW = new int[] { 740, 742, 744, 746, 748, 750, 756, 760, 762, 764, 766 };
+    public static readonly Version VERSION_132 = Version.Parse("1.3.2");
+    public static readonly Version VERSION_133 = Version.Parse("1.3.3");
+    public static readonly Version VERSION_134 = Version.Parse("1.3.4");
     /// <summary>
     /// Giá tiền kích hoạt tài khoản
     /// </summary>
@@ -773,7 +774,7 @@ public class GopetManager
             var tattoList = conn.Query<PetTattoTemplate>("SELECT * FROM `tattoo`");
             foreach (var petTattoTemplate in tattoList)
             {
-                tattos.put(petTattoTemplate.tattooId , petTattoTemplate);
+                tattos.put(petTattoTemplate.tattooId, petTattoTemplate);
             }
 
             var dropItemList = conn.Query<DropItem>("SELECT * FROM `drop_item`");
@@ -842,7 +843,7 @@ public class GopetManager
             foreach (var template in clanSKillTemplates)
             {
                 ClanSkillViaId[template.id] = template;
-                template.clanSkillLvlTemplates = conn.Query<ClanSkillLvlTemplate>("SELECT * FROM `clan_skill_lvl` WHERE skillId = @skillId ORDER BY `clan_skill_lvl`.`lvl` ASC" , new { skillId = template.id }).ToArray();
+                template.clanSkillLvlTemplates = conn.Query<ClanSkillLvlTemplate>("SELECT * FROM `clan_skill_lvl` WHERE skillId = @skillId ORDER BY `clan_skill_lvl`.`lvl` ASC", new { skillId = template.id }).ToArray();
             }
         }
 
@@ -993,5 +994,21 @@ public class GopetManager
                 Data = JsonConvert.SerializeObject(MarketPlace.kiosks)
             });
         }
+    }
+
+
+    public static Func<Version, bool> GreaterThan(Version version)
+    {
+        return (p) => p > version;
+    }
+
+    public static Func<Version, bool> LessThan(Version version)
+    {
+        return (p) => p < version;
+    }
+
+    public static Func<Version, bool> LessThanAndEquals(Version version)
+    {
+        return (p) => p <= version;
     }
 }

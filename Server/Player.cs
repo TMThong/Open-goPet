@@ -21,11 +21,11 @@ public class Player : IHandleMessage
     public ISession session { get; }
     public sbyte CLIENT_TYPE;
     public int PROVIDER;
-    public String version;
+    public Version ApplicationVersion;
     public String info;
     public int displayWidth, displayHeight;
     public String language;
-    public String Refcode, ApplicationVersion;
+    public String Refcode;
     public UserData user;
     public PlayerData playerData;
     public GameController controller;
@@ -90,13 +90,22 @@ public class Player : IHandleMessage
 
                         CLIENT_TYPE = ms.reader().readsbyte();
                         PROVIDER = ms.reader().readInt();
-                        ApplicationVersion = ms.reader().readUTF();
+                        ApplicationVersion = Version.Parse(ms.reader().readUTF());
                         info = ms.reader().readUTF();
                         displayWidth = ms.reader().readInt();
                         displayHeight = ms.reader().readInt();
                         language = ms.reader().readUTF();
                         Refcode = ms.reader().readUTF();
-                        session.setClientOK(true);
+                        if(ApplicationVersion > GopetManager.VERSION_133)
+                        {
+                            session.setClientOK(true);
+                        }
+                        else
+                        {
+                            redDialog("Phiên bản cũ rồi, bạn vui lòng tải bản mới nhất tại gopettae.com");
+                            session.setClientOK(false);
+                            session.Close();
+                        }
                         break;
 
                     case GopetCMD.LOGIN:

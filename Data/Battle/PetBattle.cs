@@ -282,11 +282,6 @@ namespace Gopet.Battle
                 {
                     win();
                 }
-                /*
-                if (petAttackMob)
-                {
-                    Thread.Sleep(GopetManager.DELAY_TURN_PET_BATTLE);
-                }*/
             }
             else
             {
@@ -509,6 +504,8 @@ namespace Gopet.Battle
         {
             message.putInt(pet.getPetIdTemplate());
             message.putUTF(pet.getPetTemplate().frameImg);
+            message.putsbyte(pet.Template.frameNum);
+            message.putShort(pet.Template.vY);
             message.putUTF(pet.getNameWithStar());
             message.putInt(1);
             message.putInt(pet.getPetTemplate().str);
@@ -538,6 +535,8 @@ namespace Gopet.Battle
         {
             message.putInt(mob.getMobId());
             message.putUTF(mob.getPetTemplate().frameImg);
+            message.putsbyte(mob.Template.frameNum);
+            message.putShort(mob.Template.vY);
             message.putUTF(mob.getPetTemplate().name);
             message.putInt(1);
             message.putInt(mob.hp);
@@ -551,6 +550,8 @@ namespace Gopet.Battle
         {
             message.putInt(petPassive.getPetIdTemplate());
             message.putUTF(petPassive.getPetTemplate().frameImg);
+            message.putsbyte(petPassive.Template.frameNum);
+            message.putShort(petPassive.Template.vY);
             message.putUTF(petPassive.getPetTemplate().name);
             message.putInt(petPassive.lvl);
             message.putInt(petPassive.hp);
@@ -807,9 +808,9 @@ namespace Gopet.Battle
                     {
                         exp_sub_winner = Utilities.round(Utilities.GetValueFromPercent(expCurrentLvl, 3f));
                     }
-                    
+
                     nonPet.subExpPK(exp_sub);
-                    
+
                     win(petBattleTexts.ToArray(), price, 0);
                     winner.addCoin(Utilities.round(Utilities.GetValueFromPercent(coinPK, 50f)));
                     nonWinner.mineCoin(coinPK);

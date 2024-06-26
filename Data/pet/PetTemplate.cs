@@ -4,7 +4,6 @@ using System.Diagnostics;
 
 public class PetTemplate
 {
-
     public int agi { get; private set; }
     public sbyte element { get; private set; }
     public sbyte type { get; private set; }
@@ -18,6 +17,8 @@ public class PetTemplate
     public string icon { get; private set; }
 
     public int gymUpLevel { get; private set; }
+    public sbyte frameNum { get; private set; }
+    public short vY { get; private set; }
 
 
     public String getDesc()

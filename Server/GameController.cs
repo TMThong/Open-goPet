@@ -416,7 +416,7 @@ public class GameController
                 message.putsbyte(1);
                 message.putUTF("");
             }
-
+            message.putsbyte(pet.Template.frameNum);
             message.cleanup();
             player.session.sendMessage(message);
             HistoryManager.addHistory(new History(player).setLog("Xem magic của pet " + pet.getNameWithoutStar()).setObj(pet));
@@ -1379,6 +1379,7 @@ public class GameController
                 message.putUTF("");
                 message.putsbyte(1);
             }
+            message.putsbyte(pet.Template.frameNum);
             message.cleanup();
             player.session.sendMessage(message);
             HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Xem gym pet %s", pet.getNameWithoutStar())).setObj(pet));
@@ -1474,6 +1475,7 @@ public class GameController
                 message.putInt(pet.getInt());
                 CopyOnWriteArrayList<Item> petEquipItem = oPlayer.playerData.getInventoryOrCreate(GopetManager.EQUIP_PET_INVENTORY);
                 writeListItemEquip(petEquipItem, message, false);
+                message.putsbyte(pet.Template.frameNum);
                 message.cleanup();
                 player.session.sendMessage(message);
                 if (oPlayer != player)
@@ -2430,6 +2432,14 @@ public class GameController
             m.putUTF(sellItem.getName());
             m.putUTF(sellItem.getDescription());
             m.putInt(Utilities.round((sellItem.expireTime - Utilities.CurrentTimeMillis) / 1000l));
+            if(sellItem.pet != null)
+            {
+                m.putsbyte(sellItem.pet.Template.frameNum);
+            }
+            else
+            {
+                m.putsbyte(2);
+            }
         }
         m.cleanup();
         player.session.sendMessage(m);
@@ -3266,10 +3276,6 @@ public class GameController
 
     public void confirmpk()
     {
-        //        if (true) {
-        //            player.redDialog("Chức năng này bị tắt do vi phạm nguyên tác cho người chơi mới");
-        //            return;
-        //        }
         int user_id = (int)objectPerformed.get(MenuController.OBJKEY_USER_ID_PK);
         Item cardPK = (Item)objectPerformed.get(MenuController.OBJKEY_ITEM_PK);
         objectPerformed.Remove(MenuController.OBJKEY_ITEM_PK);

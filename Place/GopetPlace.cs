@@ -8,6 +8,7 @@ using Gopet.Data.Map;
 using Gopet.Data.Mob;
 using Gopet.IO;
 using Gopet.Util;
+using Gopet.Server.IO;
 
 public class GopetPlace : Place
 {
@@ -18,7 +19,7 @@ public class GopetPlace : Place
     public const long TIME_NEW_MOB = 25000;
     public int[] numMobDie;
 
-    
+
     public int[] numMobDieNeed
     {
         get
@@ -153,6 +154,11 @@ public class GopetPlace : Place
             message.putInt(mob.getMobLocation().getX());
             message.putInt(mob.getMobLocation().getY());
             message.putsbyte(0);
+            if (player.ApplicationVersion > GopetManager.VERSION_133)
+            {
+                message.putsbyte(mob.Template.frameNum);
+                message.putShort(mob.Template.vY);
+            }
         }
         message.cleanup();
         player.session.sendMessage(message);
@@ -161,7 +167,7 @@ public class GopetPlace : Place
     public void sendMob()
     {
         CopyOnWriteArrayList<Mob> gopetMobs = (CopyOnWriteArrayList<Mob>)mobs.clone();
-        Message message = new Message(GopetCMD.PET_SERVICE);
+        ListWriterMessage message = new ListWriterMessage(2, GopetCMD.PET_SERVICE);
         message.putsbyte(GopetCMD.SEND_LIST_MOB_ZONE);
         message.putInt(gopetMobs.Count);
         foreach (Mob mob in gopetMobs)
@@ -173,14 +179,20 @@ public class GopetPlace : Place
             message.putInt(mob.getMobLocation().getX());
             message.putInt(mob.getMobLocation().getY());
             message.putsbyte(0);
+            message[1].putsbyte(mob.Template.frameNum);
+            message[1].putShort(mob.Template.vY);
         }
         message.cleanup();
-        sendMessage(message);
+        sendMessageWithCheckVersion(new Dictionary<Message, Func<Version, bool>>()
+        {
+            [message[0]] = GopetManager.LessThanAndEquals(GopetManager.VERSION_133),
+            [message[1]] = GopetManager.GreaterThan(GopetManager.VERSION_133)
+        });
     }
 
     private void sendMob(JArrayList<Mob> newMobs)
     {
-        Message message = new Message(GopetCMD.PET_SERVICE);
+        ListWriterMessage message = new ListWriterMessage(2, GopetCMD.PET_SERVICE);
         message.putsbyte(GopetCMD.SEND_LIST_MOB_ZONE);
         message.putInt(newMobs.Count);
         foreach (Mob mob in newMobs)
@@ -192,9 +204,15 @@ public class GopetPlace : Place
             message.putInt(mob.getMobLocation().getX());
             message.putInt(mob.getMobLocation().getY());
             message.putsbyte(0);
+            message[1].putsbyte(mob.Template.frameNum);
+            message[1].putShort(mob.Template.vY);
         }
         message.cleanup();
-        sendMessage(message);
+        sendMessageWithCheckVersion(new Dictionary<Message, Func<Version, bool>>()
+        {
+            [message[0]] = GopetManager.LessThanAndEquals(GopetManager.VERSION_133),
+            [message[1]] = GopetManager.GreaterThan(GopetManager.VERSION_133)
+        });
     }
 
     public void sendListPet(Player player)
@@ -209,7 +227,8 @@ public class GopetPlace : Place
         }
         if (hashMap.Count != 0)
         {
-            Message message = new Message(GopetCMD.PET_SERVICE);
+            Dictionary<Message, Func<Version, bool>> messagesDict = new Dictionary<Message, Func<Version, bool>>();
+            ListWriterMessage message = new ListWriterMessage(2, GopetCMD.PET_SERVICE);
             message.putsbyte(GopetCMD.SEND_LIST_PET_ZONE);
             message.putsbyte(hashMap.Count);
             foreach (var entry in hashMap)
@@ -221,10 +240,13 @@ public class GopetPlace : Place
                 message.putUTF(petSelected.getPetTemplate().frameImg);
                 message.putUTF(petSelected.getNameWithStar());
                 message.putInt(petSelected.lvl);
+                message[1].putsbyte(petSelected.getPetTemplate().frameNum);
+                message[1].putShort(petSelected.getPetTemplate().vY);
             }
             message.cleanup();
-            sendMessage(message);
-
+            messagesDict[message[0]] = GopetManager.LessThanAndEquals(GopetManager.VERSION_133);
+            messagesDict[message[1]] = GopetManager.GreaterThan(GopetManager.VERSION_133);
+            sendMessageWithCheckVersion(messagesDict);
             if (hashMap.ContainsKey(player))
             {
                 player.controller.sendMyPetInfo();
