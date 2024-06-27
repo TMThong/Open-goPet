@@ -155,7 +155,7 @@ public abstract class Place
         return false;
     }
 
-    public static Message messagePetSerive(sbyte subCmd)
+    public static Message messagePetService(sbyte subCmd)
     {
         Message message = new Message(GopetCMD.PET_SERVICE);
         message.putsbyte(subCmd);

@@ -168,4 +168,6 @@ public class GopetCMD {
     public const sbyte SHOW_EXP = 95;
     public const sbyte ANIMATION_MENU = 100;
     public const sbyte SERVER_LIST = 64;
+    public const sbyte SEND_ANIMATION_CHARACTER = 4;
+    public const sbyte SEND_LIST_ANIMATION_CHARACTER = 5;
 }

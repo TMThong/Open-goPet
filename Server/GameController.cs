@@ -42,6 +42,15 @@ public class GameController
     public bool isBuffEnchent { get; private set; } = false;
     public bool IsBuffEnchantTatto { get; set; } = false;
 
+    public Animation[] Animations
+    {
+        get
+        {
+            return new Animation[] { };
+        }
+    }
+
+
     public bool isHasBattleAndShowDialog()
     {
         if (petBattle != null)
@@ -1593,7 +1602,7 @@ public class GameController
         player.redDialog("Không đủ huyết ngọc");
     }
 
-    public void notEnoughCrystal ()
+    public void notEnoughCrystal()
     {
         player.redDialog("Không đủ tinh thạch");
     }
@@ -1613,7 +1622,7 @@ public class GameController
         return checkCount(GopetManager.BLOOD_GEM_ID, count, GopetManager.MONEY_INVENTORY);
     }
 
-    public bool checkCrystal (int count)
+    public bool checkCrystal(int count)
     {
         return checkCount(GopetManager.CRYSTAL_ID, count, GopetManager.MONEY_INVENTORY);
     }
@@ -2432,7 +2441,7 @@ public class GameController
             m.putUTF(sellItem.getName());
             m.putUTF(sellItem.getDescription());
             m.putInt(Utilities.round((sellItem.expireTime - Utilities.CurrentTimeMillis) / 1000l));
-            if(sellItem.pet != null)
+            if (sellItem.pet != null)
             {
                 m.putsbyte(sellItem.pet.Template.frameNum);
             }
@@ -3744,7 +3753,7 @@ public class GameController
                 case GopetManager.GIFT_FUND_CLAN:
                     {
                         ClanMember clanMember = getClan();
-                        if(clanMember != null)
+                        if (clanMember != null)
                         {
                             clanMember.clan.addFund(giftInfo[1], clanMember);
                             player.okDialog($"Bang hội của bạng được cộng {Utilities.FormatNumber(giftInfo[1])} quỹ bang");
@@ -4308,13 +4317,13 @@ public class GameController
         if (clanMember != null)
         {
             Clan clan = clanMember.getClan();
-            if(clan.slotSkill >= GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN.Length)
+            if (clan.slotSkill >= GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN.Length)
             {
                 player.redDialog("Mở khóa hết các ô rồi");
             }
             else
             {
-                if(clan.lvl >= GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[clan.slotSkill] && clan.fund >= GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN[clan.slotSkill])
+                if (clan.lvl >= GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[clan.slotSkill] && clan.fund >= GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN[clan.slotSkill])
                 {
                     MenuController.showYNDialog(MenuController.DIALOG_ASK_UNLOCK_SLOT_SKILL_CLAN, $"Bạn có chắc muốn mở khóa ô kỹ năng bang hội tiếp theo cho bang với giá {Utilities.FormatNumber(GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN[clan.slotSkill])} quỹ", player);
                 }

@@ -38,9 +38,6 @@ public class BuffExp
                     case 300:
                         return GopetManager.itemTemplate[200];
                 }
-
-
-
                 return null;
             }
 

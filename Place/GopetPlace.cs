@@ -9,6 +9,7 @@ using Gopet.Data.Mob;
 using Gopet.IO;
 using Gopet.Util;
 using Gopet.Server.IO;
+using Gopet.Data.User;
 
 public class GopetPlace : Place
 {
@@ -18,8 +19,6 @@ public class GopetPlace : Place
     public ConcurrentHashMap<MobLocation, long> newMob = new();
     public const long TIME_NEW_MOB = 25000;
     public int[] numMobDie;
-
-
     public int[] numMobDieNeed
     {
         get
@@ -66,11 +65,9 @@ public class GopetPlace : Place
         sendPetBattleList(player);
         sendWing(player);
         sendSkin(player);
-        sendClan(player, true);/*
-        if (this.map.mapID >= 26 && !player.playerData.isOnSky)
-        {
-            player.user.ban(UserData.BAN_TIME, "Xăm nhập bất hợp pháp", Utilities.CurrentTimeMillis + (1000L * 60 * 30));
-        }*/
+        sendClan(player, true);
+        updatePlayerAnimation(player);
+        sendListAnimationOfAllPlayers(player);
     }
 
 
@@ -329,15 +326,11 @@ public class GopetPlace : Place
 
     public void chat(Player player, String text)
     {
-
         Message message = new Message(GopetCMD.ON_PLACE_CHAT);
         message.putInt(player.playerData.user_id);
         message.putUTF(text);
         message.cleanup();
         sendMessage(message);
-        //        if (text.Equals(  "j")) {
-        //            MYSQLManager.updateSql(Utilities.Format(  "INSERT INTO `gopet_mob_location`(`mapID`, `x`, `y`) VALUES ('%s','%s','%s')", map.mapID, player.playerData.x, player.playerData.y));
-        //        }
     }
 
     public void sendMove(int userID, sbyte lastDir, int[] points)
@@ -506,8 +499,7 @@ public class GopetPlace : Place
 
     public override void update()
     {
-        base.update(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-
+        base.update();
         foreach (Mob mob in mobs)
         {
             if (mob is Boss)
@@ -654,7 +646,7 @@ public class GopetPlace : Place
 
     public void showBigTextEff(String text)
     {
-        Message message = messagePetSerive(GopetCMD.SHOW_BIG_TEXT_EFF);
+        Message message = messagePetService(GopetCMD.SHOW_BIG_TEXT_EFF);
         message.putUTF(text);
         message.cleanup();
         sendMessage(message);
@@ -672,7 +664,7 @@ public class GopetPlace : Place
                 wingPlayer.put(currentPlayer.user.user_id, wingItem);
             }
         }
-        Message m = messagePetSerive(GopetCMD.WING);
+        Message m = messagePetService(GopetCMD.WING);
         m.putsbyte(3);
         m.putInt(wingPlayer.Count);
         foreach (var entry in wingPlayer)
@@ -693,7 +685,7 @@ public class GopetPlace : Place
         Item wingItem = player.playerData.wing;
         if (wingItem != null)
         {
-            Message m = messagePetSerive(GopetCMD.WING);
+            Message m = messagePetService(GopetCMD.WING);
             m.putsbyte(3);
             m.putInt(1);
             m.putInt(player.user.user_id);
@@ -706,7 +698,7 @@ public class GopetPlace : Place
 
     public void sendUnEquipWing(Player player)
     {
-        Message m = messagePetSerive(GopetCMD.WING);
+        Message m = messagePetService(GopetCMD.WING);
         m.putsbyte(3);
         m.putInt(1);
         m.putInt(player.user.user_id);
@@ -728,7 +720,7 @@ public class GopetPlace : Place
                 skinPlayer.put(currentPlayer.user.user_id, itemSkin);
             }
         }
-        Message m = messagePetSerive(GopetCMD.SEND_SKIN);
+        Message m = messagePetService(GopetCMD.SEND_SKIN);
         m.putInt(skinPlayer.Count);
         foreach (var entry in skinPlayer)
         {
@@ -744,7 +736,7 @@ public class GopetPlace : Place
 
     public void sendMySkin(Player player)
     {
-        Message m = messagePetSerive(GopetCMD.SEND_SKIN);
+        Message m = messagePetService(GopetCMD.SEND_SKIN);
         m.putInt(1);
         m.putInt(player.user.user_id);
         Item itemSkin = player.playerData.skin;
@@ -774,7 +766,7 @@ public class GopetPlace : Place
 
     public void petInteract(sbyte type, int user_id)
     {
-        Message m = messagePetSerive(GopetCMD.ON_PET_INTERACT);
+        Message m = messagePetService(GopetCMD.ON_PET_INTERACT);
         m.putInt(user_id);
         m.putsbyte(type);
         sendMessage(m);
@@ -818,9 +810,51 @@ public class GopetPlace : Place
     }
     public void sendTimePlace()
     {
-        Message message = GopetPlace.messagePetSerive(GopetCMD.TIME_PLACE);
+        Message message = GopetPlace.messagePetService(GopetCMD.TIME_PLACE);
         message.putInt(Utilities.round(placeTime - Utilities.CurrentTimeMillis) / 1000);
         message.cleanup();
         sendMessage(message);
+    }
+
+    public void updatePlayerAnimation(Player player)
+    {
+        Message message = messagePetService(GopetCMD.SEND_ANIMATION_CHARACTER);
+        message.putInt(player.user.user_id);
+        Animation[] animations = player.controller.Animations;
+        message.putInt(animations.Length);
+        for (int i = 0; i < animations.Length; i++)
+        {
+            Animation anim = animations[i];
+            message.putsbyte(anim.numFrame);
+            message.putUTF(anim.frameImgPath);
+            message.putShort(anim.vX);
+            message.putShort(anim.vY);
+            message.putbool(anim.isDrawEnd);
+            message.putbool(anim.mirrorWithChar);
+        }
+        message.cleanup();
+        sendMessage(message);
+    }
+
+    private void sendListAnimationOfAllPlayers(Player player)
+    {
+        Message message = messagePetService(GopetCMD.SEND_LIST_ANIMATION_CHARACTER);
+        foreach (var p in players)
+        {
+            message.putInt(p.playerData.user_id);
+            Animation[] animations = p.controller.Animations;
+            message.putInt(animations.Length);
+            for (int i = 0; i < animations.Length; i++)
+            {
+                Animation anim = animations[i];
+                message.putsbyte(anim.numFrame);
+                message.putUTF(anim.frameImgPath);
+                message.putShort(anim.vX);
+                message.putShort(anim.vY);
+                message.putbool(anim.isDrawEnd);
+                message.putbool(anim.mirrorWithChar);
+            }
+        }
+        player.session.sendMessage(message);
     }
 }
