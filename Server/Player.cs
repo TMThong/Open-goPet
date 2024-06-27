@@ -29,7 +29,7 @@ public class Player : IHandleMessage
     public UserData user;
     public PlayerData playerData;
     public GameController controller;
-    private Place place_;
+    private GopetPlace place_;
     public long timeSaveDelta = Utilities.CurrentTimeMillis + TIME_SAVE_DATA;
     public long petHpRecovery = Utilities.CurrentTimeMillis + TIME_PET_RECOVERY;
     public const long TIME_SAVE_DATA = 1000l * 60 * 15;
@@ -58,12 +58,12 @@ public class Player : IHandleMessage
         controller.setTaskCalculator(new TaskCalculator(this));
     }
 
-    public void setPlace(Place place)
+    public void setPlace(GopetPlace place)
     {
         place_ = place;
     }
 
-    public Place getPlace()
+    public GopetPlace getPlace()
     {
         return place_;
     }

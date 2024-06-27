@@ -381,7 +381,7 @@ public partial class MenuController
                         Clan clan = clanMember.getClan();
                         if (clan.getLvl() >= 15)
                         {
-                              showShop(SHOP_CLAN, player);                     
+                            showShop(SHOP_CLAN, player);
                         }
                         else
                         {
@@ -429,6 +429,9 @@ public partial class MenuController
                 break;
             case OP_EVENT_SUMMER_2024_TOP_KITE_VIP:
                 showTop(Summer2024Event.TopKiteVip.Instance, player);
+                break;
+            case OP_USE_ACHIEVEMENT:
+                sendMenu(MENU_USE_ACHIEVEMNT, player);
                 break;
             default:
                 player.redDialog("Tính năng đang được xây dựng"); break;

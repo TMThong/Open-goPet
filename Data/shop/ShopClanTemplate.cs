@@ -14,13 +14,6 @@ public class ShopClanTemplate {
     public const int ITEM_PART_PET = 1;
     public const int ITEM_PART_ITEM = 2;
 
-    /**
-     *
-     * Option Id 0 index1: idItemTemp index2: count item index3: inventory type
-     * index4: moneyType index5: price index6: perItem
-     *
-     * @return
-     */
 
     public void setId(int Id)
     {
@@ -91,7 +84,6 @@ public class ShopClanTemplate {
                     }
                 }
                 break;
-               
             }
         }
         return shopTemplateItems;

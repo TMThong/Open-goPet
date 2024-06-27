@@ -525,7 +525,7 @@ public partial class MenuController
                                         {
                                             if (menuId == MENU_SELECT_TYPE_MONEY_TO_RENT_SKILL_CLAN)
                                             {
-                                                if(index >= 0 && index < clanSkillTemplate.price.Length)
+                                                if (index >= 0 && index < clanSkillTemplate.price.Length)
                                                 {
                                                     if (checkMoney(clanSkillTemplate.moneyType[index], clanSkillTemplate.price[index], player))
                                                     {
@@ -1533,7 +1533,7 @@ public partial class MenuController
                             else
                             {
                                 Achievement achievement = new Achievement(ach.IdTemplate);
-                                player.playerData.achievements.Add(achievement);
+                                player.playerData.addAchivement(achievement, player);
                                 player.okDialog($"Chúc mừng bạn nhận được danh hiệu {ach.Name}");
                             }
                         }
@@ -1695,7 +1695,48 @@ public partial class MenuController
                     }
                 }
                 break;
-
+            case MENU_USE_ACHIEVEMNT:
+                {
+                    if (index >= 0 && index < player.playerData.achievements.Count)
+                    {
+                        player.controller.objectPerformed[OBJKEY_INDEX_ACHIEVEMNT_USE] = index;
+                        sendMenu(MENU_USE_ACHIEVEMNT_OPTION, player);
+                    }
+                }
+                break;
+            case MENU_USE_ACHIEVEMNT_OPTION:
+                {
+                    if (!player.controller.objectPerformed.ContainsKey(OBJKEY_INDEX_ACHIEVEMNT_USE))
+                    {
+                        return;
+                    }
+                    switch (index)
+                    {
+                        case 0:
+                            int index_Achievement = player.controller.objectPerformed[OBJKEY_INDEX_ACHIEVEMNT_USE];
+                            if (index_Achievement >= 0 && index_Achievement < player.playerData.achievements.Count)
+                            {
+                                Achievement achievement = player.playerData.achievements[index_Achievement];
+                                player.playerData.CurrentAchievementId = achievement.Id;
+                                player.okDialog("Sử dụng thành công !!!");
+                                player.getPlace()?.updatePlayerAnimation(player);
+                            }
+                            break;
+                        case 1:
+                            if (player.playerData.CurrentAchievementId > 0)
+                            {
+                                player.playerData.CurrentAchievementId = -1;
+                                player.okDialog("Tháo thành công !!!");
+                                player.getPlace()?.updatePlayerAnimation(player);
+                            }
+                            else
+                            {
+                                player.redDialog("Bạn chưa đeo danh hiệu");
+                            }
+                            break;
+                    }
+                }
+                break;
             default:
                 {
                     player.redDialog("KHONG TON TAI MENU NAY");

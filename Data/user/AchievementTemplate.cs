@@ -19,7 +19,7 @@ namespace Gopet.Data.user
 
         public bool IsVertically { get; set; }
 
-        public int FrameNum { get; set; }
+        public sbyte FrameNum { get; set; }
 
         public int Atk { get; set; }
 
@@ -30,6 +30,8 @@ namespace Gopet.Data.user
         public int Int { get; set; }
         public int Str { get; set; }
         public int Agi { get; set; }
+        public int vX { get; set; }
+        public int vY { get; set; }
 
         public long Expire { get; set; }
     }

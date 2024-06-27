@@ -105,6 +105,8 @@ public partial class MenuController
     public const int MENU_ADMIN_SHOW_ALL_ACHIEVEMENT = 1055;
     public const int MENU_ME_SHOW_ACHIEVEMENT = 1056;
     public const int MENU_SELECT_TYPE_MONEY_TO_RENT_SKILL_CLAN = 1057;
+    public const int MENU_USE_ACHIEVEMNT = 1058;
+    public const int MENU_USE_ACHIEVEMNT_OPTION = 1059;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -270,6 +272,7 @@ public partial class MenuController
     public const int OP_EVENT_SUMMER_2024_TOP_KITE_NORMAL = 74;
     public const int OP_EVENT_SUMMER_2024_TOP_KITE_VIP = 75;
     public const int OP_EVENT_SUMMER_2024_GUIDE = 76;
+    public const int OP_USE_ACHIEVEMENT = 77;
     public const int OP_TRADE_GIFT_COIN = 1000000000;
     public const int OP_TRADE_GIFT_GOLD = 1000000001;
     /**
@@ -349,6 +352,7 @@ public partial class MenuController
     public const int OBJKEY_PLAYER_GIVE_ITEM = 46;
     public const int OBJKEY_COUNT_ITEM_TO_GET_BY_ADMIN = 47;
     public const int OBJKEY_COUNT_ITEM_TO_GIVE_BY_ADMIN = 48;
+    public const int OBJKEY_INDEX_ACHIEVEMNT_USE = 49;
     /// <summary>
     /// Kỹ năng mẫu mà người dùng muốn thuê
     /// </summary>

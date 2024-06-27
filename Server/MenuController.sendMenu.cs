@@ -88,6 +88,7 @@ public partial class MenuController
 
                 }
                 break;
+
             case MENU_SHOW_ALL_TATTO:
                 {
                     JArrayList<MenuItemInfo> menuInfos = new();
@@ -116,11 +117,33 @@ public partial class MenuController
                     }
                     break;
                 }
+            case MENU_USE_ACHIEVEMNT:
+                {
+                    JArrayList<MenuItemInfo> menuInfos = new();
+                    foreach (var ach in player.playerData.achievements)
+                    {
+                        MenuItemInfo menuItemInfo = new MenuItemInfo(ach.Template.Name, ach.Template.Description, ach.Template.IconPath, true);
+                        menuInfos.add(menuItemInfo);
+                    }
+                    player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Danh hiệu", menuInfos);
+                }
+                break;
+            case MENU_USE_ACHIEVEMNT_OPTION:
+                {
+                    JArrayList<Option> list = new();
+                    list.Add(new Option(0, "Sử dụng", 1));
+                    if (player.playerData.CurrentAchievementId > 0)
+                    {
+                        list.Add(new Option(1, "Tháo danh hiệu hiện tại", 1));
+                    }
+                    player.controller.sendListOption(menuId, "Sử dụng danh hiệu", CMD_CENTER_OK, list);
+                }
+                break;
             case MENU_ME_SHOW_ACHIEVEMENT:
                 {
                     AnimationMenu animationMenu = new AnimationMenu("Danh hiệu");
                     animationMenu.Commands.Add(AnimationMenu.RightExitCMD);
-                    foreach(var ach in player.playerData.achievements)
+                    foreach (var ach in player.playerData.achievements)
                     {
                         animationMenu.AddLabel(0, $"Danh hiệu: {ach.Template.Name}", FontStyle.SMALL);
                         animationMenu.AddImage(0, ach.Template.FramePath, ach.Template.FrameNum);
@@ -220,7 +243,7 @@ public partial class MenuController
                 {
                     JArrayList<Option> list = new();
 
-                    list.add(new Option(0, $"{(menuId == MENU_OPTION_TO_SLECT_TYPE_MONEY_ENCHANT_TATTOO ?  GopetManager.PRICE_GOLD_ENCHANT_TATTO : GopetManager.PRICE_GOLD_ARENA_JOURNALISM)} (vang)", Option.CAN_SELECT));
+                    list.add(new Option(0, $"{(menuId == MENU_OPTION_TO_SLECT_TYPE_MONEY_ENCHANT_TATTOO ? GopetManager.PRICE_GOLD_ENCHANT_TATTO : GopetManager.PRICE_GOLD_ARENA_JOURNALISM)} (vang)", Option.CAN_SELECT));
                     list.add(new Option(1, $"{(menuId == MENU_OPTION_TO_SLECT_TYPE_MONEY_ENCHANT_TATTOO ? GopetManager.PRICE_COIN_ENCHANT_TATTO : GopetManager.PRICE_COIN_ARENA_JOURNALISM)} (ngoc)", Option.CAN_SELECT));
 
                     player.controller.sendListOption(menuId, "Tùy chọn phương thức thanh toán", "", list);
@@ -423,7 +446,7 @@ public partial class MenuController
             case MENU_MERGE_WING:
                 {
                     CopyOnWriteArrayList<Item> listItems = null;
-                    switch(menuId)
+                    switch (menuId)
                     {
                         case MENU_MERGE_PART_ITEM:
                             listItems = getItemByMenuId(menuId, player, (item) => GopetManager.itemTemplate[item.Template.itemOptionValue[0]].type != GopetManager.WING_ITEM);
@@ -503,7 +526,7 @@ public partial class MenuController
                 break;
             case MENU_SELECT_TYPE_MONEY_TO_RENT_SKILL_CLAN:
                 {
-                    if(player.controller.objectPerformed.ContainsKey(OBJKEY_CLAN_SKILL_TEMPLATE_RENT))
+                    if (player.controller.objectPerformed.ContainsKey(OBJKEY_CLAN_SKILL_TEMPLATE_RENT))
                     {
                         ClanSkillTemplate clanSkillTemplate = player.controller.objectPerformed[OBJKEY_CLAN_SKILL_TEMPLATE_RENT];
                         JArrayList<Option> approvalOptions = new();
@@ -528,9 +551,9 @@ public partial class MenuController
                         if (clan.SkillInfo.Count > 0)
                         {
                             JArrayList<MenuItemInfo> skillMenuItemInfos = new();
-                            foreach(var skill in clan.SkillInfo)
+                            foreach (var skill in clan.SkillInfo)
                             {
-                                if(skill.Value > 0)
+                                if (skill.Value > 0)
                                 {
                                     ClanSkillTemplate clanSkillTemplate = GopetManager.ClanSkillViaId[skill.Key];
                                     MenuItemInfo menuItemInfo = new MenuItemInfo(clanSkillTemplate.name, clanSkillTemplate.description, "npcs/gopet.png", true);
@@ -560,7 +583,7 @@ public partial class MenuController
                     if (clanMember != null)
                     {
                         JArrayList<MenuItemInfo> skillMenuItemInfos = new();
-                        foreach (var clanSkill in GopetManager.clanSkillTemplateList.Where(p =>  clanMember.clan.lvl >= p.lvlClanRequire))
+                        foreach (var clanSkill in GopetManager.clanSkillTemplateList.Where(p => clanMember.clan.lvl >= p.lvlClanRequire))
                         {
                             MenuItemInfo menuItemInfo = new MenuItemInfo(clanSkill.name, clanSkill.description, "npcs/gopet.png", true);
                             menuItemInfo.setShowDialog(true);

@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using Gopet.Data.dialog;
 using Gopet.Data.Clan;
+using Gopet.Data.user;
 
 [NonController]
 public class GameController
@@ -46,15 +47,37 @@ public class GameController
     {
         get
         {
-            if (player.playerData.achievements.Count > 0)
+            List<Animation> list = new List<Animation>();
+            if (player.playerData.CurrentAchievementId > 0)
             {
-                return new Animation[] { new Animation(2, player.playerData.achievements[0].Template.FramePath, 0, 0, false, false, Animation.TYPE_ARCHIVENMENT) };
+                Achievement achievement = player.controller.FindSeach(player.playerData.CurrentAchievementId);
+                if (achievement != null)
+                {
+                    list.Add(new Animation(achievement.Template.FrameNum, achievement.Template.FramePath, achievement.Template.vX, achievement.Template.vY, false, false, Animation.TYPE_ARCHIVENMENT));
+                }
             }
-
-            return new Animation[] { };
+            return list.ToArray();
         }
     }
 
+    public Achievement FindSeach(int Id)
+    {
+        CopyOnWriteArrayList<Achievement> achs = player.playerData.achievements;
+        int left = 0;
+        int right = achs.Count - 1;
+        while (left <= right)
+        {
+            int mid = left + (right - left) / 2;
+            Achievement midItem = achs.get(mid);
+            if (midItem.Id == Id)
+                return midItem;
+            if (midItem.Id < Id)
+                left = mid + 1;
+            else
+                right = mid - 1;
+        }
+        return null;
+    }
 
     public bool isHasBattleAndShowDialog()
     {
@@ -200,23 +223,13 @@ public class GameController
                     {
                         points[i] = message.reader().readInt();
                     }
-                    // System.out.println("server.GameController.onMessage() point  " + JsonManager.ToJson(points));
                     GopetPlace place = (GopetPlace)player.getPlace();
                     if (place != null)
                     {
                         player.playerData.x = points[points.Length - 2];
                         player.playerData.y = points[points.Length - 1];
-                        //GopetManager.ServerMonitor.LogInfo(player.playerData.x + "|" + player.playerData.y + "|" + place.map.mapID);
                         place.sendMove(player.user.user_id, b1, points);
                     }
-
-                    //                if (Math.abs(points[0] - points[points.Length - 2]) > 300) {
-                    //                    hackMoveCounter++;
-                    //                }
-                    //
-                    //                if (Math.abs(points[1] - points[points.Length - 1]) > 300) {
-                    //                    hackMoveCounter++;
-                    //                }
                     if (points.Length > 30 && !player.playerData.isAdmin)
                     {
                         hackMoveCounter++;
@@ -230,7 +243,6 @@ public class GameController
 
                     if (hackMoveCounter > 200)
                     {
-                        //player.user.ban(UserData.BAN_TIME, "Hack speed", Utilities.CurrentTimeMillis + (1000l * 60 * 60 * 24));
                         player.session.Close();
                     }
                 }
@@ -240,7 +252,7 @@ public class GameController
                     GopetPlace place = (GopetPlace)player.getPlace();
                     if (place != null)
                     {
-                        String text = message.reader().readUTF();
+                        string text = message.reader().readUTF();
                         switch (text)
                         {
                             case "kiss":
@@ -275,14 +287,11 @@ public class GameController
                         {
                             return;
                         }
-
-
                         if (player.getPet()?.TimeDieZ > Utilities.CurrentTimeMillis)
                         {
                             player.redDialog($"Bạn đã kiệt sức vui lòng không rời khỏi vùng an toàn !!! Còn {Utilities.FormatNumber(((player.getPet().TimeDieZ - Utilities.CurrentTimeMillis) / 1000))} giây nữa là hồi phục!");
                             return;
                         }
-
                         int index = message.reader().readInt();
                         int mapVersion = message.reader().readInt();
                         player.playerData.waypointIndex = (sbyte)index;
@@ -1264,7 +1273,6 @@ public class GameController
 
     private void daily()
     {
-
         var serverDate = Utilities.GetCurrentDate();
         if (player.playerData.loginDate.Day != serverDate.Day || player.playerData.loginDate.Month != serverDate.Month || player.playerData.loginDate.Year != serverDate.Year)
         {

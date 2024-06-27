@@ -58,6 +58,8 @@ public class PlayerData
 
     public CopyOnWriteArrayList<Achievement> achievements { get; set; } = new();
 
+    public int CurrentAchievementId { get; set; } = -1;
+
     public PlayerData()
     {
         x = 24 * 4;
@@ -222,5 +224,26 @@ public class PlayerData
             }
         }
         pets.Sort(new InventoryPetComparer());
+    }
+
+    public void addAchivement(Achievement achievement, Player player)
+    {
+        achievements.Add(achievement);
+        bool flagId = false;
+        while (true)
+        {
+            if (achievement.Id > 0 && !flagId)
+                flagId = true;
+            else
+                achievement.Id = Utilities.nextInt(10, int.MaxValue - 2);
+            bool flag = true;
+            foreach (var item1 in achievements)
+                if (item1 != achievement)
+                    if (item1.Id == achievement.Id)
+                        flag = false;
+            if (flag)
+                break;
+        }
+        achievements.Sort(new Achievement.AchievementComparer());
     }
 }
