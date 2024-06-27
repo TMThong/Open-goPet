@@ -95,6 +95,14 @@ namespace Gopet.Data.Collections
         }
 
 
+        public bool IsEmpty
+        {
+            get
+            {
+                return this.values.IsEmpty;
+            }
+        }
+
         public IEnumerator<T> GetEnumerator()
         {
             return values.GetEnumerator();
@@ -212,7 +220,7 @@ namespace Gopet.Data.Collections
             {
                 this.values = this.values.RemoveAt(index);
             }
-            catch(Exception e) { e.printStackTrace(); }
+            catch (Exception e) { e.printStackTrace(); }
             finally
             {
                 mutex.ReleaseMutex();

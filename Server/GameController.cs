@@ -46,6 +46,11 @@ public class GameController
     {
         get
         {
+            if (player.playerData.achievements.Count > 0)
+            {
+                return new Animation[] { new Animation(2, player.playerData.achievements[0].Template.FramePath, 0, 0, false, false, Animation.TYPE_ARCHIVENMENT) };
+            }
+
             return new Animation[] { };
         }
     }
