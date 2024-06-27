@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Gopet.Data.User
 {
-    public record Animation(int numFrame, string frameImgPath, int vX, int vY, bool isDrawEnd, bool mirrorWithChar);
+    public record Animation(sbyte numFrame, string frameImgPath, int vX, int vY, bool isDrawEnd, bool mirrorWithChar, sbyte type);
 }

@@ -830,7 +830,7 @@ public class GopetPlace : Place
             message.putShort(anim.vX);
             message.putShort(anim.vY);
             message.putbool(anim.isDrawEnd);
-            message.putbool(anim.mirrorWithChar);
+            message.putsbyte(anim.type);
         }
         message.cleanup();
         sendMessage(message);
@@ -853,6 +853,7 @@ public class GopetPlace : Place
                 message.putShort(anim.vY);
                 message.putbool(anim.isDrawEnd);
                 message.putbool(anim.mirrorWithChar);
+                message.putsbyte(anim.type);
             }
         }
         player.session.sendMessage(message);
