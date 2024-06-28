@@ -6,7 +6,7 @@ using System.Collections.Concurrent;
 
 namespace Gopet.Data.GopetItem
 {
-    public class Item
+    public class Item : IBinaryObject<Item>
     {
 
         public int itemId;
@@ -184,6 +184,9 @@ namespace Gopet.Data.GopetItem
                 return GopetManager.itemTemplate.get(itemTemplateId);
             }
         }
+
+        [JsonIgnore]
+        public Item Instance => this;
 
         public string getDescription(Player player)
         {
@@ -509,6 +512,16 @@ namespace Gopet.Data.GopetItem
                 return itemBattleOptionBuffs;
             }
             return new ItemBattleOptionBuff[0];
+        }
+
+        public int GetId()
+        {
+            return this.itemId;
+        }
+
+        public void SetId(int id)
+        {
+            this.itemId = id;
         }
     }
 }

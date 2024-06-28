@@ -5,7 +5,7 @@ using Gopet.Data.GopetItem;
 using Gopet.Util;
 using Newtonsoft.Json;
 
-public class Pet : GameObject
+public class Pet : GameObject, IBinaryObject<Pet>
 {
 
 
@@ -112,6 +112,9 @@ public class Pet : GameObject
             return isCrit();
         }
     }
+
+    [JsonIgnore]
+    public Pet Instance => this;
 
     public override int getAgi()
     {
@@ -428,60 +431,14 @@ public class Pet : GameObject
 
     public PetTatto selectTattoById(int tattooId)
     {
-        int left = 0;
-        int right = tatto.Count - 1;
-        while (left <= right)
-        {
-            int mid = left + (right - left) / 2;
-            PetTatto midTattoo = tatto.get(mid);
-            if (midTattoo.tattoId == tattooId)
-            {
-                return midTattoo;
-            }
-            if (midTattoo.tattoId < tattooId)
-            {
-                left = mid + 1;
-            }
-            else
-            {
-                right = mid - 1;
-            }
-        }
-        return null;
+        return tatto.BinarySearch(tattooId);
     }
-
-    sealed class PetTattoComparer : IComparer<PetTatto>
-    {
-        public int Compare(PetTatto? obj1, PetTatto? obj2)
-        {
-            return obj1.tattoId - obj2.tattoId;
-        }
-    }
-
 
     public void addTatto(PetTatto petTatto)
     {
         tatto.Add(petTatto);
-        while (true)
-        {
-            petTatto.tattoId = Utilities.nextInt(1, int.MaxValue - 2);
-            bool flag = true;
-            foreach (PetTatto item1 in tatto)
-            {
-                if (item1 != petTatto)
-                {
-                    if (item1.tattoId == petTatto.tattoId)
-                    {
-                        flag = false;
-                    }
-                }
-            }
-            if (flag)
-            {
-                break;
-            }
-        }
-        tatto.Sort(new PetTattoComparer());
+        tatto.BinaryObjectAdd(petTatto);
+        tatto.Sort(new BinaryCompare<PetTatto>());
     }
 
     public String getDesc()
@@ -522,5 +479,15 @@ public class Pet : GameObject
         String desc = Utilities.Format("(str) %s (int) %s (agi) %s", getStr(), getInt(), getAgi());
 
         return desc + Utilities.Format("  lvl: %s , ", lvl) + String.Join(" , ", infoStrings) + String.Join(" , ", tattooStrings);
+    }
+
+    public int GetId()
+    {
+        return this.petId;
+    }
+
+    public void SetId(int id)
+    {
+        this.petId = id;
     }
 }

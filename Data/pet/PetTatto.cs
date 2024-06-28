@@ -1,8 +1,9 @@
 ﻿
 using Gopet.Data.Collections;
 using Gopet.Util;
+using Newtonsoft.Json;
 
-public class PetTatto
+public class PetTatto : IBinaryObject<PetTatto>
 {
 
     public int tattooTemplateId;
@@ -52,6 +53,9 @@ public class PetTatto
         }
     }
 
+    [JsonIgnore]
+    public PetTatto Instance => this;
+
     public String getName()
     {
         JArrayList<String> infoStrings = new JArrayList<String>();
@@ -79,5 +83,15 @@ public class PetTatto
         }
 
         return Template.name + "  " + String.Join(" ", infoStrings);
+    }
+
+    public int GetId()
+    {
+        return this.tattoId;
+    }
+
+    public void SetId(int id)
+    {
+        this.tattoId = id;
     }
 }

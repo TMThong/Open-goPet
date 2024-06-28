@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gopet.Data.user;
+using System;
 using System.Globalization;
 using System.Net;
 using System.Runtime.Serialization;
@@ -300,6 +301,56 @@ namespace Gopet.Util
             }
 
             return true;
+        }
+
+
+        public static T BinarySearch<T>(this IEnumerable<IBinaryObject<T>> binaryObjects, int Id)
+        {
+            int left = 0;
+            int right = binaryObjects.Count() - 1;
+            while (left <= right)
+            {
+                int mid = left + (right - left) / 2;
+                IBinaryObject<T> midItem = binaryObjects.ElementAt(mid);
+                if (midItem.GetId() == Id)
+                    return midItem.Instance;
+                if (midItem.GetId() < Id)
+                    left = mid + 1;
+                else
+                    right = mid - 1;
+            }
+            return default(T);
+        }
+
+        public static void BinaryObjectAdd<T>(this IEnumerable<IBinaryObject<T>> binaryObjects, IBinaryObject<T> binaryObject)
+        {
+            bool flagId = false;
+            while (true)
+            {
+                if (binaryObject.GetId() > 0 && !flagId)
+                {
+                    flagId = true;
+                }
+                else
+                {
+                    binaryObject.SetId(Utilities.nextInt(10, int.MaxValue - 2));
+                }
+                bool flag = true;
+                foreach (var item1 in binaryObjects)
+                {
+                    if (item1 != binaryObject)
+                    {
+                        if (item1.GetId() == binaryObject.GetId())
+                        {
+                            flag = false;
+                        }
+                    }
+                }
+                if (flag)
+                {
+                    break;
+                }
+            }
         }
     }
 }

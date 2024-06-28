@@ -62,21 +62,7 @@ public class GameController
 
     public Achievement FindSeach(int Id)
     {
-        CopyOnWriteArrayList<Achievement> achs = player.playerData.achievements;
-        int left = 0;
-        int right = achs.Count - 1;
-        while (left <= right)
-        {
-            int mid = left + (right - left) / 2;
-            Achievement midItem = achs.get(mid);
-            if (midItem.Id == Id)
-                return midItem;
-            if (midItem.Id < Id)
-                left = mid + 1;
-            else
-                right = mid - 1;
-        }
-        return null;
+        return Utilities.BinarySearch(player.playerData.achievements, Id);
     }
 
     public bool isHasBattleAndShowDialog()
@@ -397,7 +383,7 @@ public class GameController
         Message message = letterMessage(13);
         message.putInt(1);
         message.putInt(1);
-        message.putsbyte(1);
+        message.putsbyte(3);
         message.putUTF("UTF 1");
         message.putUTF("UTF 2");
         message.putUTF("UTF 3");
@@ -2395,26 +2381,7 @@ public class GameController
     public Item selectItemByItemId(int itemId, sbyte inventoryItem)
     {
         CopyOnWriteArrayList<Item> inventory = (CopyOnWriteArrayList<Item>)player.playerData.getInventoryOrCreate(inventoryItem);
-        int left = 0;
-        int right = inventory.Count - 1;
-        while (left <= right)
-        {
-            int mid = left + (right - left) / 2;
-            Item midItem = inventory.get(mid);
-            if (midItem.itemId == itemId)
-            {
-                return midItem;
-            }
-            if (midItem.itemId < itemId)
-            {
-                left = mid + 1;
-            }
-            else
-            {
-                right = mid - 1;
-            }
-        }
-        return null;
+        return inventory.BinarySearch(itemId);
     }
 
     public Item selectItemsbytemp(int templateId, sbyte inventoryItem)
@@ -2433,26 +2400,7 @@ public class GameController
     public Pet selectPetByItemId(int petId)
     {
         CopyOnWriteArrayList<Pet> inventory = player.playerData.pets;
-        int left = 0;
-        int right = inventory.Count - 1;
-        while (left <= right)
-        {
-            int mid = left + (right - left) / 2;
-            Pet midPet = inventory.get(mid);
-            if (midPet.petId == petId)
-            {
-                return midPet;
-            }
-            if (midPet.petId < petId)
-            {
-                left = mid + 1;
-            }
-            else
-            {
-                right = mid - 1;
-            }
-        }
-        return null;
+        return inventory.BinarySearch(petId);
     }
 
     private void selectPet(sbyte typeSelect)

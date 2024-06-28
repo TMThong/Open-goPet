@@ -1,4 +1,6 @@
 ﻿using Gopet.Data.GopetItem;
+using Gopet.Util;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Gopet.Data.user
 {
-    public class Achievement
+    public class Achievement : IBinaryObject<Achievement>
     {
         public int IdTemplate { get; set; }
         public int Id { get; set; }
@@ -31,12 +33,25 @@ namespace Gopet.Data.user
             }
         }
 
+        [JsonIgnore]
+        public Achievement Instance => this;
+
         internal class AchievementComparer : IComparer<Achievement>
         {
             public int Compare(Achievement? obj1, Achievement? obj2)
             {
                 return obj1.Id - obj2.Id;
             }
+        }
+
+        public int GetId()
+        {
+            return Id;
+        }
+
+        public void SetId(int id)
+        {
+            this.Id = id;
         }
     }
 }

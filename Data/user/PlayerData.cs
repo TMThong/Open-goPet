@@ -167,25 +167,7 @@ public class PlayerData
             }
         }
         list.Add(item);
-        while (true)
-        {
-            item.itemId = Utilities.nextInt(10, int.MaxValue - 2);
-            bool flag = true;
-            foreach (Item item1 in getInventoryOrCreate(type))
-            {
-                if (item1 != item)
-                {
-                    if (item1.itemId == item.itemId)
-                    {
-                        flag = false;
-                    }
-                }
-            }
-            if (flag)
-            {
-                break;
-            }
-        }
+        list.BinaryObjectAdd(item);
         list.Sort(new InventoryItemComparer());
     }
 
@@ -197,54 +179,14 @@ public class PlayerData
     public void addPet(Pet pet, Player player)
     {
         pets.Add(pet);
-        bool flagId = false;
-        while (true)
-        {
-            if (pet.petId > 0 && !flagId)
-            {
-                flagId = true;
-            }
-            else
-            {
-                pet.petId = Utilities.nextInt(10, int.MaxValue - 2);
-            }
-            bool flag = true;
-            foreach (Pet item1 in pets)
-            {
-                if (item1 != pet)
-                {
-                    if (item1.petId == pet.petId)
-                    {
-                        flag = false;
-                    }
-                }
-            }
-            if (flag)
-            {
-                break;
-            }
-        }
-        pets.Sort(new InventoryPetComparer());
+        pets.BinaryObjectAdd(pet);
+        pets.Sort(new BinaryCompare<Pet>());
     }
 
     public void addAchivement(Achievement achievement, Player player)
     {
         achievements.Add(achievement);
-        bool flagId = false;
-        while (true)
-        {
-            if (achievement.Id > 0 && !flagId)
-                flagId = true;
-            else
-                achievement.Id = Utilities.nextInt(10, int.MaxValue - 2);
-            bool flag = true;
-            foreach (var item1 in achievements)
-                if (item1 != achievement)
-                    if (item1.Id == achievement.Id)
-                        flag = false;
-            if (flag)
-                break;
-        }
+        achievements.BinaryObjectAdd(achievement);
         achievements.Sort(new Achievement.AchievementComparer());
     }
 }
