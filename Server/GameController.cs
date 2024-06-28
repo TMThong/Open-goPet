@@ -435,13 +435,13 @@ public class GameController
                         player.redDialog(REQUEST_ADD_FRIEND_BLOCK);
                     else
                     {
-                        var findHasRequest = conn.Query<FriendRequest>("SELECT `userId`, `targetId` FROM `request_add_friend` WHERE `userId` =  @userId  AND `targetId` = @targetId;", new FriendRequest(player.user.user_id, userId));
+                        var findHasRequest = conn.Query<FriendRequest>("SELECT `userId`, `targetId` FROM `request_add_friend` WHERE `userId` =  @userId  AND `targetId` = @targetId;", new FriendRequest(player.user.user_id, userId, DateTime.Now));
                         if (findHasRequest.Any())
                         {
                             player.redDialog(REQUEST_ADD_FRIEND_EXISTS);
                             return;
                         }
-                        conn.Execute("INSERT INTO `request_add_friend`(`userId`, `targetId`) VALUES (@userId, @targetId);", new FriendRequest(player.user.user_id, userId));
+                        conn.Execute("INSERT INTO `request_add_friend`(`userId`, `targetId`) VALUES (@userId, @targetId);", new FriendRequest(player.user.user_id, userId, DateTime.Now));
                         player.okDialog(REQUEST_ADD_FRIEND_OK);
                     }
                 }

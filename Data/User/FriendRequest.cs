@@ -6,5 +6,8 @@ using System.Threading.Tasks;
 
 namespace Gopet.Data.User
 {
-    public record FriendRequest(int userId, int targetId);
+    public record FriendRequest(int userId, int targetId, DateTime time)
+    {
+        
+    }
 }

@@ -8,13 +8,17 @@ using System.Threading.Tasks;
 
 namespace Gopet.Data.User
 {
-    public record Letter(sbyte Type, string Title, string ShortContent, string Content) : IBinaryObject<Letter>
+    public class Letter : IBinaryObject<Letter>
     {
         public const sbyte ADMIN = 2;
         public const sbyte EVENT = 3;
         public const sbyte FRIEND = 1;
         public int LetterId { get; set; }
         public bool IsMark { get; set; } = false;
+        public sbyte Type { get; set; }
+        public string Title { get; set; }
+        public string ShortContent { get; set; }
+        public string Content { get; set; }
 
         [JsonIgnore]
         public Letter Instance => this;

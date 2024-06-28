@@ -32,11 +32,6 @@ namespace Gopet.Server
              
         }
 
-        public override bool canNPCHelp(int NPCID)
-        {
-            return base.canNPCHelp(NPCID);
-        }
-
         public override bool checkCoin(long value)
         {
              return false;
@@ -60,11 +55,6 @@ namespace Gopet.Server
         public override int GetHashCode()
         {
             return base.GetHashCode();
-        }
-
-        public override bool hasGift(int NPCID)
-        {
-            return false;
         }
 
         public override void login(string username, string password, string version)
