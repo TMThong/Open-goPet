@@ -166,6 +166,21 @@ public partial class MenuController
                     player.controller.showMenuItem(menuId, TYPE_MENU_NONE, "Tất cả vật phẩm", menuInfos);
                 }
                 break;
+            case MENU_LIST_FRIEND:
+                {
+                    JArrayList<MenuItemInfo> menuInfos = new();
+                    using (var conn = MYSQLManager.create())
+                    {
+                        var friendQuery = conn.Query($"SELECT  `name`, `avatarPath` FROM `player` WHERE `player`.`user_id` IN ({player.playerData.ListFriends.ToArray().Join(",")})");
+                        foreach (var item in friendQuery)
+                        {
+                            MenuItemInfo menuItemInfo = new MenuItemInfo(item.name, "", item.avatarPath, true);
+                            menuInfos.add(menuItemInfo);
+                        }
+                    }
+                    player.controller.showMenuItem(menuId, TYPE_MENU_NONE, "Danh sách bạn bè", menuInfos);
+                }
+                break;
             case MENU_UNEQUIP_SKIN:
             case MENU_UNEQUIP_PET:
                 {

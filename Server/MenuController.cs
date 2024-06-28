@@ -107,6 +107,7 @@ public partial class MenuController
     public const int MENU_SELECT_TYPE_MONEY_TO_RENT_SKILL_CLAN = 1057;
     public const int MENU_USE_ACHIEVEMNT = 1058;
     public const int MENU_USE_ACHIEVEMNT_OPTION = 1059;
+    public const int MENU_LIST_FRIEND = 1060;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),

@@ -352,5 +352,18 @@ namespace Gopet.Util
                 }
             }
         }
+
+        public static string Join<T>(this IEnumerable<T> values, string char_)
+        {
+            string joinText = string.Empty;
+            for (int i = 0; i < values.Count(); i++)
+            {
+                if (i + 1 >= values.Count())
+                    joinText += values.ElementAt(i).ToString();
+                else
+                    joinText += values.ElementAt(i).ToString() + char_;
+            }
+            return joinText;
+        }
     }
 }

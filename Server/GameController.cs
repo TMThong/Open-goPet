@@ -371,6 +371,9 @@ public class GameController
 #endif
         switch (subCmd)
         {
+            case GopetCMD.LETTER_COMMAND_LIST_FRIEND:
+                MenuController.sendMenu(MenuController.MENU_LIST_FRIEND, player);
+                break;
             case GopetCMD.LETTER_BOX:
                 showLetterBox();
                 break;
@@ -1108,9 +1111,7 @@ public class GameController
     {
         if (line_desc == null)
             line_desc = new string[] { text };
-
         if (line_desc.Length >= sbyte.MaxValue) throw new UnsupportedOperationException("Chi duoc dung 7bit thoi");
-
         Message m = messagePetSerive(GopetCMD.INFO_UP_TIER_PET);
         m.putUTF(text);
         m.putsbyte(line_desc.Length);
