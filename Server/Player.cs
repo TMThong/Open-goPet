@@ -16,16 +16,15 @@ using static Gopet.Util.Utilities;
 using Gopet.Data.user;
 public class Player : IHandleMessage
 {
-
-    public static readonly String[] BANNAME = new String[] { "admin", "test", "banquantri", "gofarm" };
+    public static readonly string[] BANNAME = new string[] { "admin", "test", "banquantri", "gofarm" };
     public ISession session { get; }
     public sbyte CLIENT_TYPE;
     public int PROVIDER;
     public Version ApplicationVersion;
-    public String info;
+    public string info;
     public int displayWidth, displayHeight;
-    public String language;
-    public String Refcode;
+    public string language;
+    public string Refcode;
     public UserData user;
     public PlayerData playerData;
     public GameController controller;
@@ -490,18 +489,6 @@ Thread.Sleep(1000);
         ms.writer().flush();
         session.sendMessage(ms);
     }
-
-    public virtual bool hasGift(int NPCID)
-    {
-        return true;
-    }
-
-    public virtual bool canNPCHelp(int NPCID)
-    {
-        return true;
-    }
-
-
 
     public virtual void onDisconnected()
     {
