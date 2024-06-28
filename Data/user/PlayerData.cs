@@ -117,7 +117,8 @@ public class PlayerData
                             EventPoint = @EventPoint,
                             achievements = @achievements,
                             NumOfUseKiteNormal = @NumOfUseKiteNormal,
-                            NumOfUseKiteVip = @NumOfUseKiteVip
+                            NumOfUseKiteVip = @NumOfUseKiteVip,
+                            CurrentAchievementId = @CurrentAchievementId
                             WHERE ID = @ID", playerData);
     }
 
