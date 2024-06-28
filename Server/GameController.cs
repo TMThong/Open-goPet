@@ -368,22 +368,61 @@ public class GameController
         message.Close();
     }
 
+
+    public static Message letterMessage(sbyte cmd)
+    {
+        Message message = new Message(GopetCMD.LETTER_COMMAND);
+        message.putInt(cmd);
+        return message;
+    }
+
+
+
     public void letter(sbyte subCmd, Message msg)
     {
 #if DEBUG_LOG
         GopetManager.ServerMonitor.LogWarning($"Hộp thư: {subCmd}");
 #endif
+        switch (subCmd)
+        {
+            case 1:
+                sendDefaultTest();
+                break;
+        }
+    }
 
+
+    public void sendDefaultTest()
+    {
+        Message message = letterMessage(13);
+        message.putInt(1);
+        message.putInt(1);
+        message.putsbyte(1);
+        message.putUTF("UTF 1");
+        message.putUTF("UTF 2");
+        message.putUTF("UTF 3");
+        message.putbool(false);
+        message.cleanup();
+        player.session.sendMessage(message);
+    }
+
+    public void sendHasLetter(bool hasBool)
+    {
+        if (player.playerData != null)
+        {
+            Message message = letterMessage(GopetCMD.LETTER_COMMAND_HAS_LETTER);
+            message.putsbyte(hasBool ? 1 : 0);
+            message.cleanup();
+            player.session.sendMessage(message);
+        }
     }
 
     public void magic(int user_id, bool isMyPet)
     {
-
         if (isHasBattleAndShowDialog())
         {
             return;
         }
-
         Pet pet = null;
         if (isMyPet)
         {
