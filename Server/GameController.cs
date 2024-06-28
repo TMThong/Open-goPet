@@ -377,11 +377,40 @@ public class GameController
             case GopetCMD.LETTER_COMMAND_REQUEST_ADD_FRIEND:
                 requestAddFriend(msg.readInt());
                 break;
+            case GopetCMD.LETTER_COMMAND_REQUEST_ADD_FRIEND_WITH_NAME:
+                requestAddFriend(msg.readUTF());
+                break;
         }
     }
 
     private const string REQUEST_ADD_FRIEND_OK = "Đã gửi yêu cầu thêm bạn thành công";
-    private const string REQUEST_ADD_FRIEND_EXISTS = "Đã gửi yêu cầu thêm bạn thành công";
+    private const string REQUEST_ADD_FRIEND_EXISTS = "Đã gửi yêu cầu thêm bạn rồi";
+    private const string REQUEST_ADD_FRIEND_BLOCK = "Bạn đã bị chặn";
+
+
+    private void requestAddFriend(string name)
+    {
+        Player playerRequest = PlayerManager.get(name);
+        if (playerRequest == null)
+        {
+            int userId = -1;
+            using (var conn = MYSQLManager.create())
+            {
+                var userData = conn.QueryFirstOrDefault("SELECT `user_id` FROM `player` WHERE `name` = @name;", new { name = name });
+                if (userData == null)
+                {
+                    player.redDialog("Người chơi không tồn tại");
+                    return;
+                }
+                else userId = userData.user_id;
+            }
+            requestAddFriend(userId);
+        }
+        else
+        {
+            requestAddFriend(playerRequest.user.user_id);
+        }
+    }
 
     private void requestAddFriend(int userId)
     {
@@ -393,14 +422,38 @@ public class GameController
         Player playerRequest = PlayerManager.get(userId);
         if (playerRequest == null)
         {
-
+            using (var conn = MYSQLManager.create())
+            {
+                var friendData = conn.QueryFirstOrDefault<PlayerData>("SELECT * FROM `player` WHERE `player`.`user_id` = @user_id LIMIT 1;", new { user_id = userId });
+                if (friendData == null)
+                    player.redDialog("Người chơi không tồn tại");
+                else
+                {
+                    if (friendData.RequestAddFriends.Contains(player.user.user_id))
+                        player.redDialog(REQUEST_ADD_FRIEND_EXISTS);
+                    else if (friendData.BlockFriendLists.Contains(player.user.user_id))
+                        player.redDialog(REQUEST_ADD_FRIEND_BLOCK);
+                    else
+                    {
+                        var findHasRequest = conn.Query<FriendRequest>("SELECT `userId`, `targetId` FROM `request_add_friend` WHERE `userId` =  @userId  AND `targetId` = @targetId;", new FriendRequest(player.user.user_id, userId));
+                        if (findHasRequest.Any())
+                        {
+                            player.redDialog(REQUEST_ADD_FRIEND_EXISTS);
+                            return;
+                        }
+                        conn.Execute("INSERT INTO `request_add_friend`(`userId`, `targetId`) VALUES (@userId, @targetId);", new FriendRequest(player.user.user_id, userId));
+                        player.okDialog(REQUEST_ADD_FRIEND_OK);
+                    }
+                }
+                friendData = null;
+            }
         }
         else
         {
             if (playerRequest.playerData.RequestAddFriends.Contains(player.user.user_id))
-            {
                 player.redDialog(REQUEST_ADD_FRIEND_EXISTS);
-            }
+            else if (playerRequest.playerData.BlockFriendLists.Contains(player.user.user_id))
+                player.redDialog(REQUEST_ADD_FRIEND_BLOCK);
             else
             {
                 playerRequest.playerData.RequestAddFriends.Add(player.user.user_id);
