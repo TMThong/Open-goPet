@@ -376,6 +376,19 @@ Thread.Sleep(1000);
                     if (playerData != null)
                     {
                         PlayerManager.put(this);
+                        var connList = gameconn.Query<FriendRequest>("SELECT * FROM `request_add_friend` WHERE `request_add_friend`.`targetId` = @userId;", new { userId = user.user_id });
+                        if(connList.Any())
+                        {
+                            foreach (var item in connList)
+                            {
+                                if (!playerData.BlockFriendLists.Contains(item.userId) && !playerData.RequestAddFriends.Contains(item.userId) && !playerData.ListFriends.Contains(item.userId))
+                                {
+                                     playerData.RequestAddFriends.Add(item.userId);
+                                }
+
+                                gameconn.Execute("DELETE FROM `request_add_friend` WHERE `request_add_friend`.`userId` = @userId AND `request_add_friend`.`targetId` = @targetId;", item);
+                            }
+                        }
                     }
                     var kioskList = gameconn.Query("SELECT * FROM `kiosk_recovery` where user_id = @user_id", new { user_id = this.user.user_id });
                     if (kioskList.Any())
@@ -508,7 +521,6 @@ Thread.Sleep(1000);
                 PlayerManager.remove(this);
                 HistoryManager.addHistory(new History(this).setLogout());
             }
-
         }
         catch (Exception e)
         {
