@@ -360,9 +360,20 @@ public class GameController
             case GopetCMD.PLAYER_CHALLENGE:
                 inviteChallenge(message.readInt());
                 break;
+            case GopetCMD.LETTER_COMMAND:
+                letter(message.readsbyte(), message);
+                break;
 
         }
         message.Close();
+    }
+
+    public void letter(sbyte subCmd, Message msg)
+    {
+#if DEBUG_LOG
+        GopetManager.ServerMonitor.LogWarning($"Hộp thư: {subCmd}");
+#endif
+
     }
 
     public void magic(int user_id, bool isMyPet)

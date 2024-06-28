@@ -1,5 +1,6 @@
- 
-public class GopetCMD {
+
+public class GopetCMD
+{
     public const sbyte COMMAND_GUIDER = 122;
     public const sbyte ON_UPDATE_PLAYER_IN_MAP = 29;
     public const sbyte ON_OTHER_USER_MOVE = 27;
@@ -40,7 +41,6 @@ public class GopetCMD {
     public const sbyte PET_BATTLE_USE_ITEM = 3;
     public const sbyte PetBattle_ATTACK = 1;
     public const sbyte PET_BATTLE_USE_SKILL = 4;
-    //public const sbyte PROFILE_IMAGE = 0;
     public const sbyte UPDATE_PET_LVL = 18;
     public const sbyte MAGIC = 11;
     public const sbyte GYM = 21;
@@ -150,11 +150,11 @@ public class GopetCMD {
     public const sbyte SKILL_CLAN_LOCK = -1;
     public const sbyte SKILL_CLAN_RENT = 0;
     public const sbyte SKILL_CLAN_CHANGE = 1;
-    
+
     public const sbyte SHOW_LIST_TASK = 54;
-    
+
     public const sbyte INVITE_MATCH = 12;
-    
+
     public const sbyte PET_UNFOLLOW = 3;
     public const sbyte WING_TYPE_USE = 4;
     public const sbyte WING_TYPE_INVENTORY = 2;
@@ -170,4 +170,5 @@ public class GopetCMD {
     public const sbyte SERVER_LIST = 64;
     public const sbyte SEND_ANIMATION_CHARACTER = 4;
     public const sbyte SEND_LIST_ANIMATION_CHARACTER = 5;
+    public const sbyte LETTER_COMMAND = 121;
 }

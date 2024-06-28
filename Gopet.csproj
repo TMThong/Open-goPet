@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <DefineConstants>$(DefineConstants);NEW_SERVER</DefineConstants>
+	  <DefineConstants>$(DefineConstants);NEW_SERVER;DEBUG_LOG</DefineConstants>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
