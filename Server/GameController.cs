@@ -429,7 +429,7 @@ public class GameController
                     player.redDialog("Người chơi không tồn tại");
                 else
                 {
-                    if (friendData.RequestAddFriends.Contains(player.user.user_id))
+                    if (friendData.RequestAddFriends.Contains(player.user.user_id) || friendData.ListFriends.Contains(player.user.user_id))
                         player.redDialog(REQUEST_ADD_FRIEND_EXISTS);
                     else if (friendData.BlockFriendLists.Contains(player.user.user_id))
                         player.redDialog(REQUEST_ADD_FRIEND_BLOCK);
@@ -450,7 +450,7 @@ public class GameController
         }
         else
         {
-            if (playerRequest.playerData.RequestAddFriends.Contains(player.user.user_id))
+            if (playerRequest.playerData.RequestAddFriends.Contains(player.user.user_id) || playerRequest.playerData.ListFriends.Contains(player.user.user_id))
                 player.redDialog(REQUEST_ADD_FRIEND_EXISTS);
             else if (playerRequest.playerData.BlockFriendLists.Contains(player.user.user_id))
                 player.redDialog(REQUEST_ADD_FRIEND_BLOCK);
