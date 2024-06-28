@@ -567,6 +567,7 @@ public class GopetManager
         SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<Achievement>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<ClanMember>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<ClanSkill>>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<CopyOnWriteArrayList<Letter>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<Pet>());
         SqlMapper.AddTypeHandler(new JsonAdapter<Item>());
         SqlMapper.AddTypeHandler(new JsonAdapter<BuffExp>());

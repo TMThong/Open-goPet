@@ -371,33 +371,69 @@ public class GameController
 #endif
         switch (subCmd)
         {
-            case 1:
-                sendDefaultTest();
+            case GopetCMD.LETTER_BOX:
+                showLetterBox();
+                break;
+            case GopetCMD.LETTER_COMMAND_REQUEST_ADD_FRIEND:
+                requestAddFriend(msg.readInt());
                 break;
         }
     }
 
+    private const string REQUEST_ADD_FRIEND_OK = "Đã gửi yêu cầu thêm bạn thành công";
+    private const string REQUEST_ADD_FRIEND_EXISTS = "Đã gửi yêu cầu thêm bạn thành công";
 
-    public void sendDefaultTest()
+    private void requestAddFriend(int userId)
     {
-        Message message = letterMessage(13);
-        message.putInt(1);
-        message.putInt(1);
-        message.putsbyte(3);
-        message.putUTF("UTF 1");
-        message.putUTF("UTF 2");
-        message.putUTF("UTF 3");
-        message.putbool(false);
+        if (userId == player.user.user_id)
+        {
+            player.redDialog("Ai bug là gay =)))");
+            return;
+        }
+        Player playerRequest = PlayerManager.get(userId);
+        if (playerRequest == null)
+        {
+
+        }
+        else
+        {
+            if (playerRequest.playerData.RequestAddFriends.Contains(player.user.user_id))
+            {
+                player.redDialog(REQUEST_ADD_FRIEND_EXISTS);
+            }
+            else
+            {
+                playerRequest.playerData.RequestAddFriends.Add(player.user.user_id);
+                player.okDialog(REQUEST_ADD_FRIEND_OK);
+            }
+        }
+    }
+
+
+    public void showLetterBox()
+    {
+        var cloneLetter = player.playerData.letters.clone();
+        Message message = letterMessage(GopetCMD.LETTER_BOX);
+        message.putInt(cloneLetter.Count);
+        foreach (var letter in cloneLetter)
+        {
+            message.putInt(letter.LetterId);
+            message.putsbyte(letter.Type);
+            message.putUTF(letter.Title);
+            message.putUTF(letter.ShortContent);
+            message.putUTF(letter.Content);
+            message.putbool(letter.IsMark);
+        }
         message.cleanup();
         player.session.sendMessage(message);
     }
 
-    public void sendHasLetter(bool hasBool)
+    public void sendHasLetter()
     {
         if (player.playerData != null)
         {
             Message message = letterMessage(GopetCMD.LETTER_COMMAND_HAS_LETTER);
-            message.putsbyte(hasBool ? 1 : 0);
+            message.putsbyte(player.playerData.letters.IsEmpty ? 0 : 1);
             message.cleanup();
             player.session.sendMessage(message);
         }
@@ -1304,6 +1340,7 @@ public class GameController
             HistoryManager.addHistory(new History(player).setLog("Đăng nhập vào trò chơi và tải nhân vật thành công"));
             checkBugEquipItem();
             showExp();
+            sendHasLetter();
         }
     }
 

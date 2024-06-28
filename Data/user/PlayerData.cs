@@ -17,7 +17,6 @@ public class PlayerData
     public long spendGold { get; set; }
     public int ID { get; set; }
     public int user_id { get; set; }
-    public JArrayList<int> friends { get; set; } = new JArrayList<int>();
     public JArrayList<int> favouriteList { get; set; } = new JArrayList<int>();
     public HashMap<sbyte, CopyOnWriteArrayList<Item>> items { get; set; } = new();
     public CopyOnWriteArrayList<Pet> pets { get; set; } = new();
@@ -58,7 +57,13 @@ public class PlayerData
 
     public CopyOnWriteArrayList<Achievement> achievements { get; set; } = new();
 
+    public CopyOnWriteArrayList<Letter> letters { get; set; } = new();
+
     public int CurrentAchievementId { get; set; } = -1;
+
+    public CopyOnWriteArrayList<int> RequestAddFriends { get; set; } = new();
+    public CopyOnWriteArrayList<int> BlockFriendLists { get; set; } = new();
+    public CopyOnWriteArrayList<int> ListFriends { get; set; } = new();
 
     public PlayerData()
     {
@@ -87,7 +92,8 @@ public class PlayerData
 
     public static void saveStatic(PlayerData playerData, MySqlConnection conn)
     {
-        conn.Execute(@"Update `player` SET pets = @pets,
+        conn.Execute(@"     Update `player` SET 
+                            pets = @pets,
                             petSelected = @petSelected,
                             isFirstFree = @isFirstFree,
                             loginDate = @loginDate,
@@ -108,7 +114,6 @@ public class PlayerData
                             spendGold = @spendGold,
                             coin = @coin,
                             gold = @gold,
-                            friends = @friends,
                             items = @items ,
                             favouriteList = @favouriteList,
                             numUseEnergy = @numUseEnergy,
@@ -118,7 +123,11 @@ public class PlayerData
                             achievements = @achievements,
                             NumOfUseKiteNormal = @NumOfUseKiteNormal,
                             NumOfUseKiteVip = @NumOfUseKiteVip,
-                            CurrentAchievementId = @CurrentAchievementId
+                            CurrentAchievementId = @CurrentAchievementId,
+                            letters = @letters,
+                            RequestAddFriends = @RequestAddFriends,
+                            BlockFriendLists = @BlockFriendLists,
+                            ListFriends = @ListFriends
                             WHERE ID = @ID", playerData);
     }
 

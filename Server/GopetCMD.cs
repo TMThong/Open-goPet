@@ -171,5 +171,7 @@ public class GopetCMD
     public const sbyte SEND_ANIMATION_CHARACTER = 4;
     public const sbyte SEND_LIST_ANIMATION_CHARACTER = 5;
     public const sbyte LETTER_COMMAND = 121;
+    public const sbyte LETTER_COMMAND_REQUEST_ADD_FRIEND = 3;
     public const sbyte LETTER_COMMAND_HAS_LETTER = 18;
+    public const sbyte LETTER_BOX = 13;
 }
