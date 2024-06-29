@@ -19,9 +19,46 @@ namespace Gopet.Data.User
         public string Title { get; set; }
         public string ShortContent { get; set; }
         public string Content { get; set; }
+        [JsonIgnore]
+        public int userId { get; set; }
+        [JsonIgnore]
+        public int targetId { get; set; }
+        [JsonIgnore]
+        public DateTime time { get; set; }
 
         [JsonIgnore]
         public Letter Instance => this;
+
+        public Letter()
+        {
+        }
+
+        public Letter(bool isMark, sbyte type, string title, string shortContent, string content)
+        {
+            IsMark = isMark;
+            Type = type;
+            Title = title;
+            ShortContent = shortContent;
+            Content = content;
+        }
+
+        public Letter(int letterId, bool isMark, sbyte type, string title, string shortContent, string content)
+        {
+            LetterId = letterId;
+            IsMark = isMark;
+            Type = type;
+            Title = title;
+            ShortContent = shortContent;
+            Content = content;
+        }
+
+        public Letter(sbyte type, string title, string shortContent, string content)
+        {
+            Type = type;
+            Title = title;
+            ShortContent = shortContent;
+            Content = content;
+        }
 
         public int GetId()
         {

@@ -65,6 +65,8 @@ public class PlayerData
     public CopyOnWriteArrayList<int> BlockFriendLists { get; set; } = new();
     public CopyOnWriteArrayList<int> ListFriends { get; set; } = new();
 
+    public Dictionary<int, DateTime> LettersSendTime { get; set; } = new();
+
     public DateTime LastTimeOnline { get; set; }
 
     public PlayerData()
@@ -131,7 +133,8 @@ public class PlayerData
                             RequestAddFriends = @RequestAddFriends,
                             BlockFriendLists = @BlockFriendLists,
                             ListFriends = @ListFriends,
-                            LastTimeOnline = @LastTimeOnline
+                            LastTimeOnline = @LastTimeOnline,
+                            LettersSendTime = @LettersSendTime
                             WHERE ID = @ID", playerData);
     }
 
@@ -200,5 +203,12 @@ public class PlayerData
         achievements.Add(achievement);
         achievements.BinaryObjectAdd(achievement);
         achievements.Sort(new BinaryCompare<Achievement>());
+    }
+
+    public void addLetter(Letter letter)
+    {
+        letters.Add(letter);
+        letters.BinaryObjectAdd(letter);
+        letters.Sort(new BinaryCompare<Letter>());
     }
 }

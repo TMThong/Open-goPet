@@ -195,6 +195,7 @@ public partial class MenuController
                             {
                                 DateTime LastTimeOnline = item.LastTimeOnline;
                                 MenuItemInfo menuItemInfo = new MenuItemInfo(item.name, $"Lần cuối online: {Utilities.ToDateString(LastTimeOnline)}", item.avatarPath, true);
+                                menuItemInfo.setCloseScreenAfterClick(true);
                                 menuInfos.add(menuItemInfo);
                             }
                         }
@@ -208,7 +209,6 @@ public partial class MenuController
                     list.Add(new Option(0, "Xem vị trí", true));  
                     list.Add(new Option(1, "Xóa", true));  
                     list.Add(new Option(2, "Xóa và chặn", true));  
-                    list.Add(new Option(3, "Gửi thư", true));  
                     player.controller.sendListOption(menuId, "Bạn bè", string.Empty, list);
                 }
                 break;
@@ -218,7 +218,6 @@ public partial class MenuController
                     list.Add(new Option(0, "Chấp nhận", true));
                     list.Add(new Option(1, "Từ chối", true));
                     list.Add(new Option(2, "Từ chối và thêm vào sổ đen", true));
-                    list.Add(new Option(3, "Gửi thư", true));
                     player.controller.sendListOption(menuId, "Danh sách chờ thêm bạn", string.Empty, list);
                 }
                 break;
@@ -226,7 +225,6 @@ public partial class MenuController
                 {
                     JArrayList<Option> list = new();
                     list.Add(new Option(0, "Bỏ chặn", true));
-                    list.Add(new Option(1, "Gửi thư", true));
                     player.controller.sendListOption(menuId, "Sổ đen", string.Empty, list);
                 }
                 break;

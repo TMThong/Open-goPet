@@ -352,6 +352,94 @@ public class GameController
         message.Close();
     }
 
+    public void updateLetterTime()
+    {
+        foreach (var delayTimeSendLetter in player.playerData.LettersSendTime.Where(k => k.Value.AddMinutes(5) < DateTime.Now))
+        {
+            player.playerData.LettersSendTime.Remove(delayTimeSendLetter.Key);
+        }
+    }
+
+    public void sendLetter(string name, string title, string shortContent, string content, sbyte type)
+    {
+        if(name == player.playerData.name)
+        {
+            player.redDialog("Tính bug?");
+            return;
+        }
+
+        Player playerRequest = PlayerManager.get(name);
+        if (playerRequest == null)
+        {
+            int userId = -1;
+            using (var conn = MYSQLManager.create())
+            {
+                var userData = conn.QueryFirstOrDefault("SELECT `user_id` FROM `player` WHERE `name` = @name;", new { name = name });
+                if (userData == null)
+                {
+                    player.redDialog("Người chơi không tồn tại");
+                    return;
+                }
+                else userId = userData.user_id;
+            }
+            sendLetter(userId, title, shortContent, content, type);
+        }
+        else
+        {
+            sendLetter(playerRequest.user.user_id, title, shortContent, content, type);
+        }
+    }
+
+    public void sendLetter(int userId, string title, string shortContent, string content, sbyte type)
+    {
+        if (userId == player.playerData.user_id)
+        {
+            player.redDialog("Tính bug?");
+            return;
+        }
+        if (player.playerData.LettersSendTime.ContainsKey(userId))
+        {
+            if (player.playerData.LettersSendTime[userId] > DateTime.Now)
+            {
+                player.redDialog("Vui lòng chờ 30 giây để gửi cho người này");
+                return;
+            }
+            else
+                player.playerData.LettersSendTime[userId] = DateTime.Now.AddSeconds(30);
+        }
+        updateLetterTime();
+        Letter letter = new Letter(type, title, shortContent, content);
+        letter.time = DateTime.Now;
+        letter.targetId = userId;
+        letter.userId = player.user.user_id;
+        Player playerRequest = PlayerManager.get(userId);
+        if (playerRequest == null)
+        {
+            using (var conn = MYSQLManager.create())
+            {
+                var friendData = conn.QueryFirstOrDefault<PlayerData>("SELECT `BlockFriendLists` FROM `player` WHERE `player`.`user_id` = @user_id LIMIT 1;", new { user_id = userId });
+                if (friendData == null)
+                    player.redDialog("Người chơi không tồn tại");
+                else
+                {
+                    if (friendData.BlockFriendLists.Contains(player.user.user_id))
+                        player.redDialog("Gửi thư thất bại, do đối phương đã chặn bạn.");
+                    else
+                    {
+                        conn.Execute("INSERT INTO `letter`(`userId`, `targetId`, `time`, `Type`, `Title`, `ShortContent`, `Content`) VALUES (@userId,@targetId,@time,@Type,@Title,@ShortContent,@Content)", letter);
+                        player.okDialog("Gửi thư thành công");
+                    }
+                }
+                friendData = null;
+            }
+        }
+        else
+        {
+            playerRequest.playerData.addLetter(letter);
+            playerRequest.controller.sendHasLetter();
+            player.okDialog("Gửi thư thành công");
+        }
+    }
 
     public static Message letterMessage(sbyte cmd)
     {
@@ -359,8 +447,6 @@ public class GameController
         message.putInt(cmd);
         return message;
     }
-
-
 
     public void letter(sbyte subCmd, Message msg)
     {
@@ -386,6 +472,9 @@ public class GameController
                 break;
             case GopetCMD.LETTER_COMMAND_LIST_BLOCK_FRIEND:
                 MenuController.sendMenu(MenuController.MENU_LIST_BLOCK_FRIEND, player);
+                break;
+            case GopetCMD.LETTER_COMMAND_SEND_LETTER:
+                sendLetter(msg.readUTF(), $"{player.playerData.name}", $"Thư của {player.playerData.name} (Ngày: {Utilities.ToDateString(DateTime.Now)})", msg.readUTF(), Letter.FRIEND);
                 break;
         }
     }

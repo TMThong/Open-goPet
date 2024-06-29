@@ -95,7 +95,7 @@ public class Player : IHandleMessage
                         displayHeight = ms.reader().readInt();
                         language = ms.reader().readUTF();
                         Refcode = ms.reader().readUTF();
-                        if(ApplicationVersion > GopetManager.VERSION_133)
+                        if (ApplicationVersion > GopetManager.VERSION_133)
                         {
                             session.setClientOK(true);
                         }
@@ -376,17 +376,27 @@ Thread.Sleep(1000);
                     {
                         PlayerManager.put(this);
                         var connList = gameconn.Query<FriendRequest>("SELECT * FROM `request_add_friend` WHERE `request_add_friend`.`targetId` = @userId;", new { userId = user.user_id });
-                        if(connList.Any())
+                        if (connList.Any())
                         {
                             foreach (var item in connList)
                             {
                                 if (!playerData.BlockFriendLists.Contains(item.userId) && !playerData.RequestAddFriends.Contains(item.userId) && !playerData.ListFriends.Contains(item.userId))
                                 {
-                                     playerData.RequestAddFriends.Add(item.userId);
+                                    playerData.RequestAddFriends.Add(item.userId);
                                 }
 
                                 gameconn.Execute("DELETE FROM `request_add_friend` WHERE `request_add_friend`.`userId` = @userId AND `request_add_friend`.`targetId` = @targetId;", item);
                             }
+                        }
+
+                        var letterList = gameconn.Query<Letter>("SELECT * FROM `letter` WHERE targetId = @targetId;", new { targetId = playerData.user_id });
+                        if (letterList.Any())
+                        {
+                            foreach (var letter in letterList)
+                            {
+                                playerData.addLetter(letter);
+                            }
+                            gameconn.Execute("DELETE FROM `letter` WHERE `letter`.`targetId` = @targetId", new { targetId = playerData.user_id });
                         }
                     }
                     var kioskList = gameconn.Query("SELECT * FROM `kiosk_recovery` where user_id = @user_id", new { user_id = this.user.user_id });

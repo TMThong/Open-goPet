@@ -1826,6 +1826,47 @@ public partial class MenuController
                     }
                 }
                 break;
+            case MENU_LIST_REQUEST_ADD_FRIEND_OPTION:
+                {
+                    if (player.controller.objectPerformed.ContainsKey(OBJKEY_INDEX_FRIEND))
+                    {
+                        int friendIndex = player.controller.objectPerformed[OBJKEY_INDEX_FRIEND];
+                        if (friendIndex >= 0 && player.playerData.RequestAddFriends.Count > friendIndex)
+                        {
+                            int friendId = player.playerData.RequestAddFriends[friendIndex];
+                            Player playerRequest = PlayerManager.get(friendId);
+                            switch (index)
+                            {
+                                case 0:
+                                    {
+                                        if(playerRequest == null)
+                                        {
+                                            using(var conn = MYSQLManager.create())
+                                            {
+                                                FriendRequest friendRequest = new FriendRequest(player.user.user_id, friendId, DateTime.Now);
+                                                if(!conn.Query("SELECT `userId`, `targetId`, `time` FROM `request_accept_friend` WHERE userId = @userId, targetId = @targetId", friendRequest).Any())
+                                                {
+                                                    conn.Execute("INSERT INTO `request_accept_friend`(`userId`, `targetId`, `time`) VALUES (@userId,@targetId,@time)", friendRequest);
+                                                }
+                                            }
+                                            player.playerData.ListFriends.addIfAbsent(friendId);
+                                            player.playerData.RequestAddFriends.remove(friendId);
+                                            player.okDialog("Kết bạn thành công");
+                                        }
+                                        else
+                                        {
+                                            playerRequest.playerData.ListFriends.addIfAbsent(player.user.user_id);
+                                            player.playerData.ListFriends.addIfAbsent(friendId);
+                                            player.playerData.RequestAddFriends.remove(friendId);
+                                            player.okDialog("Kết bạn thành công");
+                                        }
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                }
+                break;
             default:
                 {
                     player.redDialog("KHONG TON TAI MENU NAY");
