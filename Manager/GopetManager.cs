@@ -543,14 +543,18 @@ public class GopetManager
     /// Dữ liệu góp quỹ bang
     /// </summary>
     public static readonly CopyOnWriteArrayList<ClanMemberDonateInfo> clanMemberDonateInfos = new(new ClanMemberDonateInfo[]
-            {new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 10, 1),
+            {
+            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 10, 1),
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 100, 10),
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 1000, 100),
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 10000,  1000),
+            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 100000,  10000),
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_CRYSTAL_ITEM, 10, 1),
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_CRYSTAL_ITEM, 100, 10),
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_CRYSTAL_ITEM, 1000, 100),
-            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_CRYSTAL_ITEM, 10000,  1000)});
+            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_CRYSTAL_ITEM, 10000,  1000),
+            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_CRYSTAL_ITEM, 100000,  10000)
+            });
     static GopetManager()
     {
         SqlMapper.AddTypeHandler(new JsonAdapter<int[]>());
@@ -884,9 +888,7 @@ public class GopetManager
 
         foreach (var entry in tierItem)
         {
-
             TierItem val = entry.Value;
-
             if (val.itemTemplateIdTier1 == tInfo.itemTemplateIdTier2)
             {
                 list.AddRange(findListTierId(val));
@@ -900,11 +902,9 @@ public class GopetManager
     /// </summary>
     public static void loadMarket()
     {
-
         using (var conn = MYSQLManager.create())
         {
             var marketData = conn.QueryFirstOrDefault("SELECT *, UNIX_TIMESTAMP(TimeSave) * 1000 AS milliseconds FROM `market` ORDER BY `market`.`TimeSave` DESC");
-
             if (marketData != null)
             {
                 MarketPlace.setKiosks(JsonConvert.DeserializeObject<Kiosk[]>(marketData.Data));
@@ -953,7 +953,6 @@ public class GopetManager
             case ROCK_ELEMENT: return "(rock)";
             case THUNDER_ELEMENT: return "(thunder)";
         }
-
         return string.Empty;
     }
 

@@ -108,6 +108,11 @@ public partial class MenuController
     public const int MENU_USE_ACHIEVEMNT = 1058;
     public const int MENU_USE_ACHIEVEMNT_OPTION = 1059;
     public const int MENU_LIST_FRIEND = 1060;
+    public const int MENU_LIST_FRIEND_OPTION = 1061;
+    public const int MENU_LIST_REQUEST_ADD_FRIEND = 1062;
+    public const int MENU_LIST_BLOCK_FRIEND = 1063;
+    public const int MENU_LIST_BLOCK_FRIEND_OPTION = 1064;
+    public const int MENU_LIST_REQUEST_ADD_FRIEND_OPTION = 1065;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -136,7 +141,6 @@ public partial class MenuController
         new AdminItemInfo("Xóa tất cả cánh", "Dùng sẽ hiện xóa tất cả cánh trong túi đồ", "items/4000766.png"),
         new AdminItemInfo("Buff cường hóa xăm", "Dùng sẽ khiến người chỉ định luôn cường hóa xăm thành công", "items/4000766.png"),
     };
-
     public const int ADMIN_INDEX_SET_PET_INFO = 0;
     public const int ADMIN_INDEX_TELE_TO_PLAYER = 1;
     public const int ADMIN_INDEX_COUNT_PLAYER = 2;
@@ -357,7 +361,8 @@ public partial class MenuController
     /// <summary>
     /// Kỹ năng mẫu mà người dùng muốn thuê
     /// </summary>
-    public const int OBJKEY_CLAN_SKILL_TEMPLATE_RENT = 49;
+    public const int OBJKEY_CLAN_SKILL_TEMPLATE_RENT = 50;
+    public const int OBJKEY_INDEX_FRIEND = 51;
     public const int DIALOG_CONFIRM_REMOVE_ITEM_EQUIP = 0;
     public const int DIALOG_CONFIRM_BUY_KIOSK_ITEM = 1;
     public const int DIALOG_ENCHANT = 3;

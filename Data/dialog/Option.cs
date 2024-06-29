@@ -20,6 +20,13 @@ namespace Gopet.Data.Dialog
             this.optionStatus = (sbyte)optionStatus;
         }
 
+        public Option(int optionId, string optionText, bool optionStatus)
+        {
+            this.optionId = optionId;
+            this.optionText = optionText;
+            this.optionStatus = optionStatus ? CAN_SELECT : CANT_SELECT;
+        }
+
         public Option(int optionId, string optionText)
         {
             this.optionId = optionId;

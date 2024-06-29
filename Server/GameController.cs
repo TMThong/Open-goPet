@@ -22,14 +22,12 @@ using Gopet.Data.user;
 [NonController]
 public class GameController
 {
-
     private Player player;
     private PetBattle petBattle;
     private PetUpgradeInfo petUpgradeInfo;
     public HashMap<int, dynamic> objectPerformed = new();
     private long changePlaceDelay = Utilities.CurrentTimeMillis;
     private ClanMember _clanMember;
-
 
     public TaskCalculator taskCalculator { get; set; }
 
@@ -382,6 +380,12 @@ public class GameController
                 break;
             case GopetCMD.LETTER_COMMAND_REQUEST_ADD_FRIEND_WITH_NAME:
                 requestAddFriend(msg.readUTF());
+                break;
+            case GopetCMD.LETTER_COMMAND_LIST_REQUEST_ADD_FRIEND:
+                MenuController.sendMenu(MenuController.MENU_LIST_REQUEST_ADD_FRIEND, player);
+                break;
+            case GopetCMD.LETTER_COMMAND_LIST_BLOCK_FRIEND:
+                MenuController.sendMenu(MenuController.MENU_LIST_BLOCK_FRIEND, player);
                 break;
         }
     }

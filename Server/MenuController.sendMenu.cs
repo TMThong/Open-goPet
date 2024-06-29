@@ -166,19 +166,68 @@ public partial class MenuController
                     player.controller.showMenuItem(menuId, TYPE_MENU_NONE, "Tất cả vật phẩm", menuInfos);
                 }
                 break;
+            case MENU_LIST_REQUEST_ADD_FRIEND:
+            case MENU_LIST_BLOCK_FRIEND:
             case MENU_LIST_FRIEND:
                 {
-                    JArrayList<MenuItemInfo> menuInfos = new();
-                    using (var conn = MYSQLManager.create())
+                    IEnumerable<int> ints = null;
+                    switch(menuId)
                     {
-                        var friendQuery = conn.Query($"SELECT  `name`, `avatarPath` FROM `player` WHERE `player`.`user_id` IN ({player.playerData.ListFriends.ToArray().Join(",")})");
-                        foreach (var item in friendQuery)
+                        case MENU_LIST_FRIEND:
+                            ints = player.playerData.ListFriends;
+                            break;
+                        case MENU_LIST_REQUEST_ADD_FRIEND:
+                            ints = player.playerData.RequestAddFriends;
+                            break;
+                        case MENU_LIST_BLOCK_FRIEND:
+                            ints = player.playerData.BlockFriendLists;
+                            break;
+                        default:
+                            return;
+                    } 
+                    JArrayList<MenuItemInfo> menuInfos = new();
+                    if(ints.Any())
+                    {
+                        using (var conn = MYSQLManager.create())
                         {
-                            MenuItemInfo menuItemInfo = new MenuItemInfo(item.name, "", item.avatarPath, true);
-                            menuInfos.add(menuItemInfo);
+                            var friendQuery = conn.Query($"SELECT  `name`, `avatarPath`, `LastTimeOnline` FROM `player` WHERE `player`.`user_id` IN ({ints.ToArray().Join(",")})");
+                            foreach (var item in friendQuery)
+                            {
+                                DateTime LastTimeOnline = item.LastTimeOnline;
+                                MenuItemInfo menuItemInfo = new MenuItemInfo(item.name, $"Lần cuối online: {Utilities.ToDateString(LastTimeOnline)}", item.avatarPath, true);
+                                menuInfos.add(menuItemInfo);
+                            }
                         }
                     }
                     player.controller.showMenuItem(menuId, TYPE_MENU_NONE, "Danh sách bạn bè", menuInfos);
+                }
+                break;
+            case MENU_LIST_FRIEND_OPTION:
+                {
+                    JArrayList<Option> list = new();
+                    list.Add(new Option(0, "Xem vị trí", true));  
+                    list.Add(new Option(1, "Xóa", true));  
+                    list.Add(new Option(2, "Xóa và chặn", true));  
+                    list.Add(new Option(3, "Gửi thư", true));  
+                    player.controller.sendListOption(menuId, "Bạn bè", string.Empty, list);
+                }
+                break;
+            case MENU_LIST_REQUEST_ADD_FRIEND_OPTION:
+                {
+                    JArrayList<Option> list = new();
+                    list.Add(new Option(0, "Chấp nhận", true));
+                    list.Add(new Option(1, "Từ chối", true));
+                    list.Add(new Option(2, "Từ chối và thêm vào sổ đen", true));
+                    list.Add(new Option(3, "Gửi thư", true));
+                    player.controller.sendListOption(menuId, "Danh sách chờ thêm bạn", string.Empty, list);
+                }
+                break;
+            case MENU_LIST_BLOCK_FRIEND_OPTION:
+                {
+                    JArrayList<Option> list = new();
+                    list.Add(new Option(0, "Bỏ chặn", true));
+                    list.Add(new Option(1, "Gửi thư", true));
+                    player.controller.sendListOption(menuId, "Sổ đen", string.Empty, list);
                 }
                 break;
             case MENU_UNEQUIP_SKIN:

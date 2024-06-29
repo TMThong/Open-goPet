@@ -356,6 +356,10 @@ namespace Gopet.Util
         public static string Join<T>(this IEnumerable<T> values, string char_)
         {
             string joinText = string.Empty;
+            if (!values.Any())
+            {
+                return string.Empty;
+            }
             for (int i = 0; i < values.Count(); i++)
             {
                 if (i + 1 >= values.Count())

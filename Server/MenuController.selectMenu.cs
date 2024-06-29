@@ -1737,6 +1737,95 @@ public partial class MenuController
                     }
                 }
                 break;
+            case MENU_LIST_REQUEST_ADD_FRIEND:
+            case MENU_LIST_BLOCK_FRIEND:
+            case MENU_LIST_FRIEND:
+                {
+                    player.controller.objectPerformed[OBJKEY_INDEX_FRIEND] = index;
+                    switch(menuId)
+                    {
+                        case MENU_LIST_FRIEND:
+                            sendMenu(MENU_LIST_FRIEND_OPTION, player);
+                            break;
+                        case MENU_LIST_BLOCK_FRIEND:
+                            sendMenu(MENU_LIST_BLOCK_FRIEND_OPTION, player);
+                            break;
+                        case MENU_LIST_REQUEST_ADD_FRIEND:
+                            sendMenu(MENU_LIST_REQUEST_ADD_FRIEND_OPTION, player);
+                            break;
+                    }
+                }
+                break;
+            case MENU_LIST_FRIEND_OPTION:
+                {
+                    if (player.controller.objectPerformed.ContainsKey(OBJKEY_INDEX_FRIEND))
+                    {
+                        int friendIndex = player.controller.objectPerformed[OBJKEY_INDEX_FRIEND];
+                        if (friendIndex >= 0 && player.playerData.ListFriends.Count > friendIndex)
+                        {
+                            int friendId = player.playerData.ListFriends[friendIndex];
+                            Player friend = PlayerManager.get(friendId);
+                            switch (index)
+                            {
+                                case 0:
+                                    {
+                                        if (friend != null)
+                                        {
+                                            GopetPlace gopetPlace = friend.getPlace();
+                                            if (gopetPlace != null)
+                                            {
+                                                player.okDialog($"Người chơi {friend.playerData.name} đang ở map {gopetPlace.map.mapTemplate.name} khu {gopetPlace.zoneID}");
+                                            }
+                                            else
+                                            {
+                                                player.redDialog($"Người chơi {friend.playerData.name} đang chuyển map");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            player.redDialog("Bạn của bạn đã offline");
+                                        }
+                                    }
+                                    break;
+                                case 1:
+                                    {
+                                        goto DELETE_FRIEND;
+                                    }
+                                    break;
+                                case 2:
+                                    {
+                                        player.playerData.BlockFriendLists.addIfAbsent(friendId);
+                                        goto DELETE_FRIEND;
+                                    }
+                                    break;
+                            }
+                            break;
+                        DELETE_FRIEND:
+                            {
+                                if (friend != null)
+                                {
+                                    friend.playerData.ListFriends.remove(player.user.user_id);
+                                    player.playerData.ListFriends.remove(friendId);
+                                    player.okDialog("Xóa bạn thành công");
+                                }
+                                else
+                                {
+                                    using (var conn = MYSQLManager.create())
+                                    {
+                                        FriendRequest friendRequest = conn.QueryFirstOrDefault<FriendRequest>("SELECT * FROM `request_remove_friend` WHERE `userId` = @userId AND `targetId` = @targetId;", new { userId = player.user.user_id, targetId = friendId });
+                                        if (friendRequest == null)
+                                        {
+                                            conn.Execute("INSERT INTO `request_remove_friend`(`userId`, `targetId`, `time`) VALUES (@userId,@targetId,@time)", new FriendRequest(player.user.user_id, friendId, DateTime.Now));
+                                        }
+                                    }
+                                    player.playerData.ListFriends.remove(friendId);
+                                    player.okDialog("Xóa bạn thành công");
+                                }
+                            }
+                        }
+                    }
+                }
+                break;
             default:
                 {
                     player.redDialog("KHONG TON TAI MENU NAY");
