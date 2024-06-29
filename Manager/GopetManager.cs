@@ -699,9 +699,7 @@ public class GopetManager
                 itemInfoIsPercent.put(ID, isPercent);
                 itemInfoCanFormat.put(ID, canFormat);
             }
-
             ServerMonitor.LogInfo("Tải dữ liệu các dòng từ cơ sở dữ liệu OK");
-
             var listSkill = conn.Query("SELECT * FROM `skill`");
             foreach (var skill in listSkill)
             {
@@ -864,16 +862,12 @@ public class GopetManager
         }
         foreach (var entry in tierItem)
         {
-
             TierItem val = entry.Value;
-
             if (tierItemHashMap.ContainsKey(val.itemTemplateIdTier1) || tierItemHashMap.ContainsKey(val.itemTemplateIdTier2))
             {
                 continue;
             }
-
             JArrayList<int> map = findListTierId(val);
-
             tierItemHashMap.put(val.itemTemplateIdTier1, 1);
             for (int i = 0; i < map.Count; i++)
             {
@@ -881,7 +875,6 @@ public class GopetManager
                 tierItemHashMap.put(get, i + 2);
             }
         }
-
     }
 
     public static JArrayList<int> findListTierId(TierItem tInfo)
