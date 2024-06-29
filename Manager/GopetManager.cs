@@ -368,12 +368,12 @@ public class GopetManager
     /**
      * Id các map được dịch chuyển
      */
-    public static int[] TeleMapId = new int[] { 11, 19, 24, 22, 27, 26, 28 };
+    public static readonly int[] TeleMapId = new int[] { 11, 19, 24, 22, 27, 26, 28 };
     //public static int[] TeleMapId = new int[] { 11, 19, 24, 22 };
     /**
      * Giá nâng kỹ năng theo từng giai đoạn
      */
-    public static int[] PriceUPSkill = new int[] { 3000, 6000, 10000, 14000, 18000, 22000, 26000, 30000, 34000, 38000 };
+    public static readonly int[] PriceUPSkill = new int[] { 3000, 6000, 10000, 14000, 18000, 22000, 26000, 30000, 34000, 38000 };
 
     /**
      * Số lượt cần để hồi xong 1 kỹ năng
@@ -388,7 +388,7 @@ public class GopetManager
     /**
      * Id các pet trong danh sách nhận pet miễn phí
      */
-    public static int[] petFreeIds = new int[] { 1, 2, 3, 5, 6 };
+    public static readonly int[] petFreeIds = new int[] { 1, 2, 3, 5, 6 };
 
     /**
      * Map mẫu
@@ -435,7 +435,7 @@ public class GopetManager
     public const int ITEM_OP_HP = 7;
     public const int ITEM_OP_MP = 8;
 
-    public const String EMPTY_IMG_PATH = "dialog/empty.png";
+    public const string EMPTY_IMG_PATH = "dialog/empty.png";
     public const sbyte KIOSK_HAT = 0;
     public const sbyte KIOSK_WEAPON = 1;
     public const sbyte KIOSK_AMOUR = 2;
@@ -449,11 +449,11 @@ public class GopetManager
     public const int TYPE_SELECT_ITEM_UP_SKILL = 9;
     public const int TYPE_SELECT_ITEM_UP_TIER = 123;
     public const long CHANGE_CHANNEL_DELAY = 30000;
-    public static int[] ENCHANT_INFO = new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 20 };
-    public static float[] PERCENT_ENCHANT = new float[] { 90f, 80f, 70f, 60f, 50f, 30f, 20f, 5f, -10f, -20f };
-    public static float[] DISPLAY_PERCENT_ENCHANT = new float[] { 90f, 80f, 70f, 60f, 50f, 30f, 20f, 15f, 10f, 5f };
-    public static float[] PERCENT_UP_SKILL = new float[] { 90, 80, 60, 50, 40, 30, 10, 5, 2, 0, 0 };
-    public static int[] PRICE_ENCHANT = new int[] { 5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000, 50000 };
+    public static readonly int[] ENCHANT_INFO = new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 20 };
+    public static readonly float[] PERCENT_ENCHANT = new float[] { 90f, 80f, 70f, 60f, 50f, 30f, 20f, 5f, -10f, -20f };
+    public static readonly float[] DISPLAY_PERCENT_ENCHANT = new float[] { 90f, 80f, 70f, 60f, 50f, 30f, 20f, 15f, 10f, 5f };
+    public static readonly float[] PERCENT_UP_SKILL = new float[] { 90, 80, 60, 50, 40, 30, 10, 5, 2, 0, 0 };
+    public static readonly int[] PRICE_ENCHANT = new int[] { 5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000, 50000 };
     public const int PERCENT_LVL_ITEM = 5;
     public const int DELAY_TURN_PET_BATTLE = 3000;
     public const int PRICE_UP_TIER_ITEM = 100000;
@@ -475,14 +475,14 @@ public class GopetManager
     public const int GOLD_BAR_ID = 187;
     public const int BLOOD_GEM_ID = 188;
     public const int CRYSTAL_ID = 318;
-    public static int[] ID_BOSS_CHALLENGE = new int[] { 11, 12, 13, 14, 15 };
-    public static int[] ID_BOSS_TASK = new int[] { 16 };
-    public static int[] LVL_REQUIRE_PET_TATTO = new int[] { 3, 5, 10, 15, 20, 25, 30, 35 };
-    public static int[] SPECIAL_PET_TO_LEARN_ALL_SKILL = new int[] { 3091 };
+    public static readonly int[] ID_BOSS_CHALLENGE = new int[] { 11, 12, 13, 14, 15 };
+    public static readonly int[] ID_BOSS_TASK = new int[] { 16 };
+    public static readonly int[] LVL_REQUIRE_PET_TATTO = new int[] { 3, 5, 10, 15, 20, 25, 30, 35 };
+    public static readonly int[] SPECIAL_PET_TO_LEARN_ALL_SKILL = new int[] { 3091 };
     public const int MOB_NEED_CAPTCHA = 125;
     public const long TIME_BOSS_DISPOINTED = 1000 * 60 * 10;
-    public static float[] PERCENT_OF_ENCHANT_GEM = new float[] { 70f, 65f, 60f, 55f, 50f, 40f, 30f, 20f, 10f, 2f };
-    public static float[] PERCENT_OF_ENCHANT_TATOO = new float[] { 60f, 55f, 50f, 40f, 30f, 20f, 15f, 10f, 5f, 2f };
+    public static readonly float[] PERCENT_OF_ENCHANT_GEM = new float[] { 70f, 65f, 60f, 55f, 50f, 40f, 30f, 20f, 10f, 2f };
+    public static readonly float[] PERCENT_OF_ENCHANT_TATOO = new float[] { 60f, 55f, 50f, 40f, 30f, 20f, 15f, 10f, 5f, 2f };
     public const int PRICE_KEEP_GEM = 5000;
     public const int MAX_SLOT_SHOP_ARENA = 6;
     public const int DEFAULT_FREE_RESET_ARENA_SHOP = 2;
