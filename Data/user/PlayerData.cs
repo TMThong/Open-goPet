@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 public class PlayerData
 {
     public sbyte gender { get; set; } = 3;
-    public String name { get; set; }
+    public string name { get; set; }
     public long gold { get; set; }
     public long coin { get; set; }
     public long spendGold { get; set; }
@@ -43,7 +43,7 @@ public class PlayerData
     public bool isAdmin { get; set; } = false;
     public ShopArena shopArena { get; set; }
     public int clanId { get; set; }
-    public String avatarPath { get; set; }
+    public string avatarPath { get; set; }
 
     public int AccumulatedPoint { get; set; }
 
@@ -74,7 +74,7 @@ public class PlayerData
     }
 
 
-    public static void create(int user_id, String name, sbyte gender)
+    public static void create(int user_id, string name, sbyte gender)
     {
         using (MySqlConnection conn = MYSQLManager.create())
         {
