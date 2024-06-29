@@ -217,6 +217,7 @@ public partial class MenuController
                     JArrayList<Option> list = new();
                     list.Add(new Option(0, "Chấp nhận", true));
                     list.Add(new Option(1, "Từ chối", true));
+                    list.Add(new Option(3, "Từ chối tất cả", true));
                     list.Add(new Option(2, "Từ chối và thêm vào sổ đen", true));
                     player.controller.sendListOption(menuId, "Danh sách chờ thêm bạn", string.Empty, list);
                 }
@@ -225,6 +226,7 @@ public partial class MenuController
                 {
                     JArrayList<Option> list = new();
                     list.Add(new Option(0, "Bỏ chặn", true));
+                    list.Add(new Option(1, "Bỏ chặn tất cả", true));
                     player.controller.sendListOption(menuId, "Sổ đen", string.Empty, list);
                 }
                 break;

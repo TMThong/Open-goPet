@@ -1742,7 +1742,7 @@ public partial class MenuController
             case MENU_LIST_FRIEND:
                 {
                     player.controller.objectPerformed[OBJKEY_INDEX_FRIEND] = index;
-                    switch(menuId)
+                    switch (menuId)
                     {
                         case MENU_LIST_FRIEND:
                             sendMenu(MENU_LIST_FRIEND_OPTION, player);
@@ -1798,6 +1798,7 @@ public partial class MenuController
                                         goto DELETE_FRIEND;
                                     }
                                     break;
+                                
                             }
                             break;
                         DELETE_FRIEND:
@@ -1839,12 +1840,12 @@ public partial class MenuController
                             {
                                 case 0:
                                     {
-                                        if(playerRequest == null)
+                                        if (playerRequest == null)
                                         {
-                                            using(var conn = MYSQLManager.create())
+                                            using (var conn = MYSQLManager.create())
                                             {
                                                 FriendRequest friendRequest = new FriendRequest(player.user.user_id, friendId, DateTime.Now);
-                                                if(!conn.Query("SELECT `userId`, `targetId`, `time` FROM `request_accept_friend` WHERE userId = @userId, targetId = @targetId", friendRequest).Any())
+                                                if (!conn.Query("SELECT `userId`, `targetId`, `time` FROM `request_accept_friend` WHERE userId = @userId, targetId = @targetId", friendRequest).Any())
                                                 {
                                                     conn.Execute("INSERT INTO `request_accept_friend`(`userId`, `targetId`, `time`) VALUES (@userId,@targetId,@time)", friendRequest);
                                                 }
@@ -1860,6 +1861,57 @@ public partial class MenuController
                                             player.playerData.RequestAddFriends.remove(friendId);
                                             player.okDialog("Kết bạn thành công");
                                         }
+                                    }
+                                    break;
+                                case 1:
+                                    {
+                                        goto DeleteRequestAddFriends;
+                                    }
+                                    break;
+                                case 2:
+                                    {
+                                        player.playerData.BlockFriendLists.addIfAbsent(friendId);
+                                        goto DeleteRequestAddFriends;
+                                    }
+                                    break;
+                                case 3:
+                                    {
+                                        player.playerData.ListFriends.Clear();
+                                        player.okDialog("Xóa bạn thành công");
+                                    }
+                                    break;
+
+                            }
+                        DeleteRequestAddFriends:
+                            {
+                                player.playerData.RequestAddFriends.remove(friendId);
+                                player.okDialog("Xóa thành công");
+                            }
+                        }
+                    }
+                }
+                break;
+
+            case MENU_LIST_BLOCK_FRIEND_OPTION:
+                {
+                    if (player.controller.objectPerformed.ContainsKey(OBJKEY_INDEX_FRIEND))
+                    {
+                        int friendIndex = player.controller.objectPerformed[OBJKEY_INDEX_FRIEND];
+                        if (friendIndex >= 0 && player.playerData.BlockFriendLists.Count > friendIndex)
+                        {
+                            int friendId = player.playerData.BlockFriendLists[friendIndex];
+                            switch (index)
+                            {
+                                case 0:
+                                    {
+                                        player.playerData.BlockFriendLists.remove(friendId);
+                                        player.okDialog("Bỏ chặn thành công");
+                                    }
+                                    break;
+                                case 1:
+                                    {
+                                        player.playerData.BlockFriendLists.Clear();
+                                        player.okDialog("Bỏ chặn tất cả thành công");
                                     }
                                     break;
                             }
