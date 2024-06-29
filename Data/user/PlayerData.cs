@@ -65,6 +65,8 @@ public class PlayerData
     public CopyOnWriteArrayList<int> BlockFriendLists { get; set; } = new();
     public CopyOnWriteArrayList<int> ListFriends { get; set; } = new();
 
+    public DateTime LastTimeOnline { get; set; }
+
     public PlayerData()
     {
         x = 24 * 4;
@@ -92,6 +94,7 @@ public class PlayerData
 
     public static void saveStatic(PlayerData playerData, MySqlConnection conn)
     {
+        playerData.LastTimeOnline = DateTime.Now;
         conn.Execute(@"     Update `player` SET 
                             pets = @pets,
                             petSelected = @petSelected,
@@ -114,7 +117,7 @@ public class PlayerData
                             spendGold = @spendGold,
                             coin = @coin,
                             gold = @gold,
-                            items = @items ,
+                            items = @items,
                             favouriteList = @favouriteList,
                             numUseEnergy = @numUseEnergy,
                             AccumulatedPoint = @AccumulatedPoint,
@@ -127,7 +130,8 @@ public class PlayerData
                             letters = @letters,
                             RequestAddFriends = @RequestAddFriends,
                             BlockFriendLists = @BlockFriendLists,
-                            ListFriends = @ListFriends
+                            ListFriends = @ListFriends,
+                            LastTimeOnline = @LastTimeOnline
                             WHERE ID = @ID", playerData);
     }
 
