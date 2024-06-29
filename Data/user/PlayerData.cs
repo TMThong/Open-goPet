@@ -211,4 +211,9 @@ public class PlayerData
         letters.BinaryObjectAdd(letter);
         letters.Sort(new BinaryCompare<Letter>());
     }
+
+    public Letter FindLetter(int letterId)
+    {
+        return letters.BinarySearch(letterId);
+    }
 }

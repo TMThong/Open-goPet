@@ -433,6 +433,9 @@ public partial class MenuController
             case OP_USE_ACHIEVEMENT:
                 sendMenu(MENU_USE_ACHIEVEMNT, player);
                 break;
+            case OP_SHOP_GIAN_THUONG:
+                showShop(MenuController.SHOP_GIAN_THUONG,player);
+                break;
             default:
                 player.redDialog("Tính năng đang được xây dựng"); break;
         }

@@ -590,6 +590,7 @@ public class GopetManager
         shopTemplate.put(MenuController.SHOP_FOOD, new ShopTemplate(MenuController.SHOP_FOOD));
         shopTemplate.put(MenuController.SHOP_CLAN, new ShopTemplate(MenuController.SHOP_CLAN));
         shopTemplate.put(MenuController.SHOP_ENERGY, new ShopTemplate(MenuController.SHOP_ENERGY));
+        shopTemplate.put(MenuController.SHOP_GIAN_THUONG, new ShopTemplate(MenuController.SHOP_GIAN_THUONG));
     }
 
     public static void readMobLvl(String cmd, HashMap<int, MobLvInfo> hashMap)

@@ -140,6 +140,7 @@ public partial class MenuController
         new AdminItemInfo("Cập nhật máy chủ", "Dùng sẽ hiện những server ẩn đi", "items/4000766.png"),
         new AdminItemInfo("Xóa tất cả cánh", "Dùng sẽ hiện xóa tất cả cánh trong túi đồ", "items/4000766.png"),
         new AdminItemInfo("Buff cường hóa xăm", "Dùng sẽ khiến người chỉ định luôn cường hóa xăm thành công", "items/4000766.png"),
+        new AdminItemInfo("Vị trí đứng", "Dùng để lấy tọa độ trên map", "items/4000766.png"),
     };
     public const int ADMIN_INDEX_SET_PET_INFO = 0;
     public const int ADMIN_INDEX_TELE_TO_PLAYER = 1;
@@ -167,6 +168,7 @@ public partial class MenuController
     public const int ADMIN_INDEX_SHOW_LIST_SERVER = 23;
     public const int ADMIN_INDEX_DELETE_ALL_WING = 24;
     public const int ADMIN_INDEX_BUFF_ENCHANT_TATTOO = 25;
+    public const int ADMIN_INDEX_PLAYER_LOCATION = 26;
 
     /**
      * Danh sách nhận pet miễn phí
@@ -278,6 +280,7 @@ public partial class MenuController
     public const int OP_EVENT_SUMMER_2024_TOP_KITE_VIP = 75;
     public const int OP_EVENT_SUMMER_2024_GUIDE = 76;
     public const int OP_USE_ACHIEVEMENT = 77;
+    public const int OP_SHOP_GIAN_THUONG = 78;
     public const int OP_TRADE_GIFT_COIN = 1000000000;
     public const int OP_TRADE_GIFT_GOLD = 1000000001;
     /**
@@ -307,6 +310,7 @@ public partial class MenuController
 
     public const sbyte SHOP_CLAN = 10;
     public const sbyte SHOP_ENERGY = 11;
+    public const sbyte SHOP_GIAN_THUONG = 12;
 
     public const int OBJKEY_REMOVE_ITEM_EQUIP = 0;
     public const int OBJKEY_KIOSK_ITEM = 1;

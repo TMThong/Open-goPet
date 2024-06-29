@@ -41,6 +41,9 @@ public class ShopTemplate  {
             case MenuController.SHOP_ENERGY:
                 name = "Cửa hàng năng lượng";
                 break;
+            case MenuController.SHOP_GIAN_THUONG:
+                name = "Cửa hàng gian thương";
+                break;
             default:
                 name = "Error shop type " + type;
                 break;

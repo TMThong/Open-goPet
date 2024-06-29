@@ -362,7 +362,7 @@ public class GameController
 
     public void sendLetter(string name, string title, string shortContent, string content, sbyte type)
     {
-        if(name == player.playerData.name)
+        if (name == player.playerData.name)
         {
             player.redDialog("Tính bug?");
             return;
@@ -476,6 +476,14 @@ public class GameController
             case GopetCMD.LETTER_COMMAND_SEND_LETTER:
                 sendLetter(msg.readUTF(), $"{player.playerData.name}", $"Thư của {player.playerData.name} (Ngày: {Utilities.ToDateString(DateTime.Now)})", msg.readUTF(), Letter.FRIEND);
                 break;
+            case GopetCMD.LETTER_COMMAND_SET_MARK:
+                var letter = player.playerData.FindLetter(msg.readInt());
+                if (letter != null)
+                {
+                    letter.IsMark = true;
+                    sendHasLetter();
+                }
+                break;
         }
     }
 
@@ -582,7 +590,7 @@ public class GameController
         if (player.playerData != null)
         {
             Message message = letterMessage(GopetCMD.LETTER_COMMAND_HAS_LETTER);
-            message.putsbyte(player.playerData.letters.IsEmpty ? 0 : 1);
+            message.putsbyte(player.playerData.letters.Where(p => !p.IsMark).Count() <= 0 ? 0 : 1);
             message.cleanup();
             player.session.sendMessage(message);
         }

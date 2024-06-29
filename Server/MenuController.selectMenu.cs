@@ -627,6 +627,7 @@ public partial class MenuController
                     }
                 }
                 break;
+            case SHOP_GIAN_THUONG:
             case SHOP_ENERGY:
             case SHOP_CLAN:
             case SHOP_WEAPON:
@@ -1516,6 +1517,9 @@ public partial class MenuController
                         case ADMIN_INDEX_BUFF_ENCHANT_TATTOO:
                             player.controller.showInputDialog(INPUT_TYPE_NAME_BUFF_ENCHANT_TATTOO, "Buff cường hóa xăm", new String[] { "Tên nhân vật :" });
                             break;
+                        case ADMIN_INDEX_PLAYER_LOCATION:
+                            player.okDialog($"{player.playerData.x}|{player.playerData.y}");
+                            break;
                     }
                 }
                 break;
@@ -1798,7 +1802,7 @@ public partial class MenuController
                                         goto DELETE_FRIEND;
                                     }
                                     break;
-                                
+
                             }
                             break;
                         DELETE_FRIEND:
