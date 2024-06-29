@@ -143,7 +143,6 @@ public class PlayerData
         }
     }
 
-
     public CopyOnWriteArrayList<Item> this[sbyte type]
     {
         get
@@ -181,7 +180,7 @@ public class PlayerData
         }
         list.Add(item);
         list.BinaryObjectAdd(item);
-        list.Sort(new InventoryItemComparer());
+        list.Sort(new BinaryCompare<Item>());
     }
 
     public void removeItem(sbyte type, Item item)
@@ -200,6 +199,6 @@ public class PlayerData
     {
         achievements.Add(achievement);
         achievements.BinaryObjectAdd(achievement);
-        achievements.Sort(new Achievement.AchievementComparer());
+        achievements.Sort(new BinaryCompare<Achievement>());
     }
 }

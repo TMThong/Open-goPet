@@ -36,14 +36,6 @@ namespace Gopet.Data.user
         [JsonIgnore]
         public Achievement Instance => this;
 
-        internal class AchievementComparer : IComparer<Achievement>
-        {
-            public int Compare(Achievement? obj1, Achievement? obj2)
-            {
-                return obj1.Id - obj2.Id;
-            }
-        }
-
         public int GetId()
         {
             return Id;
