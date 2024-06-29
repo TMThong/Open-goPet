@@ -178,6 +178,7 @@ public class GopetCMD
     public const sbyte LETTER_COMMAND_LIST_BLOCK_FRIEND = 10;
     public const sbyte LETTER_COMMAND_SEND_LETTER = 15;
     public const sbyte LETTER_COMMAND_SET_MARK = 16;
+    public const sbyte LETTER_COMMAND_REMOVE_LETTER = 17;
     public const sbyte LETTER_COMMAND_HAS_LETTER = 18;
     public const sbyte LETTER_BOX = 13;
 }

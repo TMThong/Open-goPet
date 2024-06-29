@@ -418,7 +418,6 @@ Thread.Sleep(1000);
                     gameconn.Execute("DELETE FROM `kiosk_recovery` where user_id = @user_id", new { user_id = this.user.user_id });
                     loginOK();
                     controller.LoadMap();
-                    controller.sendMail();
                     controller.updateAvatar();
                     if (playerData != null)
                     {

@@ -477,11 +477,22 @@ public class GameController
                 sendLetter(msg.readUTF(), $"{player.playerData.name}", $"Thư của {player.playerData.name} (Ngày: {Utilities.ToDateString(DateTime.Now)})", msg.readUTF(), Letter.FRIEND);
                 break;
             case GopetCMD.LETTER_COMMAND_SET_MARK:
-                var letter = player.playerData.FindLetter(msg.readInt());
-                if (letter != null)
                 {
-                    letter.IsMark = true;
-                    sendHasLetter();
+                    var letter = player.playerData.FindLetter(msg.readInt());
+                    if (letter != null)
+                    {
+                        letter.IsMark = true;
+                        sendHasLetter();
+                    }
+                }
+                break;
+            case GopetCMD.LETTER_COMMAND_REMOVE_LETTER:
+                {
+                    var letter = player.playerData.FindLetter(msg.readInt());
+                    if (letter != null)
+                    {
+                        player.playerData.letters.Remove(letter);
+                    }
                 }
                 break;
         }
@@ -4012,18 +4023,6 @@ public class GameController
             m.putUTF(item.getEquipName());
             m.putInt(item.lvl);
         }
-        m.cleanup();
-        player.session.sendMessage(m);
-    }
-
-    public void sendMail()
-    {
-        Message m = new Message(GopetCMD.GL_MAIL);
-        m.putsbyte(1);
-        m.putInt(Utilities.nextInt(200000000));
-        m.putUTF("Lời chào của Game");
-        m.putUTF("Game gopet là một game nuôi thú ảo rất phổ biến trên điện thoại di động vào khoảng năm 2010-2015. Game này cho phép người chơi chọn một con thú ảo, chăm sóc, huấn luyện và thi đấu với các con thú khác. Game gopet có nhiều loại thú đa dạng, từ những con vật quen thuộc như mèo, chó, gấu, khỉ... cho đến những con thú kỳ lạ như rồng, phượng hoàng, kỳ lân... Người chơi có thể tùy biến ngoại hình, kỹ năng và trang bị cho con thú của mình. Game gopet cũng có nhiều hoạt động hấp dẫn như săn bắt, khám phá, trồng trọt, kết bạn, kết hôn... Game gopet đã thu hút hàng triệu người chơi trên khắp Việt Nam và trở thành một phần của tuổi thơ của nhiều người.");
-        m.putsbyte(0);
         m.cleanup();
         player.session.sendMessage(m);
     }
