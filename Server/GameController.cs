@@ -1273,7 +1273,6 @@ public class GameController
 
     public void sendMyPetInfo()
     {
-
         if (player.playerData.petSelected != null)
         {
             Message message = new Message(GopetCMD.PET_SERVICE);
@@ -1286,7 +1285,6 @@ public class GameController
             message.putInt(player.playerData.petSelected.maxHp);
             //max Mp
             message.putInt(player.playerData.petSelected.maxMp);
-
             message.cleanup();
             player.session.sendMessage(message);
         }
@@ -3979,8 +3977,6 @@ public class GameController
         }
         return popups;
     }
-
-
 
     public void showImageDialog(int id, int w, int h, String image, int frameNum, int frameDelay)
     {
