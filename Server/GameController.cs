@@ -3982,13 +3982,7 @@ public class GameController
 
 
 
-    public void showImageDialog(
-            int id,
-            int w,
-            int h,
-            String image,
-            int frameNum,
-            int frameDelay)
+    public void showImageDialog(int id, int w, int h, String image, int frameNum, int frameDelay)
     {
         Message m = new Message(GopetCMD.COMMAND_GUIDER);
         m.putsbyte(11);
