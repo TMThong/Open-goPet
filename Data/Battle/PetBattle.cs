@@ -440,7 +440,7 @@ namespace Gopet.Battle
             }
             else
             {
-                Message message = GameController.messagePetSerive(GopetCMD.PLAYER_BATTLE);
+                Message message = GameController.messagePetService(GopetCMD.PLAYER_BATTLE);
                 message.putInt(Utilities.round(delaTimeTurn - Utilities.CurrentTimeMillis));
                 message.putInt((int)GopetManager.TimeNextTurn);
                 message.putInt(activePlayer.user.user_id);
@@ -455,7 +455,7 @@ namespace Gopet.Battle
 
         public void sendStartFightPlayer()
         {
-            Message message = GameController.messagePetSerive(GopetCMD.PLAYER_BATTLE);
+            Message message = GameController.messagePetService(GopetCMD.PLAYER_BATTLE);
             message.putInt(Utilities.round(delaTimeTurn - Utilities.CurrentTimeMillis));
             message.putInt((int)GopetManager.TimeNextTurn);
             message.putInt(activePlayer.user.user_id);
@@ -467,7 +467,7 @@ namespace Gopet.Battle
             message.cleanup();
             activePlayer.session.sendMessage(message);
 
-            message = GameController.messagePetSerive(GopetCMD.PLAYER_BATTLE);
+            message = GameController.messagePetService(GopetCMD.PLAYER_BATTLE);
             message.putInt(Utilities.round(delaTimeTurn - Utilities.CurrentTimeMillis));
             message.putInt((int)GopetManager.TimeNextTurn);
             message.putInt(passivePlayer.user.user_id);

@@ -1224,7 +1224,7 @@ public class GameController
         if (line_desc == null)
             line_desc = new string[] { text };
         if (line_desc.Length >= sbyte.MaxValue) throw new UnsupportedOperationException("Chi duoc dung 7bit thoi");
-        Message m = messagePetSerive(GopetCMD.INFO_UP_TIER_PET);
+        Message m = messagePetService(GopetCMD.INFO_UP_TIER_PET);
         m.putUTF(text);
         m.putsbyte(line_desc.Length);
         for (int i = 0; i < line_desc.Length; i++)
@@ -1526,17 +1526,31 @@ public class GameController
         {
             return;
         }
-        Message message = messagePetSerive(GopetCMD.STAR_INFO);
+        Message message = messagePetService(GopetCMD.STAR_INFO);
         //star
         message.putInt(player.playerData.star);
         message.cleanup();
         player.session.sendMessage(message);
-
-        message = messagePetSerive(GopetCMD.MONEY_INFO);
+        message = messagePetService(GopetCMD.MONEY_INFO);
         //star
         message.putInt(player.playerData.star);
         message.putlong(player.playerData.gold);
         message.putlong(player.playerData.coin);
+        message.putInt(player.playerData.MoneyDisplays.Count);
+        foreach (var itemId in player.playerData.MoneyDisplays)
+        {
+            Item item = player.controller.selectItemsbytemp(itemId, GopetManager.MONEY_INVENTORY);
+            if(item == null)
+            {
+                message.putUTF(GopetManager.itemTemplate[itemId].iconPath);
+                message.putlong(0);
+            }
+            else
+            {
+                message.putUTF(GopetManager.itemTemplate[itemId].iconPath);
+                message.putlong(item.count);
+            }
+        }
         message.cleanup();
         player.session.sendMessage(message);
     }
@@ -1610,7 +1624,7 @@ public class GameController
         Pet pet = player.getPet();
         if (pet != null)
         {
-            Message message = messagePetSerive(GopetCMD.GYM);
+            Message message = messagePetService(GopetCMD.GYM);
             message.putInt(pet.getPetIdTemplate());
             message.putUTF(pet.getPetTemplate().frameImg);
             message.putUTF(pet.getNameWithStar());
@@ -1686,7 +1700,7 @@ public class GameController
         Pet pet = player.getPet();
         if (pet != null)
         {
-            Message message = messagePetSerive(GopetCMD.UP_TIEM_NANG);
+            Message message = messagePetService(GopetCMD.UP_TIEM_NANG);
             message.putInt(pet.getPetIdTemplate());
             message.putInt(pet.getStr());
             message.putInt(pet.getAgi());
@@ -1723,7 +1737,7 @@ public class GameController
             }
             if (pet != null)
             {
-                Message message = messagePetSerive(GopetCMD.EQUIP_INFO);
+                Message message = messagePetService(GopetCMD.EQUIP_INFO);
                 message.putInt(user_id);
                 message.putInt(pet.petId);
                 message.putUTF(pet.getPetTemplate().frameImg);
@@ -1808,7 +1822,7 @@ public class GameController
 
     public void resendPetEquipInfo(Item item)
     {
-        Message m = messagePetSerive(GopetCMD.ON_UNQUIP_GEM);
+        Message m = messagePetService(GopetCMD.ON_UNQUIP_GEM);
         writeItemEquip(item, m, true);
         m.cleanup();
         player.session.sendMessage(m);
@@ -2113,7 +2127,7 @@ public class GameController
 
     public void sendItemSelectTattoMaterialToEnchant(int id, string icon, string name)
     {
-        Message m = messagePetSerive(GopetCMD.TATTOO);
+        Message m = messagePetService(GopetCMD.TATTOO);
         m.putsbyte(7);
         m.putInt(id);
         m.putUTF(icon);
@@ -2199,7 +2213,7 @@ public class GameController
                         pet.equip.add(itemId);
                         item.petEuipId = pet.petId;
                         pet.applyInfo(player);
-                        Message message = messagePetSerive(GopetCMD.USE_EQUIP_ITEM);
+                        Message message = messagePetService(GopetCMD.USE_EQUIP_ITEM);
                         message.putsbyte(1);
                         message.putInt(itemId);
                         message.cleanup();
@@ -2230,7 +2244,7 @@ public class GameController
         }
     }
 
-    public static Message messagePetSerive(sbyte subCmd)
+    public static Message messagePetService(sbyte subCmd)
     {
         Message message = new Message(GopetCMD.PET_SERVICE);
         message.putsbyte(subCmd);
@@ -2287,7 +2301,7 @@ public class GameController
                     item.petEuipId = -1;
                     pet.equip.remove((Object)item.itemId);
                     pet.applyInfo(player);
-                    Message message = messagePetSerive(GopetCMD.UNEQUIP_ITEM);
+                    Message message = messagePetService(GopetCMD.UNEQUIP_ITEM);
                     message.putsbyte(1);
                     message.putInt(itemId);
                     message.cleanup();
@@ -2309,7 +2323,7 @@ public class GameController
 
     public void sendPlaceTime(int time)
     {
-        Message message = messagePetSerive(GopetCMD.TIME_PLACE);
+        Message message = messagePetService(GopetCMD.TIME_PLACE);
         message.putInt(time);
         message.cleanup();
         player.session.sendMessage(message);
@@ -2317,7 +2331,7 @@ public class GameController
 
     public void showBigTextEff(String text)
     {
-        Message message = messagePetSerive(GopetCMD.SHOW_BIG_TEXT_EFF);
+        Message message = messagePetService(GopetCMD.SHOW_BIG_TEXT_EFF);
         message.putUTF(text);
         message.cleanup();
         player.session.sendMessage(message);
@@ -2325,7 +2339,7 @@ public class GameController
 
     public static Message clanMessage(sbyte subCmd)
     {
-        Message m = messagePetSerive(GopetCMD.CLAN);
+        Message m = messagePetService(GopetCMD.CLAN);
         m.putsbyte(subCmd);
         return m;
     }
@@ -2501,7 +2515,7 @@ public class GameController
 
     public void showUpgradePet()
     {
-        Message message = messagePetSerive(GopetCMD.SHOW_UPGRADE_PET);
+        Message message = messagePetService(GopetCMD.SHOW_UPGRADE_PET);
         message.cleanup();
         player.session.sendMessage(message);
     }
@@ -2523,7 +2537,7 @@ public class GameController
             else
             {
                 player.playerData.removeItem(GopetManager.EQUIP_PET_INVENTORY, item);
-                Message message = messagePetSerive(GopetCMD.REMOVE_ITEM_EQUIP);
+                Message message = messagePetService(GopetCMD.REMOVE_ITEM_EQUIP);
                 message.putInt(itemId);
                 message.cleanup();
                 player.session.sendMessage(message);
@@ -2619,7 +2633,7 @@ public class GameController
 
     public void addPetUpgrade(Pet pet, sbyte typePetUpgrade, int petindex)
     {
-        Message m = messagePetSerive(GopetCMD.PET_UPGRADE_PET_INFO);
+        Message m = messagePetService(GopetCMD.PET_UPGRADE_PET_INFO);
         m.putsbyte(typePetUpgrade);
         m.putInt(petindex);
         m.putUTF(pet.getPetTemplate().frameImg);
@@ -2630,7 +2644,7 @@ public class GameController
 
     private void setPricePetUpgrade(int coin, int gold)
     {
-        Message m = messagePetSerive(GopetCMD.PRICE_UPGRADE_PET);
+        Message m = messagePetService(GopetCMD.PRICE_UPGRADE_PET);
         m.putInt(gold);
         m.putInt(coin);
         m.cleanup();
@@ -2643,7 +2657,7 @@ public class GameController
         MarketPlace marketPlace = (MarketPlace)player.getPlace();
         Kiosk kiosk = MarketPlace.getKiosk(typeKiosk);
         SellItem sellItem = kiosk.getItemByUserId(player.user.user_id);
-        Message m = messagePetSerive(GopetCMD.KIOSK);
+        Message m = messagePetService(GopetCMD.KIOSK);
         m.putsbyte(typeKiosk);
         m.putInt(sellItem == null ? 0 : 1);
         if (sellItem != null)
@@ -2794,7 +2808,7 @@ public class GameController
 
     private void writeSelectItemEnchant(int index, String iconPath, String name, int indexElemnt, sbyte cmd)
     {
-        Message m = messagePetSerive(cmd);
+        Message m = messagePetService(cmd);
         m.putInt(index);
         m.putUTF(iconPath);
         m.putUTF(name);
@@ -2805,7 +2819,7 @@ public class GameController
 
     public void selectGemUpTier(int index, String iconPath, String name, int indexElemnt, int lvl)
     {
-        Message m = messagePetSerive(GopetCMD.SELECT_GEM_UP_TIER);
+        Message m = messagePetService(GopetCMD.SELECT_GEM_UP_TIER);
         m.putInt(index);
         m.putUTF(iconPath);
         m.putUTF(name);
@@ -3304,7 +3318,7 @@ public class GameController
                                 player.playerData.pets.Add(petActive);
                                 player.okDialog(Utilities.Format("Chức mừng bạn đã tiến hóa thành công %s và thú cưng của bạn được cộng %s điểm gym", petActive.getNameWithStar(), gym_add));
                                 HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Tiến hóa pet %s thành công", petActive.getNameWithoutStar())).setObj(petActive));
-                                Message message = messagePetSerive(GopetCMD.PET_UP_TIER);
+                                Message message = messagePetService(GopetCMD.PET_UP_TIER);
                                 message.cleanup();
                                 player.session.sendMessage(message);
                                 this.taskCalculator.onUpTierPet();
@@ -3697,7 +3711,7 @@ public class GameController
                 return;
             }
             int indexUnlock = getIndexOfPetCanUnlockTatto();
-            Message m = messagePetSerive(GopetCMD.TATTOO);
+            Message m = messagePetService(GopetCMD.TATTOO);
             m.putsbyte(GopetCMD.TATTOO_INIT_SCREEN);
             m.putInt(GopetManager.LVL_REQUIRE_PET_TATTO.Length);
             for (int i = 0; i < GopetManager.LVL_REQUIRE_PET_TATTO.Length; i++)
@@ -4004,7 +4018,7 @@ public class GameController
     {
         selectGemM1 = false;
         CopyOnWriteArrayList<Item> items = player.playerData.getInventoryOrCreate(GopetManager.GEM_INVENTORY);
-        Message m = messagePetSerive(GopetCMD.SHOW_GEM_INVENTORY);
+        Message m = messagePetService(GopetCMD.SHOW_GEM_INVENTORY);
         m.putInt(items.Count);
         foreach (Item item in items)
         {
@@ -4051,7 +4065,7 @@ public class GameController
 
     private void sendRemoveGemItem(int itemId)
     {
-        Message m = messagePetSerive(GopetCMD.REMOVE_GEM_ITEM);
+        Message m = messagePetService(GopetCMD.REMOVE_GEM_ITEM);
         m.putInt(itemId);
         m.cleanup();
         player.session.sendMessage(m);
@@ -4059,7 +4073,7 @@ public class GameController
 
     public void sendGemItemInfo(Item item)
     {
-        Message m = messagePetSerive(GopetCMD.SEND_GEM_INFo);
+        Message m = messagePetService(GopetCMD.SEND_GEM_INFo);
         m.putInt(item.itemId);
         m.putUTF(item.getTemp().getIconPath());
         m.putUTF(item.getEquipName());
@@ -4659,7 +4673,7 @@ public class GameController
         Place p = player.getPlace();
         if (p != null)
         {
-            Message m = messagePetSerive(GopetCMD.PET_UNFOLLOW);
+            Message m = messagePetService(GopetCMD.PET_UNFOLLOW);
             m.putInt(player.user.user_id);
             m.putInt(pet.getPetIdTemplate());
             m.cleanup();
@@ -4737,7 +4751,7 @@ public class GameController
         {
             if (player.playerData.buffExp.buffExpTime > 0 && player.playerData.buffExp.Template != null)
             {
-                Message m = messagePetSerive(GopetCMD.SHOW_EXP);
+                Message m = messagePetService(GopetCMD.SHOW_EXP);
                 m.putUTF(player.playerData.buffExp.Template.iconPath);
                 m.putInt((int)((player.playerData.buffExp.buffExpTime + Utilities.CurrentTimeMillisJava) / 1000));
                 m.putInt(0);
@@ -4749,7 +4763,7 @@ public class GameController
 
     public void showAnimationMenu(int menuId, AnimationMenu animationMenu)
     {
-        Message m = messagePetSerive(GopetCMD.ANIMATION_MENU);
+        Message m = messagePetService(GopetCMD.ANIMATION_MENU);
         m.putsbyte(0);
         m.putInt(menuId);
         m.putUTF(animationMenu.Title);
@@ -4794,7 +4808,7 @@ public class GameController
 
     public void testMsg100()
     {
-        Message m = messagePetSerive(100);
+        Message m = messagePetService(100);
         m.putsbyte(0);
         m.putInt(11);
         m.putUTF("Giao diện gì đây?");

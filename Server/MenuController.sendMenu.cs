@@ -313,6 +313,14 @@ public partial class MenuController
                     player.controller.sendListOption(menuId, "Tùy chọn phương thức thanh toán", "", list);
                     break;
                 }
+            case MENU_MONEY_DISPLAY_SETTING:
+                {
+                    JArrayList<Option> list = new();
+                    list.add(new Option(0, "Ghim", Option.CAN_SELECT));
+                    list.add(new Option(1, "Bỏ ghim", Option.CAN_SELECT));
+                    player.controller.sendListOption(MENU_MONEY_DISPLAY_SETTING, "Thao tác", "", list);
+                }
+                break;
             case MENU_SHOW_LIST_TASK:
                 {
                     if (player.controller.objectPerformed.ContainsKey(OBJKEY_NPC_ID_FOR_MAIN_TASK))

@@ -1552,9 +1552,35 @@ public partial class MenuController
                 break;
             case MENU_ITEM_MONEY_INVENTORY:
                 {
-                    player.okDialog("Vật phẩm dùng để đổi phần thưởng");
+                    player.controller.objectPerformed[OBJKEY_INDEX_ITEM_MONEY] = index;
+                    sendMenu(MENU_MONEY_DISPLAY_SETTING, player);
                     break;
                 }
+            case MENU_MONEY_DISPLAY_SETTING:
+                {
+                    if (player.controller.objectPerformed.ContainsKey(OBJKEY_INDEX_ITEM_MONEY))
+                    {
+                        int itemIndex = player.controller.objectPerformed[OBJKEY_INDEX_ITEM_MONEY];
+                        CopyOnWriteArrayList<Item> items = player.playerData.getInventoryOrCreate(GopetManager.MONEY_INVENTORY);
+                        if (itemIndex >= 0 && items.Count > itemIndex)
+                        {
+                            Item item = items[itemIndex];
+                            switch (index)
+                            {
+                                case 0:
+                                    player.playerData.MoneyDisplays.addIfAbsent(item.Template.itemId);
+                                    player.okDialog("Ghim thành công");
+                                    break;
+                                case 1:
+                                    player.playerData.MoneyDisplays.remove(item.Template.itemId);
+                                    player.okDialog("Bỏ ghim thành công");
+                                    break;
+                            }
+                            player.controller.updateUserInfo();
+                        }
+                    }
+                }
+                break;
             case MENU_SELECT_TYPE_CHANGE_GIFT:
                 {
                     int count = 1;

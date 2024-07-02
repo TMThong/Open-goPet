@@ -113,6 +113,7 @@ public partial class MenuController
     public const int MENU_LIST_BLOCK_FRIEND = 1063;
     public const int MENU_LIST_BLOCK_FRIEND_OPTION = 1064;
     public const int MENU_LIST_REQUEST_ADD_FRIEND_OPTION = 1065;
+    public const int MENU_MONEY_DISPLAY_SETTING = 1066;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -367,6 +368,7 @@ public partial class MenuController
     /// </summary>
     public const int OBJKEY_CLAN_SKILL_TEMPLATE_RENT = 50;
     public const int OBJKEY_INDEX_FRIEND = 51;
+    public const int OBJKEY_INDEX_ITEM_MONEY = 52;
     public const int DIALOG_CONFIRM_REMOVE_ITEM_EQUIP = 0;
     public const int DIALOG_CONFIRM_BUY_KIOSK_ITEM = 1;
     public const int DIALOG_ENCHANT = 3;

@@ -69,6 +69,8 @@ public class PlayerData
 
     public DateTime LastTimeOnline { get; set; }
 
+    public CopyOnWriteArrayList<int> MoneyDisplays { get; set; } = new();
+
     public PlayerData()
     {
         x = 24 * 4;
@@ -134,7 +136,8 @@ public class PlayerData
                             BlockFriendLists = @BlockFriendLists,
                             ListFriends = @ListFriends,
                             LastTimeOnline = @LastTimeOnline,
-                            LettersSendTime = @LettersSendTime
+                            LettersSendTime = @LettersSendTime,
+                            MoneyDisplays = @MoneyDisplays
                             WHERE ID = @ID", playerData);
     }
 
