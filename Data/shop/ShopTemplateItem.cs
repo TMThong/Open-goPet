@@ -215,7 +215,7 @@ public class ShopTemplateItem
             {
                 throw new NullReferenceException("pet null");
             }
-            return Utilities.Format($"Hệ: {GopetManager.GetElementDisplay(petTemplate.element, petTemplate.nclass)}. Mô tả:   " + " + %s (str) , + %s (agi) , + %s (int) , + %s (hp) , + %s (mp)", petTemplate.str, petTemplate.agi, petTemplate._int, petTemplate.getHp(), petTemplate.getMp());
+            return Utilities.Format($"Hệ: {GopetManager.GetElementDisplay(petTemplate.element, petTemplate.nclass, player)}. Mô tả:   " + " + %s (str) , + %s (agi) , + %s (int) , + %s (hp) , + %s (mp)", petTemplate.str, petTemplate.agi, petTemplate._int, petTemplate.getHp(), petTemplate.getMp());
         }
 
         ItemTemplate itemTemplate = getItemTemplate();

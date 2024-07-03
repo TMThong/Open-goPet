@@ -2177,7 +2177,7 @@ public class GameController
                         {
                             if (pet.Template.element != itemTemplate.element)
                             {
-                                player.redDialog($"Chỉ có pet hệ {GopetManager.GetElementDisplay(itemTemplate.element)} mới mang được");
+                                player.redDialog($"Chỉ có pet hệ {GopetManager.GetElementDisplay(itemTemplate.element, player)} mới mang được");
                                 return;
                             }
                         }
@@ -3106,7 +3106,7 @@ public class GameController
         {
             if (!(pet.Template.element == GopetManager.DARK_ELEMENT || pet.Template.element == GopetManager.LIGHT_ELEMENT || pet.Template.element == elementItem))
             {
-                player.redDialog($"Bạn cần thú cưng hệ {GopetManager.GetElementDisplay(GopetManager.LIGHT_ELEMENT)} hoặc {GopetManager.GetElementDisplay(GopetManager.DARK_ELEMENT)} để thao tác với tất cả các hệ.\n Còn lại bạn phải có thú cưng cùng hệ với vật phẩm!!!");
+                player.redDialog($"Bạn cần thú cưng hệ {GopetManager.GetElementDisplay(GopetManager.LIGHT_ELEMENT, player)} hoặc {GopetManager.GetElementDisplay(GopetManager.DARK_ELEMENT, player)} để thao tác với tất cả các hệ.\n Còn lại bạn phải có thú cưng cùng hệ với vật phẩm!!!");
                 return false;
             }
         }

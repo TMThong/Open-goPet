@@ -14,6 +14,7 @@ using System.Net;
 using System.Net.WebSockets;
 using static Gopet.Util.Utilities;
 using Gopet.Data.user;
+using Gopet.Language;
 public class Player : IHandleMessage
 {
     public static readonly string[] BANNAME = new string[] { "admin", "test", "banquantri", "gofarm" };
@@ -23,7 +24,7 @@ public class Player : IHandleMessage
     public Version ApplicationVersion;
     public string info;
     public int displayWidth, displayHeight;
-    public string language;
+    public string languageCode;
     public string Refcode;
     public UserData user;
     public PlayerData playerData;
@@ -43,6 +44,14 @@ public class Player : IHandleMessage
         get
         {
             return this.playerData.clanId > 0;
+        }
+    }
+
+    public LanguageData Language
+    {
+        get
+        {
+            return GopetManager.Language[languageCode];
         }
     }
 
@@ -93,7 +102,13 @@ public class Player : IHandleMessage
                         info = ms.reader().readUTF();
                         displayWidth = ms.reader().readInt();
                         displayHeight = ms.reader().readInt();
-                        language = ms.reader().readUTF();
+                        languageCode = ms.reader().readUTF();
+                        if (!GopetManager.Language.ContainsKey(languageCode))
+                        {
+                            session.setClientOK(false);
+                            session.Close();
+                            break;
+                        }
                         Refcode = ms.reader().readUTF();
                         if (ApplicationVersion > GopetManager.VERSION_133)
                         {
@@ -101,7 +116,7 @@ public class Player : IHandleMessage
                         }
                         else
                         {
-                            redDialog("Phiên bản cũ rồi, bạn vui lòng tải bản mới nhất tại gopettae.com");
+                            redDialog(Language.OldVersionNotify);
                             session.setClientOK(false);
                             session.Close();
                         }
@@ -289,11 +304,14 @@ Thread.Sleep(1000);
 
     public virtual void login(String username, String password, String version)
     {
+
         if (this.user != null)
         {
             return;
         }
-
+        username = username.Trim();
+        password = password.Trim();
+        version = version.Trim();
         if (ServerSetting.instance.isShowMessageWhenLogin)
         {
             okDialog(ServerSetting.instance.messageWhenLogin);

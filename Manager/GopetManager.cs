@@ -19,6 +19,7 @@ using Gopet.Data.user;
 using Gopet.Data.Event.Year2024;
 using System.Diagnostics;
 using Gopet.Data.Clan;
+using Gopet.Language;
 
 public class GopetManager
 {
@@ -524,6 +525,12 @@ public class GopetManager
     /// </summary>
     public static readonly int[] PRICE_UNLOCK_SLOT_SKILL_CLAN = new int[] { 1000000, 2000000, 3000000 };
 
+    public static readonly Dictionary<string, LanguageData> Language = new Dictionary<string, LanguageData>()
+    {
+        ["vi"] = new LanguageData(),
+        ["en"] = ReadJsonFile<LanguageData>("/Language/en.json")
+    };
+
     public static readonly Dictionary<sbyte, TradeGiftTemplate[]> TradeGift = new();
 
     public static readonly Dictionary<sbyte, Tuple<int[], int[], int>> TradeGiftPrice = new()
@@ -882,6 +889,15 @@ public class GopetManager
         }
     }
 
+    public static T ReadJsonFile<T>(string targetPath)
+    {
+        if (File.Exists(Directory.GetCurrentDirectory() + targetPath))
+        {
+            return JsonConvert.DeserializeObject<T>(File.ReadAllText(Directory.GetCurrentDirectory() + targetPath));
+        }
+        return default(T);
+    }
+
     public static JArrayList<int> findListTierId(TierItem tInfo)
     {
         JArrayList<int> list = new();
@@ -942,7 +958,7 @@ public class GopetManager
     /// </summary>
     /// <param name="typeE">Loại nguyên tố</param>
     /// <returns>Trả về icon text để client render</returns>
-    public static string GetElementDisplay(sbyte typeE)
+    public static string GetElementDisplay(sbyte typeE, Player player)
     {
         switch (typeE)
         {
@@ -957,7 +973,7 @@ public class GopetManager
         return string.Empty;
     }
 
-    public static string GetClassDisplay(sbyte nclass)
+    public static string GetClassDisplay(sbyte nclass, Player player)
     {
         switch (nclass)
         {
@@ -972,9 +988,9 @@ public class GopetManager
     }
 
 
-    public static string GetElementDisplay(sbyte typeE, sbyte nClass)
+    public static string GetElementDisplay(sbyte typeE, sbyte nClass, Player player)
     {
-        return string.Concat(GetClassDisplay(nClass), " ", GetElementDisplay(typeE));
+        return string.Concat(GetClassDisplay(nClass, player), " ", GetElementDisplay(typeE, player));
     }
     /// <summary>
     /// Lưu dữ liệu chợ
