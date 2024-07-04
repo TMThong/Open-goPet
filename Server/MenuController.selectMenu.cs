@@ -35,7 +35,7 @@ public partial class MenuController
 
                     if (player.controller.getPetBattle() != null)
                     {
-                        player.redDialog("Không thể thao tác khi đang giao chiến");
+                        player.redDialog(player.Language.CannotManipulateWhenFighting);
                         return;
                     }
 

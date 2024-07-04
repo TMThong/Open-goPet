@@ -259,5 +259,6 @@ namespace Gopet.Language
         public string ClanCreateNameLaw { get; set; } = "Tên bang cần bé hơn 20 ký tự và lớn hơn 4 ký tự";
         public string WrongInputNumber { get; set; } = "Nhập sai dữ liệu, vui lòng nhập các con số";
         public string CannotManipulateInChallenge { get; set; } = "Không thể thao tác khi đang đi ải";
+        public string CannotManipulateWhenFighting { get; set; } = "Không thể thao tác khi đang giao chiến";
     }
 }
