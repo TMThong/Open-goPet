@@ -30,18 +30,18 @@ namespace Gopet.Data.GopetClan
             return dateTime < DateTime.Now;
         }
 
-        public string getDutyName()
+        public string getDutyName(Player player)
         {
             switch (duty)
             {
                 case Clan.TYPE_NORMAL:
-                    return "Thành viên";
+                    return player.Language.ClanDutyMember;
                 case Clan.TYPE_LEADER:
-                    return "Bang chủ";
+                    return player.Language.ClanLeaderMember;
                 case Clan.TYPE_DEPUTY_LEADER:
-                    return "Phó bang";
+                    return player.Language.ClanDeputyLeaderMember;
                 case Clan.TYPE_SENIOR:
-                    return "Trưởng lão";
+                    return player.Language.ClanSeniorMember;
             }
             return $"Không xác định <{duty}>";
         }

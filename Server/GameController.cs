@@ -2457,16 +2457,16 @@ public class GameController
                 {
                     MenuController.addMoney(clanMemberDonateInfo.getPriceType(), -(int)clanMemberDonateInfo.getPrice(), player);
                     clanMember.getClan().addFund(clanMemberDonateInfo.getFund(), clanMember);
-                    player.okDialog("Quyên góp thành công");
+                    player.okDialog(player.Language.DonateFundOK);
                 }
                 else
                 {
-                    player.redDialog("Không đủ tiền");
+                    player.redDialog(player.Language.NotEnoughMoney);
                 }
             }
             else
             {
-                player.redDialog("Đã có lỗi");
+                player.redDialog(player.Language.BugWarning);
             }
         }
         else
@@ -2485,7 +2485,7 @@ public class GameController
             m.putInt(clan.getClanId());
             m.putbool(clanMember.duty == Clan.TYPE_DEPUTY_LEADER || clanMember.duty == Clan.TYPE_LEADER || clanMember.duty == Clan.TYPE_SENIOR);
             m.putInt(0);
-            m.putUTF("Thông tin bang chúng");
+            m.putUTF(player.Language.InfoClanMember);
             m.putInt(0);
             m.putInt(0);
             m.putsbyte(0);
@@ -2495,8 +2495,8 @@ public class GameController
             {
                 m.putInt(member.user_id);
                 m.putUTF(member.getAvatar());
-                m.putUTF(member.name + Utilities.Format(" (Chức vụ: %s)", member.getDutyName()));
-                m.putUTF(Utilities.Format("Đóng góp quỹ: %s", Utilities.FormatNumber(member.fundDonate)));
+                m.putUTF(member.name + string.Format(player.Language.ClanDutyDescription, member.getDutyName(player)));
+                m.putUTF(string.Format(player.Language.ClanFundDescription, Utilities.FormatNumber(member.fundDonate)));
             }
             m.putbool(false);
             player.session.sendMessage(m);
@@ -2526,7 +2526,7 @@ public class GameController
         {
             if (item.petEuipId >= 0)
             {
-                player.redDialog("Tháo trang bị mới hủy vật phẩm này được");
+                player.redDialog(player.Language.NeedUnequipItemIfWantDestroyItem);
             }
             else
             {
@@ -2550,16 +2550,16 @@ public class GameController
                 if (item.petEuipId < 0)
                 {
                     objectPerformed.put(MenuController.OBJKEY_REMOVE_ITEM_EQUIP, itemid);
-                    MenuController.showYNDialog(MenuController.DIALOG_CONFIRM_REMOVE_ITEM_EQUIP, Utilities.Format("Bạn có chắc muốn hủy vật phẩm", item.getTemp().getName()), player);
+                    MenuController.showYNDialog(MenuController.DIALOG_CONFIRM_REMOVE_ITEM_EQUIP, player.Language.DoYouWantDestroyItem, player);
                 }
                 else
                 {
-                    player.redDialog("Vật phẩm này đã trang bị cho pet rồi");
+                    player.redDialog(player.Language.ItemHasPetEquip);
                 }
             }
             else
             {
-                player.redDialog("Vật phẩm này không phải trang bị");
+                player.redDialog(player.Language.ItemIsNotEquip);
             }
         }
         else
@@ -2686,7 +2686,7 @@ public class GameController
             {
                 if (sellItem.hasSell)
                 {
-                    player.redDialog("Người khác mua vật phẩm này rồi");
+                    player.redDialog(player.Language.ItemWasSell);
                 }
                 else if (sellItem.hasRemoved)
                 {
@@ -2703,7 +2703,7 @@ public class GameController
                     {
                         player.addItemToInventory(sellItem.ItemSell);
                     }
-                    player.okDialog(Utilities.Format("Gỡ vật phẩm về túi thành công", sellItem.getName()));
+                    player.okDialog(player.Language.CancelItemKiosk);
                     HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Gỡ vật phẩm về túi thành công", sellItem.getName())).setObj(sellItem));
                     sellItem.hasRemoved = true;
                 }
@@ -2711,7 +2711,7 @@ public class GameController
         }
         else
         {
-            player.redDialog("Người khác mua vật phẩm này rồi");
+            player.redDialog(player.Language.ItemWasSell);
         }
     }
 
@@ -2781,7 +2781,7 @@ public class GameController
                 MenuController.sendMenu(MenuController.MENU_SELECT_ENCHANT_MATERIAL2, player);
                 break;
             case GopetManager.TYPE_SELECT_ITEM_UP_TIER:
-                MenuController.showInventory(player, GopetManager.EQUIP_PET_INVENTORY, MenuController.MENU_SELECT_EQUIP_PET_TIER, "Vật phẩm");
+                MenuController.showInventory(player, GopetManager.EQUIP_PET_INVENTORY, MenuController.MENU_SELECT_EQUIP_PET_TIER, player.Language.Item);
                 break;
             case GopetManager.TYPE_SELECT_ITEM_UP_SKILL:
                 MenuController.sendMenu(MenuController.MENU_SELECT_ITEM_UP_SKILL, player);
@@ -2833,7 +2833,7 @@ public class GameController
         {
             if (GopetManager.PRICE_ENCHANT.Length <= itemEuip.lvl)
             {
-                player.redDialog("Trang bị đạt cấp tối đa rồi");
+                player.redDialog(player.Language.ItemHasMaxLevel);
                 return;
             }
 
@@ -2851,7 +2851,7 @@ public class GameController
                 {
                     if (itemEuip.lvl >= 10)
                     {
-                        player.redDialog("Vật phẩm này đã đạt cấp tối đa , không thể nâng thêm nữa");
+                        player.redDialog(player.Language.ItemHasMaxLevel);
                     }
                     else
                     {
@@ -2940,10 +2940,10 @@ public class GameController
                         subCountItem(materialCrystal, 1, GopetManager.NORMAL_INVENTORY);
                         if (isSuccec)
                         {
-                            player.okDialog(Utilities.Format("Chức mưng bạn đã cường hóa thành công %s lên +%s", itemEuip.getName(), itemEuip.lvl));
+                            player.okDialog(string.Format(player.Language.EnchantOKWithLvlItem, itemEuip.getName(), itemEuip.lvl));
                             if (itemEuip.lvl >= 7)
                             {
-                                PlayerManager.showBanner(Utilities.Format("Chúc mừng người chơi %s đã cường hoá trang bị %s lên +%s,lực chiến tăng mạnh!!!", player.playerData.name, itemEuip.getTemp().getName(), itemEuip.lvl));
+                                PlayerManager.showBanner(string.Format(player.Language.EnchantOKWithLvlItemBanner, player.playerData.name, itemEuip.getTemp().getName(), itemEuip.lvl));
                             }
                             HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cường hóa %s lên +%s", itemEuip.getTemp().getName(), itemEuip.lvl)).setObj(itemEuip));
                         }
@@ -2951,20 +2951,20 @@ public class GameController
                         {
                             if (destroyItem)
                             {
-                                player.redDialog("Thật không may, trong lúc cường hóa thì trang bị của bạn đã bị vỡ");
-                                PlayerManager.showBanner(Utilities.Format("Thật đáng tiếc người chơi %s đã cường hoá %s thất bại,hư hỏng vĩnh viễn!!!", player.playerData.name, itemEuip.getTemp().getName()));
+                                player.redDialog(player.Language.EnchantFailAndDestroy);
+                                PlayerManager.showBanner(string.Format(player.Language.EnchantFailAndDestroyBanner, player.playerData.name, itemEuip.getTemp().getName()));
                                 HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cường hóa %s thất bại bị vỡ", itemEuip.getTemp().getName())).setObj(itemEuip));
                             }
                             else
                             {
                                 if (levelDrop > 0)
                                 {
-                                    player.redDialog(Utilities.Format("Cường hóa thất bại trang bị giảm %s cấp", levelDrop));
+                                    player.redDialog(string.Format(player.Language.EnchantFailDrop, levelDrop));
                                     HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cường hóa %s thất bại bị giảm %s cấp", itemEuip.getTemp().getName(), levelDrop)).setObj(itemEuip));
                                 }
                                 else
                                 {
-                                    player.redDialog("Cường hóa trang bị thất bại");
+                                    player.redDialog(player.Language.EnchantFail);
                                     HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cường hóa %s thất bại bị giảm %s cấp", itemEuip.getTemp().getName(), levelDrop)).setObj(itemEuip));
                                 }
                             }
@@ -2986,7 +2986,7 @@ public class GameController
         Item materialCrystal = selectItemsbytemp(materialTempCrystal, GopetManager.NORMAL_INVENTORY);
         if (itemEuip == null || materialItem == null || materialCrystal == null)
         {
-            player.redDialog("Thao tác quá nhanh");
+            player.fastAction();
             return;
         }
 
@@ -2997,7 +2997,7 @@ public class GameController
 
                 if (!isGem && itemEuip.gemInfo != null)
                 {
-                    player.redDialog("Vui lòng tháo ngọc");
+                    player.redDialog(player.Language.PleaseUnequipWing);
                     return;
                 }
 
@@ -3039,12 +3039,12 @@ public class GameController
                 {
                     destStr = "\n Nếu thất bại trang bị của bạn sẽ mất";
                 }
-                MenuController.showYNDialog(MenuController.DIALOG_ENCHANT, Utilities.Format("Bạn có chắc muốn cường hóa %s với tỉ lệ (%s /) + %s/ với giá %s (ngoc) không?", itemEuip.getTemp().getName(), isGem ? GopetManager.PERCENT_OF_ENCHANT_GEM[itemEuip.lvl] : GopetManager.DISPLAY_PERCENT_ENCHANT[itemEuip.lvl], materialCrystal.getTemp().getOptionValue()[0], GopetManager.PRICE_ENCHANT[itemEuip.lvl]).Replace('/', '%') + dropStr + destStr, player);
+                MenuController.showYNDialog(MenuController.DIALOG_ENCHANT, string.Format(player.Language.AskEnchantItem, itemEuip.getTemp().getName(), isGem ? GopetManager.PERCENT_OF_ENCHANT_GEM[itemEuip.lvl] : GopetManager.DISPLAY_PERCENT_ENCHANT[itemEuip.lvl], materialCrystal.getTemp().getOptionValue()[0], GopetManager.PRICE_ENCHANT[itemEuip.lvl]).Replace('/', '%') + dropStr + destStr, player);
             }
         }
         else
         {
-            player.redDialog("Trang bị đã đạt cấp tối đa");
+            player.redDialog(player.Language.ItemHasMaxLevel);
         }
     }
 
@@ -4301,8 +4301,8 @@ public class GameController
             {
                 m.putInt(clanMember1.user_id);
                 m.putUTF(clanMember1.getAvatar());
-                m.putUTF(clanMember1.name + Utilities.Format(" (Chức vụ: %s)", clanMember1.getDutyName()));
-                m.putUTF(Utilities.Format("Đóng góp quỹ: %s", Utilities.FormatNumber(clanMember1.fundDonate)));
+                m.putUTF(clanMember1.name + string.Format(player.Language.ClanDutyDescription, clanMember1.getDutyName(player)));
+                m.putUTF(Utilities.Format(player.Language.ClanFundDescription, Utilities.FormatNumber(clanMember1.fundDonate)));
             }
             m.cleanup();
             player.session.sendMessage(m);

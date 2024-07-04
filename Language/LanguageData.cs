@@ -73,6 +73,7 @@ namespace Gopet.Language
         public string NotEnoughCrystal { get; set; } = "Không đủ tinh thạch";
         public string NotEnoughMaterial { get; set; } = "Không đủ nguyên liệu";
         public string NotEnoughMetrics { get; set; } = "Không đủ chỉ số";
+        public string NotEnoughMoney { get; set; } = "Không đủ tiền";
         public string EnchantOK { get; set; } = "Cường hóa thành công";
         public string EnchantFailDrop { get; set; } = "Cường hóa thất bại bị giảm {0} cấp!";
         public string TattoMaxLevel { get; set; } = "Xăm đã đạt cấp tối đa";
@@ -88,5 +89,25 @@ namespace Gopet.Language
         public string ClanMemberDescription { get; set; } = "Thành viên: {0}/{1}";
         public string ClanSloganDescription { get; set; } = "Khẩu hiệu: ";
         public string ClanFundDescription { get; set; } = "Quỹ: {0}";
+        public string ClanDutyDescription { get; set; } = " (Chức vụ: {0})";
+        public string DonateFundOK { get; set; } = "Quyên góp thành công";
+        public string InfoClanMember { get; set; } = "Thông tin bang chúng";
+        public string ClanDutyMember { get; set; } = "Thành viên";
+        public string ClanLeaderMember { get; set; } = "Bang chủ";
+        public string ClanDeputyLeaderMember { get; set; } = "Phó bang";
+        public string ClanSeniorMember { get; set; } = "Trưởng lão";
+        public string NeedUnequipItemIfWantDestroyItem { get; set; } = "Tháo trang bị mới hủy vật phẩm này được";
+        public string DoYouWantDestroyItem { get; set; } = "Bạn có chắc muốn hủy vật phẩm";
+        public string ItemWasSell { get; set; } = "Người khác mua vật phẩm này rồi";
+        public string CancelItemKiosk { get; set; } = "Gỡ vật phẩm về túi thành công";
+        public string Item { get; set; } = "Vật phẩm";
+        public string ItemHasMaxLevel { get; set; } = "Trang bị đạt cấp tối đa rồi";
+        public string EnchantOKWithLvlItem { get; set; } = "Chức mừng bạn đã cường hóa thành công {0} lên +{1}";
+        public string EnchantOKWithLvlItemBanner { get; set; } = "Chúc mừng người chơi {0} đã cường hoá trang bị {1} lên +{2},lực chiến tăng mạnh!!!";
+        public string EnchantFailAndDestroy { get; set; } = "Thật không may, trong lúc cường hóa thì trang bị của bạn đã bị vỡ";
+        public string EnchantFail { get; set; } = "Cường hóa trang bị thất bại";
+        public string EnchantFailAndDestroyBanner { get; set; } = "Thật đáng tiếc người chơi {0} đã cường hoá {1} thất bại,hư hỏng vĩnh viễn!!!";
+        public string PleaseUnequipGem { get; set; } = "Vui lòng tháo ngọc";
+        public string AskEnchantItem { get; set; } = "Bạn có chắc muốn cường hóa {0} với tỉ lệ ({1} /) + {2}/ với giá {3} (ngoc) không?";
     }
 }

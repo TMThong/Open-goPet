@@ -887,6 +887,7 @@ public class GopetManager
                 tierItemHashMap.put(get, i + 2);
             }
         }
+        //SaveJsonFile(Language["vi"], "/lang/vi.json");
     }
 
     public static T ReadJsonFile<T>(string targetPath)
@@ -896,6 +897,24 @@ public class GopetManager
             return JsonConvert.DeserializeObject<T>(File.ReadAllText(Directory.GetCurrentDirectory() + targetPath));
         }
         return default(T);
+    }
+
+    public static void SaveJsonFile<T>(T json, string file)
+    {
+        if (!File.Exists(Directory.GetCurrentDirectory() + file))
+        {
+            FileInfo fileInfo = new FileInfo(Directory.GetCurrentDirectory() + file);
+            fileInfo.Directory.Create();
+            using(var st = fileInfo.Create())
+            {
+                StreamWriter streamWriter = new StreamWriter(st);
+                streamWriter.Write(JsonConvert.SerializeObject(json, Formatting.Indented));
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+            return;
+        }
+        File.WriteAllText(Directory.GetCurrentDirectory() + file, JsonConvert.SerializeObject(json, Formatting.Indented));
     }
 
     public static JArrayList<int> findListTierId(TierItem tInfo)
