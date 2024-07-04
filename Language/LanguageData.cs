@@ -72,8 +72,21 @@ namespace Gopet.Language
         public string NotEnoughBloodGem { get; set; } = "Không đủ huyết ngọc";
         public string NotEnoughCrystal { get; set; } = "Không đủ tinh thạch";
         public string NotEnoughMaterial { get; set; } = "Không đủ nguyên liệu";
+        public string NotEnoughMetrics { get; set; } = "Không đủ chỉ số";
         public string EnchantOK { get; set; } = "Cường hóa thành công";
         public string EnchantFailDrop { get; set; } = "Cường hóa thất bại bị giảm {0} cấp!";
         public string TattoMaxLevel { get; set; } = "Xăm đã đạt cấp tối đa";
+        public string OnlyPetElementWearing { get; set; } = "Chỉ có pet hệ {0} mới mang được";
+        public string ItemHasPetEquip { get; set; } = "Vật phẩm này đã trang bị cho pet rồi!";
+        public string ItemHasntPetEquip { get; set; } = "Vật phẩm này chưa có pet nào đeo";
+        public string ItemIsNotEquip { get; set; } = "Vật phẩm này không phải trang bị";
+        public string Need { get; set; } = "Cần";
+        public string KioskIsBuiding { get; set; } = "Cửa hàng này đang được xây dựng";
+        public string ClanNameDescription { get; set; } = "Tên bang hội: ";
+        public string ClanLvlDescription { get; set; } = "Cấp: ";
+        public string ClanLeaderDescription { get; set; } = "Bang chủ: ";
+        public string ClanMemberDescription { get; set; } = "Thành viên: {0}/{1}";
+        public string ClanSloganDescription { get; set; } = "Khẩu hiệu: ";
+        public string ClanFundDescription { get; set; } = "Quỹ: {0}";
     }
 }

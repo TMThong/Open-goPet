@@ -1208,7 +1208,7 @@ public class GameController
             petActive.str = oldPet.str + 10;
             petActive.tiemnang_point = gym_add;
             petActive.pointTiemNangLvl = gym_up_level;
-            showDescPetUpTierUI(petActive.Template.name, new string[] { petActive.Template.name, $"{petActive.str}(str) {petActive.agi}(agi) {petActive._int}(int)", string.Format(player.Language.PotentialScore, petActive.pointTiemNangLvl)});
+            showDescPetUpTierUI(petActive.Template.name, new string[] { petActive.Template.name, $"{petActive.str}(str) {petActive.agi}(agi) {petActive._int}(int)", string.Format(player.Language.PotentialScore, petActive.pointTiemNangLvl) });
         }
     }
 
@@ -2109,7 +2109,7 @@ public class GameController
             }
             else
             {
-                player.redDialog("Tính bug xăm?");
+                player.redDialog(player.Language.BugWarning);
             }
         }
         else
@@ -2171,7 +2171,7 @@ public class GameController
                         {
                             if (pet.Template.element != itemTemplate.element)
                             {
-                                player.redDialog($"Chỉ có pet hệ {GopetManager.GetElementDisplay(itemTemplate.element, player)} mới mang được");
+                                player.redDialog(string.Format(player.Language.OnlyPetElementWearing, GopetManager.GetElementDisplay(itemTemplate.element, player)));
                                 return;
                             }
                         }
@@ -2217,18 +2217,18 @@ public class GameController
                     }
                     else
                     {
-                        player.redDialog("Vật phẩm này đã trang bị cho pet rồi!");
+                        player.redDialog(player.Language.ItemHasPetEquip);
                     }
                 }
                 else
                 {
-                    player.redDialog("Không đủ chỉ số.\n" + Utilities.Format("Cần %s(str) %s(agi) và %s(int)", item.getTemp().getRequireStr(), item.getTemp().getRequireAgi(), item.getTemp().getRequireInt()));
+                    player.redDialog(player.Language.NotEnoughMetrics + ".\n" + player.Language.Need + Utilities.Format(" %s(str) %s(agi) và %s(int)", item.getTemp().getRequireStr(), item.getTemp().getRequireAgi(), item.getTemp().getRequireInt()));
                 }
 
             }
             else
             {
-                player.redDialog("Vật phẩm này không phải trang bị");
+                player.redDialog(player.Language.ItemIsNotEquip);
             }
 
         }
@@ -2258,7 +2258,7 @@ public class GameController
                 MenuController.sendMenu(shopId, player);
                 break;
             default:
-                player.redDialog("Cửa hàng này đang được xây dựng");
+                player.redDialog(player.Language.KioskIsBuiding);
                 break;
         }
     }
@@ -2288,7 +2288,7 @@ public class GameController
             {
                 if (item.petEuipId <= 0)
                 {
-                    player.redDialog("Vật phẩm này chưa có pet nào đeo");
+                    player.redDialog(player.Language.ItemHasntPetEquip);
                 }
                 else
                 {
@@ -2306,7 +2306,7 @@ public class GameController
             }
             else
             {
-                player.redDialog("Vật phẩm này không phải trang bị");
+                player.redDialog(player.Language.ItemIsNotEquip);
             }
         }
         else
@@ -2399,12 +2399,12 @@ public class GameController
         {
             Clan clan = clanMember.getClan();
             JArrayList<String> listInfoClan = new();
-            listInfoClan.add("Tên bang hội: " + clan.name);
-            listInfoClan.add("Cấp: " + clan.lvl);
-            listInfoClan.add("Bang chủ: " + clan.getMemberByUserId(clan.getLeaderId()).name);
-            listInfoClan.add(Utilities.Format("Thành viên: %s/%s", clan.curMember, clan.maxMember));
-            listInfoClan.add("Khẩu hiệu: " + clan.slogan);
-            listInfoClan.add(Utilities.Format("Quỹ: %s", Utilities.FormatNumber(clan.getFund())));
+            listInfoClan.add(player.Language.ClanNameDescription + clan.name);
+            listInfoClan.add(player.Language.ClanLvlDescription + clan.lvl);
+            listInfoClan.add(player.Language.ClanLeaderDescription + clan.getMemberByUserId(clan.getLeaderId()).name);
+            listInfoClan.add(string.Format(player.Language.ClanMemberDescription, clan.curMember, clan.maxMember));
+            listInfoClan.add(player.Language.ClanSloganDescription + clan.slogan);
+            listInfoClan.add(string.Format(player.Language.ClanFundDescription, Utilities.FormatNumber(clan.getFund())));
             Message message = clanMessage(GopetCMD.CLAN_INFO);
             message.putInt(clan.getClanId());
             message.putsbyte(listInfoClan.Count);
