@@ -29,7 +29,7 @@ public partial class MenuController
                 {
                     if (player.getPlace() is ChallengePlace)
                     {
-                        player.redDialog("Không thể thao tác khi đang đi ải");
+                        player.redDialog(player.Language.CannotManipulateInChallenge);
                         return;
                     }
 
@@ -121,7 +121,7 @@ public partial class MenuController
                     {
                         PetTatto tatto = player.controller.objectPerformed[OBJKEY_ID_TATTO_TO_ENCHANT];
                         player.controller.objectPerformed[OBJKEY_TYPE_PRICE_TATTO_TO_ENCHANT] = index;
-                        showYNDialog(DIALOG_ASK_ENCHANT_TATTO, $"Bạn có chắc muốn cường hóa {tatto.Template.name} lên cấp {tatto.lvl + 1} với tỉ lệ {GopetManager.PERCENT_OF_ENCHANT_TATOO[tatto.lvl]}% thành công với giá {getMoneyText((sbyte)index, index == 0 ? GopetManager.PRICE_GOLD_ENCHANT_TATTO : GopetManager.PRICE_COIN_ENCHANT_TATTO)} không? Thất bại sẽ rớt {GopetManager.NUM_LVL_DROP_ENCHANT_TATTO_FAILED[tatto.lvl]} cấp !!!", player);
+                        showYNDialog(DIALOG_ASK_ENCHANT_TATTO, $"Bạn có chắc muốn cường hóa {tatto.Template.name} lên cấp {tatto.lvl + 1} với tỉ lệ {GopetManager.PERCENT_OF_ENCHANT_TATOO[tatto.lvl]}% thành công với giá {getMoneyText((sbyte)index, index == 0 ? GopetManager.PRICE_GOLD_ENCHANT_TATTO : GopetManager.PRICE_COIN_ENCHANT_TATTO, player)} không? Thất bại sẽ rớt {GopetManager.NUM_LVL_DROP_ENCHANT_TATTO_FAILED[tatto.lvl]} cấp !!!", player);
                     }
                     break;
                 }
@@ -152,7 +152,7 @@ public partial class MenuController
                         }
                         else
                         {
-                            player.redDialog("Tính bug ha gì?");
+                            player.redDialog(player.Language.BugWarning);
                         }
                     }
                 }

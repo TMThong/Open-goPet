@@ -2433,7 +2433,7 @@ public class GameController
             {
                 ClanMemberDonateInfo get = donateInfos.get(i);
                 message.putInt(i);
-                message.putUTF("Mốc " + (i + 1) + Utilities.Format(": Quyên góp %s để nhận %s điểm cống hiến", MenuController.getMoneyText(get.getPriceType(), get.getPrice()), Utilities.FormatNumber(get.getFund())));
+                message.putUTF("Mốc " + (i + 1) + Utilities.Format(": Quyên góp %s để nhận %s điểm cống hiến", MenuController.getMoneyText(get.getPriceType(), get.getPrice(), player), Utilities.FormatNumber(get.getFund())));
             }
             message.cleanup();
             player.session.sendMessage(message);
@@ -3337,7 +3337,7 @@ public class GameController
         }
         else
         {
-            player.redDialog(player.Language.SetNamePetWhenUpTierLaw);
+            player.redDialog(player.Language.SetPetNameLaw);
         }
     }
 
