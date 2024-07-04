@@ -8,6 +8,72 @@ namespace Gopet.Language
 {
     public sealed class LanguageData
     {
-        public string OldVersionNotify = "Phiên bản cũ rồi, bạn vui lòng tải bản mới nhất";
+        public Dictionary<string, string> ItemLanguage { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> NpcOptionLanguage { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> TattoLanguage { get; set; } = new Dictionary<string, string>();
+
+        public string OldVersionNotify { get; set; } = "Phiên bản cũ rồi, bạn vui lòng tải bản mới nhất";
+        public string AccountNonAcitve { get; set; } = "Tài khoản chưa được kích hoạt";
+        public string AccountBanTime { get; set; } = "Tài khoản của bạn đã bị khóa vì {0} \n Sau {1} giờ {2} phút nữa tài khoản sẽ được mở khóa";
+        public string AccountBanInfinity { get; set; } = "Tài khoản của bạn đã bị khóa vĩnh viên \n Lý do :{0}";
+        public string AccountLogingDuplicate { get; set; } = "Người chơi khác đăng nhập vào tài khoản";
+        public string WaitLoging { get; set; } = "Vui lòng chờ {0} giây nữa để đăng nhập";
+        public string WarningPlayerWhenLogin { get; set; } = "Người chơi game quá 180 phút có thể gây ảnh hưởng đến sức khỏe";
+        public string ServerOnlyForAdmin { get; set; } = "Server này chỉ cho Admin đăng nhập bạn vui lòng không truy cập";
+        public string IncorrectUsePassword { get; set; } = "Tài khoản hoặc mật khẩu của bạn không chính xác";
+        public string GetGoldByCard { get; set; } = "Nhận dược {0} (vang) do nạp tiền";
+        public string NotEnoughtHP { get; set; } = "Bạn không đủ máu";
+        public string NotEnoughtEnergy { get; set; } = "Bạn không đủ thể lực";
+        public string NotEnoughtStar { get; set; } = "Bạn không đủ ngôi sao";
+        public string PetNotFollow { get; set; } = "Pet không đi theo!";
+        public string FastAction { get; set; } = "Thao tác quá nhanh";
+        public string ErrorItem { get; set; } = "Lỗi vật phẩm";
+        public string HaveSpecialChar { get; set; } = "Tồn tại ký tự lạ";
+        public string PetExpire { get; set; } = "Pet vừa hết thời gian dùng thử";
+        public string DuplicateNameChar { get; set; } = "Tên tài khoản đã tồn tại rồi";
+        public string RegisterOK { get; set; } = "Đăng ký tài khoản thành công mời bạn đăng nhập";
+        public string RegisterLaw { get; set; } = "Tài khoản và mật khẩu phải có số lượng kí tự lớn hơn 6 và bé hơn 25 đối với tài khoản , bé hơn 45 đối với mật khẩu";
+        public string UsernameAndPasswordCanotHaveBanName { get; set; } = "Tài khoản không được phép có những từ này : ";
+        public string IncorrectPassword { get; set; } = "Sai mật khẩu";
+        public string ChangePasswordOK { get; set; } = "Đổi mật khẩu thành công, vui lòng nhớ kỷ thông tin";
+        public string ChangePasswordLaw { get; set; } = "Mật khẩu phải có số lượng kí tự lớn hơn 5 và không chứa các kí tự đặc biệt";
+        public string BanManipulateWhenHaveBattle { get; set; } = "Mật khẩu phải có số lượng kí tự lớn hơn 5 và không chứa các kí tự đặc biệt";
+        public string FightingCannotOutMap { get; set; } = "Đang đánh không thể rời";
+        public string WhenPlayerWasDieByPk { get; set; } = "Bạn đã kiệt sức vui lòng không rời khỏi vùng an toàn !!! Còn {0} giây nữa là hồi phục!";
+        public string BugWarning { get; set; } = "Tính bug?";
+        public string PlayerNotFound { get; set; } = "Người chơi không tồn tại";
+        public string WaitTimeForSendLetter { get; set; } = "Vui lòng chờ 30 giây để gửi cho người này";
+        public string SendLetterOK { get; set; } = "Gửi thư thành công";
+        public string SendLetterFailByBlock { get; set; } = "Gửi thư thất bại, do đối phương đã chặn bạn.";
+        public string RequestAddFriendOK { get; set; } = "Đã gửi yêu cầu thêm bạn thành công";
+        public string RequestAddFriendExist { get; set; } = "Đã gửi yêu cầu thêm bạn rồi";
+        public string RequestAddFriendBlock { get; set; } = "Bạn đã bị chặn";
+        public string CreateCharLaw { get; set; } = "Tên nhân vật phải có số lượng kí tự lớn hơn 5 và bé hơn 20 cũng như không chứa các kí tự đặc biệt";
+        public string IncorrectTyping { get; set; } = "Nhập sai";
+        public string PleaseUnequipWing { get; set; } = "Vui lòng tháo cánh ra";
+        public string ErrorWhenUpgradeWing { get; set; } = "Xảy ra lỗi ở nâng cấp cánh";
+        public string ManipulateOK { get; set; } = "Thao tác thành công";
+        public string YouNotEquipWing { get; set; } = "Hiện tại bạn không có mang bất kỳ cánh nào!";
+        public string KioskCancelPet { get; set; } = "Pet đã được bán hoặc người bán đã hủy kí gửi";
+        public string CannotUpTierWithTryPet { get; set; } = "Không thể tiến hóa với pet dùng thử";
+        public string CannotUpTier { get; set; } = "2 pet này không thể kết hợp tiến hóa";
+        public string PotentialScore { get; set; } = "Điểm tiềm năng {0}";
+        public string CannotChangeZone { get; set; } = "Không thể đổi khu";
+        public string CannotFoundZone { get; set; } = "Không tồn tại khu này";
+        public string WaitingForSeconds { get; set; } = "Vui lòng chờ {0} giây nữa";
+        public string CannotChangeZoneWhenBattle { get; set; } = "Không cho phép đánh chuyển khu cảm ơn";
+        public string NotEnoughtPotential { get; set; } = "Pet không có đủ tiềm năng";
+        public string OthersPlayerLeakPetInfo { get; set; } = "Người chơi {0} đang xem trang bị của thú cưng bạn";
+        public string PlayerOffline { get; set; } = "Người chơi đã offline";
+        public string NotEnoughCoin { get; set; } = "Không đủ (ngoc)";
+        public string NotEnoughGold { get; set; } = "Không đủ (vang)";
+        public string NotEnoughSilverBar { get; set; } = "Không đủ thỏi bạc";
+        public string NotEnoughGoldBar { get; set; } = "Không đủ thỏi vàng";
+        public string NotEnoughBloodGem { get; set; } = "Không đủ huyết ngọc";
+        public string NotEnoughCrystal { get; set; } = "Không đủ tinh thạch";
+        public string NotEnoughMaterial { get; set; } = "Không đủ nguyên liệu";
+        public string EnchantOK { get; set; } = "Cường hóa thành công";
+        public string EnchantFailDrop { get; set; } = "Cường hóa thất bại bị giảm {0} cấp!";
+        public string TattoMaxLevel { get; set; } = "Xăm đã đạt cấp tối đa";
     }
 }

@@ -67,7 +67,7 @@ public class GameController
     {
         if (petBattle != null)
         {
-            player.redDialog("Đang đánh nhau không thể thao tác");
+            player.redDialog(player.Language.BanManipulateWhenHaveBattle);
             return true;
         }
         return false;
@@ -273,7 +273,7 @@ public class GameController
                         }
                         if (player.getPet()?.TimeDieZ > Utilities.CurrentTimeMillis)
                         {
-                            player.redDialog($"Bạn đã kiệt sức vui lòng không rời khỏi vùng an toàn !!! Còn {Utilities.FormatNumber(((player.getPet().TimeDieZ - Utilities.CurrentTimeMillis) / 1000))} giây nữa là hồi phục!");
+                            player.redDialog(string.Format(player.Language.WhenPlayerWasDieByPk, Utilities.FormatNumber(((player.getPet().TimeDieZ - Utilities.CurrentTimeMillis) / 1000))));
                             return;
                         }
                         int index = message.reader().readInt();
@@ -284,7 +284,7 @@ public class GameController
                     }
                     else
                     {
-                        player.redDialog("Đang đánh không thể rời");
+                        player.redDialog(player.Language.FightingCannotOutMap);
                     }
                 }
                 break;
@@ -364,7 +364,7 @@ public class GameController
     {
         if (name == player.playerData.name)
         {
-            player.redDialog("Tính bug?");
+            player.redDialog(player.Language.BugWarning);
             return;
         }
 
@@ -377,7 +377,7 @@ public class GameController
                 var userData = conn.QueryFirstOrDefault("SELECT `user_id` FROM `player` WHERE `name` = @name;", new { name = name });
                 if (userData == null)
                 {
-                    player.redDialog("Người chơi không tồn tại");
+                    player.redDialog(player.Language.PlayerNotFound);
                     return;
                 }
                 else userId = userData.user_id;
@@ -394,14 +394,14 @@ public class GameController
     {
         if (userId == player.playerData.user_id)
         {
-            player.redDialog("Tính bug?");
+            player.redDialog(player.Language.BugWarning);
             return;
         }
         if (player.playerData.LettersSendTime.ContainsKey(userId))
         {
             if (player.playerData.LettersSendTime[userId] > DateTime.Now)
             {
-                player.redDialog("Vui lòng chờ 30 giây để gửi cho người này");
+                player.redDialog(player.Language.WaitTimeForSendLetter);
                 return;
             }
             else
@@ -419,15 +419,15 @@ public class GameController
             {
                 var friendData = conn.QueryFirstOrDefault<PlayerData>("SELECT `BlockFriendLists` FROM `player` WHERE `player`.`user_id` = @user_id LIMIT 1;", new { user_id = userId });
                 if (friendData == null)
-                    player.redDialog("Người chơi không tồn tại");
+                    player.redDialog(player.Language.PlayerNotFound);
                 else
                 {
                     if (friendData.BlockFriendLists.Contains(player.user.user_id))
-                        player.redDialog("Gửi thư thất bại, do đối phương đã chặn bạn.");
+                        player.redDialog(player.Language.SendLetterFailByBlock);
                     else
                     {
                         conn.Execute("INSERT INTO `letter`(`userId`, `targetId`, `time`, `Type`, `Title`, `ShortContent`, `Content`) VALUES (@userId,@targetId,@time,@Type,@Title,@ShortContent,@Content)", letter);
-                        player.okDialog("Gửi thư thành công");
+                        player.okDialog(player.Language.SendLetterOK);
                     }
                 }
                 friendData = null;
@@ -437,7 +437,7 @@ public class GameController
         {
             playerRequest.playerData.addLetter(letter);
             playerRequest.controller.sendHasLetter();
-            player.okDialog("Gửi thư thành công");
+            player.okDialog(player.Language.SendLetterOK);
         }
     }
 
@@ -498,11 +498,6 @@ public class GameController
         }
     }
 
-    private const string REQUEST_ADD_FRIEND_OK = "Đã gửi yêu cầu thêm bạn thành công";
-    private const string REQUEST_ADD_FRIEND_EXISTS = "Đã gửi yêu cầu thêm bạn rồi";
-    private const string REQUEST_ADD_FRIEND_BLOCK = "Bạn đã bị chặn";
-
-
     private void requestAddFriend(string name)
     {
         Player playerRequest = PlayerManager.get(name);
@@ -514,7 +509,7 @@ public class GameController
                 var userData = conn.QueryFirstOrDefault("SELECT `user_id` FROM `player` WHERE `name` = @name;", new { name = name });
                 if (userData == null)
                 {
-                    player.redDialog("Người chơi không tồn tại");
+                    player.redDialog(player.Language.PlayerNotFound);
                     return;
                 }
                 else userId = userData.user_id;
@@ -531,7 +526,7 @@ public class GameController
     {
         if (userId == player.user.user_id)
         {
-            player.redDialog("Ai bug là gay =)))");
+            player.redDialog(player.Language.BugWarning);
             return;
         }
         Player playerRequest = PlayerManager.get(userId);
@@ -541,23 +536,23 @@ public class GameController
             {
                 var friendData = conn.QueryFirstOrDefault<PlayerData>("SELECT * FROM `player` WHERE `player`.`user_id` = @user_id LIMIT 1;", new { user_id = userId });
                 if (friendData == null)
-                    player.redDialog("Người chơi không tồn tại");
+                    player.redDialog(player.Language.PlayerNotFound);
                 else
                 {
                     if (friendData.RequestAddFriends.Contains(player.user.user_id) || friendData.ListFriends.Contains(player.user.user_id))
-                        player.redDialog(REQUEST_ADD_FRIEND_EXISTS);
+                        player.redDialog(player.Language.RequestAddFriendExist);
                     else if (friendData.BlockFriendLists.Contains(player.user.user_id))
-                        player.redDialog(REQUEST_ADD_FRIEND_BLOCK);
+                        player.redDialog(player.Language.RequestAddFriendBlock);
                     else
                     {
                         var findHasRequest = conn.Query<FriendRequest>("SELECT `userId`, `targetId` FROM `request_add_friend` WHERE `userId` =  @userId  AND `targetId` = @targetId;", new FriendRequest(player.user.user_id, userId, DateTime.Now));
                         if (findHasRequest.Any())
                         {
-                            player.redDialog(REQUEST_ADD_FRIEND_EXISTS);
+                            player.redDialog(player.Language.RequestAddFriendExist);
                             return;
                         }
                         conn.Execute("INSERT INTO `request_add_friend`(`userId`, `targetId`) VALUES (@userId, @targetId);", new FriendRequest(player.user.user_id, userId, DateTime.Now));
-                        player.okDialog(REQUEST_ADD_FRIEND_OK);
+                        player.okDialog(player.Language.RequestAddFriendOK);
                     }
                 }
                 friendData = null;
@@ -566,13 +561,13 @@ public class GameController
         else
         {
             if (playerRequest.playerData.RequestAddFriends.Contains(player.user.user_id) || playerRequest.playerData.ListFriends.Contains(player.user.user_id))
-                player.redDialog(REQUEST_ADD_FRIEND_EXISTS);
+                player.redDialog(player.Language.RequestAddFriendExist);
             else if (playerRequest.playerData.BlockFriendLists.Contains(player.user.user_id))
-                player.redDialog(REQUEST_ADD_FRIEND_BLOCK);
+                player.redDialog(player.Language.RequestAddFriendBlock);
             else
             {
                 playerRequest.playerData.RequestAddFriends.Add(player.user.user_id);
-                player.okDialog(REQUEST_ADD_FRIEND_OK);
+                player.okDialog(player.Language.RequestAddFriendOK);
             }
         }
     }
@@ -707,8 +702,7 @@ public class GameController
             if (!Utilities.CheckString(name, "^[a-z0-9]+$")
                     || (name.Length > 20 || name.Length < 5))
             {
-                player.redDialog(
-                        "Tên nhân vật phải có số lượng kí tự lớn hơn 5 và bé hơn 20 cũng như không chứa các kí tự đặc biệt");
+                player.redDialog(player.Language.CreateCharLaw);
                 player.loginOK();
                 return;
             }
@@ -717,7 +711,7 @@ public class GameController
                 var playerData = conn.QueryFirstOrDefault("select user_id from player where name = @name", new { name = name });
                 if (playerData != null)
                 {
-                    player.redDialog("Tên nhân vật đã tồn tại");
+                    player.redDialog(player.Language.DuplicateNameChar);
                     Thread.Sleep(1000);
                     player.session.Close();
                     return;
@@ -785,7 +779,7 @@ public class GameController
                 }
                 catch (Exception e)
                 {
-                    player.redDialog("Nhập sai");
+                    player.redDialog(player.Language.IncorrectTyping);
                     e.printStackTrace();
                 }
                 break;
@@ -1036,7 +1030,7 @@ public class GameController
                                 int index = message.readInt();
                                 if (index == -1)
                                 {
-                                    player.redDialog("Vui lòng tháo cánh ra");
+                                    player.redDialog(player.Language.PleaseUnequipWing);
                                     return;
                                 }
                                 var wingInventory = player.playerData[GopetManager.WING_INVENTORY];
@@ -1047,7 +1041,7 @@ public class GameController
                                 }
                                 else
                                 {
-                                    player.redDialog("Xảy ra lỗi ở nâng cấp cánh");
+                                    player.redDialog(player.Language.ErrorWhenUpgradeWing);
                                 }
                             }
                             break;
@@ -1069,13 +1063,13 @@ public class GameController
                                     {
                                         p.applyInfo(player);
                                     }
-                                    player.okDialog("Thao tác thành công");
+                                    player.okDialog(player.Language.ManipulateOK);
                                     MenuController.sendMenu(MenuController.MENU_WING_INVENTORY, player);
                                     HistoryManager.addHistory(new History(player).setLog("Tháo cánh " + it.getName()).setObj(it));
                                 }
                                 else
                                 {
-                                    player.redDialog("Hiện tại bạn không có mang bất kỳ cánh nào!");
+                                    player.redDialog(player.Language.YouNotEquipWing);
                                 }
                             }
                             break;
@@ -1169,7 +1163,7 @@ public class GameController
                     }
                     else
                     {
-                        player.redDialog("Pet đã được bán hoặc người bán đã hủy kí gửi");
+                        player.redDialog(player.Language.KioskCancelPet);
                     }
                 }
                 break;
@@ -1182,13 +1176,13 @@ public class GameController
         Pet petPassive = selectPetByItemId(petId2);
         if (petActive.Expire != null || petPassive.Expire != null)
         {
-            showDescPetUpTierUI("Không thể tiến hóa với pet dùng thử", null);
+            showDescPetUpTierUI(player.Language.CannotUpTierWithTryPet, null);
             return;
         }
         PetTier petTier = GopetManager.petTier.get(petActive.petIdTemplate);
         if (petTier == null || petTier.petTemplateIdNeed != petPassive.Template.petId)
         {
-            showDescPetUpTierUI("2 pet này không thể kết hợp tiến hóa", null);
+            showDescPetUpTierUI(player.Language.CannotUpTier, null);
         }
         else
         {
@@ -1214,7 +1208,7 @@ public class GameController
             petActive.str = oldPet.str + 10;
             petActive.tiemnang_point = gym_add;
             petActive.pointTiemNangLvl = gym_up_level;
-            showDescPetUpTierUI(petActive.Template.name, new string[] { petActive.Template.name, $"{petActive.str}(str) {petActive.agi}(agi) {petActive._int}(int)", $"Điểm tiềm năng {petActive.pointTiemNangLvl}" });
+            showDescPetUpTierUI(petActive.Template.name, new string[] { petActive.Template.name, $"{petActive.str}(str) {petActive.agi}(agi) {petActive._int}(int)", string.Format(player.Language.PotentialScore, petActive.pointTiemNangLvl)});
         }
     }
 
@@ -1437,7 +1431,7 @@ public class GameController
                         GopetMap mapData = MapManager.maps.get(mapId);
                         if (!mapData.CanChangeZone)
                         {
-                            player.Popup("Không thể đổi khu");
+                            player.Popup(player.Language.CannotChangeZone);
                             return;
                         }
                         if (placeId < mapData.numPlace && placeId >= 0)
@@ -1446,7 +1440,7 @@ public class GameController
                         }
                         else
                         {
-                            player.Popup("Không tồn tại khu này");
+                            player.Popup(player.Language.CannotFoundZone);
                         }
                     }
                     changePlaceDelay = Utilities.CurrentTimeMillis + GopetManager.CHANGE_CHANNEL_DELAY;
@@ -1454,17 +1448,17 @@ public class GameController
                 else
                 {
                     int second = Utilities.round((changePlaceDelay - Utilities.CurrentTimeMillis) / 1000);
-                    player.redDialog(Utilities.Format("Vui lòng chờ %s giây nữa", second));
+                    player.redDialog(string.Format(player.Language.WaitingForSeconds, second));
                 }
             }
             else
             {
-                player.redDialog("Không cho phép đánh chuyển khu cảm ơn");
+                player.redDialog(player.Language.CannotChangeZoneWhenBattle);
             }
         }
         else
         {
-            player.redDialog("Không thể đổi khu");
+            player.redDialog(player.Language.CannotChangeZone);
         }
     }
 
@@ -1540,7 +1534,7 @@ public class GameController
         foreach (var itemId in player.playerData.MoneyDisplays)
         {
             Item item = player.controller.selectItemsbytemp(itemId, GopetManager.MONEY_INVENTORY);
-            if(item == null)
+            if (item == null)
             {
                 message.putUTF(GopetManager.itemTemplate[itemId].iconPath);
                 message.putlong(0);
@@ -1689,7 +1683,7 @@ public class GameController
                 }
                 else
                 {
-                    player.redDialog("Pet không có đủ tiềm năng");
+                    player.redDialog(player.Language.NotEnoughtPotential);
                 }
             }
         }
@@ -1753,7 +1747,7 @@ public class GameController
                 player.session.sendMessage(message);
                 if (oPlayer != player)
                 {
-                    oPlayer.Popup(Utilities.Format("Người chơi %s đang xem trang bị của thú cưng bạn", player.playerData.name));
+                    oPlayer.Popup(string.Format(player.Language.OthersPlayerLeakPetInfo, player.playerData.name));
                 }
                 HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Xem trang bị pet của người chơi %s", oPlayer.playerData.name)).setObj(oPlayer.playerData));
             }
@@ -1764,7 +1758,7 @@ public class GameController
         }
         else
         {
-            player.redDialog("Người chơi đã offline");
+            player.redDialog(player.Language.PlayerOffline);
         }
     }
 
@@ -1843,32 +1837,32 @@ public class GameController
 
     public void notEnoughCoin()
     {
-        player.redDialog("Không đủ (ngoc)");
+        player.redDialog(player.Language.NotEnoughCoin);
     }
 
     public void notEnoughGold()
     {
-        player.redDialog("Không đủ (vang)");
+        player.redDialog(player.Language.NotEnoughGold);
     }
 
     public void notEnoughSilverBar()
     {
-        player.redDialog("Không đủ thỏi bạc");
+        player.redDialog(player.Language.NotEnoughSilverBar);
     }
 
     public void notEnoughGoldBar()
     {
-        player.redDialog("Không đủ thỏi vàng");
+        player.redDialog(player.Language.NotEnoughGoldBar);
     }
 
     public void notEnoughBloodGem()
     {
-        player.redDialog("Không đủ huyết ngọc");
+        player.redDialog(player.Language.NotEnoughBloodGem);
     }
 
     public void notEnoughCrystal()
     {
-        player.redDialog("Không đủ tinh thạch");
+        player.redDialog(player.Language.NotEnoughCrystal);
     }
 
     public bool checkGoldBar(int count)
@@ -2002,7 +1996,7 @@ public class GameController
 
         if (!objectPerformed.ContainsKeyZ(OBJKEY_ID_TATTO_TO_ENCHANT, OBJKEY_ID_MATERIAL1_TATTO_TO_ENCHANT, OBJKEY_ID_MATERIAL2_TATTO_TO_ENCHANT, OBJKEY_TYPE_PRICE_TATTO_TO_ENCHANT))
         {
-            player.redDialog("Thao tác quá nhanh!!!");
+            player.fastAction();
             return;
         }
 
@@ -2023,7 +2017,7 @@ public class GameController
 
                 if (!(checkCount(item1, 1) && checkCount(item2, 1)))
                 {
-                    player.redDialog("Không đủ nguyên liệu");
+                    player.redDialog(player.Language.NotEnoughMaterial);
                     return;
                 }
                 if (checkType(GopetManager.ITEM_MATERIAL_ENCHANT_TATOO, item1) && checkType(GopetManager.MATERIAL_ENCHANT_ITEM, item2))
@@ -2043,7 +2037,7 @@ public class GameController
                             first.lvl++;
                             p.applyInfo(player);
                             showPetTattoUI();
-                            player.okDialog("Cường hóa thành công");
+                            player.okDialog(player.Language.EnchantOK);
                         }
                         else
                         {
@@ -2051,12 +2045,12 @@ public class GameController
                             first.lvl -= numDrop;
                             p.applyInfo(player);
                             showPetTattoUI();
-                            player.redDialog($"Cường hóa thất bại bị giảm {numDrop} cấp!");
+                            player.redDialog(string.Format(player.Language.EnchantFailDrop, numDrop));
                         }
                     }
                     else
                     {
-                        player.redDialog("Xăm đã đạt cấp tối đa");
+                        player.redDialog(player.Language.TattoMaxLevel);
                     }
                 }
                 else
@@ -2066,7 +2060,7 @@ public class GameController
             }
             else
             {
-                player.redDialog("Thao tác quá nhanh");
+                player.fastAction();
             }
         }
         else
@@ -2100,7 +2094,7 @@ public class GameController
                         }
                         else
                         {
-                            player.redDialog("Xăm đã đạt cấp tối đa");
+                            player.redDialog(player.Language.TattoMaxLevel);
                         }
                     }
                     else
@@ -2110,7 +2104,7 @@ public class GameController
                 }
                 else
                 {
-                    player.redDialog("Thao tác quá nhanh");
+                    player.fastAction();
                 }
             }
             else

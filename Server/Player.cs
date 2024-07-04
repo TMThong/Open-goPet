@@ -182,7 +182,7 @@ Thread.Sleep(1000);
                 {
                     if (username.Contains(str))
                     {
-                        redDialog("Tài khoản không được phép có những từ này : " + String.Join(",", BANNAME));
+                        redDialog(Language.UsernameAndPasswordCanotHaveBanName + String.Join(",", BANNAME));
                         return;
                     }
                 }
@@ -191,7 +191,7 @@ Thread.Sleep(1000);
                     var user = conn.QueryFirstOrDefault("SELECT * FROM `user` WHERE username = @username;", new { username = username });
                     if (user != null)
                     {
-                        redDialog("Tên tài khoản đã tồn tại rồi");
+                        redDialog(Language.DuplicateNameChar);
                     }
                     else
                     {
@@ -203,18 +203,18 @@ Thread.Sleep(1000);
                                 ipv4Create = ((IPEndPoint)session.sc.RemoteEndPoint).Address.ToString(),
                                 dayCreate = Utilities.CurrentTimeMillis
                             });
-                        okDialog("Đăng ký tài khoản thành công mời bạn đăng nhập");
+                        okDialog(Language.RegisterOK);
                     }
                 }
             }
             else
             {
-                redDialog("Tài khoản và mật khẩu phải có số lượng kí tự lớn hơn 6 và bé hơn 25 đối với tài khoản , bé hơn 45 đối với mật khẩu");
+                redDialog(Language.RegisterLaw);
             }
         }
         else
         {
-            redDialog("Tài khoản và mật khẩu phải không chứa các kí tự đặc biệt");
+            redDialog(Language.HaveSpecialChar);
         }
     }
 
@@ -226,7 +226,7 @@ Thread.Sleep(1000);
                     || newPass.Length < 5)
             {
                 Message mW = new Message(GopetCMD.CHANGE_PASSWORD);
-                mW.putUTF("Mật khẩu phải có số lượng kí tự lớn hơn 5 và không chứa các kí tự đặc biệt");
+                mW.putUTF(Language.ChangePasswordLaw);
                 mW.writer().flush();
                 session.sendMessage(mW);
                 return;
@@ -236,11 +236,11 @@ Thread.Sleep(1000);
             {
                 conn.Execute("UPDATE `user` set password = @password where user_id = @user_id", new { password = newPass, user_id = user.user_id });
             }
-            okDialog("Đổi mật khẩu thành công, vui lòng nhớ kỷ thông tin");
+            okDialog(Language.ChangePasswordOK);
         }
         else
         {
-            redDialog("Sai mật khẩu");
+            redDialog(Language.IncorrectPassword);
         }
     }
 
@@ -276,7 +276,7 @@ Thread.Sleep(1000);
             {
                 controller.unfollowPet(playerData.petSelected);
                 playerData.petSelected = null;
-                Popup("Pet vừa hết thời gian dùng thử");
+                Popup(Language.PetExpire);
             }
         }
 
@@ -319,7 +319,7 @@ Thread.Sleep(1000);
         }
         if (!CheckString(username, "^[a-z0-9]+$") || !CheckString(password, "^[a-z0-9]+$"))
         {
-            redDialog("Tồn tại ký tự lạ");
+            redDialog(Language.HaveSpecialChar);
             return;
         }
         using (MySqlConnection conn = MYSQLManager.createWebMySqlConnection())
@@ -332,7 +332,7 @@ Thread.Sleep(1000);
                 this.user = userData;
                 if (user.role == UserData.ROLE_NON_ACTIVE)
                 {
-                    redDialog("Tài khoản chưa được kích hoạt");
+                    redDialog(Language.AccountNonAcitve);
                     return;
                 }
 
@@ -340,7 +340,7 @@ Thread.Sleep(1000);
                 {
                     case UserData.BAN_INFINITE:
                         {
-                            this.redDialog(Utilities.Format("Tài khoản của bạn đã bị khóa vĩnh viên \n Lý do :%s", user.banReason));
+                            this.redDialog(string.Format(Language.AccountBanInfinity, user.banReason));
                             Thread.Sleep(100);
                             this.session.Close();
                             conn.Close();
@@ -353,7 +353,7 @@ Thread.Sleep(1000);
                                 long deltaTime = user.banTime - Utilities.CurrentTimeMillis;
                                 int hours = (int)(deltaTime / 1000 / 60 / 60);
                                 int min = (int)((deltaTime - (hours * 1000 * 60 * 60)) / 1000 / 60);
-                                this.redDialog(Utilities.Format("Tài khoản của bạn đã bị khóa vì %s \n Sau %s giờ %s phút nữa tài khoản sẽ được mở khóa", user.banReason, hours, min));
+                                this.redDialog(string.Format(Language.AccountBanTime, user.banReason, hours, min));
                                 Thread.Sleep(100);
                                 this.session.Close();
                                 conn.Close();
@@ -370,9 +370,8 @@ Thread.Sleep(1000);
                 Player player2 = PlayerManager.get(user.user_id);
                 if (player2 != null)
                 {
-                    String str = "Người chơi khác đăng nhập vào tài khoản";
-                    player2.redDialog(str);
-                    this.redDialog(str);
+                    player2.redDialog(Language.AccountLogingDuplicate);
+                    this.redDialog(Language.AccountLogingDuplicate);
                     player2.session.Close();
                     this.session.Close();
                     return;
@@ -381,8 +380,7 @@ Thread.Sleep(1000);
                 long timeWait = PlayerManager.GetTimeMillisWaitLogin(user.user_id);
                 if (timeWait > 0)
                 {
-                    String str = Utilities.Format("Vui lòng chờ %s giây nữa để đăng nhập", timeWait / 1000);
-                    this.redDialog(str);
+                    this.redDialog(string.Format(Language.WaitLoging, timeWait / 1000));
                     Thread.Sleep(500);
                     this.session.Close();
                     return;
@@ -440,13 +438,13 @@ Thread.Sleep(1000);
                     if (playerData != null)
                     {
                         controller.updateUserInfo();
-                        showBanner("Người chơi game quá 180 phút có thể gây ảnh hưởng đến sức khỏe");
+                        showBanner(Language.WarningPlayerWhenLogin);
                         getPet()?.applyInfo(this);
                         if (ServerSetting.instance.isOnlyAdminLogin)
                         {
                             if (!playerData.isAdmin)
                             {
-                                redDialog("Server này chỉ cho Admin đăng nhập bạn vui lòng không truy cập");
+                                redDialog(Language.ServerOnlyForAdmin);
                                 session.Close();
                                 return;
                             }
@@ -482,7 +480,7 @@ Thread.Sleep(1000);
                         }
                         if (goldPlus > 0)
                         {
-                            okDialog(Utilities.Format("Nhận dược %s (vang) do nạp tiền", Utilities.FormatNumber(goldPlus)));
+                            okDialog(string.Format(Language.GetGoldByCard, Utilities.FormatNumber(goldPlus)));
                         }
                     }
                     else
@@ -494,7 +492,7 @@ Thread.Sleep(1000);
             }
             else
             {
-                loginFailed("Tài khoản hoặc mật khẩu của bạn không chính xác");
+                loginFailed(Language.IncorrectUsePassword);
             }
         }
     }
@@ -571,12 +569,12 @@ Thread.Sleep(1000);
 
     public virtual void notEnoughHp()
     {
-        Popup("Bạn không đủ máu");
+        Popup(Language.NotEnoughtHP);
     }
 
     public virtual void notEnoughEnergy()
     {
-        Popup("Bạn không đủ thể lực");
+        Popup(Language.NotEnoughtEnergy);
     }
 
     public virtual void addCoin(long coin)
@@ -660,7 +658,7 @@ Thread.Sleep(1000);
 
     public void petNotFollow()
     {
-        redDialog("Pet không đi theo!");
+        redDialog(Language.PetNotFollow);
     }
 
     public Pet getPet()
@@ -670,7 +668,7 @@ Thread.Sleep(1000);
 
     public void notEnoughStar()
     {
-        redDialog("Bạn không đủ ngôi sao");
+        redDialog(Language.NotEnoughtStar);
     }
 
     public void addItemToInventory(Item item, sbyte inventory)
@@ -775,18 +773,18 @@ Thread.Sleep(1000);
 
     public void fastAction()
     {
-        redDialog("Thao tác quá nhanh");
+        redDialog(Language.FastAction);
     }
 
     public void itemError(string where = "")
     {
         if (string.IsNullOrEmpty(where))
         {
-            redDialog("Lỗi vật phẩm");
+            redDialog(Language.ErrorItem);
         }
         else
         {
-            redDialog("Lỗi vật phẩm ở " + where);
+            redDialog(Language.ErrorItem + where);
         }
     }
 
