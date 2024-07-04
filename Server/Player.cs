@@ -24,7 +24,7 @@ public class Player : IHandleMessage
     public Version ApplicationVersion;
     public string info;
     public int displayWidth, displayHeight;
-    public string languageCode;
+    public string _languageCode;
     public string Refcode;
     public UserData user;
     public PlayerData playerData;
@@ -51,7 +51,7 @@ public class Player : IHandleMessage
     {
         get
         {
-            return GopetManager.Language[languageCode];
+            return GopetManager.Language[_languageCode];
         }
     }
 
@@ -102,8 +102,8 @@ public class Player : IHandleMessage
                         info = ms.reader().readUTF();
                         displayWidth = ms.reader().readInt();
                         displayHeight = ms.reader().readInt();
-                        languageCode = ms.reader().readUTF();
-                        if (!GopetManager.Language.ContainsKey(languageCode))
+                        _languageCode = ms.reader().readUTF();
+                        if (!GopetManager.Language.ContainsKey(_languageCode))
                         {
                             session.setClientOK(false);
                             session.Close();
@@ -300,6 +300,11 @@ Thread.Sleep(1000);
         ms.putString(text);
         ms.cleanup();
         session.sendMessage(ms);
+    }
+
+    public void redDialog(String text, params object[] obj)
+    {
+        redDialog(string.Format(text, obj));
     }
 
     public virtual void login(String username, String password, String version)

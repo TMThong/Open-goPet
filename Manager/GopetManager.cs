@@ -996,12 +996,12 @@ public class GopetManager
     {
         switch (nclass)
         {
-            case Assassin: return "Sát thủ";
-            case Wizard: return "Pháp sư";
-            case Fighter: return "Chiến binh";
-            case Demon: return "Thiên binh";
-            case Angel: return "Thiên sứ";
-            case Archer: return "Thiên binh";
+            case Assassin: return player.Language.Assassin;
+            case Wizard: return player.Language.Wizard;
+            case Fighter: return player.Language.Fighter;
+            case Demon: return player.Language.Demon;
+            case Angel: return player.Language.Angel;
+            case Archer: return player.Language.Archer;
         }
         return string.Empty;
     }

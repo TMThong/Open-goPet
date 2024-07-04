@@ -3033,11 +3033,11 @@ public class GameController
                 String destStr = "";
                 if (levelDrop > 0)
                 {
-                    dropStr = Utilities.Format("\n Nếu thất bại trang bị của bạn sẽ giảm %s cấp.", levelDrop);
+                    dropStr = string.Format(player.Language.IfEnchantFailItemWillDrop, levelDrop);
                 }
                 if (canDest)
                 {
-                    destStr = "\n Nếu thất bại trang bị của bạn sẽ mất";
+                    destStr = player.Language.IfEnchantFailItemWillDestroy;
                 }
                 MenuController.showYNDialog(MenuController.DIALOG_ENCHANT, string.Format(player.Language.AskEnchantItem, itemEuip.getTemp().getName(), isGem ? GopetManager.PERCENT_OF_ENCHANT_GEM[itemEuip.lvl] : GopetManager.DISPLAY_PERCENT_ENCHANT[itemEuip.lvl], materialCrystal.getTemp().getOptionValue()[0], GopetManager.PRICE_ENCHANT[itemEuip.lvl]).Replace('/', '%') + dropStr + destStr, player);
             }
@@ -3076,7 +3076,7 @@ public class GameController
 
         if (itemEuipActive == itemEuipPassive || itemEuipActive == null || itemEuipPassive == null)
         {
-            player.redDialog("Thao tác nhanh");
+            player.fastAction();
             return;
         }
         objectPerformed.put(MenuController.OBJKEY_ITEM_UP_TIER_ACTIVE, itemEuipActive);
@@ -3084,12 +3084,12 @@ public class GameController
         objectPerformed.put(MenuController.OBJKEY_IS_ENCHANT_GEM, isGem);
         if (isGem)
         {
-            MenuController.showYNDialog(MenuController.DIALOG_ASK_KEEP_GEM, Utilities.Format("Bạn có muốn dùng %s (vang) để giữ ngọc không bị vỡ không?", GopetManager.PRICE_KEEP_GEM), player);
-            objectPerformed.put(MenuController.OBJKEY_ASK_UP_TIER_GEM_STR, Utilities.Format("Bạn có chắc muốn tiến hóa %s với giá %s (ngoc) không?", itemEuipActive.getName(), GopetManager.PRICE_UP_TIER_ITEM));
+            MenuController.showYNDialog(MenuController.DIALOG_ASK_KEEP_GEM, string.Format(player.Language.KeepGem, GopetManager.PRICE_KEEP_GEM), player);
+            objectPerformed.put(MenuController.OBJKEY_ASK_UP_TIER_GEM_STR, string.Format(player.Language.DoYouWantUpTierGem, itemEuipActive.getName(), GopetManager.PRICE_UP_TIER_ITEM));
         }
         else
         {
-            MenuController.showYNDialog(MenuController.DIALOG_UP_TIER_ITEM, Utilities.Format("Bạn có chắc muốn tiến hóa %s với giá %s (ngoc) không?", itemEuipActive.getName(), GopetManager.PRICE_UP_TIER_ITEM), player);
+            MenuController.showYNDialog(MenuController.DIALOG_UP_TIER_ITEM, string.Format(player.Language.DoYouWantUpTierGem, itemEuipActive.getName(), GopetManager.PRICE_UP_TIER_ITEM), player);
         }
     }
 
@@ -3100,7 +3100,7 @@ public class GameController
         {
             if (!(pet.Template.element == GopetManager.DARK_ELEMENT || pet.Template.element == GopetManager.LIGHT_ELEMENT || pet.Template.element == elementItem))
             {
-                player.redDialog($"Bạn cần thú cưng hệ {GopetManager.GetElementDisplay(GopetManager.LIGHT_ELEMENT, player)} hoặc {GopetManager.GetElementDisplay(GopetManager.DARK_ELEMENT, player)} để thao tác với tất cả các hệ.\n Còn lại bạn phải có thú cưng cùng hệ với vật phẩm!!!");
+                player.redDialog(player.Language.ItemGemElementLaw, GopetManager.GetElementDisplay(GopetManager.LIGHT_ELEMENT, player), GopetManager.GetElementDisplay(GopetManager.DARK_ELEMENT, player));
                 return false;
             }
         }
@@ -3131,7 +3131,7 @@ public class GameController
             {
                 if (itemEuipActive.gemInfo != null || itemEuipPassive.gemInfo != null)
                 {
-                    player.redDialog("Vui lòng tháo ngọc");
+                    player.redDialog(player.Language.PleaseUnequipGem);
                     return;
                 }
             }
@@ -3186,7 +3186,7 @@ public class GameController
                                 {
                                     bool isActive = Utilities.nextInt(2) == 1;
                                     removeGem(isActive ? itemEuipActive.itemId : itemEuipPassive.itemId);
-                                    PlayerManager.showBanner(Utilities.Format("Người chơi %s cường hóa %s thất bại làm bể viên ngọc", player.playerData.name, (itemEuipActive.getTemp().getName())));
+                                    PlayerManager.showBanner(string.Format(player.Language.EnchantGemFailAndDestroy, player.playerData.name, (itemEuipActive.getTemp().getName())));
                                 }
                             }
                         }
@@ -3216,13 +3216,13 @@ public class GameController
                             }
                             else
                             {
-                                player.redDialog("Vui lòng chọn vật phẩm thứ  mà thứ cưng không có đeo");
+                                player.redDialog(player.Language.ItemHasPetEquip);
                             }
                         }
                     }
                     else
                     {
-                        player.redDialog("Vật phẩm này không thể lên đời");
+                        player.redDialog(player.Language.ItemCannotUpTier);
                     }
                 }
                 else
@@ -3232,12 +3232,12 @@ public class GameController
             }
             else
             {
-                player.redDialog("Vật phẩm không cùng loại");
+                player.redDialog(player.Language.ItemNotEqualType);
             }
         }
         else
         {
-            player.redDialog("Vật phẩm trùng");
+            player.redDialog(player.Language.DuplicateItem);
         }
     }
 
@@ -3247,7 +3247,7 @@ public class GameController
         Pet petPassive = selectPetByItemId(petId2);
         if (petActive.Expire != null || petPassive.Expire != null)
         {
-            player.redDialog("Không thể tiến hóa với pet dùng thử");
+            player.redDialog(player.Language.CannotUpTierWithTryPet);
             return;
         }
         PetTier petTier = GopetManager.petTier.get(petActive.petIdTemplate);
@@ -3257,8 +3257,6 @@ public class GameController
             {
                 if (petActive.lvl >= GopetManager.LVL_PET_REQUIER_UP_TIER && petPassive.lvl >= GopetManager.LVL_PET_PASSIVE_REQUIER_UP_TIER)
                 {
-                    if (!(name.Length > 20 || name.Length < 6))
-                    {
                         if (petTier != null)
                         {
                             if (petPassive.petIdTemplate == petTier.getPetTemplateIdNeed())
@@ -3277,7 +3275,7 @@ public class GameController
                                         }
                                         break;
                                     default:
-                                        player.redDialog("Không dùng loại này");
+                                        player.redDialog(player.Language.MoneyNotEqualType);
                                         return;
                                 }
                                 player.playerData.pets.remove(petPassive);
@@ -3310,7 +3308,7 @@ public class GameController
                                 petActive.wasSell = oldPet.wasSell;
                                 petActive.pointTiemNangLvl = gym_up_level;
                                 player.playerData.pets.Add(petActive);
-                                player.okDialog(Utilities.Format("Chức mừng bạn đã tiến hóa thành công %s và thú cưng của bạn được cộng %s điểm gym", petActive.getNameWithStar(), gym_add));
+                                player.okDialog(string.Format(player.Language.UpTierPetOK, petActive.getNameWithStar(), gym_add));
                                 HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Tiến hóa pet %s thành công", petActive.getNameWithoutStar())).setObj(petActive));
                                 Message message = messagePetService(GopetCMD.PET_UP_TIER);
                                 message.cleanup();
@@ -3319,32 +3317,27 @@ public class GameController
                             }
                             else
                             {
-                                player.redDialog("Vui lòng chọn pet thứ 2 chính xác");
+                                player.redDialog(player.Language.WrongPet2UpTier);
                             }
                         }
                         else
                         {
-                            player.redDialog("Hiện tại thứ cưng này không thể tiến hóa");
+                            player.redDialog(player.Language.PetCannotUpTier);
                         }
-                    }
-                    else
-                    {
-                        player.redDialog("Tên pet phải lớn hơn 20 ký tự hoặc bé hơn 6 ký tự");
-                    }
                 }
                 else
                 {
-                    player.redDialog(Utilities.Format("Bạn cần thú cưng đạt cấp %s mới có thể tiến hóa và ảo ảnh cần cấp %s", GopetManager.LVL_PET_REQUIER_UP_TIER, GopetManager.LVL_PET_PASSIVE_REQUIER_UP_TIER));
+                    player.redDialog(string.Format(player.Language.UpTierLaw, GopetManager.LVL_PET_REQUIER_UP_TIER, GopetManager.LVL_PET_PASSIVE_REQUIER_UP_TIER));
                 }
             }
             else
             {
-                player.redDialog("Bạn phải tháo trang bị cho cả 2 pet");
+                player.redDialog(player.Language.RemoveEquipWhenUpTier);
             }
         }
         else
         {
-            player.redDialog("Tên pet không dài quá 30 ký tự và phải lớn hơn 6 ký tự");
+            player.redDialog(player.Language.SetNamePetWhenUpTierLaw);
         }
     }
 
@@ -3365,17 +3358,17 @@ public class GameController
                 {
                     pet.skill[skillIndex][1]++;
                     this.taskCalculator.onUpdateSkillPet(pet, pet.skill[skillIndex][1]);
-                    player.okDialog(Utilities.Format("Chức mừng bạn đã nâng cấp %s lên cấp %s !", petSkill.name, pet.skill[skillIndex][1]));
+                    player.okDialog(string.Format(player.Language.UpTierPetOK, petSkill.name, pet.skill[skillIndex][1]));
                     HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Bạn đã nâng cấp %s lên cấp %s  cho pet %s!", petSkill.name, pet.skill[skillIndex][1], pet.getNameWithoutStar())).setObj(pet));
                 }
                 else
                 {
-                    player.redDialog("Nâng cấp thất bại");
+                    player.redDialog(player.Language.UpgradeFail);
                 }
             }
             else
             {
-                player.redDialog("Kỹ năng đạt cấp tối đa rồi");
+                player.redDialog(player.Language.SkillIsMaxLevel);
             }
         }
     }
@@ -3453,7 +3446,7 @@ public class GameController
                     }
                     else
                     {
-                        player.redDialog("Người chơi này đang có một cuộc chiến");
+                        player.redDialog(player.Language.PlayerHasABatte);
                     }
                 }
                 else
@@ -3463,7 +3456,7 @@ public class GameController
             }
             else
             {
-                player.redDialog("Người chơi đã thoát");
+                player.redDialog(player.Language.PlayerQuit);
             }
         }
     }
@@ -3477,7 +3470,7 @@ public class GameController
         }
         else
         {
-            player.redDialog("Vui lòng chờ");
+            player.redDialog(player.Language.PleaseWait);
         }
     }
 
@@ -3494,12 +3487,12 @@ public class GameController
             }
             else
             {
-                player.redDialog("Điểm pk của bạn quá cao");
+                player.redDialog(player.Language.PkPoinHigher);
             }
         }
         else
         {
-            player.redDialog("Những map này không cho phép PK");
+            player.redDialog(player.Language.BanPkInMap);
         }
     }
 
@@ -3541,7 +3534,7 @@ public class GameController
                         }
                         else
                         {
-                            player.redDialog("Người chơi này đang có một cuộc chiến");
+                            player.redDialog(player.Language.PlayerHasABatte);
                         }
                     }
                     else
@@ -3551,12 +3544,12 @@ public class GameController
                 }
                 else
                 {
-                    player.redDialog("Người chơi đã thoát");
+                    player.redDialog(player.Language.PlayerQuit);
                 }
             }
             else
             {
-                player.redDialog("Người chơi này thuộc BQT");
+                player.redDialog(player.Language.PlayerIsAdmin);
             }
         }
     }
@@ -3565,7 +3558,7 @@ public class GameController
     {
         if (playerInvite.controller.getPetBattle() == null)
         {
-            MenuController.showYNDialog(MenuController.DIALOG_INVITE_CHALLENGE, Utilities.Format("Người chơi %s muốn thách đấu bạn với mức cược %s (ngoc)\n Bạn có đồng ý lời mời này không?", playerInvite.playerData.name, Utilities.FormatNumber(price)), player);
+            MenuController.showYNDialog(MenuController.DIALOG_INVITE_CHALLENGE, string.Format(playerInvite.Language.InviteChanllenge, playerInvite.playerData.name, Utilities.FormatNumber(price)), player);
             objectPerformed.put(MenuController.OBJKEY_INVITE_CHALLENGE_PLAYER, playerInvite);
             objectPerformed.put(MenuController.OBJKEY_PRICE_BET_CHALLENGE, price);
         }
@@ -3586,9 +3579,8 @@ public class GameController
                     {
                         if (playerInvite.getPet().petDieByPK || player.getPet().petDieByPK)
                         {
-                            String redDl = "Trong 2 thú cưng có thú cưng vừa bị chết do PK";
-                            player.redDialog(redDl);
-                            playerInvite.redDialog(redDl);
+                            player.redDialog(player.Language.In2PetHavePetDie);
+                            playerInvite.redDialog(playerInvite.Language.In2PetHavePetDie);
                         }
                         else
                         {
@@ -3601,7 +3593,7 @@ public class GameController
                     }
                     else
                     {
-                        player.redDialog("Người chơi mới bạn không có nằm trong khu này");
+                        player.redDialog(player.Language.PlayerIsNotInThisZone);
                     }
                 }
             }
@@ -3629,22 +3621,22 @@ public class GameController
                         subCountItem(itemSelect, countNeed, GopetManager.NORMAL_INVENTORY);
                         mypet.tiemnang_point += mypet.star;
                         mypet.star++;
-                        player.okDialog(Utilities.Format("Chúc mừng bạn đã nâng sao thành công cho\n %s", mypet.getNameWithStar()));
+                        player.okDialog(string.Format(player.Language.UpStarPetOK, mypet.getNameWithStar()));
                         HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Nâng sao thú cưng %s lên %s sao", mypet.getPetTemplate().name, mypet.star)));
                     }
                     else
                     {
-                        player.redDialog("Số mảnh không đủ\n Cần " + countNeed + " mảnh!");
+                        player.redDialog(player.Language.ItemPartNeedToUpStar, countNeed);
                     }
                 }
                 else
                 {
-                    player.redDialog("Đây không phải là mảnh pet đúng với pet bạn dẫn theo");
+                    player.redDialog(player.Language.ItemPartNeedToUpStarWrong);
                 }
             }
             else
             {
-                player.redDialog("Pet của bạn đã đạt sao tới đa");
+                player.redDialog(player.Language.PetIsMaxStar);
             }
         }
         else
@@ -3715,14 +3707,14 @@ public class GameController
                     if (indexUnlock > i)
                     {
                         m.putInt(0);
-                        m.putUTF("Chưa xăm");
+                        m.putUTF(player.Language.NonTatto);
                         m.putsbyte(i + 1);
                         m.putUTF("tatoos/0.png");
                     }
                     else
                     {
                         m.putInt(0);
-                        m.putUTF(Utilities.Format("Mốc cấp %s", GopetManager.LVL_REQUIRE_PET_TATTO[i]));
+                        m.putUTF(string.Format(player.Language.PetTattoMilestones, GopetManager.LVL_REQUIRE_PET_TATTO[i]));
                         m.putsbyte(i + 1);
                         m.putUTF("tatoos/-1.png");
                     }
@@ -3755,14 +3747,14 @@ public class GameController
                     int randTatto = randTattoo(itemSelect.getTemp().getOptionValue());
                     PetTatto petTatto = new PetTatto(randTatto);
                     pet.addTatto(petTatto);
-                    player.okDialog(Utilities.Format("Chức mừng bạn xăm thành công %s", petTatto.getName()));
+                    player.okDialog(string.Format(player.Language.TattoOK, petTatto.getName()));
                     pet.applyInfo(player);
                     subCountItem(itemSelect, 1, GopetManager.NORMAL_INVENTORY);
                     showPetTattoUI();
                 }
                 else
                 {
-                    player.redDialog("Bạn chưa mở mốc này");
+                    player.redDialog(player.Language.PetNonUnlockTattoMilestones);
                 }
             }
         }
@@ -3805,7 +3797,7 @@ public class GameController
                 {
                     p.tatto.remove(tatto);
                     showPetTattoUI();
-                    player.okDialog(Utilities.Format("Xóa thành công %s", tatto.Template.name));
+                    player.okDialog(string.Format(player.Language.RemoveTattoOK, tatto.Template.name));
                     subCountItem(itemSelect, 1, GopetManager.NORMAL_INVENTORY);
                     objectPerformed.Remove(MenuController.OBJKEY_TATTO_ID_REMOVE);
                     HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Xóa xăm %s cho pet %s", tatto.Template.name, p.getNameWithoutStar())));
@@ -3884,7 +3876,7 @@ public class GameController
                         if (myPet != null)
                         {
                             myPet.addExp(giftInfo[1]);
-                            popups.add(new Popup(Utilities.FormatNumber(giftInfo[1]) + " exp cho thú cưng đang đi theo"));
+                            popups.add(new Popup(Utilities.FormatNumber(giftInfo[1]) + player.Language.AddExpForPetFollow));
                         }
                     }
                     break;
@@ -3892,7 +3884,7 @@ public class GameController
                 case GopetManager.GIFT_ENERGY:
                     {
                         player.addStar(giftInfo[1]);
-                        popups.add(new Popup(Utilities.FormatNumber(giftInfo[1]) + " năng lượng"));
+                        popups.add(new Popup(Utilities.FormatNumber(giftInfo[1]) + player.Language.Energy));
                     }
                     break;
                 case GopetManager.GIFT_RANDOM_ITEM:
@@ -3924,7 +3916,7 @@ public class GameController
                                         break;
                                     case -126:
                                         player.playerData.AccumulatedPoint += count;
-                                        popups.add(new Popup($"{count} điểm tích lũy"));
+                                        popups.add(new Popup(string.Format(player.Language.GiftAccumulatedPoint, count)));
                                         flag = true;
                                         break;
                                 }
@@ -3967,7 +3959,7 @@ public class GameController
                 case GopetManager.GIFT_EVENT_POINT:
                     {
                         player.playerData.EventPoint += giftInfo[1];
-                        popups.add(new Popup($"{giftInfo[1]} điểm sự kiện"));
+                        popups.add(new Popup(string.Format(player.Language.GiftEventPoint, giftInfo[1])));
                         break;
                     }
                 case GopetManager.GIFT_FUND_CLAN:
@@ -3976,8 +3968,7 @@ public class GameController
                         if (clanMember != null)
                         {
                             clanMember.clan.addFund(giftInfo[1], clanMember);
-                            player.okDialog($"Bang hội của bạng được cộng {Utilities.FormatNumber(giftInfo[1])} quỹ bang");
-                            popups.add(new Popup($"{Utilities.FormatNumber(giftInfo[1])} quỹ bang"));
+                            popups.add(new Popup(string.Format(player.Language.GiftFundClan, Utilities.FormatNumber(giftInfo[1]))));
                         }
                         break;
                     }
@@ -4040,7 +4031,7 @@ public class GameController
     private void askRemoveGemItem(int itemId)
     {
         objectPerformed.put(MenuController.OBJKEY_ID_GEM_REMOVE, itemId);
-        MenuController.showYNDialog(MenuController.DIALOG_CONFIRM_REMOVE_GEM, "Bạn chắc muốn xóa ngọc này?", player);
+        MenuController.showYNDialog(MenuController.DIALOG_CONFIRM_REMOVE_GEM, player.Language.AskRemoveGem, player);
     }
 
     public void removeGem(int itemId)
@@ -4053,7 +4044,7 @@ public class GameController
         }
         else
         {
-            player.redDialog("Đã xóa vật phẩm này");
+            player.redDialog(player.Language.WasDeleteItem);
         }
     }
 
@@ -4088,7 +4079,7 @@ public class GameController
 
             if (equipItem.petEuipId > -1 && equipItem.petEuipId != player.playerData.petSelected?.petId)
             {
-                player.redDialog("Gắn ngọc thất bại do pet hiện tại không mang trang bị này");
+                player.redDialog(player.Language.EquipGemFailByWrongItem);
                 return;
             }
 
@@ -4115,24 +4106,24 @@ public class GameController
                 }
                 else
                 {
-                    player.redDialog("Vật phẩm này đã khảm ngọc rồi");
+                    player.redDialog(player.Language.ItemHasGem);
                 }
             }
             else
             {
-                player.redDialog("Trang bị không tồn tại");
+                player.redDialog(player.Language.CannotFoundEquip);
             }
         }
         else
         {
-            player.redDialog("Xảy ra lỗi, có vẻ như thao tác quá nhanh hoặc mạng yếu");
+            player.fastAction();
         }
     }
 
     public void unequipGem(int itemId)
     {
         objectPerformed.put(MenuController.OBJKEY_ID_ITEM_REMOVE_GEM, itemId);
-        MenuController.showYNDialog(MenuController.DIALOG_ASK_REMOVE_GEM, "Bạn có chắc là muốn tháo ngọc ra không?", player);
+        MenuController.showYNDialog(MenuController.DIALOG_ASK_REMOVE_GEM, player.Language.AskUnequipGem, player);
     }
 
     public void confirmUnequipGem(int itemId)
@@ -4142,13 +4133,13 @@ public class GameController
         {
             if (item.gemInfo == null)
             {
-                player.redDialog("Vật phẩm không có gắn ngọc");
+                player.redDialog(player.Language.ItemUnequipGem);
             }
             else
             {
                 if (item.gemInfo.timeUnequip > 0)
                 {
-                    player.redDialog("Vật phẩm đang tháo");
+                    player.redDialog(player.Language.GemIsRemoving);
                 }
                 else
                 {
@@ -4159,7 +4150,7 @@ public class GameController
         }
         else
         {
-            player.redDialog("Vật phẩm không tồn tại");
+            player.redDialog(player.Language.ItemNotFound);
         }
     }
 
@@ -4228,7 +4219,7 @@ public class GameController
     private void fastUnequipGem(int itemId)
     {
         objectPerformed.put(MenuController.OBJKEY_ID_ITEM_FAST_REMOVE_GEM, itemId);
-        MenuController.showYNDialog(MenuController.DIALOG_ASK_FAST_REMOVE_GEM, Utilities.Format("Bạn có muốn dùng %s (vang) để tháo ngọc nhanh không?", Utilities.FormatNumber(GopetManager.PRICE_UNEQUIP_GEM)), player);
+        MenuController.showYNDialog(MenuController.DIALOG_ASK_FAST_REMOVE_GEM, string.Format(player.Language.AskWantUseFastRemoveGem, Utilities.FormatNumber(GopetManager.PRICE_UNEQUIP_GEM)), player);
     }
 
     private void showListClan()

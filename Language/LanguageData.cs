@@ -8,9 +8,10 @@ namespace Gopet.Language
 {
     public sealed class LanguageData
     {
-        public Dictionary<string, string> ItemLanguage { get; set; } = new Dictionary<string, string>();
-        public Dictionary<string, string> NpcOptionLanguage { get; set; } = new Dictionary<string, string>();
-        public Dictionary<string, string> TattoLanguage { get; set; } = new Dictionary<string, string>();
+        public Dictionary<int, string> ItemLanguage { get; set; } = new Dictionary<int, string>();
+        public Dictionary<int, string> NpcOptionLanguage { get; set; } = new Dictionary<int, string>();
+        public Dictionary<int, string> NpcNameLanguage { get; set; } = new Dictionary<int, string>();
+        public Dictionary<int, string> TattoLanguage { get; set; } = new Dictionary<int, string>();
 
         public string OldVersionNotify { get; set; } = "Phiên bản cũ rồi, bạn vui lòng tải bản mới nhất";
         public string AccountNonAcitve { get; set; } = "Tài khoản chưa được kích hoạt";
@@ -109,5 +110,63 @@ namespace Gopet.Language
         public string EnchantFailAndDestroyBanner { get; set; } = "Thật đáng tiếc người chơi {0} đã cường hoá {1} thất bại,hư hỏng vĩnh viễn!!!";
         public string PleaseUnequipGem { get; set; } = "Vui lòng tháo ngọc";
         public string AskEnchantItem { get; set; } = "Bạn có chắc muốn cường hóa {0} với tỉ lệ ({1} /) + {2}/ với giá {3} (ngoc) không?";
+        public string IfEnchantFailItemWillDrop { get; set; } = "\n Nếu thất bại trang bị của bạn sẽ giảm {0} cấp.";
+        public string IfEnchantFailItemWillDestroy { get; set; } = "\n Nếu thất bại trang bị của bạn sẽ mất";
+        public string KeepGem { get; set; } = "Bạn có muốn dùng {0} (vang) để giữ ngọc không bị vỡ không?";
+        public string DoYouWantUpTierGem { get; set; } = "Bạn có chắc muốn tiến hóa {0} với giá {1} (ngoc) không?";
+        public string Assassin { get; set; } = "Sát thủ";
+        public string Wizard { get; set; } = "Pháp sư";
+        public string Fighter { get; set; } = "Chiến binh";
+        public string Demon { get; set; } = "Thiên binh";
+        public string Angel { get; set; } = "Thiên sứ";
+        public string Archer { get; set; } = "Thiên binh";
+        public string ItemGemElementLaw { get; set; } = "Bạn cần thú cưng hệ {0} hoặc {1} để thao tác với tất cả các hệ.\n Còn lại bạn phải có thú cưng cùng hệ với vật phẩm!!!";
+        public string EnchantGemFailAndDestroy { get; set; } = "Người chơi {0} cường hóa {1} thất bại làm bể viên ngọc";
+        public string ItemCannotUpTier { get; set; } = "Vật phẩm này không thể lên đời";
+        public string ItemNotEqualType { get; set; } = "Vật phẩm không cùng loại";
+        public string DuplicateItem { get; set; } = "Vật phẩm trùng";
+        public string MoneyNotEqualType { get; set; } = "Sai loại tiền tệ";
+        public string UpgradeFail { get; set; } = "Nâng cấp thất bại";
+        public string SkillIsMaxLevel { get; set; } = "Kỹ năng đạt cấp tối đa rồi";
+        public string UpTierPetOK { get; set; } = "Chức mừng bạn đã tiến hóa thành công {0} và thú cưng của bạn được cộng {1} điểm gym";
+        public string WrongPet2UpTier { get; set; } = "Vui lòng chọn pet thứ 2 chính xác";
+        public string PetCannotUpTier { get; set; } = "Hiện tại thứ cưng này không thể tiến hóa";
+        public string UpTierLaw { get; set; } = "Bạn cần thú cưng đạt cấp {0} mới có thể tiến hóa và ảo ảnh cần cấp {1}";
+        public string RemoveEquipWhenUpTier { get; set; } = "Bạn phải tháo trang bị cho cả 2 pet";
+        public string SetNamePetWhenUpTierLaw { get; set; } = "Bạn phải tháo trang bị cho cả 2 pet";
+        public string UpSkillOK { get; set; } = "Chức mừng bạn đã nâng cấp {0} lên cấp {1} !";
+        public string PlayerHasABatte { get; set; } = "Người chơi này đang có một cuộc chiến";
+        public string PlayerQuit { get; set; } = "Người chơi đã thoát";
+        public string PleaseWait { get; set; } = "Xin vui lòng chờ";
+        public string PkPoinHigher { get; set; } = "Điểm pk của bạn quá cao";
+        public string BanPkInMap { get; set; } = "Những map này không cho phép PK";
+        public string PlayerIsAdmin { get; set; } = "Người chơi này là ban quản trị";
+        public string InviteChanllenge { get; set; } = "Người chơi {0} muốn thách đấu bạn với mức cược {1} (ngoc)\n Bạn có đồng ý lời mời này không?";
+        public string In2PetHavePetDie { get; set; } = "Trong 2 thú cưng có thú cưng vừa bị chết do PK";
+        public string PlayerIsNotInThisZone { get; set; } = "Người chơi mới bạn không có nằm trong khu này";
+        public string UpStarPetOK { get; set; } = "Chúc mừng bạn đã nâng sao thành công cho {0}";
+        public string ItemPartNeedToUpStar { get; set; } = "Số mảnh không đủ . Cần {0} mảnh!";
+        public string ItemPartNeedToUpStarWrong { get; set; } = "Đây không phải là mảnh pet đúng với pet bạn dẫn theo";
+        public string PetIsMaxStar { get; set; } = "Pet của bạn đã đạt sao tới đa";
+        public string NonTatto { get; set; } = "Chưa xăm";
+        public string PetTattoMilestones { get; set; } = "Mốc cấp {0}";
+        public string PetNonUnlockTattoMilestones { get; set; } = "Bạn chưa mở mốc này";
+        public string TattoOK { get; set; } = "Chức mừng bạn xăm thành công {0}";
+        public string RemoveTattoOK { get; set; } = "Xóa thành công {0}";
+        public string Energy { get; set; } = " năng lượng";
+        public string AddExpForPetFollow { get; set; } = " exp cho thú cưng đang đi theo";
+        public string GiftAccumulatedPoint { get; set; } = "{0} điểm tích lũy";
+        public string GiftEventPoint { get; set; } = "{0} điểm sự kiện";
+        public string GiftFundClan { get; set; } = "{0} quỹ bang";
+        public string AskRemoveGem { get; set; } = "Bạn chắc muốn xóa ngọc này?";
+        public string WasDeleteItem { get; set; } = "Đã xóa vật phẩm này";
+        public string EquipGemFailByWrongItem { get; set; } = "Gắn ngọc thất bại do pet hiện tại không mang trang bị này";
+        public string ItemHasGem { get; set; } = "Vật phẩm này đã khảm ngọc rồi";
+        public string CannotFoundEquip { get; set; } = "Trang bị không tồn tại";
+        public string AskUnequipGem { get; set; } = "Bạn có chắc là muốn tháo ngọc ra không?";
+        public string ItemUnequipGem { get; set; } = "Vật phẩm không có gắn ngọc";
+        public string GemIsRemoving { get; set; } = "Vật phẩm đang tháo";
+        public string ItemNotFound { get; set; } = "Vật phẩm không tồn tại";
+        public string AskWantUseFastRemoveGem { get; set; } = "Bạn có muốn dùng {0} (vang) để tháo ngọc nhanh không?";
     }
 }
