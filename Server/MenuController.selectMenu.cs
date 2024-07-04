@@ -36,7 +36,6 @@ public partial class MenuController
                     if (player.controller.getPetBattle() != null)
                     {
                         player.redDialog(player.Language.CannotManipulateWhenFighting);
-                        return;
                     }
 
                     Pet p = player.getPet();
