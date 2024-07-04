@@ -54,7 +54,7 @@ public partial class MenuController
                             {
                                 if (wingItem.lvl >= 10)
                                 {
-                                    player.redDialog("Cánh đạt cấp tối đa rồi");
+                                    player.redDialog(player.Language.WingIsMaxLevel);
                                     player.controller.objectPerformed.Remove(OBJKEY_ID_MATERIAL_ENCHANT_WING);
                                     player.controller.objectPerformed.Remove(OBJKEY_INDEX_WING_WANT_ENCHANT);
                                     player.controller.objectPerformed.Remove(OBJKEY_TYPE_PAY_FOR_ENCHANT_WING);
@@ -103,13 +103,13 @@ public partial class MenuController
                                                 {
                                                     wingItem.lvl++;
                                                     player.getPet()?.applyInfo(player);
-                                                    player.okDialog($"Chúc mừng bạn đã nâng cấp {wingItem.getName()} lên cáp {wingItem.lvl} thành công");
+                                                    player.okDialog(string.Format(player.Language.EnchantWingOK, wingItem.getName(), wingItem.lvl));
                                                 }
                                                 else
                                                 {
                                                     wingItem.lvl += enchantWingData.NumDropLevelWing;
                                                     player.getPet()?.applyInfo(player);
-                                                    player.redDialog($"Thật xui xẻo bạn cường hóa thất bại giảm {enchantWingData.NumDropLevelWing} cấp độ");
+                                                    player.redDialog(string.Format(player.Language.EnchantWingFail, enchantWingData.NumDropLevelWing));
                                                 }
 
                                                 player.controller.objectPerformed.Remove(OBJKEY_ID_MATERIAL_ENCHANT_WING);
@@ -124,14 +124,14 @@ public partial class MenuController
                                     }
                                     else
                                     {
-                                        player.redDialog("Tính bug à :)");
+                                        player.redDialog(player.Language.BugWarning);
                                     }
                                 }
                             }
                         }
                         else
                         {
-                            player.redDialog("Không phải nguyên liệu cường hóa cánh!!!!");
+                            player.redDialog(player.Language.NotEnoughMaterial);
                         }
                     }
                     break;
@@ -197,11 +197,11 @@ public partial class MenuController
                             int index = (int)player.controller.objectPerformed.get(OBJKEY_INDEX_MENU_UPGRADE_DUTY);
                             if (memberSelect == null)
                             {
-                                player.redDialog("Người chơi này không còn trong bang hội");
+                                player.redDialog(player.Language.OtherPlayerNotHaveAClan);
                             }
                             else if (clanMember == memberSelect)
                             {
-                                player.redDialog("Không thể thao tác trên chính bản thân của mình");
+                                player.redDialog(player.Language.YouCannotManipulateYourself);
                             }
                             else
                             {
@@ -213,16 +213,16 @@ public partial class MenuController
                                         {
                                             memberSelect.duty = clanMember.duty;
                                             clanMember.duty = Clan.TYPE_NORMAL;
-                                            player.okDialog("Nhường chức thành công");
+                                            player.okDialog(player.Language.GiveUpGuildPositionOK);
                                             Player onPlayer = PlayerManager.get(memberSelect.name);
                                             if (onPlayer != null)
                                             {
-                                                onPlayer.okDialog("Bạn đã được lên làm bang chủ bang hội");
+                                                onPlayer.okDialog(player.Language.YouWasUpToLeader);
                                             }
                                         }
                                         else
                                         {
-                                            player.redDialog("Bạn không phải bang chủ!");
+                                            player.redDialog(player.Language.YouIsNotLeader);
                                         }
                                         break;
                                     case 1:
@@ -231,11 +231,11 @@ public partial class MenuController
                                             if (clan.checkDuty(Clan.TYPE_DEPUTY_LEADER))
                                             {
                                                 memberSelect.duty = Clan.TYPE_DEPUTY_LEADER;
-                                                player.okDialog("Phong chức thành công");
+                                                player.okDialog(player.Language.SuccessfulOrdination);
                                                 Player onPlayer = PlayerManager.get(memberSelect.name);
                                                 if (onPlayer != null)
                                                 {
-                                                    onPlayer.okDialog("Bạn đã được lên làm phó bang chủ bang hội");
+                                                    onPlayer.okDialog(player.Language.YouWasUpToDeputyLeader);
                                                 }
                                             }
                                             else
@@ -245,7 +245,7 @@ public partial class MenuController
                                         }
                                         else
                                         {
-                                            player.redDialog("Bạn không phải bang chủ!");
+                                            player.redDialog(player.Language.YouIsNotLeader);
                                         }
                                         break;
 
@@ -255,11 +255,11 @@ public partial class MenuController
                                             if (clan.checkDuty(Clan.TYPE_SENIOR))
                                             {
                                                 memberSelect.duty = Clan.TYPE_SENIOR;
-                                                player.okDialog("Phong chức thành công");
+                                                player.okDialog(player.Language.SuccessfulOrdination);
                                                 Player onPlayer = PlayerManager.get(memberSelect.name);
                                                 if (onPlayer != null)
                                                 {
-                                                    onPlayer.okDialog("Bạn đã được lên làm trưởng lão bang hội");
+                                                    onPlayer.okDialog(player.Language.YouWasUpToSenior);
                                                 }
                                             }
                                             else
@@ -269,23 +269,23 @@ public partial class MenuController
                                         }
                                         else
                                         {
-                                            player.redDialog("Bạn không có quyền này!");
+                                            player.redDialog(player.Language.YouEnoughPermission);
                                         }
                                         break;
                                     case 3:
                                         if (clanMember.duty == Clan.TYPE_LEADER || clanMember.duty == Clan.TYPE_DEPUTY_LEADER)
                                         {
                                             memberSelect.duty = Clan.TYPE_NORMAL;
-                                            player.okDialog("Phong chức thành công");
+                                            player.okDialog(player.Language.SuccessfulOrdination);
                                             Player onPlayer = PlayerManager.get(memberSelect.name);
                                             if (onPlayer != null)
                                             {
-                                                onPlayer.okDialog("Bạn đã bị hạ cấp về thành viên bình thường trong bang hội !");
+                                                onPlayer.okDialog(player.Language.YouWasGaveDownPosition);
                                             }
                                         }
                                         else
                                         {
-                                            player.redDialog("Bạn không có quyền này!");
+                                            player.redDialog(player.Language.YouEnoughPermission);
                                         }
                                         break;
 
@@ -297,17 +297,17 @@ public partial class MenuController
                                                 if (clanMember.duty < memberSelect.duty)
                                                 {
                                                     clan.kick(memberSelect.user_id);
-                                                    player.okDialog("Đuổi thành công");
+                                                    player.okDialog(player.Language.ClanKickOK);
                                                 }
                                                 else
                                                 {
-                                                    player.redDialog("Bạn không thể đuổi người có chức vụ cao hơn");
+                                                    player.redDialog(player.Language.YouCannotKickMoreThanPosition);
                                                 }
                                             }
                                         }
                                         else
                                         {
-                                            player.redDialog("Bạn không có quyền này!");
+                                            player.redDialog(player.Language.YouEnoughPermission);
                                         }
                                         break;
                                 }
@@ -344,7 +344,7 @@ public partial class MenuController
                                                 member.clan.mineFund(temp.fundNeed);
                                                 member.clan.lvl++;
                                                 member.clan.potentialSkill += temp.tiemnangPoint;
-                                                player.okDialog("Nâng cấp bang hội thành công");
+                                                player.okDialog(player.Language.UpgradeClanOK);
                                             }
                                             else
                                             {
@@ -353,7 +353,7 @@ public partial class MenuController
                                         }
                                         else
                                         {
-                                            player.redDialog("Bang hội đạt cấp tối đa");
+                                            player.redDialog(player.Language.ClanIsMaxLevel);
                                         }
                                     }
                                     else
@@ -391,7 +391,7 @@ public partial class MenuController
                 case DIALOG_ASK_UNLOCK_SLOT_SKILL_CLAN:
                     {
                         ClanMember clanMember = player.controller.getClan();
-                        if(clanMember != null)
+                        if (clanMember != null)
                         {
                             if (clanMember.IsLeader)
                             {
@@ -401,7 +401,7 @@ public partial class MenuController
                                     Clan clan = clanMember.getClan();
                                     if (clan.slotSkill >= GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN.Length)
                                     {
-                                        player.redDialog("Mở khóa hết các ô rồi");
+                                        player.redDialog(player.Language.PlayerWasUnlockedAllSlotSkillClan);
                                     }
                                     else
                                     {
@@ -410,11 +410,11 @@ public partial class MenuController
                                             clan.mineFund(GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN[clan.slotSkill]);
                                             clan.slotSkill++;
                                             player.controller.showSkillClan(player.user.user_id);
-                                            player.okDialog("Mở khóa ô tiếp theo thành công");
+                                            player.okDialog(player.Language.UnlockSlotSkillNextOK);
                                         }
                                         else
                                         {
-                                            player.redDialog($"Không đủ điều kiện mở ô\n Bang cần đạt cấp {GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[clan.slotSkill]} và có {Utilities.FormatNumber(GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN[clan.slotSkill])} quỹ");
+                                            player.redDialog(player.Language.UnlockSkillSlotLaw, GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[clan.slotSkill], Utilities.FormatNumber(GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN[clan.slotSkill]));
                                         }
                                     }
                                 }
@@ -433,7 +433,7 @@ public partial class MenuController
                     break;
                 default:
                     {
-                        player.redDialog("khong ton tai dialog nay");
+                        player.redDialog(player.Language.CannotFindDialog, dialogId);
                         Thread.Sleep(1000);
                     }
                     break;

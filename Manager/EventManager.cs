@@ -37,7 +37,7 @@ namespace Gopet.Manager
             }
             else
             {
-                player.redDialog("Không tìm thấy sự kiện");
+                player.redDialog(player.Language.CannotFindEvents);
             }
         }
 

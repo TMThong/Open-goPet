@@ -3257,73 +3257,73 @@ public class GameController
             {
                 if (petActive.lvl >= GopetManager.LVL_PET_REQUIER_UP_TIER && petPassive.lvl >= GopetManager.LVL_PET_PASSIVE_REQUIER_UP_TIER)
                 {
-                        if (petTier != null)
+                    if (petTier != null)
+                    {
+                        if (petPassive.petIdTemplate == petTier.getPetTemplateIdNeed())
                         {
-                            if (petPassive.petIdTemplate == petTier.getPetTemplateIdNeed())
+                            switch (moneyType)
                             {
-                                switch (moneyType)
-                                {
-                                    case 1:
-                                        if (player.checkGold(GopetManager.PRICE_UP_TIER_PET))
-                                        {
-                                            player.mineGold(GopetManager.PRICE_UP_TIER_PET);
-                                        }
-                                        else
-                                        {
-                                            notEnoughCoin();
-                                            return;
-                                        }
-                                        break;
-                                    default:
-                                        player.redDialog(player.Language.MoneyNotEqualType);
+                                case 1:
+                                    if (player.checkGold(GopetManager.PRICE_UP_TIER_PET))
+                                    {
+                                        player.mineGold(GopetManager.PRICE_UP_TIER_PET);
+                                    }
+                                    else
+                                    {
+                                        notEnoughCoin();
                                         return;
-                                }
-                                player.playerData.pets.remove(petPassive);
-                                player.playerData.pets.remove(petActive);
-                                int gym_add = 0;
-                                int gym_up_level = 0;
-                                if (petActive.star + petPassive.star >= 10)
-                                {
-                                    gym_up_level += 5;
-                                }
-                                else if (petActive.star + petPassive.star >= 8)
-                                {
-                                    gym_up_level += 4;
-                                }
-                                else
-                                {
-                                    gym_up_level += 3;
-                                }
-                                gym_add += Utilities.round((petActive.lvl + petPassive.lvl) / 2);
-                                Pet oldPet = petActive;
-                                petActive = new Pet(petTier.getPetTemplateId2());
-                                petActive._int = oldPet._int + 10;
-                                petActive.agi = oldPet.agi + 10;
-                                petActive.str = oldPet.str + 10;
-                                petActive.name = name;
-                                petActive.lvl = 1;
-                                petActive.exp = 0;
-                                petActive.tiemnang_point = gym_add;
-                                petActive.isUpTier = true;
-                                petActive.wasSell = oldPet.wasSell;
-                                petActive.pointTiemNangLvl = gym_up_level;
-                                player.playerData.pets.Add(petActive);
-                                player.okDialog(string.Format(player.Language.UpTierPetOK, petActive.getNameWithStar(), gym_add));
-                                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Tiến hóa pet %s thành công", petActive.getNameWithoutStar())).setObj(petActive));
-                                Message message = messagePetService(GopetCMD.PET_UP_TIER);
-                                message.cleanup();
-                                player.session.sendMessage(message);
-                                this.taskCalculator.onUpTierPet();
+                                    }
+                                    break;
+                                default:
+                                    player.redDialog(player.Language.MoneyNotEqualType);
+                                    return;
+                            }
+                            player.playerData.pets.remove(petPassive);
+                            player.playerData.pets.remove(petActive);
+                            int gym_add = 0;
+                            int gym_up_level = 0;
+                            if (petActive.star + petPassive.star >= 10)
+                            {
+                                gym_up_level += 5;
+                            }
+                            else if (petActive.star + petPassive.star >= 8)
+                            {
+                                gym_up_level += 4;
                             }
                             else
                             {
-                                player.redDialog(player.Language.WrongPet2UpTier);
+                                gym_up_level += 3;
                             }
+                            gym_add += Utilities.round((petActive.lvl + petPassive.lvl) / 2);
+                            Pet oldPet = petActive;
+                            petActive = new Pet(petTier.getPetTemplateId2());
+                            petActive._int = oldPet._int + 10;
+                            petActive.agi = oldPet.agi + 10;
+                            petActive.str = oldPet.str + 10;
+                            petActive.name = name;
+                            petActive.lvl = 1;
+                            petActive.exp = 0;
+                            petActive.tiemnang_point = gym_add;
+                            petActive.isUpTier = true;
+                            petActive.wasSell = oldPet.wasSell;
+                            petActive.pointTiemNangLvl = gym_up_level;
+                            player.playerData.pets.Add(petActive);
+                            player.okDialog(string.Format(player.Language.UpTierPetOK, petActive.getNameWithStar(), gym_add));
+                            HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Tiến hóa pet %s thành công", petActive.getNameWithoutStar())).setObj(petActive));
+                            Message message = messagePetService(GopetCMD.PET_UP_TIER);
+                            message.cleanup();
+                            player.session.sendMessage(message);
+                            this.taskCalculator.onUpTierPet();
                         }
                         else
                         {
-                            player.redDialog(player.Language.PetCannotUpTier);
+                            player.redDialog(player.Language.WrongPet2UpTier);
                         }
+                    }
+                    else
+                    {
+                        player.redDialog(player.Language.PetCannotUpTier);
+                    }
                 }
                 else
                 {
@@ -4233,7 +4233,7 @@ public class GameController
         {
             m.putInt(clan.getClanId());
             m.putInt(-1);
-            m.putUTF("Bang " + clan.getName() + Utilities.Format(" (Bang chủ: %s)", clan.getMemberByUserId(clan.getLeaderId()).name));
+            m.putUTF(player.Language.Clan + clan.getName() + string.Format(player.Language.ClanLeaderDescription + " {0} ", clan.getMemberByUserId(clan.getLeaderId()).name));
             m.putUTF(clan.getClanDesc());
         }
         m.cleanup();
@@ -4250,21 +4250,21 @@ public class GameController
                 if (ClanManager.clanHashMapName.ContainsKey(clanName))
                 {
                     objectPerformed.put(MenuController.OBJKEY_CLAN_NAME_REQUEST, clanName);
-                    MenuController.showYNDialog(MenuController.DIALOG_ASK_REQUEST_JOIN_CLAN, Utilities.Format("Bạn có muốn xin vào bang hội %s không?", clanName), player);
+                    MenuController.showYNDialog(MenuController.DIALOG_ASK_REQUEST_JOIN_CLAN, string.Format(player.Language.AskWantJoinClan, clanName), player);
                 }
                 else
                 {
-                    player.redDialog("Không tồn tại bang hội này");
+                    player.redDialog(player.Language.ClanNotFound);
                 }
             }
             else
             {
-                player.redDialog("Vui lòng không nhập ký tự lạ \n Hoặc số lượng ký tự không phù hợp");
+                player.redDialog(player.Language.ClanSearchLaw);
             }
         }
         else
         {
-            player.redDialog("Bạn đã có bang rồi");
+            player.redDialog(player.Language.YouHaveClan);
         }
     }
 
@@ -4313,22 +4313,22 @@ public class GameController
             ClanRequestJoin requestJoin = clan.getJoinRequestByUserId(player.user.user_id);
             if (requestJoin != null)
             {
-                player.redDialog("Bạn đã xin vào bang này rồi, vui lòng chờ xét duyệt.");
+                player.redDialog(player.Language.HaveJoinClanRequest);
             }
             else
             {
                 if (clan.getBannedJoinRequestId().Contains(player.user.user_id))
                 {
-                    player.redDialog("Bang hội này không cho phép bạn gửi đơn xin vào bang");
+                    player.redDialog(player.Language.ClanBlockYouJoinRequest);
                 }
                 else if (clan.curMember >= clan.maxMember)
                 {
-                    player.redDialog("Bang hội đã đủ thành viên.");
+                    player.redDialog(player.Language.ClanHaveMaxMember);
                 }
                 else
                 {
                     clan.addJoinRequest(player.user.user_id, player.playerData.name, player.playerData.avatarPath);
-                    player.okDialog("Xin gia nhập bang hội thành công");
+                    player.okDialog(player.Language.SendClanJoinRequestOK);
                 }
             }
         }
@@ -4336,7 +4336,7 @@ public class GameController
 
     public void notClan()
     {
-        player.redDialog("Bạn chưa vào bang hội");
+        player.redDialog(player.Language.YouNotHaveClan);
     }
 
     public void sendListOption(int listId, String title, String message, JArrayList<Option> options)
@@ -4444,9 +4444,9 @@ public class GameController
                         {
                             m.putInt(GopetCMD.SKILL_CLAN_RENT);
                             m.putInt(i);
-                            m.putUTF("Chưa có kỹ năng");
-                            m.putUTF("Chưa có kỹ năng");
-                            m.putUTF("Chưa có kỹ năng");
+                            m.putUTF(player.Language.NotHaveSkill);
+                            m.putUTF(player.Language.NotHaveSkill);
+                            m.putUTF(player.Language.NotHaveSkill);
                         }
                     }
                     else
@@ -4469,13 +4469,13 @@ public class GameController
                 }
                 else
                 {
-                    player.redDialog(Utilities.Format("Người chơi %s chưa có bang hội", olPlayer.playerData.name));
+                    player.redDialog(string.Format(player.Language.OtherPlayerNotHaveAClan, olPlayer.playerData.name));
                 }
             }
         }
         else
         {
-            player.redDialog("Người chơi offline");
+            player.redDialog(player.Language.PlayerOffline);
         }
     }
 
@@ -4510,17 +4510,17 @@ public class GameController
             Clan clan = clanMember.getClan();
             if (clan.slotSkill >= GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN.Length)
             {
-                player.redDialog("Mở khóa hết các ô rồi");
+                player.redDialog(player.Language.PlayerWasUnlockedAllSlotSkillClan);
             }
             else
             {
                 if (clan.lvl >= GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[clan.slotSkill] && clan.fund >= GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN[clan.slotSkill])
                 {
-                    MenuController.showYNDialog(MenuController.DIALOG_ASK_UNLOCK_SLOT_SKILL_CLAN, $"Bạn có chắc muốn mở khóa ô kỹ năng bang hội tiếp theo cho bang với giá {Utilities.FormatNumber(GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN[clan.slotSkill])} quỹ", player);
+                    MenuController.showYNDialog(MenuController.DIALOG_ASK_UNLOCK_SLOT_SKILL_CLAN, string.Format(player.Language.AskUnlockSlotSkillClan, Utilities.FormatNumber(GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN[clan.slotSkill])), player);
                 }
                 else
                 {
-                    player.redDialog($"Không đủ điều kiện mở ô\n Bang cần đạt cấp {GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[clan.slotSkill]} và có {Utilities.FormatNumber(GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN[clan.slotSkill])} quỹ");
+                    player.redDialog(player.Language.UnlockSkillSlotLaw, GopetManager.LVL_CLAN_NEED_TO_ADD_SLOT_SKILL[clan.slotSkill], Utilities.FormatNumber(GopetManager.PRICE_UNLOCK_SLOT_SKILL_CLAN[clan.slotSkill]));
                 }
             }
         }
@@ -4553,7 +4553,7 @@ public class GameController
                     else
                     {
                         canRent = false;
-                        player.redDialog("Ô này chưa mở!");
+                        player.redDialog(player.Language.SlotSkillClanIsNotUnlock);
                         return;
                     }
                 }
@@ -4566,7 +4566,7 @@ public class GameController
                     }
                     else
                     {
-                        player.redDialog("Bạn không đủ quyền");
+                        player.redDialog(player.Language.YouEnoughPermission);
                     }
                 }
             }
@@ -4577,18 +4577,18 @@ public class GameController
         }
         else
         {
-            player.redDialog("Bạn đang có bug ?");
+            player.redDialog(player.Language.BugWarning);
         }
     }
 
     public void notEnoughFundClan()
     {
-        player.redDialog("Điểm góp quỹ cá nhân không đủ");
+        player.redDialog(player.Language.NotEnoughFundClan);
     }
 
     public void notEnoughGrowthPointClan()
     {
-        player.redDialog("Điểm cống hiến cá nhân không đủ");
+        player.redDialog(player.Language.NotEnoughGrowthPoint);
     }
 
     private void kickClanMem(int memberId)
@@ -4599,11 +4599,11 @@ public class GameController
             ClanMember memberIsKicked = mem.getClan().getMemberByUserId(memberId);
             if (memberIsKicked == mem)
             {
-                player.redDialog("Không thể thao tác trên chính bản thân");
+                player.redDialog(player.Language.YouCannotManipulateYourself);
             }
             else if (memberIsKicked == null)
             {
-                player.redDialog("Người chơi không còn trong bang hội nữa");
+                player.redDialog(player.Language.OtherPlayerNotHaveAClan);
             }
             else
             {
@@ -4614,17 +4614,17 @@ public class GameController
                         if (mem.duty < memberIsKicked.duty)
                         {
                             mem.getClan().kick(memberIsKicked.user_id);
-                            player.okDialog("Đuổi thành công");
+                            player.okDialog(player.Language.ClanKickOK);
                         }
                         else
                         {
-                            player.redDialog("Bạn không thể đuổi người có chức vụ cao hơn");
+                            player.redDialog(player.Language.YouCanNotKickLeader);
                         }
                     }
                 }
                 else
                 {
-                    player.redDialog("Bạn không có quyền này!");
+                    player.redDialog(player.Language.YouEnoughPermission);
                 }
             }
         }
@@ -4645,11 +4645,11 @@ public class GameController
         if (player___ != null)
         {
             objectPerformed.put(MenuController.OBJKEY_INVITE_CHALLENGE_PLAYER, player___);
-            showInputDialog(MenuController.INPUT_DIALOG_CHALLENGE_INVITE, "Giá cược", new String[] { "Số ngọc:  " });
+            showInputDialog(MenuController.INPUT_DIALOG_CHALLENGE_INVITE, player.Language.PriceBet, new String[] { player.Language.PriceGemBetMatch });
         }
         else
         {
-            player.redDialog("Người chơi đã offline rồi!");
+            player.redDialog(player.Language.PlayerOffline);
         }
     }
 
@@ -4681,7 +4681,7 @@ public class GameController
 
         if (num > 0)
         {
-            player.redDialog(Utilities.Format("Nhân vật của bạn vừa bị xóa %s vật phẩm do BUG mà có!", num));
+            player.redDialog(string.Format(player.Language.DuplicateItemRemove, num));
         }
     }
 
@@ -4702,7 +4702,7 @@ public class GameController
 
     public void notEnoughItem(Item itemSelect, int count)
     {
-        player.redDialog($"Không đủ vật phẩm {itemSelect.Template.name} cần số lượng : {count}");
+        player.redDialog(player.Language.NotEnoughItemWithCount, itemSelect.Template.name, count);
     }
 
 
@@ -4710,7 +4710,7 @@ public class GameController
     {
         if (mapId >= 26 && !player.playerData.isOnSky)
         {
-            player.redDialog("Để lên thượng giới bạn cần 1 con thú cưng có cánh.\n Có nghĩa là bạn cần có 1 con pet trùng sinh!!!");
+            player.redDialog(player.Language.LawToUnlockSkyPlace);
             return false;
         }
         return true;
@@ -4727,7 +4727,7 @@ public class GameController
 
     public void InvailIitemType()
     {
-        player.redDialog("Sai loại vật phẩm");
+        player.redDialog(player.Language.WrongItemType);
     }
 
     public void showExp()

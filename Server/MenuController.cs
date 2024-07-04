@@ -555,7 +555,7 @@ public partial class MenuController
             if (taskTemplates.Count > 0)
             {
                 ms.putInt(MenuController.OP_MAIN_TASK);
-                ms.putUTF("Nhận nhiệm vụ chính");
+                ms.putUTF(player.Language.GetMainTask);
                 player.controller.objectPerformed.put(OBJKEY_NPC_ID_FOR_MAIN_TASK, npcId);
             }
             ms.cleanup();
@@ -620,7 +620,7 @@ public partial class MenuController
         ShopTemplate shopTemplate = getShop(type, player);
         if (shopTemplate == null)
         {
-            player.redDialog("Xảy ra lỗi hoặc do bạn vừa mới bị đá ra khỏi bang\nVui lòng thao tác lại");
+            player.redDialog(player.Language.GetErrorShowShopByKickClan);
             return;
         }
         JArrayList<MenuItemInfo> menuItemInfos = new();
@@ -636,7 +636,7 @@ public partial class MenuController
                 paymentOptions[i] = paymentOption;
             }
             menuItemInfo.setShowDialog(true);
-            menuItemInfo.setDialogText("Bạn có chắc muốn mua nó không");
+            menuItemInfo.setDialogText(player.Language.DoYouWantBuyIt);
             menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
             menuItemInfo.setPaymentOptions(paymentOptions);
             menuItemInfo.setCloseScreenAfterClick(shopTemplateItem.isCloseScreenAfterClick());

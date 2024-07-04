@@ -55,28 +55,28 @@ public class ArenaPlace : GopetPlace
             if (PlayerOne.playerData.petSelected.hp <= 0)
             {
                 PlayerTwo.playerData.AccumulatedPoint++;
-                PlayerTwo.Popup("Thắng trận nhận được 1 (diem)");
+                PlayerTwo.Popup(PlayerTwo.Language.WinEventMessage + " (diem)");
                 ArenaEvent.Instance.IdPlayerJoin.addIfAbsent(PlayerTwo.playerData.user_id);
                 HistoryManager.addHistory(new History(PlayerTwo).setLog($"Thắng đối thủ trong map lôi đài nhận 1 điểm hiện tại có {PlayerTwo.playerData.AccumulatedPoint}"));
             }
             else if (PlayerTwo.playerData.petSelected.hp <= 0)
             {
                 PlayerOne.playerData.AccumulatedPoint++;
-                PlayerOne.Popup("Thắng trận nhận được 1 (diem)");
+                PlayerOne.Popup(PlayerOne.Language.WinEventMessage + " (diem)");
                 ArenaEvent.Instance.IdPlayerJoin.addIfAbsent(PlayerOne.playerData.user_id);
                 HistoryManager.addHistory(new History(PlayerOne).setLog($"Thắng đối thủ trong map lôi đài nhận 1 điểm hiện tại có {PlayerOne.playerData.AccumulatedPoint}"));
             }
             else if (PlayerOne.playerData.petSelected.hp < PlayerTwo.playerData.petSelected.hp)
             {
                 PlayerTwo.playerData.AccumulatedPoint++;
-                PlayerTwo.Popup("Thắng trận nhận được 1 (diem)");
+                PlayerTwo.Popup(PlayerTwo.Language.WinEventMessage + " (diem)");
                 ArenaEvent.Instance.IdPlayerJoin.addIfAbsent(PlayerTwo.playerData.user_id);
                 HistoryManager.addHistory(new History(PlayerTwo).setLog($"Thắng đối thủ trong map lôi đài nhận 1 điểm hiện tại có {PlayerTwo.playerData.AccumulatedPoint}"));
             }
             else
             {
                 PlayerOne.playerData.AccumulatedPoint++;
-                PlayerOne.Popup("Thắng trận nhận được 1 (diem)");
+                PlayerOne.Popup(PlayerOne.Language.WinEventMessage + " (diem)");
                 ArenaEvent.Instance.IdPlayerJoin.addIfAbsent(PlayerOne.playerData.user_id);
                 HistoryManager.addHistory(new History(PlayerOne).setLog($"Thắng đối thủ trong map lôi đài nhận 1 điểm hiện tại có {PlayerOne.playerData.AccumulatedPoint}"));
             }

@@ -40,7 +40,7 @@ public class ChallengePlace : GopetPlace
     {
         base.add(player); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
         player.controller.sendPlaceTime(Utilities.round(placeTime - Utilities.CurrentTimeMillis) / 1000);
-        player.controller.showBigTextEff("PHÒNG CHỜ");
+        player.controller.showBigTextEff(player.Language.WaitRoomPlace);
     }
 
 
@@ -133,7 +133,7 @@ public class ChallengePlace : GopetPlace
             placeTime = Utilities.CurrentTimeMillis + TIME_ATTACK;
             this.sendMob();
             this.sendTimePlace();
-            this.showBigTextEff(Utilities.Format("LƯỢT", turn));
+            this.showBigTextEff(string.Format("LƯỢT {0}", turn));
         }
         else
         {
@@ -167,6 +167,4 @@ public class ChallengePlace : GopetPlace
     {
         this.mobs.remove(gopetMob);
     }
-
-    
 }

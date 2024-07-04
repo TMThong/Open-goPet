@@ -408,7 +408,7 @@ public class GopetPlace : Place
     {
         if (Utilities.CurrentTimeMillis - player.controller.getLastTimeKillMob() < 4000)
         {
-            player.user.ban(UserData.BAN_TIME, "Dùng phiên bản speed để farm quái (thuật toán ver2)!\n Nếu muốn kháng cáo vui lòng quay video lại", Utilities.CurrentTimeMillis + 60000L * 5);
+            player.user.ban(UserData.BAN_TIME, player.Language.BanUserByAutoAttackMob, Utilities.CurrentTimeMillis + 60000L * 5);
             player.session.Close();
             return;
         }
@@ -430,7 +430,7 @@ public class GopetPlace : Place
                             }
                             else
                             {
-                                player.Popup("Không đủ năng lượng");
+                                player.Popup(player.Language.NotEnoughtEnergy);
                                 return;
                             }
                         }
@@ -443,12 +443,12 @@ public class GopetPlace : Place
                 }
                 else
                 {
-                    player.Popup("Thú cưng của bạn khong đủ máu");
+                    player.Popup(player.Language.YourPetEnoughHP);
                 }
             }
             else
             {
-                player.Popup("Chưa có thu cưng đi theo");
+                player.Popup(player.Language.PetNotFollow);
             }
         }
     }
@@ -471,7 +471,7 @@ public class GopetPlace : Place
                 {
                     if (player.controller.getPetBattle() != null || player.controller.getPetBattle() != null)
                     {
-                        player.redDialog("Bạn hoặc người chơi kia đang trong trận chiến");
+                        player.redDialog(player.Language.YouOrOtherPlayerIsFighting);
                     }
                     else
                     {
@@ -492,7 +492,7 @@ public class GopetPlace : Place
         }
         else
         {
-            player.redDialog("Người chơi đã đi rồi");
+            player.redDialog(player.Language.PlayerQuit);
         }
     }
 
