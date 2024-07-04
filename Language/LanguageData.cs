@@ -134,7 +134,7 @@ namespace Gopet.Language
         public string PetCannotUpTier { get; set; } = "Hiện tại thứ cưng này không thể tiến hóa";
         public string UpTierLaw { get; set; } = "Bạn cần thú cưng đạt cấp {0} mới có thể tiến hóa và ảo ảnh cần cấp {1}";
         public string RemoveEquipWhenUpTier { get; set; } = "Bạn phải tháo trang bị cho cả 2 pet";
-        public string SetNamePetWhenUpTierLaw { get; set; } = "Bạn phải tháo trang bị cho cả 2 pet";
+        public string SetPetNameLaw { get; set; } = "Tên pet không dài quá 30 ký tự và phải lớn hơn 6 ký tự";
         public string UpSkillOK { get; set; } = "Chức mừng bạn đã nâng cấp {0} lên cấp {1} !";
         public string PlayerHasABatte { get; set; } = "Người chơi này đang có một cuộc chiến";
         public string PlayerQuit { get; set; } = "Người chơi đã thoát";
@@ -201,7 +201,7 @@ namespace Gopet.Language
         public string CannotFindEvents { get; set; } = "Không tìm thấy sự kiện";
         public string WinEventMessage { get; set; } = "Thắng trận nhận được 1";
         public string WaitRoomPlace { get; set; } = "PHÒNG CHỜ";
-        public string TURN { get; set; } = "PHÒNG CHỜ";
+        public string TURN { get; set; } = "LƯỢT";
         public string BanUserByAutoAttackMob { get; set; } = "Dùng phiên bản speed để farm quái (thuật toán ver2)!\n Nếu muốn kháng cáo vui lòng quay video lại";
         public string YourPetEnoughHP { get; set; } = "Thú cưng của bạn không đủ máu";
         public string YouOrOtherPlayerIsFighting { get; set; } = "Bạn hoặc người chơi kia đang trong trận chiến";
@@ -224,5 +224,39 @@ namespace Gopet.Language
         public string GetMainTask { get; set; } = "Nhận nhiệm vụ chính";
         public string DoYouWantBuyIt { get; set; } = "Bạn có chắc muốn mua nó không";
         public string GetErrorShowShopByKickClan { get; set; } = "Xảy ra lỗi hoặc do bạn vừa mới bị đá ra khỏi bang\nVui lòng thao tác lại";
+        public string NotEnoughStr { get; set; } = "Bạn không đủ {0}";
+        public string GetMoneyTextSilverBar { get; set; } = " thỏi bạc";
+        public string GetMoneyTextGoldBar { get; set; } = " thỏi vàng";
+        public string GetMoneyTextBloodGem { get; set; } = " huyết ngọc";
+        public string GetMoneyTextFundClan { get; set; } = " điểm góp quỹ cá nhân";
+        public string GetMoneyTextCrystalItem { get; set; } = " tinh thạch";
+        public string DoYouWantSelectItem { get; set; } = "Bạn có muốn chọn {0} không?";
+        public string IsUsing { get; set; } = " (Đang sử dụng)";
+        public string GemLimitWarning { get; set; } = "Giới hạn (ngoc) là {0}";
+        public string ItemCanNotTrade { get; set; } = "Vật phẩm này không thể giao dịch";
+        public string EnoughCountOfItem { get; set; } = "Số lượng không đủ";
+        public string UseGiftCodeSystemDown { get; set; } = "Quá nhiều người cố gắng dùng mã quà tặng này nên hệ thống quá tải!";
+        public string YouHaveUseThisGiftCode { get; set; } = "Bạn đã sử dụng mã quà tặng này rồi";
+        public string YourClanHaveUseThisGiftCode { get; set; } = "Bang hội của bạn đã sử dụng mã quà tặng này rồi";
+        public string NumOfPlayerUseGiftCodeIsLimit { get; set; } = "Số người dùng mã quà tặng này đã đạt giới hạn!";
+        public string GiftCodeIsExpired { get; set; } = "Mã quà tặng đã hết hạn";
+        public string GiftCodeEmptyGift { get; set; } = "Mã quà tặng này chả tặng bạn được cái gì :)";
+        public string GetGiftCodeOK { get; set; } = "Chức mừng bạn nhận được: {0}";
+        public string NotHaveGiftCode { get; set; } = "Không có mã quà tặng này";
+        public string GiftCodeError { get; set; } = "Xảy ra sự cố mà ông trời cũng cả biết";
+        public string EmptyField { get; set; } = "Vui lòng không bỏ trống";
+        public string WrongNumOfItem { get; set; } = "Số lượng không hợp lệ";
+        public string Correct { get; set; } = "Chính xác";
+        public string Incorrect { get; set; } = "Không chính xác";
+        public string Pricing { get; set; } = "Định giá";
+        public string ChangeGoldToCoinMessageOK { get; set; } = "Chúc mừng bạn đổi thành công {0} (ngoc)";
+        public string ClanSetSloganLaw { get; set; } = "Khẩu hiệu không quá 500 từ";
+        public string YouEnoughPermissionOnlyLeader { get; set; } = "Bạn không có quyền này, chỉ có bang chủ mới thao tác được.";
+        public string CreateClanOK { get; set; } = "Tạo bang {0} thành công";
+        public string CreateClanDuplicateError { get; set; } = "Lỗi trùng lập tên bang hội theo thời gian thực, nó hiếm khi xảy ra";
+        public string CreateClanError { get; set; } = "Lỗi tạo bang";
+        public string ClanDuplicateName { get; set; } = "Tên bang hội này đã tồn tại";
+        public string ClanCreateNameLaw { get; set; } = "Tên bang cần bé hơn 20 ký tự và lớn hơn 4 ký tự";
+        public string WrongInputNumber { get; set; } = "Nhập sai dữ liệu, vui lòng nhập các con số";
     }
 }

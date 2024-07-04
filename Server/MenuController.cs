@@ -632,7 +632,7 @@ public partial class MenuController
             for (int i = 0; i < shopTemplateItem.getMoneyType().Length; i++)
             {
                 sbyte b = shopTemplateItem.getMoneyType()[i];
-                MenuItemInfo.PaymentOption paymentOption = new MenuItemInfo.PaymentOption(i, getMoneyText(b, shopTemplateItem.getPrice()[i]), checkMoney(b, shopTemplateItem.getPrice()[i], player) ? (sbyte)1 : (sbyte)0);
+                MenuItemInfo.PaymentOption paymentOption = new MenuItemInfo.PaymentOption(i, getMoneyText(b, shopTemplateItem.getPrice()[i], player), checkMoney(b, shopTemplateItem.getPrice()[i], player) ? (sbyte)1 : (sbyte)0);
                 paymentOptions[i] = paymentOption;
             }
             menuItemInfo.setShowDialog(true);
@@ -674,7 +674,7 @@ public partial class MenuController
         }
     }
 
-    public static String getMoneyText(sbyte type, long value)
+    public static String getMoneyText(sbyte type, long value, Player player)
     {
         String str = Utilities.FormatNumber(value);
         switch (type)
@@ -685,22 +685,22 @@ public partial class MenuController
             case GopetManager.MONEY_TYPE_GOLD:
                 str += " (vang)"; break;
             case GopetManager.MONEY_TYPE_SILVER_BAR:
-                str += " thỏi bạc"; break;
+                str += player.Language.GetMoneyTextSilverBar; break;
             case GopetManager.MONEY_TYPE_GOLD_BAR:
-                str += " thỏi vàng"; break;
+                str += player.Language.GetMoneyTextGoldBar; break;
             case GopetManager.MONEY_TYPE_BLOOD_GEM:
-                str += " huyết ngọc"; break;
+                str += player.Language.GetMoneyTextBloodGem; break;
             case GopetManager.MONEY_TYPE_FUND_CLAN:
-                str += " điểm góp quỹ cá nhân"; break;
+                str += player.Language.GetMoneyTextFundClan; break;
             case GopetManager.MONEY_TYPE_CRYSTAL_ITEM:
-                str += " tinh thạch"; break;
+                str += player.Language.GetMoneyTextCrystalItem; break;
         }
         return str;
     }
 
     public static void NotEngouhMoney(sbyte type, long value, Player player)
     {
-        player.redDialog($"Bạn không đủ {getMoneyText(type, value)}");
+        player.redDialog(player.Language.NotEnoughStr, getMoneyText(type, value, player));
     }
 
     public static bool checkMoney(sbyte type, long value, Player player)
@@ -814,7 +814,7 @@ public partial class MenuController
             MenuItemInfo menuItemInfo = new MenuItemInfo(typeInventory == GopetManager.EQUIP_PET_INVENTORY ? item.getEquipName() : item.getName(), item.getDescription(player), "", true);
             menuItemInfo.setImgPath(itemTemplate.getIconPath());
             menuItemInfo.setShowDialog(true);
-            menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", itemTemplate.getName()));
+            menuItemInfo.setDialogText(string.Format(player.Language.DoWantSelectIt, itemTemplate.getName()));
             menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
             menuItemInfo.setCloseScreenAfterClick(true);
             menuItemInfo.setHasId(true);
@@ -822,7 +822,7 @@ public partial class MenuController
 
             if (i == -1)
             {
-                menuItemInfo.setTitleMenu(menuItemInfo.getTitleMenu() + " (Đang sử dụng)");
+                menuItemInfo.setTitleMenu(menuItemInfo.getTitleMenu() + player.Language.IsUsing);
             }
             menuList.add(menuItemInfo);
             i++;

@@ -381,7 +381,7 @@ public partial class MenuController
                     for (sbyte i = 0; i < GopetManager.TradeGiftPrice.Count; i++)
                     {
                         var tradeGiftTemplate = GopetManager.TradeGiftPrice[i];
-                        changeList[i] = new Option(tradeGiftTemplate.Item3, $"Dùng {getMoneyText((sbyte)tradeGiftTemplate.Item1[0], tradeGiftTemplate.Item2[0])} và {getMoneyText((sbyte)tradeGiftTemplate.Item1[1], tradeGiftTemplate.Item2[1])} để đổi phần thưởng");
+                        changeList[i] = new Option(tradeGiftTemplate.Item3, $"Dùng {getMoneyText((sbyte)tradeGiftTemplate.Item1[0], tradeGiftTemplate.Item2[0], player)} và {getMoneyText((sbyte)tradeGiftTemplate.Item1[1], tradeGiftTemplate.Item2[1], player)} để đổi phần thưởng");
                     }
                     showNpcOption(GopetManager.NPC_TIEN_NU, player, changeList);
                 }
@@ -426,7 +426,7 @@ public partial class MenuController
                         JArrayList<MenuItemInfo> approvalElements = new();
                         foreach (ClanMember clanMemberSelect in clan.getMembers())
                         {
-                            MenuItemInfo menuItemInfo = new MenuItemInfo(clanMemberSelect.name + "(Chức vụ: " + clanMemberSelect.getDutyName() + ")", Utilities.Format("Đóng góp quỹ :%s", Utilities.FormatNumber(clanMemberSelect.fundDonate)), "", true);
+                            MenuItemInfo menuItemInfo = new MenuItemInfo(clanMemberSelect.name + "(Chức vụ: " + clanMemberSelect.getDutyName(player) + ")", Utilities.Format("Đóng góp quỹ :%s", Utilities.FormatNumber(clanMemberSelect.fundDonate)), "", true);
                             menuItemInfo.setImgPath(clanMemberSelect.getAvatar());
                             menuItemInfo.setShowDialog(true);
                             menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", clanMemberSelect.name));
@@ -604,7 +604,7 @@ public partial class MenuController
                         JArrayList<Option> approvalOptions = new();
                         for (global::System.Int32 i = 0; i < clanSkillTemplate.moneyType.Length; i++)
                         {
-                            approvalOptions.add(new Option(i, getMoneyText(clanSkillTemplate.moneyType[i], clanSkillTemplate.price[i]), (sbyte)1));
+                            approvalOptions.add(new Option(i, getMoneyText(clanSkillTemplate.moneyType[i], clanSkillTemplate.price[i], player), (sbyte)1));
                         }
                         player.controller.sendListOption(menuId, "Thuê kỹ năng bang hội", "", approvalOptions);
                     }

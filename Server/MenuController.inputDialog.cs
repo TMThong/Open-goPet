@@ -24,12 +24,12 @@ public partial class MenuController
                     int priceItem = reader.readInt(0);
                     if (priceItem <= 0)
                     {
-                        player.redDialog("Tính bug ha gì!");
+                        player.redDialog(player.Language.BugWarning);
                         return;
                     }
                     if (priceItem > 2000000000)
                     {
-                        player.redDialog(Utilities.Format("Giới hạn (ngoc) là %s", Utilities.FormatNumber(2000000000)));
+                        player.redDialog(string.Format(player.Language.GemLimitWarning, Utilities.FormatNumber(2000000000)));
                         return;
                     }
 
@@ -56,7 +56,7 @@ public partial class MenuController
                         {
                             if (!item.getTemp().isCanTrade() || !item.canTrade)
                             {
-                                player.redDialog("Vật phẩm này không thể giao dịch");
+                                player.redDialog(player.Language.ItemCanNotTrade);
                                 return;
                             }
                         }
@@ -115,7 +115,7 @@ public partial class MenuController
                                         }
                                         else
                                         {
-                                            player.redDialog("Số lượng không đủ");
+                                            player.redDialog(player.Language.EnoughCountOfItem);
                                         }
                                         break;
                                 }
@@ -128,7 +128,7 @@ public partial class MenuController
                         ClanMember clanMember = player.controller.getClan();
                         if (!player.controller.canTypeGiftCode())
                         {
-                            player.redDialog("Thao tác quá nhanh vui lòng chờ tí!");
+                            player.fastAction();
                             return;
                         }
                         String code = reader.readString(0);
@@ -136,7 +136,7 @@ public partial class MenuController
                         {
                             if (Utilities.CheckString(code, "^[a-z0-9A-Z]+$"))
                             {
-                                player.okDialog("Vui lòng chờ");
+                                player.okDialog(player.Language.PleaseWait);
 
                                 using (MySqlConnection MySqlConnection = MYSQLManager.create())
                                 {
@@ -148,7 +148,7 @@ public partial class MenuController
                                             bool hasLock = keyL.hasLock == 1;
                                             if (!hasLock)
                                             {
-                                                player.redDialog("Quá nhiều người cố gắng dùng mã quà tặng này nên hệ thống quá tải!");
+                                                player.redDialog(player.Language.UseGiftCodeSystemDown);
                                             }
                                             else
                                             {
@@ -164,7 +164,7 @@ public partial class MenuController
                                                     {
                                                         if (giftCodeData.getUsersOfUseThis().Contains(player.user.user_id))
                                                         {
-                                                            player.redDialog("Bạn đã sử dụng mã quà tặng này rồi");
+                                                            player.redDialog(player.Language.YouHaveUseThisGiftCode);
                                                             goto EndGiftCode;
                                                         }
                                                     }
@@ -172,19 +172,19 @@ public partial class MenuController
                                                     {
                                                         if (giftCodeData.getUsersOfUseThis().Contains(clanMember.clan.clanId))
                                                         {
-                                                            player.redDialog("Bang hội của bạn đã sử dụng mã quà tặng này rồi");
+                                                            player.redDialog(player.Language.YourClanHaveUseThisGiftCode);
                                                             goto EndGiftCode;
                                                         }
                                                     }
                                                     if (giftCodeData.getCurUser() >= giftCodeData.getMaxUser())
                                                     {
-                                                        player.redDialog("Số người dùng mã quà tặng này đã đạt giới hạn!");
+                                                        player.redDialog(player.Language.NumOfPlayerUseGiftCodeIsLimit);
                                                     }
                                                     else
                                                     {
                                                         if (giftCodeData.getExpire().GetTimeMillis() < Utilities.CurrentTimeMillis)
                                                         {
-                                                            player.redDialog("Mã quà tặng đã hết hạn");
+                                                            player.redDialog(player.Language.GiftCodeIsExpired);
                                                         }
                                                         else
                                                         {
@@ -195,7 +195,7 @@ public partial class MenuController
                                                             giftCodeData.currentUser++; ;
                                                             if (giftCodeData.getGift_data().Length <= 0)
                                                             {
-                                                                player.redDialog("Mã quà tặng này chả tặng bạn được cái gì :)");
+                                                                player.redDialog(player.Language.GiftCodeEmptyGift);
                                                             }
                                                             else
                                                             {
@@ -205,7 +205,7 @@ public partial class MenuController
                                                                 {
                                                                     textInfo.add(popup.getText());
                                                                 }
-                                                                player.okDialog(Utilities.Format("Chức mừng bạn nhận được: %s", String.Join(",", textInfo)));
+                                                                player.okDialog(string.Format(player.Language.GetGiftCodeOK, String.Join(",", textInfo)));
                                                             }
                                                             MySqlConnection.Execute("UPDATE `gift_code` SET `currentUser` = @currentUser , `usersOfUseThis` = @usersOfUseThis WHERE `id` =  @id;", giftCodeData);
                                                         }
@@ -215,13 +215,13 @@ public partial class MenuController
                                                 }
                                                 else
                                                 {
-                                                    player.redDialog("Không có mã quà tặng này");
+                                                    player.redDialog(player.Language.NotHaveGiftCode);
                                                 }
                                             }
                                         }
                                         else
                                         {
-                                            player.redDialog("Xảy ra sự cố mà ông trời cũng cả biết");
+                                            player.redDialog(player.Language.GiftCodeError);
                                         }
                                     }
                                     catch (Exception e)
@@ -236,12 +236,12 @@ public partial class MenuController
                             }
                             else
                             {
-                                player.redDialog("Có kí tự lạ");
+                                player.redDialog(player.Language.HaveSpecialChar);
                             }
                         }
                         else
                         {
-                            player.redDialog("Vui lòng không bỏ trống");
+                            player.redDialog(player.Language.EmptyField);
                         }
                     }
                     break;
@@ -249,12 +249,12 @@ public partial class MenuController
                     int priceChallenge = reader.readInt(0);
                     if (priceChallenge <= 0)
                     {
-                        player.redDialog("Tính bug ha gì!");
+                        player.redDialog(player.Language.BugWarning);
                         return;
                     }
                     if (priceChallenge > 100000)
                     {
-                        player.redDialog(Utilities.Format("Giới hạn (ngoc) là %s", Utilities.FormatNumber(100000)));
+                        player.redDialog(string.Format(player.Language.GemLimitWarning, Utilities.FormatNumber(100000)));
                         return;
                     }
 
@@ -267,11 +267,11 @@ public partial class MenuController
                         if (count >= 1)
                         {
                             player.controller.objectPerformed.put(OBJKEY_COUNT_OF_ITEM_KIOSK, count);
-                            player.controller.showInputDialog(INPUT_DIALOG_KIOSK, "Định giá", new String[] { "  " }, new sbyte[] { 0 });
+                            player.controller.showInputDialog(INPUT_DIALOG_KIOSK, player.Language.Pricing, new String[] { "  " }, new sbyte[] { 0 });
                         }
                         else
                         {
-                            player.redDialog("Số lượng không hợp lệ");
+                            player.redDialog(player.Language.WrongNumOfItem);
                         }
                     }
                     break;
@@ -282,11 +282,11 @@ public partial class MenuController
                         if (captcha.key.Equals(reader.readString(0)))
                         {
                             player.playerData.captcha = null;
-                            player.okDialog("Chính xác");
+                            player.okDialog(player.Language.Correct);
                         }
                         else
                         {
-                            player.redDialog("Nhập mã sai");
+                            player.redDialog(player.Language.Incorrect);
                         }
                     }
                     break;
@@ -347,7 +347,7 @@ public partial class MenuController
                             player.mineGold(value);
                             long valueCoin = value * GopetManager.PERCENT_EXCHANGE_GOLD_TO_COIN;
                             player.addCoin(valueCoin);
-                            player.okDialog(Utilities.Format("Chúc mừng bạn đổi thành công %s (ngoc)", Utilities.FormatNumber(valueCoin)));
+                            player.okDialog(string.Format(player.Language.ChangeGoldToCoinMessageOK, Utilities.FormatNumber(valueCoin)));
                         }
                         else
                         {
@@ -391,7 +391,7 @@ public partial class MenuController
                             }
                             else
                             {
-                                player.redDialog("Người chơi đã offline");
+                                player.redDialog(player.Language.PlayerOffline);
                             }
                         }
                     }
@@ -413,7 +413,7 @@ public partial class MenuController
                                     }
                                     else
                                     {
-                                        player.redDialog("Người chơi này không tồn tại");
+                                        player.redDialog(player.Language.PlayerNotFound);
                                         return;
                                     }
                                 }
@@ -446,7 +446,7 @@ public partial class MenuController
                                     }
                                     else
                                     {
-                                        player.redDialog("Người chơi này không tồn tại");
+                                        player.redDialog(player.Language.PlayerNotFound);
                                         return;
                                     }
                                 }
@@ -466,17 +466,17 @@ public partial class MenuController
                                 if (dialogInputId == INPUT_TYPE_NAME_TO_BUFF_ENCHANT)
                                 {
                                     playerOnline.controller.setBuffEnchent(true);
-                                    player.okDialog(Utilities.Format("Buff cho người chơi đập không thất bại thành công!", name));
+                                    player.okDialog(string.Format("Buff cho người chơi đập không thất bại thành công!", name));
                                 }
                                 else
                                 {
                                     playerOnline.controller.IsBuffEnchantTatto = true;
-                                    player.okDialog(Utilities.Format("Buff cho người chơi cường hóa xăm không thất bại thành công!", name));
+                                    player.okDialog(string.Format("Buff cho người chơi cường hóa xăm không thất bại thành công!", name));
                                 }
                             }
                             else
                             {
-                                player.redDialog("Người chơi đã offline");
+                                player.redDialog(player.Language.PlayerNotFound);
                             }
                         }
                     }
@@ -516,7 +516,7 @@ public partial class MenuController
                                 String slogan = reader.readString(0);
                                 if (slogan.Length >= 500)
                                 {
-                                    player.redDialog("Khẩu hiệu không quá 500 từ");
+                                    player.redDialog(player.Language.ClanSetSloganLaw);
                                 }
                                 else
                                 {
@@ -525,7 +525,7 @@ public partial class MenuController
                             }
                             else
                             {
-                                player.redDialog("Bạn không có quyền này, chỉ có bang chủ mới thao tác được.");
+                                player.redDialog(player.Language.YouEnoughPermissionOnlyLeader);
                             }
                         }
                         else
@@ -539,7 +539,7 @@ public partial class MenuController
                         string name = reader.readString(0);
                         if (name.Length > 30 || name.Length <= 5)
                         {
-                            player.redDialog("Tên pet không dài quá 30 ký tự và phải lớn hơn 6 ký tự");
+                            player.redDialog(player.Language.SetPetNameLaw);
                             return;
                         }
                         player.controller.objectPerformed[OBJKEY_NAME_PET_WANT] = name;
@@ -571,7 +571,7 @@ public partial class MenuController
                             }
                             else
                             {
-                                player.redDialog("Người chơi đã offline");
+                                player.redDialog(player.Language.PlayerOffline);
                             }
                         }
                         break;
@@ -581,7 +581,7 @@ public partial class MenuController
                         String clanName = reader.readString(0);
                         if (player.HaveClan)
                         {
-                            player.redDialog("Bạn đã có bang hội rồi");
+                            player.redDialog(player.Language.YouHaveClan);
                             return;
                         }
                         else
@@ -602,40 +602,40 @@ public partial class MenuController
                                                 player.playerData.clanId = clan.getClanId();
                                                 player.mineCoin(GopetManager.COIN_CREATE_CLAN);
                                                 player.mineGold(GopetManager.GOLD_CREATE_CLAN);
-                                                player.okDialog(Utilities.Format("Tạo bang %s thành công", clanName));
+                                                player.okDialog(string.Format(player.Language.CreateClanOK, clanName));
                                             }
                                             catch (MySqlException e)
                                             {
                                                 if (e.Code == 1062)
                                                 {
-                                                    player.redDialog("Lỗi trùng lập tên bang hội theo thời gian thực, nó hiếm khi xảy ra");
+                                                    player.redDialog(player.Language.CreateClanDuplicateError);
                                                 }
                                                 e.printStackTrace();
                                             }
                                             catch (Exception e)
                                             {
                                                 e.printStackTrace();
-                                                player.redDialog("Lỗi tạo bang");
+                                                player.redDialog(player.Language.CreateClanError);
                                             }
                                         }
                                         else
                                         {
-                                            player.redDialog("Tên bang hội này đã tồn tại");
+                                            player.redDialog(player.Language.ClanDuplicateName);
                                         }
                                     }
                                     else
                                     {
-                                        player.redDialog("Không đủ (vang) và (ngoc)");
+                                        player.redDialog(player.Language.NotEnoughMaterial);
                                     }
                                 }
                                 else
                                 {
-                                    player.redDialog("Tên bang cần bé hơn 20 ký tự và lớn hơn 4 ký tự");
+                                    player.redDialog(player.Language.ClanCreateNameLaw);
                                 }
                             }
                             else
                             {
-                                player.redDialog("Tên bang hội không có dấu và ký tự đặc biệt nhé");
+                                player.redDialog(player.Language.HaveSpecialChar);
                             }
                         }
                     }
@@ -644,7 +644,7 @@ public partial class MenuController
         }
         catch (FormatException ex)
         {
-            player.redDialog("Nhập sai, vui lòng nhập các con số");
+            player.redDialog(player.Language.WrongInputNumber);
         }
         catch (Exception e)
         {
