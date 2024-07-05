@@ -39,7 +39,7 @@ public partial class MenuController
                     var listTaskEvent = player.playerData.task.Where(p => p.taskTemplateId >= 38 && p.taskTemplateId <= 49).ToList();
                     if (listTaskEvent.Count > 0)
                     {
-                        player.redDialog("Ngươi đã nhận nhiệm vụ thì đi làm đi. \n Tới đây hỏi gì nữa hả?!");
+                        player.redDialog(player.Language.GetTaskFastAction);
                     }
                     else
                     {
@@ -52,7 +52,7 @@ public partial class MenuController
                             taskData.CanCancelTask = false;
                             player.playerData.task.Add(taskData);
                             player.playerData.tasking.Add(taskData.taskTemplateId);
-                            player.okDialog("Nhận nhiệm vụ thành công");
+                            player.okDialog(player.Language.GetTaskOK);
                         }
                         else
                         {
@@ -106,7 +106,7 @@ public partial class MenuController
                 break;
             case OP_TYPE_GIFT_CODE:
                 {
-                    player.controller.showInputDialog(INPUT_TYPE_GIFT_CODE, "Nhập mã quà tặng", new String[] { "Giftcode:  " });
+                    player.controller.showInputDialog(INPUT_TYPE_GIFT_CODE, player.Language.InputGiftCode, new String[] { player.Language.GiftCodeDescription });
                 }
                 break;
             case OP_UPGRADE_PET:
@@ -180,7 +180,7 @@ public partial class MenuController
                                 player.mineGold(GopetManager.PRICE_REVIVAL_PET_FATER_PK);
                                 pet.petDieByPK = false;
                                 pet.TimeDieZ = 0;
-                                player.okDialog(Utilities.Format("Hồi sinh %s thành công, nhờ trân trọng nó nhé", pet.getNameWithStar()));
+                                player.okDialog(string.Format(player.Language.RevialPetOK, pet.getNameWithStar()));
                             }
                             else
                             {
@@ -189,7 +189,7 @@ public partial class MenuController
                         }
                         else
                         {
-                            player.redDialog("Nó vẫn bình thường mà");
+                            player.redDialog(player.Language.PetIsNormalMessage);
                         }
                     }
                     else
@@ -211,12 +211,12 @@ public partial class MenuController
                 break;
             case OP_CREATE_CLAN:
                 {
-                    player.controller.showInputDialog(INPUT_DIALOG_CREATE_CLAN, Utilities.Format("Tạo bang hội (Phí %s (ngoc) + %s (vang)", Utilities.FormatNumber(GopetManager.COIN_CREATE_CLAN), Utilities.FormatNumber(GopetManager.GOLD_CREATE_CLAN)), new String[] { "Tên bang hội: " });
+                    player.controller.showInputDialog(INPUT_DIALOG_CREATE_CLAN, string.Format(player.Language.AskCreateClanOp + " {0} (ngoc) + {1} (vang)", Utilities.FormatNumber(GopetManager.COIN_CREATE_CLAN), Utilities.FormatNumber(GopetManager.GOLD_CREATE_CLAN)), new String[] { "Tên bang hội: " });
                 }
                 break;
             case OP_NUM_OF_TASK:
                 {
-                    player.okDialog(Utilities.Format("Số nhiệm vụ đã hoàn thành là: ", player.playerData.wasTask.Count));
+                    player.okDialog(string.Format(player.Language.NumOfTask, player.playerData.wasTask.Count));
                 }
                 break;
             case OP_TOP_LVL_CLAN:
@@ -233,7 +233,7 @@ public partial class MenuController
                     }
                     else
                     {
-                        player.redDialog("Bạn chưa vào bang");
+                        player.redDialog(player.Language.YouNotHaveClan);
                     }
                 }
                 break;
@@ -242,7 +242,7 @@ public partial class MenuController
                     ClanMember clanMember = player.controller.getClan();
                     if (clanMember != null)
                     {
-                        player.okDialog("Bang hội hiện chưa có sự kiện gì...");
+                        player.okDialog(player.Language.ClanIsNotHaveAnyEvent);
                     }
                     else
                     {
@@ -255,7 +255,7 @@ public partial class MenuController
                     ClanMember clanMember = player.controller.getClan();
                     if (clanMember != null)
                     {
-                        player.okDialog(Utilities.Format("Bạn đã quyên góp quỹ được:%s", Utilities.FormatNumber(clanMember.fundDonate)));
+                        player.okDialog(string.Format(player.Language.FastClanInfoMessage, Utilities.FormatNumber(clanMember.fundDonate)));
                     }
                     else
                     {
@@ -274,7 +274,7 @@ public partial class MenuController
                         }
                         else
                         {
-                            player.redDialog("Bạn chỉ là thành viên.");
+                            player.redDialog(player.Language.YouOnlyIsMemeber);
                         }
                     }
                     else
@@ -290,7 +290,7 @@ public partial class MenuController
                     {
                         if (clanMember.duty == Clan.TYPE_LEADER)
                         {
-                            player.redDialog("Bang chủ không thể rời bang.");
+                            player.redDialog(player.Language.ClanLeaderCannotOutClan);
                         }
                         else
                         {
@@ -312,11 +312,11 @@ public partial class MenuController
                     {
                         if (clanMember.IsLeader)
                         {
-                            showYNDialog(DIALOG_ASK_REQUEST_UPGRADE_MAIN_HOUSE, Utilities.Format("Bạn có muốn năng cấp nhà chính lên cấp %s không?", clanMember.getClan().getLvl() + 1), player);
+                            showYNDialog(DIALOG_ASK_REQUEST_UPGRADE_MAIN_HOUSE, string.Format(player.Language.DoYouWantUpgradeClanLevel, clanMember.getClan().getLvl() + 1), player);
                         }
                         else
                         {
-                            player.redDialog("Bạn không có quyền này, chỉ có bang chủ mới thao tác được.");
+                            player.redDialog(player.Language.YouEnoughPermissionOnlyLeader);
                         }
                     }
                     else
@@ -338,11 +338,11 @@ public partial class MenuController
                     {
                         if (clanMember.duty == Clan.TYPE_LEADER)
                         {
-                            player.controller.showInputDialog(INPUT_DIALOG_CHANGE_SLOGAN_CLAN, "Thay đổi khẩu hiệu bang hội", new String[] { "Khẩu hiệu: " });
+                            player.controller.showInputDialog(INPUT_DIALOG_CHANGE_SLOGAN_CLAN, player.Language.ChangeSloganClan, new String[] { player.Language.ClanSloganDescription });
                         }
                         else
                         {
-                            player.redDialog("Bạn không có quyền này, chỉ có bang chủ mới thao tác được.");
+                            player.redDialog(player.Language.YouEnoughPermissionOnlyLeader);
                         }
                     }
                     else
@@ -385,7 +385,7 @@ public partial class MenuController
                         }
                         else
                         {
-                            player.redDialog("Bang hội chưa đạt cấp 15 trở lên");
+                            player.redDialog(player.Language.ClanMustReachLevel15);
                         }
                     }
                     else
@@ -437,7 +437,8 @@ public partial class MenuController
                 showShop(MenuController.SHOP_GIAN_THUONG, player);
                 break;
             default:
-                player.redDialog("Tính năng đang được xây dựng"); break;
+                player.redDialog(player.Language.FeatureIsNotFound); 
+                break;
         }
     }
 }

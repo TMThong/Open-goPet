@@ -400,7 +400,7 @@ public partial class MenuController
                         JArrayList<MenuItemInfo> approvalElements = new();
                         foreach (ClanRequestJoin clanRequestJoin in clan.getRequestJoin())
                         {
-                            MenuItemInfo menuItemInfo = new MenuItemInfo(clanRequestJoin.name, string.Format("Xin vào bang lúc: {0}", Utilities.GetDate(clanRequestJoin.timeRequest)), "", true);
+                            MenuItemInfo menuItemInfo = new MenuItemInfo(clanRequestJoin.name, string.Format(player.Language.ApplyToClanWhen, Utilities.GetDate(clanRequestJoin.timeRequest)), "", true);
                             menuItemInfo.setImgPath(clanRequestJoin.getAvatar());
                             menuItemInfo.setShowDialog(true);
                             menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, clanRequestJoin.name));
@@ -409,7 +409,7 @@ public partial class MenuController
                             menuItemInfo.setItemId(clanRequestJoin.user_id);
                             approvalElements.add(menuItemInfo);
                         }
-                        player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Duyệt thành viên", approvalElements);
+                        player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.MemberReview, approvalElements);
                     }
                     else
                     {
@@ -426,16 +426,16 @@ public partial class MenuController
                         JArrayList<MenuItemInfo> approvalElements = new();
                         foreach (ClanMember clanMemberSelect in clan.getMembers())
                         {
-                            MenuItemInfo menuItemInfo = new MenuItemInfo(clanMemberSelect.name + "(Chức vụ: " + clanMemberSelect.getDutyName(player) + ")", Utilities.Format("Đóng góp quỹ :%s", Utilities.FormatNumber(clanMemberSelect.fundDonate)), "", true);
+                            MenuItemInfo menuItemInfo = new MenuItemInfo(clanMemberSelect.name + "(" + player.Language.PositionDescription + clanMemberSelect.getDutyName(player) + ")", string.Format(player.Language.ClanFundDescription, Utilities.FormatNumber(clanMemberSelect.fundDonate)), "", true);
                             menuItemInfo.setImgPath(clanMemberSelect.getAvatar());
                             menuItemInfo.setShowDialog(true);
-                            menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", clanMemberSelect.name));
+                            menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, clanMemberSelect.name));
                             menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                             menuItemInfo.setHasId(true);
                             menuItemInfo.setItemId(clanMemberSelect.user_id);
                             approvalElements.add(menuItemInfo);
                         }
-                        player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Duyệt thành viên", approvalElements);
+                        player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.MemberReview, approvalElements);
                     }
                     else
                     {
@@ -453,11 +453,11 @@ public partial class MenuController
                             MenuItemInfo menuItemInfo = new MenuItemInfo(gopetMap.mapTemplate.name + "  (" + gopetMap.mapID + ")", "", "", true);
                             menuItemInfo.setImgPath("npcs/mgo.png");
                             menuItemInfo.setShowDialog(true);
-                            menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", gopetMap.mapTemplate.name));
+                            menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, gopetMap.mapTemplate.name));
                             menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                             mapMenuItem.add(menuItemInfo);
                         }
-                        player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Dịch chuyển tới map", mapMenuItem);
+                        player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.TeleToMap, mapMenuItem);
                     }
                 }
                 break;
@@ -473,7 +473,7 @@ public partial class MenuController
                         menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                         menuItemInfos.add(menuItemInfo);
                     }
-                    player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Tẩy gym", menuItemInfos);
+                    player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.DeleteGymTitle, menuItemInfos);
                 }
                 break;
             case SHOP_ENERGY:
@@ -488,13 +488,13 @@ public partial class MenuController
                 showShop((sbyte)menuId, player);
                 break;
             case MENU_WING_INVENTORY:
-                showInventory(player, GopetManager.WING_INVENTORY, menuId, "Cánh của tôi");
+                showInventory(player, GopetManager.WING_INVENTORY, menuId, player.Language.MyWing);
                 break;
             case MENU_NORMAL_INVENTORY:
-                showInventory(player, GopetManager.NORMAL_INVENTORY, menuId, "Hành trang");
+                showInventory(player, GopetManager.NORMAL_INVENTORY, menuId, player.Language.Inventory);
                 break;
             case MENU_SKIN_INVENTORY:
-                showInventory(player, GopetManager.SKIN_INVENTORY, menuId, "Tủ quần ảo");
+                showInventory(player, GopetManager.SKIN_INVENTORY, menuId, player.Language.SkinInventory);
                 break;
             case MENU_SELECT_ITEM_TO_GET_BY_ADMIN:
             case MENU_SELECT_ITEM_TO_GIVE_BY_ADMIN:
@@ -535,12 +535,12 @@ public partial class MenuController
                     {
                         MenuItemInfo menuItemInfo = new MenuItemInfo(item.getTemp().isStackable ? item.getName() : item.getEquipName(), item.getDescription(player), item.getTemp().getIconPath(), true);
                         menuItemInfo.setShowDialog(true);
-                        menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", item.getName()));
+                        menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, item.getName()));
                         menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                         menuItemInfo.setCloseScreenAfterClick(true);
                         menuItemMaterial1Infos.add(menuItemInfo);
                     }
-                    player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Chọn nguyên liệu", menuItemMaterial1Infos);
+                    player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.SelectMaterial, menuItemMaterial1Infos);
 
                 }
                 break;
@@ -562,12 +562,12 @@ public partial class MenuController
                     {
                         MenuItemInfo menuItemInfo = new MenuItemInfo(item.getEquipName(), item.getDescription(player), item.getTemp().getIconPath(), true);
                         menuItemInfo.setShowDialog(true);
-                        menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", item.getName()));
+                        menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, item.getName()));
                         menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                         menuItemInfo.setCloseScreenAfterClick(true);
                         menuItemEquipInfos.add(menuItemInfo);
                     }
-                    player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Chọn trang bị", menuItemEquipInfos);
+                    player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.SelectEquip, menuItemEquipInfos);
                 }
                 break;
             case MENU_KIOSK_OHTER_SELECT:
@@ -578,22 +578,22 @@ public partial class MenuController
                     {
                         MenuItemInfo menuItemInfo = new MenuItemInfo(item.getName(), item.getDescription(player), item.getTemp().getIconPath(), true);
                         menuItemInfo.setShowDialog(true);
-                        menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", item.getName()));
+                        menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, item.getName()));
                         menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                         menuItemInfo.setCloseScreenAfterClick(true);
                         menuItemEquipInfos.add(menuItemInfo);
                     }
-                    player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Chọn vật phẩm", menuItemEquipInfos);
+                    player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.SelectItem, menuItemEquipInfos);
                 }
                 break;
             case MENU_APPROVAL_CLAN_MEM_OPTION:
                 {
                     JArrayList<Option> approvalOptions = new();
-                    approvalOptions.add(new Option(0, "Duyệt", (sbyte)1));
-                    approvalOptions.add(new Option(1, "Xóa", (sbyte)1));
-                    approvalOptions.add(new Option(2, "Xóa và cho vào danh sách chặn", (sbyte)1));
-                    approvalOptions.add(new Option(3, "Xóa tất cả", (sbyte)1));
-                    player.controller.sendListOption(menuId, "Duyệt thành viên", "", approvalOptions);
+                    approvalOptions.add(new Option(0, player.Language.ApplyMember, (sbyte)1));
+                    approvalOptions.add(new Option(1, player.Language.Remove, (sbyte)1));
+                    approvalOptions.add(new Option(2, player.Language.RemoveAndBlock, (sbyte)1));
+                    approvalOptions.add(new Option(3, player.Language.RemoveAll, (sbyte)1));
+                    player.controller.sendListOption(menuId, player.Language.MemberReview, "", approvalOptions);
                 }
                 break;
             case MENU_SELECT_TYPE_MONEY_TO_RENT_SKILL_CLAN:
@@ -606,7 +606,7 @@ public partial class MenuController
                         {
                             approvalOptions.add(new Option(i, getMoneyText(clanSkillTemplate.moneyType[i], clanSkillTemplate.price[i], player), (sbyte)1));
                         }
-                        player.controller.sendListOption(menuId, "Thuê kỹ năng bang hội", "", approvalOptions);
+                        player.controller.sendListOption(menuId, player.Language.RentSkillClan, "", approvalOptions);
                     }
                     else
                     {
@@ -630,17 +630,17 @@ public partial class MenuController
                                     ClanSkillTemplate clanSkillTemplate = GopetManager.ClanSkillViaId[skill.Key];
                                     MenuItemInfo menuItemInfo = new MenuItemInfo(clanSkillTemplate.name, clanSkillTemplate.description, "npcs/gopet.png", true);
                                     menuItemInfo.setShowDialog(true);
-                                    menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", menuItemInfo.getTitleMenu()));
+                                    menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, menuItemInfo.getTitleMenu()));
                                     menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                                     menuItemInfo.setCloseScreenAfterClick(true);
                                     skillMenuItemInfos.add(menuItemInfo);
                                 }
                             }
-                            player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Chọn kỹ năng bang hội", skillMenuItemInfos);
+                            player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.SelectClanSkillRent, skillMenuItemInfos);
                         }
                         else
                         {
-                            player.redDialog("Bang hội bạng chưa có kỹ năng nào\nVui lòng cộng tiềm năng vào kỹ năng để mở khóa");
+                            player.redDialog(player.Language.RentSkillClanLaw);
                         }
                     }
                     else
@@ -659,12 +659,12 @@ public partial class MenuController
                         {
                             MenuItemInfo menuItemInfo = new MenuItemInfo(clanSkill.name, clanSkill.description, "npcs/gopet.png", true);
                             menuItemInfo.setShowDialog(true);
-                            menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", menuItemInfo.getTitleMenu()));
+                            menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, menuItemInfo.getTitleMenu()));
                             menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                             menuItemInfo.setCloseScreenAfterClick(true);
                             skillMenuItemInfos.add(menuItemInfo);
                         }
-                        player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Tăng kỹ năng bang hội", skillMenuItemInfos);
+                        player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT,player.Language.AddSkillClanLevelTitle, skillMenuItemInfos);
                     }
                     else
                     {
@@ -678,18 +678,18 @@ public partial class MenuController
                     for (int i = 0; i < GopetManager.PRICE_BET_CHALLENGE.Length; i++)
                     {
                         long l = GopetManager.PRICE_BET_CHALLENGE[i];
-                        Option option = new Option(i, Utilities.FormatNumber(l) + " ngọc", 1);
+                        Option option = new Option(i, Utilities.FormatNumber(l) + " (ngoc)", 1);
                         list.add(option);
                     }
-                    player.controller.sendListOption(menuId, "Đặt cược", CMD_CENTER_OK, list);
+                    player.controller.sendListOption(menuId, player.Language.Bet , CMD_CENTER_OK, list);
                 }
                 break;
             case MENU_ATM:
                 {
                     JArrayList<Option> options = new();
-                    options.add(new Option(0, "Đổi (vang)"));
-                    options.add(new Option(1, "Đổi (ngoc)"));
-                    player.controller.sendListOption(menuId, "Cây ATM", CMD_CENTER_OK, options);
+                    options.add(new Option(0, player.Language.Change +  " (vang)"));
+                    options.add(new Option(1, player.Language.Change + " (ngoc)"));
+                    player.controller.sendListOption(menuId, "ATM", CMD_CENTER_OK, options);
                 }
                 break;
             case MENU_KIOSK_OHTER:
@@ -739,9 +739,9 @@ public partial class MenuController
                                 {
                                     MenuItemInfo menuItemInfo = new MenuItemInfo();
                                     menuItemInfo.setCanSelect(true);
-                                    menuItemInfo.setTitleMenu((menuId != MENU_KIOSK_OHTER ? kioskItem.ItemSell.getEquipName() : kioskItem.ItemSell.getName()) + Utilities.Format(" (Mã định danh:%s)", kioskItem.itemId));
+                                    menuItemInfo.setTitleMenu((menuId != MENU_KIOSK_OHTER ? kioskItem.ItemSell.getEquipName() : kioskItem.ItemSell.getName()) + string.Format(player.Language.KioskIdItemDescription, kioskItem.itemId));
                                     menuItemInfo.setImgPath(kioskItem.getFrameImgPath());
-                                    menuItemInfo.setDesc(Utilities.Format("Giá %s (ngoc) ", Utilities.FormatNumber(kioskItem.price)) + kioskItem.ItemSell.getTemp().getDescription());
+                                    menuItemInfo.setDesc(string.Format(player.Language.PriceKioskDescription + "(ngoc) ", Utilities.FormatNumber(kioskItem.price)) + kioskItem.ItemSell.getTemp().getDescription());
                                     menuItemInfo.setCloseScreenAfterClick(true);
                                     menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                                     menuItemInfo.setHasId(true);
@@ -751,7 +751,7 @@ public partial class MenuController
                             });
                                     arrayListEquip.add(menuItemInfo);
                                 }
-                                player.controller.showMenuItem(menuId, TYPE_MENU_PAYMENT, "Ki ốt", arrayListEquip);
+                                player.controller.showMenuItem(menuId, TYPE_MENU_PAYMENT, player.Language.Kiosk, arrayListEquip);
                             }
                             break;
                         case MENU_KIOSK_PET:
@@ -761,9 +761,9 @@ public partial class MenuController
                                 {
                                     MenuItemInfo menuItemInfo = new MenuItemInfo();
                                     menuItemInfo.setCanSelect(true);
-                                    menuItemInfo.setTitleMenu(kioskItem.pet.getNameWithStar() + Utilities.Format(" (Mã định danh:%s)", kioskItem.itemId));
+                                    menuItemInfo.setTitleMenu(kioskItem.pet.getNameWithStar() + string.Format(player.Language.KioskIdItemDescription, kioskItem.itemId));
                                     menuItemInfo.setImgPath(kioskItem.pet.getPetTemplate().icon);
-                                    menuItemInfo.setDesc(Utilities.Format("Giá %s (ngoc) ", Utilities.FormatNumber(kioskItem.price)) + kioskItem.pet.getDesc());
+                                    menuItemInfo.setDesc(string.Format(player.Language.PriceKioskDescription + "(ngoc) ", Utilities.FormatNumber(kioskItem.price)) + kioskItem.pet.getDesc());
                                     menuItemInfo.setCloseScreenAfterClick(true);
                                     menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                                     menuItemInfo.setHasId(true);
@@ -772,7 +772,7 @@ public partial class MenuController
                                     new MenuItemInfo.PaymentOption(0, kioskItem.price + " (ngoc)", checkMoney(GopetManager.MONEY_TYPE_COIN, kioskItem.price, player) ? (sbyte) 1 : (sbyte) 0)});
                                     arrayListEquip.add(menuItemInfo);
                                 }
-                                player.controller.showMenuItem(menuId, TYPE_MENU_PAYMENT, menuId == MENU_KIOSK_PET ? "Chợ pet" : "Ki ốt", arrayListEquip);
+                                player.controller.showMenuItem(menuId, TYPE_MENU_PAYMENT, menuId == MENU_KIOSK_PET ? player.Language.KioskPet : player.Language.Kiosk, arrayListEquip);
                             }
                             break;
                     }
