@@ -524,11 +524,12 @@ public class GopetManager
     /// Giá mở khóa ô kỹ năng bang hội
     /// </summary>
     public static readonly int[] PRICE_UNLOCK_SLOT_SKILL_CLAN = new int[] { 1000000, 2000000, 3000000 };
-
+    public const string VI_CODE = "vi";
+    public const string EN_CODE = "en";
     public static readonly Dictionary<string, LanguageData> Language = new Dictionary<string, LanguageData>()
     {
-        ["vi"] = new LanguageData(),
-        ["en"] = ReadJsonFile<LanguageData>("/Language/en.json")
+        [VI_CODE] = new LanguageData(),
+        [EN_CODE] = ReadJsonFile<LanguageData>("/Language/en.json")
     };
 
     public static readonly Dictionary<sbyte, TradeGiftTemplate[]> TradeGift = new();
@@ -887,6 +888,31 @@ public class GopetManager
                 tierItemHashMap.put(get, i + 2);
             }
         }
+
+        foreach (var item in npcTemplate)
+        {
+            Language[VI_CODE].NpcNameLanguage[item.Key] = item.Value.name;
+            for (global::System.Int32 i = 0; i < item.Value.optionId.Length; i++)
+            {
+                Language[VI_CODE].NpcOptionLanguage[item.Value.optionId[i]] = item.Value.optionName[i];
+            }
+        }
+
+        foreach (var item in itemTemplates)
+        {
+            Language[VI_CODE].ItemLanguage[item.itemId] = item.name;
+        }
+
+        foreach (var item in tattos)
+        {
+            Language[VI_CODE].TattoLanguage[item.Key] = item.Value.name;
+        }
+
+        foreach (var item in mapTemplate)
+        {
+            Language[VI_CODE].MapLanguage[item.Key] = item.Value.name;
+        }
+
         //SaveJsonFile(Language["vi"], "/lang/vi.json");
     }
 
@@ -905,7 +931,7 @@ public class GopetManager
         {
             FileInfo fileInfo = new FileInfo(Directory.GetCurrentDirectory() + file);
             fileInfo.Directory.Create();
-            using(var st = fileInfo.Create())
+            using (var st = fileInfo.Create())
             {
                 StreamWriter streamWriter = new StreamWriter(st);
                 streamWriter.Write(JsonConvert.SerializeObject(json, Formatting.Indented));

@@ -361,7 +361,7 @@ public partial class MenuController
                             MenuItemInfo menuItemInfo = new MenuItemInfo(petSkill.name, petSkill.description, petSkill.skillID + "", true);
                             menuItemInfo.setImgPath(Utilities.Format("skills/skill_%s.png", petSkill.skillID));
                             menuItemInfo.setShowDialog(true);
-                            menuItemInfo.setDialogText(string.Format(player.Language.DoWantSelectIt, petSkill.name));
+                            menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, petSkill.name));
                             menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                             skillMenuItem.add(menuItemInfo);
                         }
