@@ -334,22 +334,22 @@ public partial class MenuController
                             {
                                 MenuItemInfo menuItemInfo = new MenuItemInfo(taskTemplate.getName(), taskTemplate.getDescription(), "dialog/1.png", true);
                                 menuItemInfo.setShowDialog(true);
-                                menuItemInfo.setDialogText("Bạn có chắc muốn nhận nhiệm vụ này ?" + TaskCalculator.getTaskText(null, taskTemplate.getTask(), taskTemplate.getTimeTask()));
+                                menuItemInfo.setDialogText(player.Language.DoYouWantGetThisTask + TaskCalculator.getTaskText(null, taskTemplate.getTask(), taskTemplate.getTimeTask()));
                                 menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                                 menuItemInfo.setCloseScreenAfterClick(true);
                                 taskMenuInfos.add(menuItemInfo);
                             }
-                            player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Nhiệm vụ", taskMenuInfos);
+                            player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.Task, taskMenuInfos);
                         }
                         else
                         {
-                            player.redDialog("Không có nhiệm vụ để cho bạn nhận");
+                            player.redDialog(player.Language.ThisNpcIsNotHaveTaskForYourself);
                         }
                     }
                 }
                 break;
             case MENU_LIST_PET_FREE:
-                player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Nhận pet miễn phí", PetFreeList);
+                player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.GetPetFree, PetFreeList);
                 break;
             case MENU_LEARN_NEW_SKILL:
                 {
@@ -361,11 +361,11 @@ public partial class MenuController
                             MenuItemInfo menuItemInfo = new MenuItemInfo(petSkill.name, petSkill.description, petSkill.skillID + "", true);
                             menuItemInfo.setImgPath(Utilities.Format("skills/skill_%s.png", petSkill.skillID));
                             menuItemInfo.setShowDialog(true);
-                            menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", petSkill.name));
+                            menuItemInfo.setDialogText(string.Format(player.Language.DoWantSelectIt, petSkill.name));
                             menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                             skillMenuItem.add(menuItemInfo);
                         }
-                        player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Học kỹ năng cho thú cưng", skillMenuItem);
+                        player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.LearnSkillForPet, skillMenuItem);
 
                     }
                 }

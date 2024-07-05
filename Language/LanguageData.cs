@@ -300,5 +300,10 @@ namespace Gopet.Language
         public string Manipulate { get; set; } = "Thao tác";
         public string Pin { get; set; } = "Ghim";
         public string Unpin { get; set; } = "Bỏ ghim";
+        public string DoYouWantGetThisTask { get; set; } = "Bạn có chắc muốn nhận nhiệm vụ này ?";
+        public string Task { get; set; } = "Nhiệm vụ";
+        public string ThisNpcIsNotHaveTaskForYourself { get; set; } = "Không có nhiệm vụ để cho bạn nhận";
+        public string GetPetFree { get; set; } = "Nhận pet miễn phí";
+        public string LearnSkillForPet { get; set; } = "Học kỹ năng cho thú cưng";
     }
 }
