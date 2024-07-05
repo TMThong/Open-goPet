@@ -47,18 +47,18 @@ public partial class MenuController
                         MenuItemInfo menuItemInfo = new PetMenuItemInfo(pet);
                         menuItemInfo.setCloseScreenAfterClick(true);
                         menuItemInfo.setShowDialog(true);
-                        menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", pet.getNameWithStar()));
+                        menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, pet.getNameWithStar()));
                         menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                         petItemInfos.add(menuItemInfo);
                         menuItemInfo.setItemId(i);
                         menuItemInfo.setHasId(true);
                         if (i == -1)
                         {
-                            menuItemInfo.setTitleMenu(menuItemInfo.getTitleMenu() + " (Đang sử dụng)");
+                            menuItemInfo.setTitleMenu(menuItemInfo.getTitleMenu() + player.Language.IsUsing);
                         }
                         i++;
                     }
-                    player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Pet của bạn", petItemInfos);
+                    player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.YourPet, petItemInfos);
                 }
                 break;
             case MENU_CHOOSE_PET_FROM_PACKAGE_PET:
@@ -74,12 +74,12 @@ public partial class MenuController
                                 PetMenuItemInfo petMenuItemInfo = new PetMenuItemInfo(GopetManager.PETTEMPLATE_HASH_MAP.get(petId));
                                 petMenuItemInfo.setCloseScreenAfterClick(true);
                                 petMenuItemInfo.setShowDialog(true);
-                                petMenuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn nó không?"));
+                                petMenuItemInfo.setDialogText(player.Language.DoWantSelectIt);
                                 petMenuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                                 petMenus.add(petMenuItemInfo);
                             }
                         }
-                        player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Quà nhiệm vụ", petMenus);
+                        player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.GiftOfTaskTitle, petMenus);
                     }
                 }
                 break;
@@ -100,7 +100,7 @@ public partial class MenuController
                         menuInfos.add(menuItemInfo);
                     }
 
-                    player.controller.showMenuItem(menuId, TYPE_MENU_NONE, "Tất cả xăm", menuInfos);
+                    player.controller.showMenuItem(menuId, TYPE_MENU_NONE, player.Language.AllTattoo , menuInfos);
                     break;
                 }
             case MENU_ADMIN_SHOW_ALL_ACHIEVEMENT:
@@ -113,7 +113,7 @@ public partial class MenuController
                             MenuItemInfo menuItemInfo = new MenuItemInfo(ach.Name, ach.Description, ach.IconPath, true);
                             menuInfos.add(menuItemInfo);
                         }
-                        player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Danh hiệu", menuInfos);
+                        player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.Archievement, menuInfos);
                     }
                     break;
                 }
@@ -125,30 +125,30 @@ public partial class MenuController
                         MenuItemInfo menuItemInfo = new MenuItemInfo(ach.Template.Name, ach.Template.Description, ach.Template.IconPath, true);
                         menuInfos.add(menuItemInfo);
                     }
-                    player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Danh hiệu", menuInfos);
+                    player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.Archievement, menuInfos);
                 }
                 break;
             case MENU_USE_ACHIEVEMNT_OPTION:
                 {
                     JArrayList<Option> list = new();
-                    list.Add(new Option(0, "Sử dụng", 1));
+                    list.Add(new Option(0, player.Language.Use, 1));
                     if (player.playerData.CurrentAchievementId > 0)
                     {
-                        list.Add(new Option(1, "Tháo danh hiệu hiện tại", 1));
+                        list.Add(new Option(1, player.Language.UnequipCurrentAcrhievement, 1));
                     }
-                    player.controller.sendListOption(menuId, "Sử dụng danh hiệu", CMD_CENTER_OK, list);
+                    player.controller.sendListOption(menuId, player.Language.UseAcrhievement, CMD_CENTER_OK, list);
                 }
                 break;
             case MENU_ME_SHOW_ACHIEVEMENT:
                 {
-                    AnimationMenu animationMenu = new AnimationMenu("Danh hiệu");
+                    AnimationMenu animationMenu = new AnimationMenu(player.Language.Archievement);
                     animationMenu.Commands.Add(AnimationMenu.RightExitCMD);
                     foreach (var ach in player.playerData.achievements)
                     {
-                        animationMenu.AddLabel(0, $"Danh hiệu: {ach.Template.Name}", FontStyle.SMALL);
+                        animationMenu.AddLabel(0, string.Format(player.Language.ArchievementDescription, ach.Template.Name), FontStyle.SMALL);
                         animationMenu.AddImage(0, ach.Template.FramePath, ach.Template.FrameNum);
-                        animationMenu.AddLabel(0, $"Chỉ số: {ach.Template.Atk} (atk) {ach.Template.Def} (def) {ach.Template.Hp} (hp) {ach.Template.Mp} (mp)", FontStyle.SMALL);
-                        animationMenu.AddLabel(0, $"Hạn sử dụng: {(ach.Expire == null ? "Vĩnh viễn" : Utilities.ToDateString(ach.Expire.Value))}", FontStyle.SMALL);
+                        animationMenu.AddLabel(0, $"{player.Language.InfoDescrption} {ach.Template.Atk} (atk) {ach.Template.Def} (def) {ach.Template.Hp} (hp) {ach.Template.Mp} (mp)", FontStyle.SMALL);
+                        animationMenu.AddLabel(0, $"{player.Language.ExpireDescrption} {(ach.Expire == null ? player.Language.InfinityExpire : Utilities.ToDateString(ach.Expire.Value))}", FontStyle.SMALL);
                     }
                     player.controller.showAnimationMenu(menuId, animationMenu);
                 }
@@ -163,7 +163,7 @@ public partial class MenuController
                         menuInfos.add(menuItemInfo);
                     }
 
-                    player.controller.showMenuItem(menuId, TYPE_MENU_NONE, "Tất cả vật phẩm", menuInfos);
+                    player.controller.showMenuItem(menuId, TYPE_MENU_NONE, player.Language.AllItems, menuInfos);
                 }
                 break;
             case MENU_LIST_REQUEST_ADD_FRIEND:
@@ -194,55 +194,55 @@ public partial class MenuController
                             foreach (var item in friendQuery)
                             {
                                 DateTime LastTimeOnline = item.LastTimeOnline;
-                                MenuItemInfo menuItemInfo = new MenuItemInfo(item.name, $"Lần cuối online: {Utilities.ToDateString(LastTimeOnline)}", item.avatarPath, true);
+                                MenuItemInfo menuItemInfo = new MenuItemInfo(item.name, $"{player.Language.LastTimeOnline} {Utilities.ToDateString(LastTimeOnline)}", item.avatarPath, true);
                                 menuItemInfo.setCloseScreenAfterClick(true);
                                 menuInfos.add(menuItemInfo);
                             }
                         }
                     }
-                    player.controller.showMenuItem(menuId, TYPE_MENU_NONE, "Danh sách bạn bè", menuInfos);
+                    player.controller.showMenuItem(menuId, TYPE_MENU_NONE, player.Language.FriendList, menuInfos);
                 }
                 break;
             case MENU_LIST_FRIEND_OPTION:
                 {
                     JArrayList<Option> list = new();
-                    list.Add(new Option(0, "Xem vị trí", true));  
-                    list.Add(new Option(1, "Xóa", true));  
-                    list.Add(new Option(2, "Xóa và chặn", true));  
-                    player.controller.sendListOption(menuId, "Bạn bè", string.Empty, list);
+                    list.Add(new Option(0, player.Language.GetPlayerLocation, true));  
+                    list.Add(new Option(1, player.Language.Remove, true));  
+                    list.Add(new Option(2, player.Language.RemoveAndBlock, true));  
+                    player.controller.sendListOption(menuId, player.Language.Friend, string.Empty, list);
                 }
                 break;
             case MENU_LIST_REQUEST_ADD_FRIEND_OPTION:
                 {
                     JArrayList<Option> list = new();
-                    list.Add(new Option(0, "Chấp nhận", true));
-                    list.Add(new Option(1, "Từ chối", true));
-                    list.Add(new Option(3, "Từ chối tất cả", true));
-                    list.Add(new Option(2, "Từ chối và thêm vào sổ đen", true));
-                    player.controller.sendListOption(menuId, "Danh sách chờ thêm bạn", string.Empty, list);
+                    list.Add(new Option(0, player.Language.Accept, true));
+                    list.Add(new Option(1, player.Language.Refuse, true));
+                    list.Add(new Option(3, player.Language.RefuseAllPlayer, true));
+                    list.Add(new Option(2, player.Language.RefuseAndAddToBlock, true));
+                    player.controller.sendListOption(menuId, player.Language.ListWaitingAddFriendList, string.Empty, list);
                 }
                 break;
             case MENU_LIST_BLOCK_FRIEND_OPTION:
                 {
                     JArrayList<Option> list = new();
-                    list.Add(new Option(0, "Bỏ chặn", true));
-                    list.Add(new Option(1, "Bỏ chặn tất cả", true));
-                    player.controller.sendListOption(menuId, "Sổ đen", string.Empty, list);
+                    list.Add(new Option(0, player.Language.RemoveBlockFriend, true));
+                    list.Add(new Option(1, player.Language.RemoveBlockFriendAll, true));
+                    player.controller.sendListOption(menuId, player.Language.ListBlockFriend, string.Empty, list);
                 }
                 break;
             case MENU_UNEQUIP_SKIN:
             case MENU_UNEQUIP_PET:
                 {
                     JArrayList<Option> list = new();
-                    list.add(new Option(0, menuId == MENU_UNEQUIP_PET ? "Không cho thú cưng đi theo" : "Tháo", Option.CAN_SELECT));
+                    list.add(new Option(0, menuId == MENU_UNEQUIP_PET ? player.Language.YouNotHavePetFollow : player.Language.Unequip, Option.CAN_SELECT));
                     String titleStr = "";
                     switch (menuId)
                     {
                         case MENU_UNEQUIP_PET:
-                            titleStr = "Tùy chọn với thú cưng đi theo bạn";
+                            titleStr = player.Language.MenuUnequipPetTitle;
                             break;
                         case MENU_UNEQUIP_SKIN:
-                            titleStr = "Tùy chọn với trang phục đang mặc của bạn";
+                            titleStr = player.Language.MenuUnequipSkinTitle;
                             break;
                     }
                     player.controller.sendListOption(menuId, titleStr, titleStr, list);
@@ -262,7 +262,7 @@ public partial class MenuController
                         menuItemInfo.setCloseScreenAfterClick(true);
                         taskMenuInfos.add(menuItemInfo);
                     }
-                    player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "Nhiệm vụ của bạn", taskMenuInfos);
+                    player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.YourTask, taskMenuInfos);
                 }
                 break;
             case MENU_SELECT_MONEY_TO_PAY_FOR_ENCHANT_WING:
@@ -286,7 +286,7 @@ public partial class MenuController
                                 list.add(new Option(1, Utilities.FormatNumber(enchantWingData.Gold) + " (vang)", Option.CAN_SELECT));
                             }
 
-                            player.controller.sendListOption(MENU_SELECT_MONEY_TO_PAY_FOR_ENCHANT_WING, "Thanh toán cường hóa", "", list);
+                            player.controller.sendListOption(MENU_SELECT_MONEY_TO_PAY_FOR_ENCHANT_WING, player.Language.PayForEnchantWing, "", list);
                         }
                     }
                 }
@@ -295,11 +295,11 @@ public partial class MenuController
                 {
                     JArrayList<Option> list = new();
 
-                    list.add(new Option(0, "Cập nhật", Option.CAN_SELECT));
-                    list.add(new Option(1, "Hoàn thành nhiệm vụ", Option.CAN_SELECT));
-                    list.add(new Option(2, "Hủy nhiệm vụ", Option.CAN_SELECT));
+                    list.add(new Option(0, player.Language.Update, Option.CAN_SELECT));
+                    list.add(new Option(1, player.Language.TaskIsSuccessfully, Option.CAN_SELECT));
+                    list.add(new Option(2, player.Language.CancelTask, Option.CAN_SELECT));
 
-                    player.controller.sendListOption(MENU_OPTION_TASK, "Tùy chọn nhiệm vụ", "", list);
+                    player.controller.sendListOption(MENU_OPTION_TASK, player.Language.OptionTask, "", list);
                 }
                 break;
             case MENU_SELECT_TYPE_PAYMENT_TO_ARENA_JOURNALISM:
@@ -310,15 +310,15 @@ public partial class MenuController
                     list.add(new Option(0, $"{(menuId == MENU_OPTION_TO_SLECT_TYPE_MONEY_ENCHANT_TATTOO ? GopetManager.PRICE_GOLD_ENCHANT_TATTO : GopetManager.PRICE_GOLD_ARENA_JOURNALISM)} (vang)", Option.CAN_SELECT));
                     list.add(new Option(1, $"{(menuId == MENU_OPTION_TO_SLECT_TYPE_MONEY_ENCHANT_TATTOO ? GopetManager.PRICE_COIN_ENCHANT_TATTO : GopetManager.PRICE_COIN_ARENA_JOURNALISM)} (ngoc)", Option.CAN_SELECT));
 
-                    player.controller.sendListOption(menuId, "Tùy chọn phương thức thanh toán", "", list);
+                    player.controller.sendListOption(menuId, player.Language.SelectPaymentType, "", list);
                     break;
                 }
             case MENU_MONEY_DISPLAY_SETTING:
                 {
                     JArrayList<Option> list = new();
-                    list.add(new Option(0, "Ghim", Option.CAN_SELECT));
-                    list.add(new Option(1, "Bỏ ghim", Option.CAN_SELECT));
-                    player.controller.sendListOption(MENU_MONEY_DISPLAY_SETTING, "Thao tác", "", list);
+                    list.add(new Option(0, player.Language.Pin, Option.CAN_SELECT));
+                    list.add(new Option(1, player.Language.Unpin, Option.CAN_SELECT));
+                    player.controller.sendListOption(MENU_MONEY_DISPLAY_SETTING, player.Language.Manipulate, "", list);
                 }
                 break;
             case MENU_SHOW_LIST_TASK:
