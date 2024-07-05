@@ -305,5 +305,8 @@ namespace Gopet.Language
         public string ThisNpcIsNotHaveTaskForYourself { get; set; } = "Không có nhiệm vụ để cho bạn nhận";
         public string GetPetFree { get; set; } = "Nhận pet miễn phí";
         public string LearnSkillForPet { get; set; } = "Học kỹ năng cho thú cưng";
+        public string ExchangeGoldLaw { get; set; } = "Đổi (vang) (Bạn hiện có: {0}vnđ)";
+        public string OptionTradeGift { get; set; } = "Dùng {0} và {1} để đổi phần thưởng";
+        public string ItemYouHave { get; set; } = "Vật phẩm hiện có";
     }
 }

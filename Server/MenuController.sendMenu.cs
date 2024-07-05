@@ -372,7 +372,7 @@ public partial class MenuController
                 break;
             case MENU_EXCHANGE_GOLD:
                 {
-                    player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, Utilities.Format("Đổi (vang) (Bạn hiện có: %svnđ)", Utilities.FormatNumber(player.user.getCoin())), EXCHANGE_ITEM_INFOS);
+                    player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, string.Format(player.Language.ExchangeGoldLaw, Utilities.FormatNumber(player.user.getCoin())), EXCHANGE_ITEM_INFOS);
                 }
                 break;
             case MENU_SELECT_TYPE_CHANGE_GIFT:
@@ -381,14 +381,14 @@ public partial class MenuController
                     for (sbyte i = 0; i < GopetManager.TradeGiftPrice.Count; i++)
                     {
                         var tradeGiftTemplate = GopetManager.TradeGiftPrice[i];
-                        changeList[i] = new Option(tradeGiftTemplate.Item3, $"Dùng {getMoneyText((sbyte)tradeGiftTemplate.Item1[0], tradeGiftTemplate.Item2[0], player)} và {getMoneyText((sbyte)tradeGiftTemplate.Item1[1], tradeGiftTemplate.Item2[1], player)} để đổi phần thưởng");
+                        changeList[i] = new Option(tradeGiftTemplate.Item3,string.Format(player.Language.OptionTradeGift, getMoneyText((sbyte)tradeGiftTemplate.Item1[0], tradeGiftTemplate.Item2[0], player), getMoneyText((sbyte)tradeGiftTemplate.Item1[1], tradeGiftTemplate.Item2[1], player)));
                     }
                     showNpcOption(GopetManager.NPC_TIEN_NU, player, changeList);
                 }
                 break;
             case MENU_ITEM_MONEY_INVENTORY:
                 {
-                    showInventory(player, GopetManager.MONEY_INVENTORY, MENU_ITEM_MONEY_INVENTORY, "Vật phẩm hiện có");
+                    showInventory(player, GopetManager.MONEY_INVENTORY, MENU_ITEM_MONEY_INVENTORY, player.Language.ItemYouHave);
                 }
                 break;
             case MENU_APPROVAL_CLAN_MEMBER:
@@ -400,10 +400,10 @@ public partial class MenuController
                         JArrayList<MenuItemInfo> approvalElements = new();
                         foreach (ClanRequestJoin clanRequestJoin in clan.getRequestJoin())
                         {
-                            MenuItemInfo menuItemInfo = new MenuItemInfo(clanRequestJoin.name, Utilities.Format("Xin vào bang lúc: %s", Utilities.GetDate(clanRequestJoin.timeRequest)), "", true);
+                            MenuItemInfo menuItemInfo = new MenuItemInfo(clanRequestJoin.name, string.Format("Xin vào bang lúc: {0}", Utilities.GetDate(clanRequestJoin.timeRequest)), "", true);
                             menuItemInfo.setImgPath(clanRequestJoin.getAvatar());
                             menuItemInfo.setShowDialog(true);
-                            menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", clanRequestJoin.name));
+                            menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, clanRequestJoin.name));
                             menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                             menuItemInfo.setHasId(true);
                             menuItemInfo.setItemId(clanRequestJoin.user_id);
