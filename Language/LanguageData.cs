@@ -10,10 +10,17 @@ namespace Gopet.Language
     {
         public Dictionary<int, string> ItemLanguage { get; set; } = new Dictionary<int, string>();
         public Dictionary<int, string> ItemDescLanguage { get; set; } = new Dictionary<int, string>();
+        public Dictionary<int, string> TaskNameLanguage { get; set; } = new Dictionary<int, string>();
+        public Dictionary<int, string> TaskDescLanguage { get; set; } = new Dictionary<int, string>();
         public Dictionary<int, string> NpcOptionLanguage { get; set; } = new Dictionary<int, string>();
         public Dictionary<int, string> NpcNameLanguage { get; set; } = new Dictionary<int, string>();
         public Dictionary<int, string> TattoLanguage { get; set; } = new Dictionary<int, string>();
         public Dictionary<int, string> MapLanguage { get; set; } = new Dictionary<int, string>();
+        public Dictionary<int, string> PetNameLanguage { get; set; } = new Dictionary<int, string>();
+        public Dictionary<int, string> ItemInfoNameLanguage { get; set; } = new Dictionary<int, string>();
+        public Dictionary<int, string> SkillNameLanguage { get; set; } = new Dictionary<int, string>();
+        public Dictionary<int, string> SkillDescLanguage { get; set; } = new Dictionary<int, string>();
+        public Dictionary<int, string> BossNameLanguage { get; set; } = new Dictionary<int, string>();
 
         public string OldVersionNotify { get; set; } = "Phiên bản cũ rồi, bạn vui lòng tải bản mới nhất";
         public string AccountNonAcitve { get; set; } = "Tài khoản chưa được kích hoạt";
@@ -441,5 +448,9 @@ namespace Gopet.Language
         public string SHOP_CLAN { get; set; } = "Cửa hàng bang hội";
         public string SHOP_ENERGY { get; set; } = "Cửa hàng năng lượng";
         public string SHOP_GIAN_THUONG { get; set; } = "Cửa hàng gian thương";
+        public string BuyOK { get; set; } = "Mua thành công";
+        public string CannotBuyThisItemByMaintenance { get; set; } = "Sắp bảo trì không thể mua vật phẩm này";
+        public string CannotBuyThisItemOfYourself { get; set; } = "Bạn không thể mua chính vật phẩm mà bạn bán";
+        public string MapRequireYouHaveClan { get; set; } = "Map này cần phải có bang hội mới vào được";
     }
 }

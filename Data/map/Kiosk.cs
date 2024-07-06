@@ -111,22 +111,28 @@ namespace Gopet.Data.Map
 
         public void buy(int itemId, Player player)
         {
+            if (Maintenance.gI().isIsMaintenance())
+            {
+                player.redDialog(player.Language.CannotBuyThisItemByMaintenance);
+                return;
+            }
+
             SellItem sellItem = searchItem(itemId);
             if (sellItem != null)
             {
                 if (sellItem.user_id == player.user.user_id)
                 {
-                    player.redDialog("Bạn không thể mua chính vật phẩm mà bạn bán");
+                    player.redDialog(player.Language.CannotBuyThisItemOfYourself);
                 }
                 else
                 {
                     player.controller.objectPerformed.put(MenuController.OBJKEY_KIOSK_ITEM, new KeyValuePair<Kiosk, SellItem>(this, sellItem));
-                    MenuController.showYNDialog(MenuController.DIALOG_CONFIRM_BUY_KIOSK_ITEM, Utilities.Format("Bạn có chắc là muốn mua %s không?", sellItem.getName()), player);
+                    MenuController.showYNDialog(MenuController.DIALOG_CONFIRM_BUY_KIOSK_ITEM, player.Language.DoYouWantBuyIt, player);
                 }
             }
             else
             {
-                player.redDialog("Vật phẩm đã bị người khác mua rồi");
+                player.redDialog(player.Language.ItemWasSell);
             }
         }
 
@@ -134,13 +140,13 @@ namespace Gopet.Data.Map
         {
             if(Maintenance.gI().isIsMaintenance())
             {
-                player.redDialog("Sắp bảo trì không thể mua vật phẩm này");
+                player.redDialog(player.Language.CannotBuyThisItemByMaintenance);
                 return;
             }
 
             if (!kioskItems.Contains(sellItem))
             {
-                player.redDialog("Vật phẩm đã bị người khác mua!");
+                player.redDialog(player.Language.ItemWasSell);
                 return;
             }
             if (player.checkCoin(sellItem.price))
@@ -157,7 +163,7 @@ namespace Gopet.Data.Map
                     {
                         player.playerData.addPet(sellItem.pet, player);
                     }
-                    player.okDialog("Mua thành công");
+                    player.okDialog(player.Language.BuyOK);
                     kioskItems.remove(sellItem);
                     Player sellPlayer = PlayerManager.get(sellItem.user_id);
                     long priceReiceived = Utilities.round(Utilities.GetValueFromPercent(sellItem.price, 100f - GopetManager.KIOSK_PER_SELL));
@@ -179,7 +185,7 @@ namespace Gopet.Data.Map
                 }
                 else
                 {
-                    player.redDialog("Vật phẩm đã này dược người khác mua rồi");
+                    player.redDialog(player.Language.ItemWasSell);
                 }
             }
             else

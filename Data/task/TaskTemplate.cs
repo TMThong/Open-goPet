@@ -4,8 +4,8 @@ public class TaskTemplate
 
     public int taskId;
     public int type;
-    public String name;
-    public String description;
+    public string name;
+    public string description;
     public int[][] task;
     public int[][] gift;
     public int fromNPC;

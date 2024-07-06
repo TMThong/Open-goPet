@@ -17,7 +17,7 @@ namespace Gopet.Data.Map
 
         public override void addRandom(Player player)
         {
-            player.redDialog("Map này cần phải có bang hội mới vào được");
+            player.redDialog(player.Language.MapRequireYouHaveClan);
         }
 
 

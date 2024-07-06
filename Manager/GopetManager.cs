@@ -914,7 +914,29 @@ public class GopetManager
             Language[VI_CODE].MapLanguage[item.Key] = item.Value.name;
         }
 
-        //SaveJsonFile(Language["vi"], "/lang/vi.json");
+        foreach (var item in taskTemplate)
+        {
+            Language[VI_CODE].TaskNameLanguage[item.Key] = item.Value.name;
+            Language[VI_CODE].TaskDescLanguage[item.Key] = item.Value.description;
+        }
+
+        foreach (var item in PETTEMPLATE_HASH_MAP)
+        {
+            Language[VI_CODE].PetNameLanguage[item.Key] = item.Value.name;
+        }
+
+        foreach (var item in itemInfoName)
+        {
+            Language[VI_CODE].ItemInfoNameLanguage[item.Key] = item.Value;
+        }
+
+        foreach (var item in PET_SKILLS)
+        {
+            Language[VI_CODE].SkillNameLanguage[item.skillID] = item.name;
+            Language[VI_CODE].SkillDescLanguage[item.skillID] = item.description;
+        }
+
+        SaveJsonFile(Language["vi"], "/lang/vi.json");
     }
 
     public static T ReadJsonFile<T>(string targetPath)
