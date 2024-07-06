@@ -143,7 +143,7 @@ public class TaskCalculator
                     break;
                 case REQUEST_KILL_SPECIAL_BOSS:
                 case REQUEST_KILL_BOSS:
-                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_KILL_BOSS, GopetManager.boss.get(taskI[2]).name, task[i], taskI[1]));
+                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_KILL_BOSS, GopetManager.boss.get(taskI[2]).getName(player), task[i], taskI[1]));
                     break;
                 case REQUEST_UP_TIER_ITEM:
                     taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_UP_TIER_ITEM, task[i], taskI[1], taskI[2]));
@@ -155,7 +155,7 @@ public class TaskCalculator
                     taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_NEED_TASK, GopetManager.taskTemplate.get(taskI[2]).getName(), task[i], taskI[1]));
                     break;
                 case REQUEST_ATTACK_BOSS:
-                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_ATTACK_BOSS, GopetManager.boss.get(taskI[2]).name, task[i], taskI[1]));
+                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_ATTACK_BOSS, GopetManager.boss.get(taskI[2]).getName(player), task[i], taskI[1]));
                     break;
                 case REQUEST_ITEM:
                     taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_ITEM, GopetManager.itemTemplate.get(taskI[2]).getName(player), task[i], taskI[1]));

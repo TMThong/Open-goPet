@@ -766,7 +766,7 @@ namespace Gopet.Battle
                             {
                                 txtInfo.add(petBattleText.getText());
                             }
-                            activePlayer.okDialog(Utilities.Format("Chức mừng bạn kích sát %s nhận được :\n%s", boss.Template.name, string.Join(",", txtInfo)));
+                            activePlayer.okDialog(Utilities.Format("Chức mừng bạn kích sát %s nhận được :\n%s", boss.Template.getName(activePlayer), string.Join(",", txtInfo)));
                             activePlayer.controller.getTaskCalculator().onKillBoss(boss);
                         }
                     }

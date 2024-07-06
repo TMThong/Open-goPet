@@ -1402,8 +1402,8 @@ public class GameController
             int j = GopetManager.TeleMapId[i];
             GopetMap mapData = MapManager.maps.get(j);
             ms.putsbyte((sbyte)j);
-            ms.putUTF(mapData.mapTemplate.name);
-            ms.putUTF(mapData.mapTemplate.name);
+            ms.putUTF(mapData.mapTemplate.getName(player));
+            ms.putUTF(mapData.mapTemplate.getName(player));
             ms.putsbyte(0);
         }
         ms.writer().flush();

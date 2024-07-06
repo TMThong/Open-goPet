@@ -1447,7 +1447,7 @@ public partial class MenuController
                             {
                                 numPlayerMap += place1.numPlayer;
                             }
-                            player.okDialog(Utilities.Format("Online player %s: %s", place.map.mapTemplate.name, numPlayerMap));
+                            player.okDialog(Utilities.Format("Online player %s: %s", place.map.mapTemplate.getName(player), numPlayerMap));
                             break;
                         case ADMIN_INDEX_TELE_TO_MAP:
                             sendMenu(MENU_ADMIN_MAP, player);
@@ -1486,7 +1486,7 @@ public partial class MenuController
                             player.controller.showInputDialog(INPUT_TYPE_NAME_TO_BUFF_COIN, "Cộng từ tiền", new String[] { "Tiền :", "Tài khoản :" });
                             break;
                         case ADMIN_INDEX_GET_ZONE_ID:
-                            player.okDialog($"Bạn đang ở khu {player.getPlace().zoneID} của map {player.getPlace().map.mapTemplate.name} mapId = {player.getPlace().map.mapID}");
+                            player.okDialog($"Bạn đang ở khu {player.getPlace().zoneID} của map {player.getPlace().map.mapTemplate.getName(player)} mapId = {player.getPlace().map.mapID}");
                             break;
                         case ADMIN_INDEX_DELETE_ALL_EQUIP_PET_ITEM:
                             {
@@ -1806,7 +1806,7 @@ public partial class MenuController
                                             GopetPlace gopetPlace = friend.getPlace();
                                             if (gopetPlace != null)
                                             {
-                                                player.okDialog(player.Language.GetFriendLocationInfo, friend.playerData.name, gopetPlace.map.mapTemplate.name, gopetPlace.zoneID);
+                                                player.okDialog(player.Language.GetFriendLocationInfo, friend.playerData.name, gopetPlace.map.mapTemplate.getName(player), gopetPlace.zoneID);
                                             }
                                             else
                                             {

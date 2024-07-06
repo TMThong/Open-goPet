@@ -450,10 +450,10 @@ public partial class MenuController
                         JArrayList<MenuItemInfo> mapMenuItem = new();
                         foreach (GopetMap gopetMap in MapManager.mapArr)
                         {
-                            MenuItemInfo menuItemInfo = new MenuItemInfo(gopetMap.mapTemplate.name + "  (" + gopetMap.mapID + ")", "", "", true);
+                            MenuItemInfo menuItemInfo = new MenuItemInfo(gopetMap.mapTemplate.getName(player) + "  (" + gopetMap.mapID + ")", "", "", true);
                             menuItemInfo.setImgPath("npcs/mgo.png");
                             menuItemInfo.setShowDialog(true);
-                            menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, gopetMap.mapTemplate.name));
+                            menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, gopetMap.mapTemplate.getName(player)));
                             menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                             mapMenuItem.add(menuItemInfo);
                         }

@@ -37,11 +37,6 @@ namespace Gopet.Data.Mob
 
 
 
-        public string getName()
-        {
-            return bossTemplate.name;
-        }
-
         internal BossTemplate Template
         {
             get { return bossTemplate; }

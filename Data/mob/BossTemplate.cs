@@ -12,5 +12,10 @@ namespace Gopet.Data.Mob
         public int agi { get; private set; }
         public int _int { get; private set; }
         public int exp { get; private set; }
+
+        public string getName(Player player)
+        {
+            return player.Language.BossNameLanguage[this.bossId];
+        }
     }
 }

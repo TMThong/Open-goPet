@@ -7,5 +7,10 @@ namespace Gopet.Data.Map
         public int[] npc { get; private set; }
         public int[] boss {  get; private set; }
         public int[] numPetDie { get; private set; }
+
+        public string getName(Player player)
+        {
+            return player.Language.MapLanguage[this.mapId];
+        }
     }
 }
