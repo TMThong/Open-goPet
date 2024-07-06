@@ -180,7 +180,7 @@ public partial class MenuController
                                 player.mineGold(GopetManager.PRICE_REVIVAL_PET_FATER_PK);
                                 pet.petDieByPK = false;
                                 pet.TimeDieZ = 0;
-                                player.okDialog(string.Format(player.Language.RevialPetOK, pet.getNameWithStar()));
+                                player.okDialog(string.Format(player.Language.RevialPetOK, pet.getNameWithStar(player)));
                             }
                             else
                             {

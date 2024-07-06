@@ -241,7 +241,7 @@ public class ShopTemplateItem
 
         if (!isSellItem)
         {
-            return getPetTemplate().name;
+            return getPetTemplate().getName(player);
         }
         ItemTemplate itemTemplate = getItemTemplate();
 

@@ -47,7 +47,7 @@ namespace Gopet.Data.GopetItem
         {
             if (pet != null)
             {
-                return pet.getNameWithoutStar() + Utilities.Format(" (Id:%s)", itemId);
+                return pet.getNameWithoutStar(player) + Utilities.Format(" (Id:%s)", itemId);
             }
             return ItemSell.getTemp().getName(player) + Utilities.Format(" (Id:%s)", itemId);
         }

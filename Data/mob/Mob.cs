@@ -151,9 +151,9 @@ namespace Gopet.Data.Mob
         }
 
 
-        public string getName()
+        public string getName(Player player)
         {
-            return getPetTemplate().name;
+            return getPetTemplate().getName(player);
         }
 
         public override int getAgi()

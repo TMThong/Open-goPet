@@ -45,7 +45,7 @@ namespace Gopet.Data.Map
                     pet.wasSell = true;
                 }
                 addKioskItem(new SellItem(price, pet, GopetManager.HOUR_UPLOAD_ITEM), player);
-                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Treo pet %s với giá %s ngọc", pet.getPetTemplate().name, Utilities.FormatNumber(price))).setObj(pet));
+                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Treo pet %s với giá %s ngọc", pet.getPetTemplate().getName(player), Utilities.FormatNumber(price))).setObj(pet));
                 return;
             }
         }

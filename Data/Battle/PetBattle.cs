@@ -506,7 +506,7 @@ namespace Gopet.Battle
             message.putUTF(pet.getPetTemplate().frameImg);
             message.putsbyte(pet.Template.frameNum);
             message.putShort(pet.Template.vY);
-            message.putUTF(pet.getNameWithStar());
+            message.putUTF(pet.Template.name);
             message.putInt(1);
             message.putInt(pet.getPetTemplate().str);
             message.putInt(pet.getPetTemplate().agi);
@@ -770,7 +770,7 @@ namespace Gopet.Battle
                             activePlayer.controller.getTaskCalculator().onKillBoss(boss);
                         }
                     }
-                    HistoryManager.addHistory(new History(activePlayer).setLog(Utilities.Format("Tiếu diệt quái %s", mob.getName())).setObj(mob).setSpceialType(History.KILL_MOB));
+                    HistoryManager.addHistory(new History(activePlayer).setLog(Utilities.Format("Tiếu diệt quái %s", mob.getName(activePlayer))).setObj(mob).setSpceialType(History.KILL_MOB));
                     activePlayer.controller.randomCaptcha();
                 }
                 else

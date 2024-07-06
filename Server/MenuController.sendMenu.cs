@@ -44,10 +44,10 @@ public partial class MenuController
                     }
                     foreach (Pet pet in listPet)
                     {
-                        MenuItemInfo menuItemInfo = new PetMenuItemInfo(pet);
+                        MenuItemInfo menuItemInfo = new PetMenuItemInfo(pet, player);
                         menuItemInfo.setCloseScreenAfterClick(true);
                         menuItemInfo.setShowDialog(true);
-                        menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, pet.getNameWithStar()));
+                        menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, pet.getNameWithStar(player)));
                         menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                         petItemInfos.add(menuItemInfo);
                         menuItemInfo.setItemId(i);
@@ -71,7 +71,7 @@ public partial class MenuController
                         {
                             if (GopetManager.PETTEMPLATE_HASH_MAP.ContainsKey(petId))
                             {
-                                PetMenuItemInfo petMenuItemInfo = new PetMenuItemInfo(GopetManager.PETTEMPLATE_HASH_MAP.get(petId));
+                                PetMenuItemInfo petMenuItemInfo = new PetMenuItemInfo(GopetManager.PETTEMPLATE_HASH_MAP.get(petId), player);
                                 petMenuItemInfo.setCloseScreenAfterClick(true);
                                 petMenuItemInfo.setShowDialog(true);
                                 petMenuItemInfo.setDialogText(player.Language.DoWantSelectIt);
@@ -761,7 +761,7 @@ public partial class MenuController
                                 {
                                     MenuItemInfo menuItemInfo = new MenuItemInfo();
                                     menuItemInfo.setCanSelect(true);
-                                    menuItemInfo.setTitleMenu(kioskItem.pet.getNameWithStar() + string.Format(player.Language.KioskIdItemDescription, kioskItem.itemId));
+                                    menuItemInfo.setTitleMenu(kioskItem.pet.getNameWithStar(player) + string.Format(player.Language.KioskIdItemDescription, kioskItem.itemId));
                                     menuItemInfo.setImgPath(kioskItem.pet.getPetTemplate().icon);
                                     menuItemInfo.setDesc(string.Format(player.Language.PriceKioskDescription + "(ngoc) ", Utilities.FormatNumber(kioskItem.price)) + kioskItem.pet.getDesc());
                                     menuItemInfo.setCloseScreenAfterClick(true);

@@ -235,7 +235,7 @@ public class GopetPlace : Place
                 message.putInt(player1.user.user_id);
                 message.putInt(petSelected.petIdTemplate);
                 message.putUTF(petSelected.getPetTemplate().frameImg);
-                message.putUTF(petSelected.getNameWithStar());
+                message.putUTF(petSelected.getNameWithStar(player));
                 message.putInt(petSelected.lvl);
                 message[1].putsbyte(petSelected.getPetTemplate().frameNum);
                 message[1].putShort(petSelected.getPetTemplate().vY);

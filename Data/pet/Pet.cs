@@ -237,18 +237,18 @@ public class Pet : GameObject, IBinaryObject<Pet>
 
 
 
-    public String getNameWithoutStar()
+    public String getNameWithoutStar(Player player)
     {
         if (name != null)
         {
             return name;
         }
-        return getPetTemplate().name;
+        return getPetTemplate().getName(player);
     }
 
-    public String getNameWithStar()
+    public String getNameWithStar(Player player)
     {
-        String name = getNameWithoutStar() + " ";
+        String name = getNameWithoutStar(player) + " ";
         for (int i = 0; i < star; i++)
         {
             name += "(sao)";

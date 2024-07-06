@@ -35,4 +35,9 @@ public class PetTemplate
     {
         return 1 * 2 + agi * 5 + 20;
     }
+
+    public string getName(Player player)
+    {
+        return player.Language.PetNameLanguage[this.petId];
+    }
 }

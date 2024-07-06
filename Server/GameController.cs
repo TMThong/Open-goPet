@@ -629,7 +629,7 @@ public class GameController
             message.putInt(pet.getPetIdTemplate());
             message.putsbyte(pet.getPetTemplate().element);
             message.putUTF(pet.getPetTemplate().frameImg);
-            message.putUTF(pet.getNameWithStar());
+            message.putUTF(pet.getNameWithStar(player));
             message.putsbyte(pet.getPetTemplate().nclass);
             message.putInt(pet.lvl);
             message.putlong(pet.exp);
@@ -677,7 +677,7 @@ public class GameController
             message.putsbyte(pet.Template.frameNum);
             message.cleanup();
             player.session.sendMessage(message);
-            HistoryManager.addHistory(new History(player).setLog("Xem magic của pet " + pet.getNameWithoutStar()).setObj(pet));
+            HistoryManager.addHistory(new History(player).setLog("Xem magic của pet " + pet.Template.name).setObj(pet));
         }
         else
         {
@@ -1208,7 +1208,7 @@ public class GameController
             petActive.str = oldPet.str + 10;
             petActive.tiemnang_point = gym_add;
             petActive.pointTiemNangLvl = gym_up_level;
-            showDescPetUpTierUI(petActive.Template.name, new string[] { petActive.Template.name, $"{petActive.str}(str) {petActive.agi}(agi) {petActive._int}(int)", string.Format(player.Language.PotentialScore, petActive.pointTiemNangLvl) });
+            showDescPetUpTierUI(petActive.Template.getName(player), new string[] { petActive.Template.getName(player), $"{petActive.str}(str) {petActive.agi}(agi) {petActive._int}(int)", string.Format(player.Language.PotentialScore, petActive.pointTiemNangLvl) });
         }
     }
 
@@ -1621,7 +1621,7 @@ public class GameController
             Message message = messagePetService(GopetCMD.GYM);
             message.putInt(pet.getPetIdTemplate());
             message.putUTF(pet.getPetTemplate().frameImg);
-            message.putUTF(pet.getNameWithStar());
+            message.putUTF(pet.getNameWithStar(player));
             message.putsbyte(pet.getNClassIcon());
             message.putInt(pet.lvl);
             message.putlong(pet.exp);
@@ -1649,7 +1649,7 @@ public class GameController
             message.putsbyte(pet.Template.frameNum);
             message.cleanup();
             player.session.sendMessage(message);
-            HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Xem gym pet %s", pet.getNameWithoutStar())).setObj(pet));
+            HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Xem gym pet %s", pet.Template.name)).setObj(pet));
         }
         else
         {
@@ -1687,7 +1687,7 @@ public class GameController
                     pet.applyInfo(player);
                     updateTiemnang();
                     getTaskCalculator().onPlusGymPoint();
-                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cộng tìm năng cho pet %s [num =%s,index=%s]", pet.getNameWithoutStar(), num, index)).setObj(pet));
+                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cộng tìm năng cho pet %s [num =%s,index=%s]", pet.Template.name, num, index)).setObj(pet));
                 }
                 else
                 {
@@ -1743,7 +1743,7 @@ public class GameController
                 message.putInt(user_id);
                 message.putInt(pet.petId);
                 message.putUTF(pet.getPetTemplate().frameImg);
-                message.putUTF(pet.getNameWithStar());
+                message.putUTF(pet.getNameWithStar(player));
                 message.putInt(pet.lvl);
                 message.putInt(pet.getStr());
                 message.putInt(pet.getAgi());
@@ -3316,8 +3316,8 @@ public class GameController
                             petActive.wasSell = oldPet.wasSell;
                             petActive.pointTiemNangLvl = gym_up_level;
                             player.playerData.pets.Add(petActive);
-                            player.okDialog(string.Format(player.Language.UpTierPetOK, petActive.getNameWithStar(), gym_add));
-                            HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Tiến hóa pet %s thành công", petActive.getNameWithoutStar())).setObj(petActive));
+                            player.okDialog(string.Format(player.Language.UpTierPetOK, petActive.getNameWithStar(player), gym_add));
+                            HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Tiến hóa pet %s thành công", petActive.getNameWithoutStar(player))).setObj(petActive));
                             Message message = messagePetService(GopetCMD.PET_UP_TIER);
                             message.cleanup();
                             player.session.sendMessage(message);
@@ -3367,7 +3367,7 @@ public class GameController
                     pet.skill[skillIndex][1]++;
                     this.taskCalculator.onUpdateSkillPet(pet, pet.skill[skillIndex][1]);
                     player.okDialog(string.Format(player.Language.UpTierPetOK, petSkill.name, pet.skill[skillIndex][1]));
-                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Bạn đã nâng cấp %s lên cấp %s  cho pet %s!", petSkill.name, pet.skill[skillIndex][1], pet.getNameWithoutStar())).setObj(pet));
+                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Bạn đã nâng cấp %s lên cấp %s  cho pet %s!", petSkill.name, pet.skill[skillIndex][1], pet.getNameWithoutStar(player))).setObj(pet));
                 }
                 else
                 {
@@ -3629,8 +3629,8 @@ public class GameController
                         subCountItem(itemSelect, countNeed, GopetManager.NORMAL_INVENTORY);
                         mypet.tiemnang_point += mypet.star;
                         mypet.star++;
-                        player.okDialog(string.Format(player.Language.UpStarPetOK, mypet.getNameWithStar()));
-                        HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Nâng sao thú cưng %s lên %s sao", mypet.getPetTemplate().name, mypet.star)));
+                        player.okDialog(string.Format(player.Language.UpStarPetOK, mypet.getNameWithStar(player)));
+                        HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Nâng sao thú cưng %s lên %s sao", mypet.getPetTemplate().getName(player), mypet.star)));
                     }
                     else
                     {
@@ -3808,7 +3808,7 @@ public class GameController
                     player.okDialog(string.Format(player.Language.RemoveTattoOK, tatto.Template.name));
                     subCountItem(itemSelect, 1, GopetManager.NORMAL_INVENTORY);
                     objectPerformed.Remove(MenuController.OBJKEY_TATTO_ID_REMOVE);
-                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Xóa xăm %s cho pet %s", tatto.Template.name, p.getNameWithoutStar())));
+                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Xóa xăm %s cho pet %s", tatto.Template.name, p.getNameWithoutStar(player))));
                 }
             }
         }

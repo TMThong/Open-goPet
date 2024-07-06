@@ -124,7 +124,7 @@ public class TaskCalculator
             switch (taskI[0])
             {
                 case REQUEST_KILL_MOB:
-                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_KILL_MOB, GopetManager.PETTEMPLATE_HASH_MAP.get(taskI[2]).name, task[i], taskI[1]));
+                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_KILL_MOB, GopetManager.PETTEMPLATE_HASH_MAP.get(taskI[2]).getName(player), task[i], taskI[1]));
                     break;
                 case REQUEST_PET_LVL:
                     taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_PET_LVL, task[i], taskI[1]));

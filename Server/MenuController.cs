@@ -414,7 +414,7 @@ public partial class MenuController
         {
             if (GopetManager.PETTEMPLATE_HASH_MAP.ContainsKey(petFreeId))
             {
-                PetMenuItemInfo petMenuItemInfo = new PetMenuItemInfo(GopetManager.PETTEMPLATE_HASH_MAP.get(petFreeId));
+                PetMenuItemInfo petMenuItemInfo = new PetMenuItemInfo(GopetManager.PETTEMPLATE_HASH_MAP.get(petFreeId), player);
                 petMenuItemInfo.setCloseScreenAfterClick(true);
                 petMenuItemInfo.setShowDialog(true);
                 petMenuItemInfo.setDialogText(player.Language.DoWantSelectIt);

@@ -147,7 +147,7 @@ public partial class MenuController
                             Pet p = new Pet(item.Template.itemOptionValue[index]);
                             player.playerData.addPet(p, player);
                             player.controller.subCountItem(item, 1, GopetManager.NORMAL_INVENTORY);
-                            player.okDialog(string.Format(player.Language.CongratulateGetNewPet, p.getNameWithStar()));
+                            player.okDialog(string.Format(player.Language.CongratulateGetNewPet, p.getNameWithStar(player)));
                         }
                         else
                         {
@@ -270,8 +270,8 @@ public partial class MenuController
                             player.playerData.isFirstFree = true;
                             Pet p = new Pet(petMenuItemInfo.getPetTemplate().petId);
                             player.playerData.addPet(p, player);
-                            player.okDialog(string.Format(player.Language.GetPetFreeOK, petMenuItemInfo.getPetTemplate().name));
-                            HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Nhận pet %s miễn phí tại NPC trân trân", petMenuItemInfo.getPetTemplate().name)).setObj(p));
+                            player.okDialog(string.Format(player.Language.GetPetFreeOK, petMenuItemInfo.getPetTemplate().getName(player)));
+                            HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Nhận pet %s miễn phí tại NPC trân trân", petMenuItemInfo.getPetTemplate().getName(player))).setObj(p));
                         }
                         else
                         {
@@ -353,7 +353,7 @@ public partial class MenuController
                                     player.addCoin(-GopetManager.PriceLearnSkill);
                                     player.controller.magic(GopetCMD.MAGIC_LEARN_SKILL, true);
                                     player.okDialog(player.Language.LearnSkillPetOK);
-                                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Học kỹ năng thành công cho pet %s", pet.getNameWithoutStar())).setObj(pet));
+                                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Học kỹ năng thành công cho pet %s", pet.Template.name)).setObj(pet));
                                 }
                                 else
                                 {
@@ -391,7 +391,7 @@ public partial class MenuController
                                 pet.tiemnang_point++;
                                 pet.applyInfo(player);
                                 player.okDialog(player.Language.DeleteGymOK);
-                                HistoryManager.addHistory(new History(player).setLog("Tảy tìm năng cho pet" + pet.getNameWithoutStar()).setObj(pet));
+                                HistoryManager.addHistory(new History(player).setLog("Tảy tìm năng cho pet" + pet.getNameWithoutStar(player)).setObj(pet));
                             }
                             else
                             {
@@ -446,7 +446,7 @@ public partial class MenuController
                     {
                         player.playerData.PetDefLeague = pet;
                         pet.applyInfo(player);
-                        player.okDialog(string.Format(player.Language.SelectPetDefOK, pet.getNameWithStar()));
+                        player.okDialog(string.Format(player.Language.SelectPetDefOK, pet.getNameWithStar(player)));
                     }
                 }
                 break;
@@ -705,7 +705,7 @@ public partial class MenuController
                                     Pet p = new Pet(shopTemplateItem.getPetId());
                                     p.name = player.controller.objectPerformed[OBJKEY_NAME_PET_WANT];
                                     player.playerData.addPet(p, player);
-                                    player.okDialog(string.Format(player.Language.YouBuyItemOK, p.getNameWithStar()));
+                                    player.okDialog(string.Format(player.Language.YouBuyItemOK, p.getNameWithStar(player)));
                                     player.controller.objectPerformed.Remove(OBJKEY_ID_MENU_BUY_PET_TO_NAME);
                                     player.controller.objectPerformed.Remove(OBJKEY_INDEX_MENU_BUY_PET_TO_NAME);
                                     player.controller.objectPerformed.Remove(OBJKEY_PAYMENT_INDEX_WANT_TO_NAME_PET);
@@ -846,7 +846,7 @@ public partial class MenuController
 
                                         Pet pet = new Pet(petTemplateId);
                                         player.playerData.addPet(pet, player);
-                                        player.okDialog(string.Format(player.Language.MergePartPetOK, pet.getNameWithStar()));
+                                        player.okDialog(string.Format(player.Language.MergePartPetOK, pet.getNameWithStar(player)));
                                     }
                                     else
                                     {
@@ -1158,7 +1158,7 @@ public partial class MenuController
                                 if (itemSelect.Template.itemOptionValue.Length == 2)
                                 {
                                     Pet pet = new Pet(itemSelect.Template.itemOptionValue[0]);
-                                    player.okDialog(pet.getNameWithoutStar() + ": " + pet.getDesc());
+                                    player.okDialog(pet.getNameWithoutStar(player) + ": " + pet.getDesc());
                                     pet = null;
                                 }
                                 else

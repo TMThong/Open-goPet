@@ -6,18 +6,18 @@ public class PetMenuItemInfo : MenuItemInfo {
     private PetTemplate petTemplate;
     private Pet pet;
 
-    public PetMenuItemInfo(PetTemplate petTemplate) {
+    public PetMenuItemInfo(PetTemplate petTemplate, Player player) {
         setPetTemplate(petTemplate);
-        setTitleMenu(petTemplate.name);
+        setTitleMenu(petTemplate.getName(player));
         setImgPath(petTemplate.icon);
         setDesc(petTemplate.getDesc());
         setCanSelect(true);
     }
 
-    public PetMenuItemInfo(Pet pet) {
+    public PetMenuItemInfo(Pet pet, Player player) {
         this.pet = pet;
         setPetTemplate(pet.getPetTemplate());
-        setTitleMenu(pet.getNameWithStar());
+        setTitleMenu(pet.getNameWithStar(player));
         setImgPath(petTemplate.icon);
         setDesc(pet.getDesc());
         setCanSelect(true);
