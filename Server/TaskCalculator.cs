@@ -463,7 +463,7 @@ public class TaskCalculator
         {
             txtInfo.add(petBattleText.getText());
         }
-        player.okDialog(Utilities.Format("Chức mừng bạn hoàn thành nhiệm vụ %s nhận được in\n%s", taskData.getTemplate().getName(), String.Join(",", txtInfo)));
+        player.okDialog(string.Format(player.Language.OnTaskSuccess, taskData.getTemplate().getName(), String.Join(",", txtInfo)));
         this.onAllTaskUpdate(REQUEST_NEED_TASK, taskData.taskTemplateId);
     }
 
