@@ -110,7 +110,7 @@ public partial class MenuController
                         JArrayList<MenuItemInfo> menuInfos = new();
                         foreach (var ach in GopetManager.achievements)
                         {
-                            MenuItemInfo menuItemInfo = new MenuItemInfo(ach.Name, ach.Description, ach.IconPath, true);
+                            MenuItemInfo menuItemInfo = new MenuItemInfo(ach.getName(player), ach.getDescription(player), ach.IconPath, true);
                             menuInfos.add(menuItemInfo);
                         }
                         player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.Archievement, menuInfos);
@@ -122,7 +122,7 @@ public partial class MenuController
                     JArrayList<MenuItemInfo> menuInfos = new();
                     foreach (var ach in player.playerData.achievements)
                     {
-                        MenuItemInfo menuItemInfo = new MenuItemInfo(ach.Template.Name, ach.Template.Description, ach.Template.IconPath, true);
+                        MenuItemInfo menuItemInfo = new MenuItemInfo(ach.Template.getName(player), ach.Template.getDescription(player), ach.Template.IconPath, true);
                         menuInfos.add(menuItemInfo);
                     }
                     player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.Archievement, menuInfos);
@@ -145,7 +145,7 @@ public partial class MenuController
                     animationMenu.Commands.Add(AnimationMenu.RightExitCMD);
                     foreach (var ach in player.playerData.achievements)
                     {
-                        animationMenu.AddLabel(0, string.Format(player.Language.ArchievementDescription, ach.Template.Name), FontStyle.SMALL);
+                        animationMenu.AddLabel(0, string.Format(player.Language.ArchievementDescription, ach.Template.getName(player)), FontStyle.SMALL);
                         animationMenu.AddImage(0, ach.Template.FramePath, ach.Template.FrameNum);
                         animationMenu.AddLabel(0, $"{player.Language.InfoDescrption} {ach.Template.Atk} (atk) {ach.Template.Def} (def) {ach.Template.Hp} (hp) {ach.Template.Mp} (mp)", FontStyle.SMALL);
                         animationMenu.AddLabel(0, $"{player.Language.ExpireDescrption} {(ach.Expire == null ? player.Language.InfinityExpire : Utilities.ToDateString(ach.Expire.Value))}", FontStyle.SMALL);

@@ -34,5 +34,15 @@ namespace Gopet.Data.user
         public int vY { get; set; }
 
         public long Expire { get; set; }
+
+        public string getName(Player player)
+        {
+            return player.Language.AchievementNameLanguage[this.IdTemplate];
+        }
+
+        public string getDescription(Player player)
+        {
+            return player.Language.AchievementDescLanguage[this.IdTemplate];
+        }
     }
 }

@@ -1,8 +1,10 @@
 
 using Gopet.Data.Collections;
 using Gopet.IO;
+using Gopet.Language;
 using Gopet.Util;
 using MySqlX.XDevAPI;
+using static System.Net.Mime.MediaTypeNames;
 
 public class PlayerManager
 {
@@ -97,13 +99,31 @@ public class PlayerManager
         crossChat(player.playerData.name, text);
     }
 
-    public static void showBanner(String text)
+    public static void showBannerZ(String text)
     {
         Message m = new Message(45);
         m.putsbyte(1);
         m.putUTF(text);
         m.writer().flush();
         sendMessage(m);
+    }
+
+    public static void showBanner(Func<LanguageData, string> func)
+    {
+        Dictionary<LanguageData, Message> messages = new Dictionary<LanguageData, Message>();
+        foreach (var item in GopetManager.Language)
+        {
+            Message m = new Message(45);
+            m.putsbyte(1);
+            m.putUTF(func.Invoke(item.Value));
+            m.writer().flush();
+            sendMessage(m);
+            messages[item.Value] = m;
+        }
+        foreach (var p in players)
+        {
+            p.session.sendMessage(messages[p.Language]);
+        }
     }
 
     public static void Popup(String text)
@@ -114,5 +134,4 @@ public class PlayerManager
         m.writer().flush();
         sendMessage(m);
     }
-
 }

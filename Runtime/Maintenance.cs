@@ -1,5 +1,6 @@
 
 using Gopet.App;
+using Gopet.Language;
 using Gopet.Util;
 using System.Diagnostics;
 
@@ -26,7 +27,7 @@ public class Maintenance : IRuntime
                 {
                     beginMaintenance = Utilities.CurrentTimeMillis;
                     min--;
-                    PlayerManager.showBanner(Utilities.Format("Sau %s phút nữa sẽ bảo trì, các người chơi vui lòng thoát game sớm tránh bị mất dữ liệu", min));
+                    PlayerManager.showBanner((l) => string.Format(l.BannerLanguage[LanguageData.BANNER_MANTENANCE_MESSAGE], min));
                 }
             }
             else if (min <= 0)

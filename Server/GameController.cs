@@ -2951,7 +2951,7 @@ public class GameController
                             player.okDialog(string.Format(player.Language.EnchantOKWithLvlItem, itemEuip.getName(player), itemEuip.lvl));
                             if (itemEuip.lvl >= 7)
                             {
-                                PlayerManager.showBanner(string.Format(player.Language.EnchantOKWithLvlItemBanner, player.playerData.name, itemEuip.getTemp().getName(player), itemEuip.lvl));
+                                PlayerManager.showBanner((Language) => string.Format(Language.EnchantOKWithLvlItemBanner, player.playerData.name, itemEuip.getTemp().getName(player), itemEuip.lvl));
                             }
                             HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cường hóa %s lên +%s", itemEuip.getTemp().getName(player), itemEuip.lvl)).setObj(itemEuip));
                         }
@@ -2960,7 +2960,7 @@ public class GameController
                             if (destroyItem)
                             {
                                 player.redDialog(player.Language.EnchantFailAndDestroy);
-                                PlayerManager.showBanner(string.Format(player.Language.EnchantFailAndDestroyBanner, player.playerData.name, itemEuip.getTemp().getName(player)));
+                                PlayerManager.showBanner((Language) => string.Format(Language.EnchantFailAndDestroyBanner, player.playerData.name, itemEuip.getTemp().getName(player)));
                                 HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cường hóa %s thất bại bị vỡ", itemEuip.getTemp().getName(player))).setObj(itemEuip));
                             }
                             else
@@ -3194,7 +3194,7 @@ public class GameController
                                 {
                                     bool isActive = Utilities.nextInt(2) == 1;
                                     removeGem(isActive ? itemEuipActive.itemId : itemEuipPassive.itemId);
-                                    PlayerManager.showBanner(string.Format(player.Language.EnchantGemFailAndDestroy, player.playerData.name, (itemEuipActive.getTemp().getName(player))));
+                                    PlayerManager.showBanner((Language) => string.Format(Language.EnchantGemFailAndDestroy, player.playerData.name, (itemEuipActive.getTemp().getName(player))));
                                 }
                             }
                         }

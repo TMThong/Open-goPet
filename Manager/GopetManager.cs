@@ -936,6 +936,12 @@ public class GopetManager
             Language[VI_CODE].SkillDescLanguage[item.skillID] = item.description;
         }
 
+        foreach (var item in AchievementMAP)
+        {
+            Language[VI_CODE].AchievementNameLanguage[item.Key] = item.Value.Name;
+            Language[VI_CODE].AchievementDescLanguage[item.Key] = item.Value.Description;
+        }
+
         foreach (var item in boss)
         {
             Language[VI_CODE].BossNameLanguage[item.Key] = item.Value.name;

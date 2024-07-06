@@ -1,4 +1,5 @@
 ﻿using Gopet.Data.Collections;
+using Gopet.Language;
 using Gopet.Util;
 using System;
 using System.Collections.Generic;
@@ -74,7 +75,7 @@ namespace Gopet.Data.Event
                     }
                     else if (showBanner % 60 == 0)
                     {
-                        PlayerManager.showBanner($"Các người chơi nhanh chóng đến đấu trường báo danh tham gia lôi đài còn {timeWaitPlayerJournalism / 60000l} phút nữa bắt đầu rồi!!! ");
+                        PlayerManager.showBanner((l) => string.Format(l.BannerLanguage[LanguageData.BANNER_SHOW_ARENA_EVENT_BANNER] , timeWaitPlayerJournalism / 60000l));
                     }
                 }
             }

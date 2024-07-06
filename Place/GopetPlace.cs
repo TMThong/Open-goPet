@@ -10,6 +10,7 @@ using Gopet.IO;
 using Gopet.Util;
 using Gopet.Server.IO;
 using Gopet.Data.User;
+using Gopet.Language;
 
 public class GopetPlace : Place
 {
@@ -606,7 +607,7 @@ public class GopetPlace : Place
 
                                 addNewMob(boss);
                                 nGopetMobs.add(boss);
-                                PlayerManager.showBanner(Utilities.Format("Boss %s đã xuất hiện tại %s khu %s nhanh tay lên nào!!!!", boss.Template.name, this.map.mapTemplate.name, this.zoneID));
+                                PlayerManager.showBanner((l) => string.Format(l.BannerLanguage[LanguageData.BANNER_SHOW_BOSS_SUMMON], boss.Template.name, this.map.mapTemplate.name, this.zoneID));
                                 numMobDie[i] = 0;
                                 continue;
                             }

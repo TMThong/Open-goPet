@@ -370,7 +370,7 @@ public partial class MenuController
                         if (player.checkIsAdmin())
                         {
                             String text = reader.readString(0);
-                            PlayerManager.showBanner(text);
+                            PlayerManager.showBanner((l) => text);
                         }
                     }
                     break;

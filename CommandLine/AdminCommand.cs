@@ -27,7 +27,7 @@ namespace Gopet.CommandLine
                 switch (args[0])
                 {
                     case "banner":
-                        PlayerManager.showBanner(args[1]);
+                        //PlayerManager.showBanner(args[1]);
                         GopetManager.ServerMonitor.LogWarning("Thao tác thành công");
                         break;
                     case "location":

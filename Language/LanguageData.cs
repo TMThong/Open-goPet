@@ -8,8 +8,13 @@ namespace Gopet.Language
 {
     public sealed class LanguageData
     {
+        public const int BANNER_SHOW_ARENA_EVENT_BANNER = 0;
+        public const int BANNER_SHOW_BOSS_SUMMON = 1;
+        public const int BANNER_MANTENANCE_MESSAGE = 2;
         public Dictionary<int, string> ItemLanguage { get; set; } = new Dictionary<int, string>();
         public Dictionary<int, string> ItemDescLanguage { get; set; } = new Dictionary<int, string>();
+        public Dictionary<int, string> AchievementNameLanguage { get; set; } = new Dictionary<int, string>();
+        public Dictionary<int, string> AchievementDescLanguage { get; set; } = new Dictionary<int, string>();
         public Dictionary<int, string> TaskNameLanguage { get; set; } = new Dictionary<int, string>();
         public Dictionary<int, string> TaskDescLanguage { get; set; } = new Dictionary<int, string>();
         public Dictionary<int, string> NpcOptionLanguage { get; set; } = new Dictionary<int, string>();
@@ -21,7 +26,12 @@ namespace Gopet.Language
         public Dictionary<int, string> SkillNameLanguage { get; set; } = new Dictionary<int, string>();
         public Dictionary<int, string> SkillDescLanguage { get; set; } = new Dictionary<int, string>();
         public Dictionary<int, string> BossNameLanguage { get; set; } = new Dictionary<int, string>();
-        public Dictionary<int, string> BannerLanguage { get; set; } = new Dictionary<int, string>();
+        public Dictionary<int, string> BannerLanguage { get; set; } = new Dictionary<int, string>() 
+        {
+            [BANNER_SHOW_ARENA_EVENT_BANNER] = "Các người chơi nhanh chóng đến đấu trường báo danh tham gia lôi đài còn {0} phút nữa bắt đầu rồi!!! ",
+            [BANNER_SHOW_BOSS_SUMMON] = "Boss {0} đã xuất hiện tại {1} khu %s nhanh tay lên nào!!!!",
+            [BANNER_MANTENANCE_MESSAGE] = "Sau {0} phút nữa sẽ bảo trì, các người chơi vui lòng thoát game sớm tránh bị mất dữ liệu",
+        };
 
         public string OldVersionNotify { get; set; } = "Phiên bản cũ rồi, bạn vui lòng tải bản mới nhất";
         public string AccountNonAcitve { get; set; } = "Tài khoản chưa được kích hoạt";
