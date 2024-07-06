@@ -163,7 +163,7 @@ namespace Gopet.Data.GopetItem
                             PetTemplate petTemplate = GopetManager.PETTEMPLATE_HASH_MAP.get(petId);
                             if (petTemplate != null)
                             {
-                                return Utilities.Format("Dùng %s mảnh sẽ đổi được pet %s", count, petTemplate.getName(player));
+                                return string.Format(player.Language.ItemPartPetDesc, count, petTemplate.getName(player));
                             }
                         }
                         return getDescription(player);
@@ -177,7 +177,7 @@ namespace Gopet.Data.GopetItem
                             ItemTemplate itemTemplate = GopetManager.itemTemplate.get(itemidTemp);
                             if (itemTemplate != null)
                             {
-                                return Utilities.Format("Dùng %s mảnh sẽ đổi được %s", count, itemTemplate.getName(player));
+                                return string.Format(player.Language.ItemPartItemDesc, count, itemTemplate.getName(player));
                             }
                         }
                         return getDescription(player);

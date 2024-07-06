@@ -244,13 +244,13 @@ namespace Gopet.Data.GopetItem
                                             wingBuffDesc += getSign(buff.OptionValue) + Utilities.round(buff.OptionValue / 100f) + "%(def)";
                                             break;
                                         case ItemInfo.Type.PHANDOAN_2_TURN:
-                                            wingBuffDesc += " phản lại" + Utilities.round(buff.OptionValue / 100f) + "% sát thương";
+                                            wingBuffDesc += player.Language.CounterAttack + Utilities.round(buff.OptionValue / 100f) + player.Language.PercentDamageItemDesc;
                                             break;
                                         case ItemInfo.Type.PER_STUN_1_TURN:
-                                            wingBuffDesc += Utilities.round(buff.OptionValue / 100f) + "% định thân";
+                                            wingBuffDesc += Utilities.round(buff.OptionValue / 100f) + player.Language.PercentStunItemDesc;
                                             break;
                                         case ItemInfo.Type.RECOVERY_HP:
-                                            wingBuffDesc += " hút máu " + Utilities.round(buff.OptionValue / 100f) + "%";
+                                            wingBuffDesc += player.Language.PercentBloodSuckingItemDesc + Utilities.round(buff.OptionValue / 100f) + "%";
                                             break;
                                     }
                                 }

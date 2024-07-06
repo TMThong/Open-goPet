@@ -497,5 +497,11 @@ namespace Gopet.Language
         public string ForWizard { get; set; } = " Dành cho pháp sư";
         public string LockItemDescrption { get; set; } = " (Khóa)";
         public string ItemInfoApply { get; set; } = " Chỉ số áp dụng";
+        public string CounterAttack { get; set; } = " phản đòn lại";
+        public string PercentDamageItemDesc { get; set; } = "% sát thương";
+        public string PercentStunItemDesc { get; set; } = "% định thân";
+        public string PercentBloodSuckingItemDesc { get; set; } = " hút máu ";
+        public string ItemPartPetDesc { get; set; } = "Dùng {0} mảnh sẽ đổi được pet {1}";
+        public string ItemPartItemDesc { get; set; } = "Dùng {0} mảnh sẽ đổi được {1}";
     }
 }
