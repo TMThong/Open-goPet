@@ -2,7 +2,7 @@
 using Gopet.Data.GopetItem;
 using Gopet.Util;
 
-public class ShopTemplateItem 
+public class ShopTemplateItem
 {
 
     public sbyte shopId;
@@ -247,7 +247,7 @@ public class ShopTemplateItem
 
         if (itemTemplate.getType() == GopetManager.PET_EQUIP_ARMOUR || itemTemplate.getType() == GopetManager.PET_EQUIP_GLOVE || itemTemplate.getType() == GopetManager.PET_EQUIP_HAT || itemTemplate.getType() == GopetManager.PET_EQUIP_SHOE || itemTemplate.getType() == GopetManager.PET_EQUIP_WEAPON)
         {
-            return itemTemplate.getName(player) + Utilities.Format("(Yêu cầu   %s (str) ,  %s (agi) ,  %s (int))", itemTemplate.getRequireStr(), itemTemplate.getRequireAgi(), itemTemplate.getRequireInt());
+            return itemTemplate.getName(player) + Utilities.Format("(" + player.Language.Request + "   %s (str) ,  %s (agi) ,  %s (int))", itemTemplate.getRequireStr(), itemTemplate.getRequireAgi(), itemTemplate.getRequireInt());
         }
 
         if (count > 1 && shopId != MenuController.SHOP_CLAN)
