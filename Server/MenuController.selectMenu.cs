@@ -1170,7 +1170,7 @@ public partial class MenuController
                                 if (itemSelect.Template.itemOptionValue.Length == 2)
                                 {
                                     ItemTemplate itemTemplate = GopetManager.itemTemplate[itemSelect.Template.itemOptionValue[0]];
-                                    player.okDialog($"{itemTemplate.name} {itemTemplate.description} {player.Language.from} {itemTemplate.getAtk()} {itemTemplate.getDef()} {itemTemplate.getHp()} {itemTemplate.getMp()}");
+                                    player.okDialog($"{itemTemplate.name} {itemTemplate.description} {itemTemplate.getAtk()} {itemTemplate.getDef()} {itemTemplate.getHp()} {itemTemplate.getMp()}");
                                 }
                                 else
                                 {
@@ -1393,12 +1393,12 @@ public partial class MenuController
                                         }
                                         else
                                         {
-                                            player.redDialog("Thành viên trong bang hội này đã đủ");
+                                            player.redDialog(player.Language.NumOfMemberClanIsMax);
                                         }
                                         break;
                                     case 1:
                                         clan.getRequestJoin().remove(requestJoin);
-                                        player.okDialog("Xóa thành công");
+                                        player.okDialog(player.Language.RemoveOK);
                                         break;
                                     case 2:
                                         clan.getRequestJoin().remove(requestJoin);
@@ -1406,18 +1406,18 @@ public partial class MenuController
                                         break;
                                     case 3:
                                         clan.getRequestJoin().Clear();
-                                        player.okDialog("Xóa tất cả thành công");
+                                        player.okDialog(player.Language.RemoveAllOK);
                                         break;
                                 }
                             }
                             else
                             {
-                                player.redDialog("Yêu cầu này đã được xét duyệt hoặc gỡ bỏ");
+                                player.redDialog(player.Language.ApprovalRequestIsApplyOrRemove);
                             }
                         }
                         else
                         {
-                            player.redDialog("Bạn chỉ là thành viên bình thường");
+                            player.redDialog(player.Language.YouOnlyIsMemeber);
                         }
                     }
                     else
@@ -1436,7 +1436,7 @@ public partial class MenuController
                             player.controller.showInputDialog(INPUT_DIALOG_SET_PET_SELECTED_INFo, "Đặt chỉ số pet đang đi theo", new String[] { "LVL:  ", "STAR:  ", "GYM:  " });
                             break;
                         case ADMIN_INDEX_COUNT_PLAYER:
-                            player.okDialog(Utilities.Format("Online player: %s", PlayerManager.players.Count));
+                            player.okDialog(string.Format("Online player: {0}", PlayerManager.players.Count));
                             break;
                         case ADMIN_INDEX_COUNT_OF_MAP:
                             int numPlayerMap = 0;
@@ -1568,11 +1568,11 @@ public partial class MenuController
                             {
                                 case 0:
                                     player.playerData.MoneyDisplays.addIfAbsent(item.Template.itemId);
-                                    player.okDialog("Ghim thành công");
+                                    player.okDialog(player.Language.PinOK);
                                     break;
                                 case 1:
                                     player.playerData.MoneyDisplays.remove(item.Template.itemId);
-                                    player.okDialog("Bỏ ghim thành công");
+                                    player.okDialog(player.Language.UnpinOK);
                                     break;
                             }
                             player.controller.updateUserInfo();
@@ -1604,11 +1604,11 @@ public partial class MenuController
                         ClanMember memberSelect = clan.getMemberByUserId((int)player.controller.objectPerformed.get(OBJKEY_MEM_ID_UPGRADE_DUTY));
                         if (memberSelect == null)
                         {
-                            player.redDialog("Người chơi này không còn trong bang hội");
+                            player.redDialog(player.Language.ThisPlayerIsNotInThisClan);
                         }
                         else if (clanMember == memberSelect)
                         {
-                            player.redDialog("Không thể thao tác trên chính bản thân của mình");
+                            player.redDialog(player.Language.YouCannotManipulateYourself);
                         }
                         else
                         {
@@ -1618,54 +1618,54 @@ public partial class MenuController
                                 case 0:
                                     if (clanMember.duty == Clan.TYPE_LEADER)
                                     {
-                                        showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, Utilities.Format("Bạn có chắc muốn nhường chúc vụ bang chủ cho người chơi %s không?", memberSelect.name), player);
+                                        showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, string.Format(player.Language.YouGiveUpGuildPosition1, memberSelect.name), player);
                                     }
                                     else
                                     {
-                                        player.redDialog("Bạn không phải bang chủ!");
+                                        player.redDialog(player.Language.YouIsNotLeader);
                                     }
                                     break;
                                 case 1:
                                     if (clanMember.duty == Clan.TYPE_LEADER)
                                     {
-                                        showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, Utilities.Format("Bạn có chắc muốn phong chúc vụ bang phó cho người chơi %s không?", memberSelect.name), player);
+                                        showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, string.Format(player.Language.YouGiveUpGuildPosition2, memberSelect.name), player);
                                     }
                                     else
                                     {
-                                        player.redDialog("Bạn không phải bang chủ!");
+                                        player.redDialog(player.Language.YouIsNotLeader);
                                     }
                                     break;
 
                                 case 2:
                                     if (clanMember.duty == Clan.TYPE_LEADER || clanMember.duty == Clan.TYPE_DEPUTY_LEADER)
                                     {
-                                        showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, Utilities.Format("Bạn có chắc muốn phong chúc vụ trưởng lão cho người chơi %s không?", memberSelect.name), player);
+                                        showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, string.Format(player.Language.YouGiveUpGuildPosition3, memberSelect.name), player);
                                     }
                                     else
                                     {
-                                        player.redDialog("Bạn không có quyền này!");
+                                        player.redDialog(player.Language.YouEnoughPermission);
                                     }
                                     break;
 
                                 case 3:
                                     if (clanMember.duty == Clan.TYPE_LEADER || clanMember.duty == Clan.TYPE_DEPUTY_LEADER)
                                     {
-                                        showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, Utilities.Format("Bạn có chắc muốn phong chúc vụ thành viên cho người chơi %s không?", memberSelect.name), player);
+                                        showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, string.Format(player.Language.YouGiveUpGuildPosition4, memberSelect.name), player);
                                     }
                                     else
                                     {
-                                        player.redDialog("Bạn không có quyền này!");
+                                        player.redDialog(player.Language.YouEnoughPermission);
                                     }
                                     break;
 
                                 case 4:
                                     if (clanMember.duty == Clan.TYPE_LEADER || clanMember.duty == Clan.TYPE_DEPUTY_LEADER || clanMember.duty == Clan.TYPE_SENIOR)
                                     {
-                                        showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, Utilities.Format("Bạn có chắc muốn đuổi người chơi %s không?", memberSelect.name), player);
+                                        showYNDialog(DIALOG_CONFIRM_ASK_UPGRADE_MEM_CLAN, string.Format(player.Language.DoYouWantKickMember, memberSelect.name), player);
                                     }
                                     else
                                     {
-                                        player.redDialog("Bạn không có quyền này!");
+                                        player.redDialog(player.Language.YouEnoughPermission);
                                     }
                                     break;
                             }
@@ -1712,7 +1712,7 @@ public partial class MenuController
 
                             if (clanMember.duty != Clan.TYPE_NORMAL)
                             {
-                                list.add(new Option(4, "Đuổi", 1));
+                                list.add(new Option(4, player.Language.Kick, 1));
                             }
 
                             player.controller.sendListOption(MENU_SELECT_TYPE_UPGRADE_DUTY, "Phong tước?", CMD_CENTER_OK, list);
@@ -1747,7 +1747,7 @@ public partial class MenuController
                             {
                                 Achievement achievement = player.playerData.achievements[index_Achievement];
                                 player.playerData.CurrentAchievementId = achievement.Id;
-                                player.okDialog("Sử dụng thành công !!!");
+                                player.okDialog(player.Language.UseOK);
                                 player.getPlace()?.updatePlayerAnimation(player);
                             }
                             break;

@@ -9,6 +9,7 @@ namespace Gopet.Language
     public sealed class LanguageData
     {
         public Dictionary<int, string> ItemLanguage { get; set; } = new Dictionary<int, string>();
+        public Dictionary<int, string> ItemDescLanguage { get; set; } = new Dictionary<int, string>();
         public Dictionary<int, string> NpcOptionLanguage { get; set; } = new Dictionary<int, string>();
         public Dictionary<int, string> NpcNameLanguage { get; set; } = new Dictionary<int, string>();
         public Dictionary<int, string> TattoLanguage { get; set; } = new Dictionary<int, string>();
@@ -395,7 +396,6 @@ namespace Gopet.Language
         public string UseEnergyItemOK { get; set; } = "Sử dụng thành công và hiện tại bạn đang có {0} năng lượng";
         public string UseEnergyFailByMax { get; set; } = "Bạn đã sử dụng đạt tối đa ngày hôm nay";
         public string CannotUseThisItem { get; set; } = "Không thể sử dụng vật phẩm này";
-        public string from { get; set; } = "từ";
         public string Count { get; set; } = "Số lượng";
         public string PleaseDoUpToKioskItemHasPetEquip { get; set; } = "Vui lòng không treo trang bị đã được pet trang bị";
         public string YouCannotSellPetTry { get; set; } = "Bạn không thể treo pet dùng thử";
@@ -403,5 +403,18 @@ namespace Gopet.Language
         public string YourApplyToClanIsAccept { get; set; } = "Lời xin vào bang hội của bạn được chấp nhận";
         public string ApplyOK { get; set; } = "Duyệt thành công";
         public string ThisPlayerHaveClan { get; set; } = "Người chơi đã vào bang hội khác";
+        public string RemoveOK { get; set; } = "Xóa thành công";
+        public string RemoveAllOK { get; set; } = "Xóa tất cả thành công";
+        public string NumOfMemberClanIsMax { get; set; } = "Thành viên trong bang hội này đã đủ";
+        public string PinOK { get; set; } = "Ghim thành công";
+        public string UnpinOK { get; set; } = "Bỏ ghim thành công";
+        public string ThisPlayerIsNotInThisClan { get; set; } = "Người chơi này không còn trong bang hội";
+        public string YouGiveUpGuildPosition1 { get; set; } = "Bạn có chắc muốn nhường chúc vụ bang chủ cho người chơi {0} không?";
+        public string YouGiveUpGuildPosition2 { get; set; } = "Bạn có chắc muốn phong chúc vụ bang phó cho người chơi {0} không?";
+        public string YouGiveUpGuildPosition3 { get; set; } = "Bạn có chắc muốn phong chúc vụ trưởng lão cho người chơi {0} không?";
+        public string YouGiveUpGuildPosition4 { get; set; } = "Bạn có chắc muốn phong chúc vụ thành viên cho người chơi {0} không?";
+        public string DoYouWantKickMember { get; set; } = "Bạn có chắc muốn đuổi người chơi {0} không?";
+        public string Kick { get; set; } = "Đuổi";
+        public string UseOK { get; set; } = "Sử dụng thành công !!!";
     }
 }

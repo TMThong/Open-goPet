@@ -901,6 +901,7 @@ public class GopetManager
         foreach (var item in itemTemplates)
         {
             Language[VI_CODE].ItemLanguage[item.itemId] = item.name;
+            Language[VI_CODE].ItemDescLanguage[item.itemId] = item.description;
         }
 
         foreach (var item in tattos)
