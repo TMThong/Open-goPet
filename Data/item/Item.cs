@@ -198,11 +198,11 @@ namespace Gopet.Data.GopetItem
                         string strExpire = "";
                         if (expire > 0)
                         {
-                            strExpire = " (HSD: " + Utilities.ToDateString(Utilities.GetDate(expire)) + " )";
+                            strExpire = "(" + player.Language.ExpireDescrption + Utilities.ToDateString(Utilities.GetDate(expire)) + " )";
                         }
                         else
                         {
-                            strExpire = " (Hạn sử dụng đến : vĩnh viễn).";
+                            strExpire = player.Language.ExpireItemInfinityDescription;
                         }
                         return Utilities.Format("+%s (atk) +%s (def) +%s (hp) +%s (mp)", atk, def, hp, mp) + strExpire;
 
@@ -212,11 +212,11 @@ namespace Gopet.Data.GopetItem
                         string strExpire = "";
                         if (expire > 0)
                         {
-                            strExpire = " (HSD: " + Utilities.GetFormatNumber(expire) + " )";
+                            strExpire = "(" + player.Language.ExpireDescrption + Utilities.GetFormatNumber(expire) + " )";
                         }
                         else
                         {
-                            strExpire = "Hạn sử dụng đến : vĩnh viễn .";
+                            strExpire = player.Language.ExpireItemInfinityDescription;
                         }
 
                         string getSign(int value)
@@ -256,14 +256,14 @@ namespace Gopet.Data.GopetItem
                                 }
                             }
                         }
-                        return strExpire + " Chỉ số áp dụng" + Utilities.Format(" +%s (atk) +%s (def) +%s (hp) +%s (mp) ", getAtk(), getDef(), getHp(), getMp()) + wingBuffDesc;
+                        return strExpire + player.Language.ItemInfoApply + Utilities.Format(" +%s (atk) +%s (def) +%s (hp) +%s (mp) ", getAtk(), getDef(), getHp(), getMp()) + wingBuffDesc;
 
                     }
             }
 
             if (expire > 0)
             {
-                return getTemp().getDescription(player) + " (HSD: " + Utilities.GetFormatNumber(expire) + " )";
+                return getTemp().getDescription(player) + "(" + player.Language.ExpireDescrption + Utilities.GetFormatNumber(expire) + " )";
             }
             return getTemp().getDescription(player);
         }
@@ -368,13 +368,13 @@ namespace Gopet.Data.GopetItem
         {
             if (getTemp().isStackable)
             {
-                return getTemp().getName(player) + " x" + count + (canTrade ? "" : " (Khóa)");
+                return getTemp().getName(player) + " x" + count + (canTrade ? "" : player.Language.LockItemDescrption);
             }
             if (Template.type == GopetManager.WING_INVENTORY)
             {
-                return getTemp().getName(player) + " cấp " + lvl + (canTrade ? "" : " (Khóa)");
+                return getTemp().getName(player) + player.Language.level + lvl + (canTrade ? "" : player.Language.LockItemDescrption);
             }
-            return getTemp().getName(player) + (canTrade ? "" : " (Khóa)");
+            return getTemp().getName(player) + (canTrade ? "" : player.Language.LockItemDescrption);
         }
 
         public string getEquipName(Player player)
@@ -412,16 +412,16 @@ namespace Gopet.Data.GopetItem
                             switch (j)
                             {
                                 case ItemInfo.OptionType.PERCENT_HP:
-                                    infoStrings.add(Utilities.Format("Tăng %s/ ", info).Replace('/', '%') + " (hp) ");
+                                    infoStrings.add(Utilities.Format(player.Language.Up + " %s/ ", info).Replace('/', '%') + " (hp) ");
                                     break;
                                 case ItemInfo.OptionType.PERCENT_MP:
-                                    infoStrings.add(Utilities.Format("Tăng %s/ ", info).Replace('/', '%') + " (mp) ");
+                                    infoStrings.add(Utilities.Format(player.Language.Up + " %s/ ", info).Replace('/', '%') + " (mp) ");
                                     break;
                                 case ItemInfo.OptionType.PERCENT_ATK:
-                                    infoStrings.add(Utilities.Format("Tăng %s/ ", info).Replace('/', '%') + " (atk) ");
+                                    infoStrings.add(Utilities.Format(player.Language.Up + " %s/ ", info).Replace('/', '%') + " (atk) ");
                                     break;
                                 case ItemInfo.OptionType.PERCENT_DEF:
-                                    infoStrings.add(Utilities.Format("Tăng %s/ ", info).Replace('/', '%') + " (def) ");
+                                    infoStrings.add(Utilities.Format(player.Language.Up + " %s/ ", info).Replace('/', '%') + " (def) ");
                                     break;
                             }
                         }
@@ -436,13 +436,13 @@ namespace Gopet.Data.GopetItem
                     switch (getTemp().getNClass())
                     {
                         case GopetManager.Fighter:
-                            infoStrings.add(" Dành cho chiến binh");
+                            infoStrings.add(player.Language.ForFighter);
                             break;
                         case GopetManager.Assassin:
-                            infoStrings.add(" Dành cho sát thủ");
+                            infoStrings.add(player.Language.ForAssassin);
                             break;
                         case GopetManager.Wizard:
-                            infoStrings.add(" Dành cho pháp sư");
+                            infoStrings.add(player.Language.ForWizard);
                             break;
                     }
                 }

@@ -489,6 +489,13 @@ namespace Gopet.Language
         public string GymOptionAgi { get; set; } = "tốc độ (agi)";
         public string GymOptionInt { get; set; } = "thông minh (int)";
         public string TradeOKMessage { get; set; } = "Chúc mừng bạn nhận được:";
-        public string level { get; set; } = "cấp";
+        public string level { get; set; } = " cấp độ ";
+        public string ExpireItemInfinityDescription { get; set; } = "Hạn sử dụng đến : vĩnh viễn .";
+        public string Up { get; set; } = "Tăng";
+        public string ForFighter { get; set; } = " Dành cho chiến binh";
+        public string ForAssassin { get; set; } = " Dành cho sát thủ";
+        public string ForWizard { get; set; } = " Dành cho pháp sư";
+        public string LockItemDescrption { get; set; } = " (Khóa)";
+        public string ItemInfoApply { get; set; } = " Chỉ số áp dụng";
     }
 }
