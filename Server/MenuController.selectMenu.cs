@@ -120,7 +120,7 @@ public partial class MenuController
                     {
                         PetTatto tatto = player.controller.objectPerformed[OBJKEY_ID_TATTO_TO_ENCHANT];
                         player.controller.objectPerformed[OBJKEY_TYPE_PRICE_TATTO_TO_ENCHANT] = index;
-                        showYNDialog(DIALOG_ASK_ENCHANT_TATTO, string.Format(player.Language.AskSelectTattoEnchantLaw, tatto.Template.name, tatto.lvl + 1, GopetManager.PERCENT_OF_ENCHANT_TATOO[tatto.lvl], getMoneyText((sbyte)index, index == 0 ? GopetManager.PRICE_GOLD_ENCHANT_TATTO : GopetManager.PRICE_COIN_ENCHANT_TATTO, player), GopetManager.NUM_LVL_DROP_ENCHANT_TATTO_FAILED[tatto.lvl]), player);
+                        showYNDialog(DIALOG_ASK_ENCHANT_TATTO, string.Format(player.Language.AskSelectTattoEnchantLaw, tatto.Template.getName(player), tatto.lvl + 1, GopetManager.PERCENT_OF_ENCHANT_TATOO[tatto.lvl], getMoneyText((sbyte)index, index == 0 ? GopetManager.PRICE_GOLD_ENCHANT_TATTO : GopetManager.PRICE_COIN_ENCHANT_TATTO, player), GopetManager.NUM_LVL_DROP_ENCHANT_TATTO_FAILED[tatto.lvl]), player);
                     }
                     break;
                 }
@@ -1158,7 +1158,7 @@ public partial class MenuController
                                 if (itemSelect.Template.itemOptionValue.Length == 2)
                                 {
                                     Pet pet = new Pet(itemSelect.Template.itemOptionValue[0]);
-                                    player.okDialog(pet.getNameWithoutStar(player) + ": " + pet.getDesc());
+                                    player.okDialog(pet.getNameWithoutStar(player) + ": " + pet.getDesc(player));
                                     pet = null;
                                 }
                                 else

@@ -14,8 +14,8 @@ public class PetSkill {
     public String name, description;
     public JArrayList<PetSkillLv> skillLv = new JArrayList<PetSkillLv>();
 
-    public String getDescription(PetSkillLv petSkillLv) {
-        return String.Join("\n", ItemInfo.getName(petSkillLv.skillInfo));
+    public String getDescription(PetSkillLv petSkillLv, Player player) {
+        return String.Join("\n", ItemInfo.getName(petSkillLv.skillInfo, player));
     }
 
     /**

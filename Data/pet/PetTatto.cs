@@ -56,13 +56,13 @@ public class PetTatto : IBinaryObject<PetTatto>
     [JsonIgnore]
     public PetTatto Instance => this;
 
-    public String getName()
+    public String getName(Player player)
     {
         JArrayList<String> infoStrings = new JArrayList<String>();
 
         if (lvl > 0)
         {
-            infoStrings.add($" cấp {lvl}");
+            infoStrings.add($" "+ player.Language.level +" {lvl}");
         }
 
         if (getAtk() > 0)
@@ -82,7 +82,7 @@ public class PetTatto : IBinaryObject<PetTatto>
             infoStrings.add(getMp() + " (mp) ");
         }
 
-        return Template.name + "  " + String.Join(" ", infoStrings);
+        return Template.getName(player) + "  " + String.Join(" ", infoStrings);
     }
 
     public int GetId()

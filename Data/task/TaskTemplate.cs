@@ -1,4 +1,6 @@
 
+using System.Numerics;
+
 public class TaskTemplate
 {
 
@@ -12,51 +14,6 @@ public class TaskTemplate
     public int[] taskNeed;
     public long timeTask = -1;
 
-    public void setTaskId(int taskId)
-    {
-        this.taskId = taskId;
-    }
-
-    public void setType(int type)
-    {
-        this.type = type;
-    }
-
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
-    public void setDescription(String description)
-    {
-        this.description = description;
-    }
-
-    public void setTask(int[][] task)
-    {
-        this.task = task;
-    }
-
-    public void setGift(int[][] gift)
-    {
-        this.gift = gift;
-    }
-
-    public void setFromNpc(int fromNpc)
-    {
-        this.fromNPC = fromNpc;
-    }
-
-    public void setTaskNeed(int[] taskNeed)
-    {
-        this.taskNeed = taskNeed;
-    }
-
-    public void setTimeTask(long timeTask)
-    {
-        this.timeTask = timeTask;
-    }
-
     public int getTaskId()
     {
         return this.taskId;
@@ -67,17 +24,17 @@ public class TaskTemplate
         return this.type;
     }
 
-    public String getName()
+    public String getName(Player player)
     {
-        return this.name;
+        return player.Language.TaskNameLanguage[this.taskId];
     }
 
-    public String getDescription()
+    public String getDescription(Player player)
     {
-        return this.description;
+        return player.Language.TaskDescLanguage[this.taskId];
     }
 
-    public int[][] getTask()
+    public int[][] getTask(Player player)
     {
         return this.task;
     }

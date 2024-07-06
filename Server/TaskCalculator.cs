@@ -152,7 +152,7 @@ public class TaskCalculator
                     taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_ENCHANT_ITEM, task[i], taskI[1], taskI[2]));
                     break;
                 case REQUEST_NEED_TASK:
-                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_NEED_TASK, GopetManager.taskTemplate.get(taskI[2]).getName(), task[i], taskI[1]));
+                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_NEED_TASK, GopetManager.taskTemplate.get(taskI[2]).getName(player), task[i], taskI[1]));
                     break;
                 case REQUEST_ATTACK_BOSS:
                     taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_ATTACK_BOSS, GopetManager.boss.get(taskI[2]).getName(player), task[i], taskI[1]));
@@ -463,7 +463,7 @@ public class TaskCalculator
         {
             txtInfo.add(petBattleText.getText());
         }
-        player.okDialog(string.Format(player.Language.OnTaskSuccess, taskData.getTemplate().getName(), String.Join(",", txtInfo)));
+        player.okDialog(string.Format(player.Language.OnTaskSuccess, taskData.getTemplate().getName(player), String.Join(",", txtInfo)));
         this.onAllTaskUpdate(REQUEST_NEED_TASK, taskData.taskTemplateId);
     }
 

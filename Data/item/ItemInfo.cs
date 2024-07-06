@@ -28,18 +28,18 @@ namespace Gopet.Data.GopetItem
          *
          * @return
          */
-        public string getName()
+        public string getName(Player player)
         {
             bool canFormat = GopetManager.itemInfoCanFormat.ContainsKey(id);
             if (canFormat)
             {
                 if (GopetManager.itemInfoIsPercent.get(id))
                 {
-                    return Utilities.Format(GopetManager.itemInfoName.get(id), value / 100f).Replace('/', '%');
+                    return Utilities.Format(player.Language.ItemInfoNameLanguage[id], value / 100f).Replace('/', '%');
                 }
-                return Utilities.Format(GopetManager.itemInfoName.get(id), value).Replace('/', '%');
+                return Utilities.Format(player.Language.ItemInfoNameLanguage[id], value).Replace('/', '%');
             }
-            return GopetManager.itemInfoName.get(id);
+            return player.Language.ItemInfoNameLanguage[id];
         }
 
         /**
@@ -48,12 +48,12 @@ namespace Gopet.Data.GopetItem
          * @param itemInfos Dữ liệu chỉ số
          * @return
          */
-        public static string[] getName(ItemInfo[] itemInfos)
+        public static string[] getName(ItemInfo[] itemInfos, Player player)
         {
             string[] strings = new string[itemInfos.Length];
             for (int i = 0; i < strings.Length; i++)
             {
-                strings[i] = itemInfos[i].getName();
+                strings[i] = itemInfos[i].getName(player);
             }
             return strings;
         }
@@ -64,9 +64,9 @@ namespace Gopet.Data.GopetItem
          * @param joinText
          * @return
          */
-        public static string getNameJoin(ItemInfo[] itemInfos, string joinText)
+        public static string getNameJoin(ItemInfo[] itemInfos, string joinText, Player player)
         {
-            return string.Join(joinText, getName(itemInfos));
+            return string.Join(joinText, getName(itemInfos, player));
         }
 
         /**

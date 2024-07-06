@@ -10,10 +10,6 @@ public class PetTattoTemplate {
         this.tattooId = tattooId;
     }
 
-    public void setName(String name)
-    {
-        this.name = name;
-    }
 
     public void setIconPath(String iconPath)
     {
@@ -51,9 +47,9 @@ public class PetTattoTemplate {
         return this.tattooId;
     }
 
-    public String getName()
+    public string getName(Player player)
     {
-        return this.name;
+        return player.Language.TattoLanguage[this.tattooId];
     }
 
     public String getIconPath()

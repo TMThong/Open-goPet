@@ -19,7 +19,7 @@ public class PetMenuItemInfo : MenuItemInfo {
         setPetTemplate(pet.getPetTemplate());
         setTitleMenu(pet.getNameWithStar(player));
         setImgPath(petTemplate.icon);
-        setDesc(pet.getDesc());
+        setDesc(pet.getDesc(player));
         setCanSelect(true);
     }
 

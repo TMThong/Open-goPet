@@ -441,7 +441,7 @@ public class Pet : GameObject, IBinaryObject<Pet>
         tatto.Sort(new BinaryCompare<PetTatto>());
     }
 
-    public String getDesc()
+    public String getDesc(Player player)
     {
         JArrayList<String> infoStrings = new();
         infoStrings.add(Utilities.FormatNumber(exp) + " exp ");
@@ -470,11 +470,11 @@ public class Pet : GameObject, IBinaryObject<Pet>
         {
             if (!flag)
             {
-                tattooStrings.add(". Xăm: " + petTatto.getName());
+                tattooStrings.add(". Xăm: " + petTatto.getName(player));
                 flag = true;
                 continue;
             }
-            tattooStrings.add(petTatto.getName());
+            tattooStrings.add(petTatto.getName(player));
         }
         String desc = Utilities.Format("(str) %s (int) %s (agi) %s", getStr(), getInt(), getAgi());
 

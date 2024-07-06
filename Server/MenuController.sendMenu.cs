@@ -96,7 +96,7 @@ public partial class MenuController
                     foreach (var tattoKeyPair in GopetManager.tattos)
                     {
                         var tatto = tattoKeyPair.Value;
-                        MenuItemInfo menuItemInfo = new MenuItemInfo(tatto.name, $"{tatto.atk} (atk) {tatto.def}(def) {tatto.hp}(hp) {tatto.mp}(mp)", tatto.iconPath, false);
+                        MenuItemInfo menuItemInfo = new MenuItemInfo(tatto.getName(player), $"{tatto.atk} (atk) {tatto.def}(def) {tatto.hp}(hp) {tatto.mp}(mp)", tatto.iconPath, false);
                         menuInfos.add(menuItemInfo);
                     }
 
@@ -255,7 +255,7 @@ public partial class MenuController
                     foreach (TaskData taskData in taskDatas)
                     {
                         TaskTemplate taskTemplate = taskData.getTemplate();
-                        MenuItemInfo menuItemInfo = new MenuItemInfo(taskTemplate.getName(), taskTemplate.getDescription(), "dialog/1.png", true);
+                        MenuItemInfo menuItemInfo = new MenuItemInfo(taskTemplate.getName(player), taskTemplate.getDescription(player), "dialog/1.png", true);
                         menuItemInfo.setShowDialog(true);
                         menuItemInfo.setDialogText(TaskCalculator.getTaskText(taskData.task, taskData.taskInfo, taskData.timeTask, player));
                         menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
@@ -332,9 +332,9 @@ public partial class MenuController
                             JArrayList<MenuItemInfo> taskMenuInfos = new();
                             foreach (TaskTemplate taskTemplate in taskTemplates)
                             {
-                                MenuItemInfo menuItemInfo = new MenuItemInfo(taskTemplate.getName(), taskTemplate.getDescription(), "dialog/1.png", true);
+                                MenuItemInfo menuItemInfo = new MenuItemInfo(taskTemplate.getName(player), taskTemplate.getDescription(player), "dialog/1.png", true);
                                 menuItemInfo.setShowDialog(true);
-                                menuItemInfo.setDialogText(player.Language.DoYouWantGetThisTask + TaskCalculator.getTaskText(null, taskTemplate.getTask(), taskTemplate.getTimeTask(), player));
+                                menuItemInfo.setDialogText(player.Language.DoYouWantGetThisTask + TaskCalculator.getTaskText(null, taskTemplate.getTask(player), taskTemplate.getTimeTask(), player));
                                 menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                                 menuItemInfo.setCloseScreenAfterClick(true);
                                 taskMenuInfos.add(menuItemInfo);
@@ -763,7 +763,7 @@ public partial class MenuController
                                     menuItemInfo.setCanSelect(true);
                                     menuItemInfo.setTitleMenu(kioskItem.pet.getNameWithStar(player) + string.Format(player.Language.KioskIdItemDescription, kioskItem.itemId));
                                     menuItemInfo.setImgPath(kioskItem.pet.getPetTemplate().icon);
-                                    menuItemInfo.setDesc(string.Format(player.Language.PriceKioskDescription + "(ngoc) ", Utilities.FormatNumber(kioskItem.price)) + kioskItem.pet.getDesc());
+                                    menuItemInfo.setDesc(string.Format(player.Language.PriceKioskDescription + "(ngoc) ", Utilities.FormatNumber(kioskItem.price)) + kioskItem.pet.getDesc(player));
                                     menuItemInfo.setCloseScreenAfterClick(true);
                                     menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                                     menuItemInfo.setHasId(true);

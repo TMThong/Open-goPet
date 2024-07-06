@@ -432,7 +432,7 @@ namespace Gopet.Battle
                 //Max turn Time
                 message.putInt((int)GopetManager.TimeNextTurn);
                 message.putInt(player.user.user_id);
-                writeMyPetInfo(player.playerData.petSelected, message);
+                writeMyPetInfo(player.playerData.petSelected, message, playerInZone);
                 message.putInt(mob.getMobId());
                 writeMobInfo(mob, message);
                 message.cleanup();
@@ -445,7 +445,7 @@ namespace Gopet.Battle
                 message.putInt((int)GopetManager.TimeNextTurn);
                 message.putInt(activePlayer.user.user_id);
                 message.putsbyte(0);
-                writeMyPetInfo(activePlayer.getPet(), message);
+                writeMyPetInfo(activePlayer.getPet(), message, playerInZone);
                 message.putInt(passivePlayer.user.user_id);
                 writePetPassiveInfo(passivePlayer.getPet(), message);
                 message.cleanup();
@@ -460,7 +460,7 @@ namespace Gopet.Battle
             message.putInt((int)GopetManager.TimeNextTurn);
             message.putInt(activePlayer.user.user_id);
             message.putsbyte(1);
-            writeMyPetInfo(activePlayer.getPet(), message);
+            writeMyPetInfo(activePlayer.getPet(), message, activePlayer);
             message.putInt(passivePlayer.user.user_id);
             writePetPassiveInfo(passivePlayer.getPet(), message);
             message.putbool(false);
@@ -472,7 +472,7 @@ namespace Gopet.Battle
             message.putInt((int)GopetManager.TimeNextTurn);
             message.putInt(passivePlayer.user.user_id);
             message.putsbyte(0);
-            writeMyPetInfo(passivePlayer.getPet(), message);
+            writeMyPetInfo(passivePlayer.getPet(), message, passivePlayer);
             message.putInt(activePlayer.user.user_id);
             writePetPassiveInfo(activePlayer.getPet(), message);
             message.putbool(false);
@@ -486,21 +486,24 @@ namespace Gopet.Battle
 
         public void sendStartFightMob(Mob mob, Player player)
         {
-            Message message = new Message(GopetCMD.PET_SERVICE);
-            message.putsbyte(GopetCMD.ATTACK_MOB);
-            //Turn time
-            message.putInt(Utilities.round(delaTimeTurn - Utilities.CurrentTimeMillis));
-            //Max turn Time
-            message.putInt((int)GopetManager.TimeNextTurn);
-            message.putInt(player.user.user_id);
-            writeMyPetInfo(player.playerData.petSelected, message);
-            message.putInt(mob.getMobId());
-            writeMobInfo(mob, message);
-            message.cleanup();
-            place.sendMessage(message);
+            foreach (var item in place.players)
+            {
+                Message message = new Message(GopetCMD.PET_SERVICE);
+                message.putsbyte(GopetCMD.ATTACK_MOB);
+                //Turn time
+                message.putInt(Utilities.round(delaTimeTurn - Utilities.CurrentTimeMillis));
+                //Max turn Time
+                message.putInt((int)GopetManager.TimeNextTurn);
+                message.putInt(player.user.user_id);
+                writeMyPetInfo(player.playerData.petSelected, message, item);
+                message.putInt(mob.getMobId());
+                writeMobInfo(mob, message);
+                message.cleanup();
+                item.session.sendMessage(message);
+            }
         }
 
-        public static void writeMyPetInfo(Pet pet, Message message)
+        public static void writeMyPetInfo(Pet pet, Message message, Player player)
         {
             message.putInt(pet.getPetIdTemplate());
             message.putUTF(pet.getPetTemplate().frameImg);
@@ -526,7 +529,7 @@ namespace Gopet.Battle
                 PetSkillLv petSkillLv = petSkill.skillLv.get(skilllvl - 1);
                 message.putInt(skillId);
                 message.putUTF(petSkill.name + " " + skilllvl);
-                message.putUTF(petSkill.getDescription(petSkillLv));
+                message.putUTF(petSkill.getDescription(petSkillLv, player));
                 message.putInt(petSkillLv.mpLost);
             }
         }

@@ -660,7 +660,7 @@ public class GameController
                 PetSkillLv petSkillLv = petSkill.skillLv.get(skilllvl);
                 message.putInt(skillId);
                 message.putUTF(petSkill.name + " " + skilllvl);
-                message.putUTF(petSkill.getDescription(petSkillLv));
+                message.putUTF(petSkill.getDescription(petSkillLv, player));
                 message.putInt(petSkillLv.mpLost);
             }
             message.putInt(pet.tiemnang_point);
@@ -670,7 +670,7 @@ public class GameController
             foreach (PetTatto petTatto in petTattos)
             {
                 message.putInt(1);
-                message.putUTF(petTatto.getName());
+                message.putUTF(petTatto.getName(player));
                 message.putsbyte(1);
                 message.putUTF("");
             }
@@ -3732,7 +3732,7 @@ public class GameController
                     PetTatto petTatto = pet.tatto.get(i);
                     PetTattoTemplate petTattoTemplate = petTatto.Template;
                     m.putInt(petTatto.tattoId);
-                    m.putUTF(petTatto.getName());
+                    m.putUTF(petTatto.getName(player));
                     m.putsbyte(i + 1);
                     m.putUTF(petTattoTemplate.iconPath);
                 }
@@ -3755,7 +3755,7 @@ public class GameController
                     int randTatto = randTattoo(itemSelect.getTemp().getOptionValue());
                     PetTatto petTatto = new PetTatto(randTatto);
                     pet.addTatto(petTatto);
-                    player.okDialog(string.Format(player.Language.TattoOK, petTatto.getName()));
+                    player.okDialog(string.Format(player.Language.TattoOK, petTatto.getName(player)));
                     pet.applyInfo(player);
                     subCountItem(itemSelect, 1, GopetManager.NORMAL_INVENTORY);
                     showPetTattoUI();
@@ -3805,7 +3805,7 @@ public class GameController
                 {
                     p.tatto.remove(tatto);
                     showPetTattoUI();
-                    player.okDialog(string.Format(player.Language.RemoveTattoOK, tatto.Template.name));
+                    player.okDialog(string.Format(player.Language.RemoveTattoOK, tatto.Template.getName(player)));
                     subCountItem(itemSelect, 1, GopetManager.NORMAL_INVENTORY);
                     objectPerformed.Remove(MenuController.OBJKEY_TATTO_ID_REMOVE);
                     HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Xóa xăm %s cho pet %s", tatto.Template.name, p.getNameWithoutStar(player))));
