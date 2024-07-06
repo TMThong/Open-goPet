@@ -533,9 +533,9 @@ public partial class MenuController
                     JArrayList<MenuItemInfo> menuItemMaterial1Infos = new();
                     foreach (Item item in listItems)
                     {
-                        MenuItemInfo menuItemInfo = new MenuItemInfo(item.getTemp().isStackable ? item.getName() : item.getEquipName(), item.getDescription(player), item.getTemp().getIconPath(), true);
+                        MenuItemInfo menuItemInfo = new MenuItemInfo(item.getTemp().isStackable ? item.getName(player) : item.getEquipName(player), item.getDescription(player), item.getTemp().getIconPath(), true);
                         menuItemInfo.setShowDialog(true);
-                        menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, item.getName()));
+                        menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, item.getName(player)));
                         menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                         menuItemInfo.setCloseScreenAfterClick(true);
                         menuItemMaterial1Infos.add(menuItemInfo);
@@ -560,9 +560,9 @@ public partial class MenuController
                     JArrayList<MenuItemInfo> menuItemEquipInfos = new();
                     foreach (Item item in listItems)
                     {
-                        MenuItemInfo menuItemInfo = new MenuItemInfo(item.getEquipName(), item.getDescription(player), item.getTemp().getIconPath(), true);
+                        MenuItemInfo menuItemInfo = new MenuItemInfo(item.getEquipName(player), item.getDescription(player), item.getTemp().getIconPath(), true);
                         menuItemInfo.setShowDialog(true);
-                        menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, item.getName()));
+                        menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, item.getName(player)));
                         menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                         menuItemInfo.setCloseScreenAfterClick(true);
                         menuItemEquipInfos.add(menuItemInfo);
@@ -576,9 +576,9 @@ public partial class MenuController
                     JArrayList<MenuItemInfo> menuItemEquipInfos = new();
                     foreach (Item item in listItems)
                     {
-                        MenuItemInfo menuItemInfo = new MenuItemInfo(item.getName(), item.getDescription(player), item.getTemp().getIconPath(), true);
+                        MenuItemInfo menuItemInfo = new MenuItemInfo(item.getName(player), item.getDescription(player), item.getTemp().getIconPath(), true);
                         menuItemInfo.setShowDialog(true);
-                        menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, item.getName()));
+                        menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, item.getName(player)));
                         menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                         menuItemInfo.setCloseScreenAfterClick(true);
                         menuItemEquipInfos.add(menuItemInfo);
@@ -739,9 +739,9 @@ public partial class MenuController
                                 {
                                     MenuItemInfo menuItemInfo = new MenuItemInfo();
                                     menuItemInfo.setCanSelect(true);
-                                    menuItemInfo.setTitleMenu((menuId != MENU_KIOSK_OHTER ? kioskItem.ItemSell.getEquipName() : kioskItem.ItemSell.getName()) + string.Format(player.Language.KioskIdItemDescription, kioskItem.itemId));
+                                    menuItemInfo.setTitleMenu((menuId != MENU_KIOSK_OHTER ? kioskItem.ItemSell.getEquipName(player) : kioskItem.ItemSell.getName(player)) + string.Format(player.Language.KioskIdItemDescription, kioskItem.itemId));
                                     menuItemInfo.setImgPath(kioskItem.getFrameImgPath());
-                                    menuItemInfo.setDesc(string.Format(player.Language.PriceKioskDescription + "(ngoc) ", Utilities.FormatNumber(kioskItem.price)) + kioskItem.ItemSell.getTemp().getDescription());
+                                    menuItemInfo.setDesc(string.Format(player.Language.PriceKioskDescription + "(ngoc) ", Utilities.FormatNumber(kioskItem.price)) + kioskItem.ItemSell.getTemp().getDescription(player));
                                     menuItemInfo.setCloseScreenAfterClick(true);
                                     menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                                     menuItemInfo.setHasId(true);

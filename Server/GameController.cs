@@ -1065,7 +1065,7 @@ public class GameController
                                     }
                                     player.okDialog(player.Language.ManipulateOK);
                                     MenuController.sendMenu(MenuController.MENU_WING_INVENTORY, player);
-                                    HistoryManager.addHistory(new History(player).setLog("Tháo cánh " + it.getName()).setObj(it));
+                                    HistoryManager.addHistory(new History(player).setLog("Tháo cánh " + it.getName(player)).setObj(it));
                                 }
                                 else
                                 {
@@ -1786,7 +1786,7 @@ public class GameController
         message.putInt(item.itemId);
         message.putUTF(template.getFrameImgPath());
         message.putUTF("???");
-        message.putUTF(item.getEquipName());
+        message.putUTF(item.getEquipName(player));
         message.putInt(template.getType());
         message.putInt(item.petEuipId);
         for (int j = 0; j < 11; j++)
@@ -2220,7 +2220,7 @@ public class GameController
                         message.putInt(itemId);
                         message.cleanup();
                         player.session.sendMessage(message);
-                        HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Mặc trang bị %s cho pet", item.getName())).setObj(item));
+                        HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Mặc trang bị %s cho pet", item.getName(player))).setObj(item));
 
                     }
                     else
@@ -2309,7 +2309,7 @@ public class GameController
                     message.cleanup();
                     player.session.sendMessage(message);
                     resendPetEquipInfo(item);
-                    HistoryManager.addHistory(new History(player).setLog("Tháo vật phẩm " + item.getName()).setObj(item));
+                    HistoryManager.addHistory(new History(player).setLog("Tháo vật phẩm " + item.getName(player)).setObj(item));
                 }
             }
             else
@@ -2948,32 +2948,32 @@ public class GameController
                         subCountItem(materialCrystal, 1, GopetManager.NORMAL_INVENTORY);
                         if (isSuccec)
                         {
-                            player.okDialog(string.Format(player.Language.EnchantOKWithLvlItem, itemEuip.getName(), itemEuip.lvl));
+                            player.okDialog(string.Format(player.Language.EnchantOKWithLvlItem, itemEuip.getName(player), itemEuip.lvl));
                             if (itemEuip.lvl >= 7)
                             {
-                                PlayerManager.showBanner(string.Format(player.Language.EnchantOKWithLvlItemBanner, player.playerData.name, itemEuip.getTemp().getName(), itemEuip.lvl));
+                                PlayerManager.showBanner(string.Format(player.Language.EnchantOKWithLvlItemBanner, player.playerData.name, itemEuip.getTemp().getName(player), itemEuip.lvl));
                             }
-                            HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cường hóa %s lên +%s", itemEuip.getTemp().getName(), itemEuip.lvl)).setObj(itemEuip));
+                            HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cường hóa %s lên +%s", itemEuip.getTemp().getName(player), itemEuip.lvl)).setObj(itemEuip));
                         }
                         else
                         {
                             if (destroyItem)
                             {
                                 player.redDialog(player.Language.EnchantFailAndDestroy);
-                                PlayerManager.showBanner(string.Format(player.Language.EnchantFailAndDestroyBanner, player.playerData.name, itemEuip.getTemp().getName()));
-                                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cường hóa %s thất bại bị vỡ", itemEuip.getTemp().getName())).setObj(itemEuip));
+                                PlayerManager.showBanner(string.Format(player.Language.EnchantFailAndDestroyBanner, player.playerData.name, itemEuip.getTemp().getName(player)));
+                                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cường hóa %s thất bại bị vỡ", itemEuip.getTemp().getName(player))).setObj(itemEuip));
                             }
                             else
                             {
                                 if (levelDrop > 0)
                                 {
                                     player.redDialog(string.Format(player.Language.EnchantFailDrop, levelDrop));
-                                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cường hóa %s thất bại bị giảm %s cấp", itemEuip.getTemp().getName(), levelDrop)).setObj(itemEuip));
+                                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cường hóa %s thất bại bị giảm %s cấp", itemEuip.getTemp().getName(player), levelDrop)).setObj(itemEuip));
                                 }
                                 else
                                 {
                                     player.redDialog(player.Language.EnchantFail);
-                                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cường hóa %s thất bại bị giảm %s cấp", itemEuip.getTemp().getName(), levelDrop)).setObj(itemEuip));
+                                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Cường hóa %s thất bại bị giảm %s cấp", itemEuip.getTemp().getName(player), levelDrop)).setObj(itemEuip));
                                 }
                             }
                         }
@@ -4017,7 +4017,7 @@ public class GameController
         {
             m.putInt(item.itemId);
             m.putInt(item.getTemp().getIconId());
-            m.putUTF(item.getEquipName());
+            m.putUTF(item.getEquipName(player));
             m.putInt(item.lvl);
         }
         m.cleanup();
@@ -4069,7 +4069,7 @@ public class GameController
         Message m = messagePetService(GopetCMD.SEND_GEM_INFo);
         m.putInt(item.itemId);
         m.putUTF(item.getTemp().getIconPath());
-        m.putUTF(item.getEquipName());
+        m.putUTF(item.getEquipName(player));
         m.putsbyte(item.lvl);
         m.cleanup();
         player.session.sendMessage(m);
@@ -4710,7 +4710,7 @@ public class GameController
 
     public void notEnoughItem(Item itemSelect, int count)
     {
-        player.redDialog(player.Language.NotEnoughItemWithCount, itemSelect.Template.name, count);
+        player.redDialog(player.Language.NotEnoughItemWithCount, itemSelect.Template.getName(player), count);
     }
 
 

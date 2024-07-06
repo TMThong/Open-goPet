@@ -912,7 +912,7 @@ public partial class MenuController
 
                         case MENU_SELECT_GEM_UP_TIER:
                             {
-                                player.controller.selectGemUpTier(itemSelect.itemId, itemSelect.getTemp().getIconPath(), itemSelect.getEquipName(), 1, itemSelect.lvl);
+                                player.controller.selectGemUpTier(itemSelect.itemId, itemSelect.getTemp().getIconPath(), itemSelect.getEquipName(player), 1, itemSelect.lvl);
                             }
                             break;
                         case MENU_MERGE_WING:
@@ -925,7 +925,7 @@ public partial class MenuController
                                     Item item = new Item(optionValue[0]);
                                     item.count = 1;
                                     player.addItemToInventory(item);
-                                    player.okDialog(string.Format(player.Language.ChangeItemOK, item.getTemp().getName()));
+                                    player.okDialog(string.Format(player.Language.ChangeItemOK, item.getTemp().getName(player)));
                                 }
                                 else
                                 {
@@ -935,12 +935,12 @@ public partial class MenuController
                             break;
                         case MENU_SELECT_MATERIAL2_TO_ENCHANT_TATOO:
                             {
-                                player.controller.sendItemSelectTattoMaterialToEnchant(itemSelect.itemId, itemSelect.Template.iconPath, itemSelect.Template.name);
+                                player.controller.sendItemSelectTattoMaterialToEnchant(itemSelect.itemId, itemSelect.Template.iconPath, itemSelect.Template.getName(player));
                                 break;
                             }
                         case MENU_SELECT_MATERIAL1_TO_ENCHANT_TATOO:
                             {
-                                player.controller.sendItemSelectTattoMaterialToEnchant(itemSelect.itemId, itemSelect.Template.iconPath, itemSelect.Template.name);
+                                player.controller.sendItemSelectTattoMaterialToEnchant(itemSelect.itemId, itemSelect.Template.iconPath, itemSelect.Template.getName(player));
                                 break;
                             }
                         case MENU_SELECT_GEM_TO_INLAY:
@@ -977,8 +977,8 @@ public partial class MenuController
                                     playerOnline.playerData.save();
 
                                     player.addItemToInventory(item, inventory);
-                                    player.okDialog($"Bạn đã lấy thành công {item.Template.name}");
-                                    playerOnline.redDialog($"Bạn đã bị lấy mất {item.Template.name}");
+                                    player.okDialog($"Bạn đã lấy thành công {item.Template.getName(player)}");
+                                    playerOnline.redDialog($"Bạn đã bị lấy mất {item.Template.getName(player)}");
                                 }
                                 else
                                 {
@@ -1013,8 +1013,8 @@ public partial class MenuController
                                     }
 
                                     playerOnline.addItemToInventory(item, inventory);
-                                    player.okDialog($"Bạn đã đưa thành công {item.Template.name}");
-                                    playerOnline.okDialog($"Bạn đã nhận được {item.Template.name}");
+                                    player.okDialog($"Bạn đã đưa thành công {item.Template.getName(player)}");
+                                    playerOnline.okDialog($"Bạn đã nhận được {item.Template.getName(player)}");
                                     playerOnline.playerData.save();
                                 }
                                 else
@@ -1042,7 +1042,7 @@ public partial class MenuController
                                                 if (player.controller.checkCountItem(itemSelect, enchantWingData.NumItemMaterial))
                                                 {
                                                     player.controller.objectPerformed[OBJKEY_ID_MATERIAL_ENCHANT_WING] = itemSelect.itemTemplateId;
-                                                    showYNDialog(DIALOG_ASK_ENCHANT_WING, string.Format(player.Language.AskDoYouWantEnchantWing, wingItem.getEquipName(), wingItem.lvl + 1, PAYMENT_DISPLAY[typePayment], enchantWingData.Percent, enchantWingData.NumDropLevelWing), player);
+                                                    showYNDialog(DIALOG_ASK_ENCHANT_WING, string.Format(player.Language.AskDoYouWantEnchantWing, wingItem.getEquipName(player), wingItem.lvl + 1, PAYMENT_DISPLAY[typePayment], enchantWingData.Percent, enchantWingData.NumDropLevelWing), player);
                                                 }
                                                 else
                                                 {
@@ -1066,7 +1066,7 @@ public partial class MenuController
                 if (index >= 0 && listItemEquip.Count > index)
                 {
                     Item itemSelect = listItemEquip.get(index);
-                    player.controller.selectMaterialEnchant(itemSelect.itemId, itemSelect.getTemp().getIconPath(), itemSelect.getEquipName(), int.MaxValue);
+                    player.controller.selectMaterialEnchant(itemSelect.itemId, itemSelect.getTemp().getIconPath(), itemSelect.getEquipName(player), int.MaxValue);
                 }
                 break;
 
@@ -1173,7 +1173,7 @@ public partial class MenuController
                                 if (itemSelect.Template.itemOptionValue.Length == 2)
                                 {
                                     ItemTemplate itemTemplate = GopetManager.itemTemplate[itemSelect.Template.itemOptionValue[0]];
-                                    player.okDialog($"{itemTemplate.name} {itemTemplate.description} {itemTemplate.getAtk()} {itemTemplate.getDef()} {itemTemplate.getHp()} {itemTemplate.getMp()}");
+                                    player.okDialog($"{itemTemplate.getName(player)} {itemTemplate.getDescription(player)} {itemTemplate.getAtk()} {itemTemplate.getDef()} {itemTemplate.getHp()} {itemTemplate.getMp()}");
                                 }
                                 else
                                 {

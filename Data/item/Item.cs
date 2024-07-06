@@ -263,9 +263,9 @@ namespace Gopet.Data.GopetItem
 
             if (expire > 0)
             {
-                return getTemp().getDescription() + " (HSD: " + Utilities.GetFormatNumber(expire) + " )";
+                return getTemp().getDescription(player) + " (HSD: " + Utilities.GetFormatNumber(expire) + " )";
             }
-            return getTemp().getDescription();
+            return getTemp().getDescription(player);
         }
 
         public int getDef()
@@ -364,20 +364,20 @@ namespace Gopet.Data.GopetItem
             return arrayList;
         }
 
-        public string getName()
+        public string getName(Player player)
         {
             if (getTemp().isStackable)
             {
-                return getTemp().getName() + " x" + count + (canTrade ? "" : " (Khóa)");
+                return getTemp().getName(player) + " x" + count + (canTrade ? "" : " (Khóa)");
             }
             if (Template.type == GopetManager.WING_INVENTORY)
             {
-                return getTemp().getName() + " cấp " + lvl + (canTrade ? "" : " (Khóa)");
+                return getTemp().getName(player) + " cấp " + lvl + (canTrade ? "" : " (Khóa)");
             }
-            return getTemp().getName() + (canTrade ? "" : " (Khóa)");
+            return getTemp().getName(player) + (canTrade ? "" : " (Khóa)");
         }
 
-        public string getEquipName()
+        public string getEquipName(Player player)
         {
             JArrayList<string> infoStrings = new();
             if (getAtk() > 0)
@@ -447,7 +447,7 @@ namespace Gopet.Data.GopetItem
                     }
                 }
             }
-            return getName() + "  " + getTemp().description + " " + Utilities.Format("up: %s ", lvl) + string.Join(" ", infoStrings) + (gemInfo == null ? "" : " " + gemInfo.getElementIcon());
+            return getName(player) + "  " + getTemp().getDescription(player) + " " + Utilities.Format("up: %s ", lvl) + string.Join(" ", infoStrings) + (gemInfo == null ? "" : " " + gemInfo.getElementIcon());
         }
 
         public void updateGemOption()

@@ -447,7 +447,7 @@ public partial class MenuController
         TradeGiftTemplate tradeGift = Utilities.RandomArray(GopetManager.TradeGift[type]);
         var it = new Item(tradeGift.ItemTemplateId, tradeGift.Count);
         player.addItemToInventory(it);
-        player.okDialog($"Chúc mừng bạn nhận được: {it.Template.name} x{tradeGift.Count}");
+        player.okDialog($"{player.Language.TradeOKMessage} {it.Template.getName(player)} x{tradeGift.Count}");
     }
 
     public static JArrayList<int> typeSelectItemMaterial(int menuId, Player player)
@@ -808,10 +808,10 @@ public partial class MenuController
         foreach (Item item in items)
         {
             ItemTemplate itemTemplate = item.getTemp();
-            MenuItemInfo menuItemInfo = new MenuItemInfo(typeInventory == GopetManager.EQUIP_PET_INVENTORY ? item.getEquipName() : item.getName(), item.getDescription(player), "", true);
+            MenuItemInfo menuItemInfo = new MenuItemInfo(typeInventory == GopetManager.EQUIP_PET_INVENTORY ? item.getEquipName(player) : item.getName(player), item.getDescription(player), "", true);
             menuItemInfo.setImgPath(itemTemplate.getIconPath());
             menuItemInfo.setShowDialog(true);
-            menuItemInfo.setDialogText(string.Format(player.Language.DoWantSelectIt, itemTemplate.getName()));
+            menuItemInfo.setDialogText(string.Format(player.Language.DoWantSelectIt, itemTemplate.getName(player)));
             menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
             menuItemInfo.setCloseScreenAfterClick(true);
             menuItemInfo.setHasId(true);

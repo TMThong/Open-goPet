@@ -222,17 +222,17 @@ public class ShopTemplateItem
 
         if (itemTemplate.getType() == GopetManager.PET_EQUIP_ARMOUR || itemTemplate.getType() == GopetManager.PET_EQUIP_GLOVE || itemTemplate.getType() == GopetManager.PET_EQUIP_HAT || itemTemplate.getType() == GopetManager.PET_EQUIP_SHOE || itemTemplate.getType() == GopetManager.PET_EQUIP_WEAPON)
         {
-            return itemTemplate.getDescription() + Utilities.Format("( %s ,  %s,  %s ,  %s )", itemTemplate.getAtk(), itemTemplate.getDef(), itemTemplate.getHp(), itemTemplate.getMp());
+            return itemTemplate.getDescription(player) + Utilities.Format("( %s ,  %s,  %s ,  %s )", itemTemplate.getAtk(), itemTemplate.getDef(), itemTemplate.getHp(), itemTemplate.getMp());
         }
 
         if (itemTemplate.getType() == GopetManager.SKIN_ITEM)
         {
             return Utilities.Format("+%s  +%s +%s  +%s ", itemTemplate.getAtk(), itemTemplate.getDef(), itemTemplate.getHp(), itemTemplate.getMp());
         }
-        return itemTemplate.getDescription();
+        return itemTemplate.getDescription(player);
     }
 
-    public String getName()
+    public String getName(Player player)
     {
         if (isSpceial)
         {
@@ -247,18 +247,18 @@ public class ShopTemplateItem
 
         if (itemTemplate.getType() == GopetManager.PET_EQUIP_ARMOUR || itemTemplate.getType() == GopetManager.PET_EQUIP_GLOVE || itemTemplate.getType() == GopetManager.PET_EQUIP_HAT || itemTemplate.getType() == GopetManager.PET_EQUIP_SHOE || itemTemplate.getType() == GopetManager.PET_EQUIP_WEAPON)
         {
-            return itemTemplate.getName() + Utilities.Format("(Yêu cầu   %s (str) ,  %s (agi) ,  %s (int))", itemTemplate.getRequireStr(), itemTemplate.getRequireAgi(), itemTemplate.getRequireInt());
+            return itemTemplate.getName(player) + Utilities.Format("(Yêu cầu   %s (str) ,  %s (agi) ,  %s (int))", itemTemplate.getRequireStr(), itemTemplate.getRequireAgi(), itemTemplate.getRequireInt());
         }
 
         if (count > 1 && shopId != MenuController.SHOP_CLAN)
         {
-            return itemTemplate.getName() + "  x" + count;
+            return itemTemplate.getName(player) + "  x" + count;
         }
         else if (count > 1 && shopId == MenuController.SHOP_CLAN)
         {
-            return itemTemplate.getName() + " còn x" + (count - perCount);
+            return itemTemplate.getName(player) + " còn x" + (count - perCount);
         }
-        return itemTemplate.getName();
+        return itemTemplate.getName(player);
     }
 
     public void execute(Player player)

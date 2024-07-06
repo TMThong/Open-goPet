@@ -5,23 +5,23 @@ namespace Gopet.Data.GopetItem
 {
     public class ItemTemplate
     {
-        public int itemId {  get; private set; }
+        public int itemId { get; private set; }
         public string name { get; private set; }
         public string description { get; private set; }
         public int requireStr { get; private set; }
         public int requireAgi { get; private set; }
         public int requireInt { get; private set; }
         public int type { get; private set; }
-       
+
         public int[] itemOption { get; private set; } = new int[0];
-       
+
         public int[] itemOptionValue { get; private set; } = new int[0];
-       
+
         public int[] hpRange { get; private set; }
-      
+
         public int[] mpRange { get; private set; }
         public int[] atkRange { get; private set; }
-       
+
         public int[] defRange { get; private set; }
         public bool isStackable { get; private set; }
         public string frameImgPath { get; private set; }
@@ -39,23 +39,23 @@ namespace Gopet.Data.GopetItem
             this.iconId = iconId;
         }
 
-        
 
- 
+
+
 
         public int getItemId()
         {
             return itemId;
         }
 
-        public string getName()
+        public string getName(Player player)
         {
-            return name;
+            return player.Language.ItemLanguage[itemId];
         }
 
-        public string getDescription()
+        public string getDescription(Player player)
         {
-            return description;
+            return player.Language.ItemDescLanguage[itemId];
         }
 
 
@@ -135,7 +135,7 @@ namespace Gopet.Data.GopetItem
 
 
 
-        public string getNameViaType()
+        public string getNameViaType(Player player)
         {
             switch (type)
             {
@@ -146,11 +146,11 @@ namespace Gopet.Data.GopetItem
                 case GopetManager.PET_EQUIP_HAT:
                 //return Utilities.Format("%s chỉ số (%s(atk) %s(def) %s(hp) %s(mp)) Yêu cầu (%s(str) %s(int) %s(agi))", name, atk, def, hp, mp, requireStr, requireInt, requireAgi);
                 default:
-                    return name;
+                    return getName(player);
             }
         }
 
-        public string getDescriptionViaType()
+        public string getDescriptionViaType(Player player)
         {
             switch (type)
             {
@@ -166,7 +166,7 @@ namespace Gopet.Data.GopetItem
                                 return Utilities.Format("Dùng %s mảnh sẽ đổi được pet %s", count, petTemplate.name);
                             }
                         }
-                        return description;
+                        return getDescription(player);
                     }
                 case GopetManager.ITEM_PART_ITEM:
                     {
@@ -177,13 +177,13 @@ namespace Gopet.Data.GopetItem
                             ItemTemplate itemTemplate = GopetManager.itemTemplate.get(itemidTemp);
                             if (itemTemplate != null)
                             {
-                                return Utilities.Format("Dùng %s mảnh sẽ đổi được %s", count, itemTemplate.getName());
+                                return Utilities.Format("Dùng %s mảnh sẽ đổi được %s", count, itemTemplate.getName(player));
                             }
                         }
-                        return description;
+                        return getDescription(player);
                     }
                 default:
-                    return description;
+                    return getDescription(player);
             }
         }
 
@@ -194,7 +194,7 @@ namespace Gopet.Data.GopetItem
 
             if (range.Length == 0) return string.Empty;
 
-            if (range.Length == 1) return range[0].ToString() + " ("+icon+") ";
+            if (range.Length == 1) return range[0].ToString() + " (" + icon + ") ";
 
             return string.Format("[{0} ({2}) -{1} ({2}) ]", range[0], range[1], icon);
         }

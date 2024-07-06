@@ -478,5 +478,6 @@ namespace Gopet.Language
         public string GymOptionStr { get; set; } = "sức mạnh (str)";
         public string GymOptionAgi { get; set; } = "tốc độ (agi)";
         public string GymOptionInt { get; set; } = "thông minh (int)";
+        public string TradeOKMessage { get; set; } = "Chúc mừng bạn nhận được:";
     }
 }
