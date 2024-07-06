@@ -304,7 +304,7 @@ public partial class MenuController
                                     Item item = new Item(itemTemplateId);
                                     item.count = count;
                                     player.addItemToInventory(item);
-                                    player.okDialog(item.getName());
+                                    player.okDialog(item.getName(player));
                                 }
                                 else
                                 {
@@ -317,7 +317,7 @@ public partial class MenuController
                                             player.addItemToInventory(item);
 
                                         }
-                                        player.okDialog(itemTemplate.getName() + " x" + count);
+                                        player.okDialog(itemTemplate.getName(player) + " x" + count);
                                     }
                                     else
                                     {

@@ -103,7 +103,7 @@ public partial class MenuController
                                                 {
                                                     wingItem.lvl++;
                                                     player.getPet()?.applyInfo(player);
-                                                    player.okDialog(string.Format(player.Language.EnchantWingOK, wingItem.getName(), wingItem.lvl));
+                                                    player.okDialog(string.Format(player.Language.EnchantWingOK, wingItem.getName(player), wingItem.lvl));
                                                 }
                                                 else
                                                 {

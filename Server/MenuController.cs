@@ -535,7 +535,7 @@ public partial class MenuController
             ms.putsbyte(GopetCMD.NPC_OPTION);
             ms.putInt(npcId);
             int[] optionId = npcTemplate.getOptionId();
-            String[] optionName = npcTemplate.getOptionName();
+            String[] optionName = npcTemplate.getOptionName(player);
             int LengthOP = optionName.Length;
             JArrayList<TaskTemplate> taskTemplates = player.controller.getTaskCalculator().getTaskTemplate(npcId);
             if (taskTemplates.Count > 0)
@@ -624,7 +624,7 @@ public partial class MenuController
         foreach (ShopTemplateItem shopTemplateItem in shopTemplate.getShopTemplateItems())
         {
             ItemTemplate itemTemplate = shopTemplateItem.getItemTemplate();
-            MenuItemInfo menuItemInfo = new MenuItemInfo(shopTemplateItem.getName(), shopTemplateItem.getDesc(player), shopTemplateItem.isSpceial ? "npcs/fone2.png" : shopTemplateItem.getIconPath(), true);
+            MenuItemInfo menuItemInfo = new MenuItemInfo(shopTemplateItem.getName(player), shopTemplateItem.getDesc(player), shopTemplateItem.isSpceial ? "npcs/fone2.png" : shopTemplateItem.getIconPath(), true);
             MenuItemInfo.PaymentOption[] paymentOptions = new MenuItemInfo.PaymentOption[shopTemplateItem.getMoneyType().Length];
             for (int i = 0; i < shopTemplateItem.getMoneyType().Length; i++)
             {

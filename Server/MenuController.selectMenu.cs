@@ -75,7 +75,7 @@ public partial class MenuController
                                         p.applyInfo(player);
                                     }
                                     player.okDialog(player.Language.ManipulateOK);
-                                    HistoryManager.addHistory(new History(player).setLog("Tháo cải trang " + it.getName()).setObj(it));
+                                    HistoryManager.addHistory(new History(player).setLog("Tháo cải trang " + it.getName(player)).setObj(it));
                                 }
                                 else
                                 {
@@ -690,7 +690,7 @@ public partial class MenuController
                                         item.expire = Utilities.CurrentTimeMillis + item.getTemp().getExpire();
                                     }
                                     player.addItemToInventory(item);
-                                    player.okDialog(string.Format(player.Language.YouBuyItemOK, item.getTemp().getName()));
+                                    player.okDialog(string.Format(player.Language.YouBuyItemOK, item.getTemp().getName(player)));
                                 }
                                 else
                                 {
@@ -813,20 +813,20 @@ public partial class MenuController
                     switch (menuId)
                     {
                         case MENU_SELECT_ENCHANT_MATERIAL1:
-                            player.controller.selectMaterialEnchant(itemSelect.getTemp().getItemId(), itemSelect.getTemp().getIconPath(), itemSelect.getTemp().getName(), 1);
+                            player.controller.selectMaterialEnchant(itemSelect.getTemp().getItemId(), itemSelect.getTemp().getIconPath(), itemSelect.getTemp().getName(player), 1);
                             break;
                         case MENU_SELECT_ENCHANT_MATERIAL2:
-                            player.controller.selectMaterialEnchant(itemSelect.getTemp().getItemId(), itemSelect.getTemp().getIconPath(), itemSelect.getTemp().getName(), 2);
+                            player.controller.selectMaterialEnchant(itemSelect.getTemp().getItemId(), itemSelect.getTemp().getIconPath(), itemSelect.getTemp().getName(player), 2);
                             break;
                         case MENU_SELECT_GEM_ENCHANT_MATERIAL1:
                             {
-                                player.controller.selectMaterialGemEnchant(itemSelect.getTemp().getItemId(), itemSelect.getTemp().getIconPath(), itemSelect.getTemp().getName(), 1);
+                                player.controller.selectMaterialGemEnchant(itemSelect.getTemp().getItemId(), itemSelect.getTemp().getIconPath(), itemSelect.getTemp().getName(player), 1);
                                 player.controller.selectGemM1 = true;
                             }
                             break;
                         case MENU_SELECT_GEM_ENCHANT_MATERIAL2:
                             {
-                                player.controller.selectMaterialGemEnchant(itemSelect.getTemp().getItemId(), itemSelect.getTemp().getIconPath(), itemSelect.getTemp().getName(), 12);
+                                player.controller.selectMaterialGemEnchant(itemSelect.getTemp().getItemId(), itemSelect.getTemp().getIconPath(), itemSelect.getTemp().getName(player), 12);
                                 player.controller.selectGemM1 = false;
                             }
                             break;

@@ -28,7 +28,7 @@ namespace Gopet.Data.Map
                     item.wasSell = true;
                 }
                 addKioskItem(new SellItem(item, price, GopetManager.HOUR_UPLOAD_ITEM), player);
-                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Treo vật phẩm %s với giá %s ngọc", item.getTemp().getName(), Utilities.FormatNumber(price))).setObj(item));
+                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Treo vật phẩm %s với giá %s ngọc", item.getTemp().getName(player), Utilities.FormatNumber(price))).setObj(item));
             }
             else
             {

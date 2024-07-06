@@ -312,7 +312,7 @@ public class Pet : GameObject, IBinaryObject<Pet>
             {
                 equip.remove(next);
                 it.petEuipId = -1;
-                player.Popup(Utilities.Format("Hệ thống tự gỡ vật phẩm do phiên bản trước có lỗi, vui lòng đeo %s lại", it.getTemp().getName()));
+                player.Popup(Utilities.Format("Hệ thống tự gỡ vật phẩm do phiên bản trước có lỗi, vui lòng đeo %s lại", it.getTemp().getName(player)));
                 continue;
             }
 
@@ -320,7 +320,7 @@ public class Pet : GameObject, IBinaryObject<Pet>
             {
                 equip.remove(next);
                 it.petEuipId = -1;
-                player.Popup(Utilities.Format("Pet của bạn đã tự tháo trang bị %s do pet cảm thấy khó chịu vì không đủ chỉ số", it.getTemp().getName()));
+                player.Popup(Utilities.Format("Pet của bạn đã tự tháo trang bị %s do pet cảm thấy khó chịu vì không đủ chỉ số", it.getTemp().getName(player)));
                 continue;
             }
 

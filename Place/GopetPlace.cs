@@ -276,7 +276,7 @@ public class GopetPlace : Place
                 {
                     ms.putUTF(CHAT_String);
                 }
-                ms.putUTF(npcTemplate.getName());
+                ms.putUTF(npcTemplate.getName(player));
                 ms.putsbyte(npcTemplate.getType());
             }
         }

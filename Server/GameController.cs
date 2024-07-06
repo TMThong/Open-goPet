@@ -2543,7 +2543,7 @@ public class GameController
                 message.putInt(itemId);
                 message.cleanup();
                 player.session.sendMessage(message);
-                HistoryManager.addHistory(new History(player).setLog("Hủy vật phẩm " + item.getTemp().getName()).setObj(item));
+                HistoryManager.addHistory(new History(player).setLog("Hủy vật phẩm " + item.getTemp().getName(player)).setObj(item));
             }
         }
     }
@@ -2666,8 +2666,8 @@ public class GameController
         {
             m.putInt(sellItem.itemId);
             m.putUTF(sellItem.getFrameImgPath());
-            m.putUTF(sellItem.getName());
-            m.putUTF(sellItem.getDescription());
+            m.putUTF(sellItem.getName(player));
+            m.putUTF(sellItem.getDescription(player));
             m.putInt(Utilities.round((sellItem.expireTime - Utilities.CurrentTimeMillis) / 1000l));
             if (sellItem.pet != null)
             {
@@ -2712,7 +2712,7 @@ public class GameController
                         player.addItemToInventory(sellItem.ItemSell);
                     }
                     player.okDialog(player.Language.CancelItemKiosk);
-                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Gỡ vật phẩm về túi thành công", sellItem.getName())).setObj(sellItem));
+                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Gỡ vật phẩm về túi thành công", sellItem.getName(player))).setObj(sellItem));
                     sellItem.hasRemoved = true;
                 }
             }
@@ -3047,7 +3047,7 @@ public class GameController
                 {
                     destStr = player.Language.IfEnchantFailItemWillDestroy;
                 }
-                MenuController.showYNDialog(MenuController.DIALOG_ENCHANT, string.Format(player.Language.AskEnchantItem, itemEuip.getTemp().getName(), isGem ? GopetManager.PERCENT_OF_ENCHANT_GEM[itemEuip.lvl] : GopetManager.DISPLAY_PERCENT_ENCHANT[itemEuip.lvl], materialCrystal.getTemp().getOptionValue()[0], GopetManager.PRICE_ENCHANT[itemEuip.lvl]).Replace('/', '%') + dropStr + destStr, player);
+                MenuController.showYNDialog(MenuController.DIALOG_ENCHANT, string.Format(player.Language.AskEnchantItem, itemEuip.getTemp().getName(player), isGem ? GopetManager.PERCENT_OF_ENCHANT_GEM[itemEuip.lvl] : GopetManager.DISPLAY_PERCENT_ENCHANT[itemEuip.lvl], materialCrystal.getTemp().getOptionValue()[0], GopetManager.PRICE_ENCHANT[itemEuip.lvl]).Replace('/', '%') + dropStr + destStr, player);
             }
         }
         else
@@ -3093,11 +3093,11 @@ public class GameController
         if (isGem)
         {
             MenuController.showYNDialog(MenuController.DIALOG_ASK_KEEP_GEM, string.Format(player.Language.KeepGem, GopetManager.PRICE_KEEP_GEM), player);
-            objectPerformed.put(MenuController.OBJKEY_ASK_UP_TIER_GEM_STR, string.Format(player.Language.DoYouWantUpTierGem, itemEuipActive.getName(), GopetManager.PRICE_UP_TIER_ITEM));
+            objectPerformed.put(MenuController.OBJKEY_ASK_UP_TIER_GEM_STR, string.Format(player.Language.DoYouWantUpTierGem, itemEuipActive.getName(player), GopetManager.PRICE_UP_TIER_ITEM));
         }
         else
         {
-            MenuController.showYNDialog(MenuController.DIALOG_UP_TIER_ITEM, string.Format(player.Language.DoYouWantUpTierGem, itemEuipActive.getName(), GopetManager.PRICE_UP_TIER_ITEM), player);
+            MenuController.showYNDialog(MenuController.DIALOG_UP_TIER_ITEM, string.Format(player.Language.DoYouWantUpTierGem, itemEuipActive.getName(player), GopetManager.PRICE_UP_TIER_ITEM), player);
         }
     }
 
@@ -3194,7 +3194,7 @@ public class GameController
                                 {
                                     bool isActive = Utilities.nextInt(2) == 1;
                                     removeGem(isActive ? itemEuipActive.itemId : itemEuipPassive.itemId);
-                                    PlayerManager.showBanner(string.Format(player.Language.EnchantGemFailAndDestroy, player.playerData.name, (itemEuipActive.getTemp().getName())));
+                                    PlayerManager.showBanner(string.Format(player.Language.EnchantGemFailAndDestroy, player.playerData.name, (itemEuipActive.getTemp().getName(player))));
                                 }
                             }
                         }
@@ -3847,13 +3847,13 @@ public class GameController
                             {
                                 player.addItemToInventory(new Item(itemId));
                             }
-                            popups.add(new Popup(item.getName() + " x" + count));
+                            popups.add(new Popup(item.getName(player) + " x" + count));
                         }
                         else
                         {
                             item.count = count;
                             player.addItemToInventory(item);
-                            popups.add(new Popup(item.getName()));
+                            popups.add(new Popup(item.getName(player)));
                         }
                     }
                     break;
@@ -3870,7 +3870,7 @@ public class GameController
                                 Item item = new Item(itemId);
                                 item.count = giftInfo[3];
                                 player.addItemToInventory(item);
-                                popups.add(new Popup(item.getName()));
+                                popups.add(new Popup(item.getName(player)));
                                 flagDrop = true;
                             }
                         }
@@ -3936,13 +3936,13 @@ public class GameController
                                     {
                                         player.addItemToInventory(new Item(itemId));
                                     }
-                                    popups.add(new Popup(item.getName() + " x" + count));
+                                    popups.add(new Popup(item.getName(player) + " x" + count));
                                 }
                                 else
                                 {
                                     item.count = count;
                                     player.addItemToInventory(item);
-                                    popups.add(new Popup(item.getName()));
+                                    popups.add(new Popup(item.getName(player)));
                                 }
                             }
                         }
@@ -3960,7 +3960,7 @@ public class GameController
                             item.hp = Item.GetMaxOption(item.Template.hpRange);
                             item.mp = Item.GetMaxOption(item.Template.mpRange);
                             player.addItemToInventory(item);
-                            popups.add(new Popup(item.getName()));
+                            popups.add(new Popup(item.getName(player)));
                         }
                     }
                     break;
@@ -4102,7 +4102,7 @@ public class GameController
                     itemGem.lvl = (gem.lvl);
                     itemGem.option = (gem.option);
                     itemGem.optionValue = (gem.optionValue);
-                    itemGem.name = (gem.getTemp().getName());
+                    itemGem.name = (gem.getTemp().getName(player));
                     equipItem.gemInfo = itemGem;
                     equipItem.updateGemOption();
                     Pet p = player.getPet();
@@ -4682,7 +4682,7 @@ public class GameController
             if (item.petEuipId == 0)
             {
                 player.playerData.removeItem(GopetManager.EQUIP_PET_INVENTORY, item);
-                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Xóa vật phẩm bug (%s)", item.getName())).setObj(item));
+                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Xóa vật phẩm bug (%s)", item.getName(player))).setObj(item));
                 num++;
             }
         }

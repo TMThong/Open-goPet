@@ -158,13 +158,13 @@ public class TaskCalculator
                     taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_ATTACK_BOSS, GopetManager.boss.get(taskI[2]).name, task[i], taskI[1]));
                     break;
                 case REQUEST_ITEM:
-                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_ITEM, GopetManager.itemTemplate.get(taskI[2]).getName(), task[i], taskI[1]));
+                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_ITEM, GopetManager.itemTemplate.get(taskI[2]).getName(player), task[i], taskI[1]));
                     break;
                 case REQUEST_CHALLENGE_PLACE:
                     taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_CHALLENGE_PLACE, task[i], taskI[1]));
                     break;
                 case REQUEST_ITEM_AND_PLUS:
-                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_ITEM_AND_PLUS, GopetManager.itemTemplate.get(taskI[2]).getName(), task[i], taskI[1]));
+                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_ITEM_AND_PLUS, GopetManager.itemTemplate.get(taskI[2]).getName(player), task[i], taskI[1]));
                     break;
                 case REQUEST_UP_TIER_PET:
                     taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_UP_TIER_PET, task[i], taskI[1]));
@@ -173,7 +173,7 @@ public class TaskCalculator
                     taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_PLUS_GYM_POINT, task[i], taskI[1]));
                     break;
                 case REQUEST_MEET_NPC:
-                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_MEET_NPC, GopetManager.npcTemplate[taskI[2]].name, task[i], taskI[1]));
+                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_MEET_NPC, GopetManager.npcTemplate[taskI[2]].getName(player), task[i], taskI[1]));
                     break;
                 case REUQEST_BET_PLAYER_WIN:
                     taskText.Add(string.Format(player.Language.TASK_REUQEST_BET_PLAYER_WIN, task[i], taskI[1]));

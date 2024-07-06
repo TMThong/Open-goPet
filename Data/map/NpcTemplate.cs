@@ -27,15 +27,6 @@ namespace Gopet.Data.Map
             this.type = type;
         }
 
-        public void setName(string name)
-        {
-            this.name = name;
-        }
-
-        public void setOptionName(string[] optionName)
-        {
-            this.optionName = optionName;
-        }
 
         public void setChat(string[] chat)
         {
@@ -77,14 +68,19 @@ namespace Gopet.Data.Map
             return type;
         }
 
-        public string getName()
+        public string getName(Player player)
         {
-            return name;
+            return player.Language.NpcNameLanguage[this.npcId];
         }
 
-        public string[] getOptionName()
+        public string[] getOptionName(Player player)
         {
-            return optionName;
+            string[] strings = new string[optionId.Length];
+            for (int i = 0; i < strings.Length; i++)
+            {
+                strings[i] = player.Language.NpcOptionLanguage[optionId[i]];
+            }
+            return strings;
         }
 
         public string[] getChat()

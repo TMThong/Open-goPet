@@ -743,7 +743,7 @@ namespace Gopet.Battle
                                     Item item = new Item(next.getItemTemplateId());
                                     item.count = next.getCount();
                                     activePlayer.addItemToInventory(item);
-                                    PetBattleText petBattleText = new PetBattleText(item.getTemp().getName() + " x" + item.count);
+                                    PetBattleText petBattleText = new PetBattleText(item.getTemp().getName(activePlayer) + " x" + item.count);
                                     petBattleTexts.add(petBattleText);
                                 }
                             }
@@ -1492,7 +1492,7 @@ namespace Gopet.Battle
                     player.controller.subCountItem(itemSelect, 1, GopetManager.NORMAL_INVENTORY);
                     if (!petAttackMob)
                     {
-                        string str = Utilities.Format("Người chơi %s đã sử dụng %s", player.playerData.name, itemSelect.getTemp().getName());
+                        string str = Utilities.Format("Người chơi %s đã sử dụng %s", player.playerData.name, itemSelect.getTemp().getName(player));
                         Player playerNeedSend = player == activePlayer ? passivePlayer : activePlayer;
                         playerNeedSend.Popup(str);
                     }

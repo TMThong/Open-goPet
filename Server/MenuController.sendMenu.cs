@@ -159,7 +159,7 @@ public partial class MenuController
 
                     foreach (ItemTemplate itemTemplate in GopetManager.NonAdminItemList)
                     {
-                        MenuItemInfo menuItemInfo = new MenuItemInfo(itemTemplate.getNameViaType() + "((chienluc)" + itemTemplate.getItemId() + ")", itemTemplate.getDescriptionViaType(), itemTemplate.getIconPath(), false);
+                        MenuItemInfo menuItemInfo = new MenuItemInfo(itemTemplate.getNameViaType(player) + "((chienluc)" + itemTemplate.getItemId() + ")", itemTemplate.getDescriptionViaType(player), itemTemplate.getIconPath(), false);
                         menuInfos.add(menuItemInfo);
                     }
 

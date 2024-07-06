@@ -43,13 +43,13 @@ namespace Gopet.Data.GopetItem
             hasSell = b;
         }
 
-        public string getName()
+        public string getName(Player player)
         {
             if (pet != null)
             {
                 return pet.getNameWithoutStar() + Utilities.Format(" (Id:%s)", itemId);
             }
-            return ItemSell.getTemp().getName() + Utilities.Format(" (Id:%s)", itemId);
+            return ItemSell.getTemp().getName(player) + Utilities.Format(" (Id:%s)", itemId);
         }
 
         public string getFrameImgPath()
@@ -61,13 +61,13 @@ namespace Gopet.Data.GopetItem
             return ItemSell.getTemp().getIconPath();
         }
 
-        public string getDescription()
+        public string getDescription(Player player)
         {
             if (pet != null)
             {
                 return pet.getPetTemplate().getDesc();
             }
-            return ItemSell.getTemp().getDescription();
+            return ItemSell.getTemp().getDescription(player);
         }
 
     }
