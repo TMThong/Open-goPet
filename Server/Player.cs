@@ -572,6 +572,11 @@ Thread.Sleep(1000);
         session.sendMessage(m);
     }
 
+    public void okDialog(String str, params object[] objects)
+    {
+         okDialog(string.Format(str, objects));
+    }
+
     public virtual void notEnoughHp()
     {
         Popup(Language.NotEnoughtHP);

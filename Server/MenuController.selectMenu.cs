@@ -687,13 +687,13 @@ public partial class MenuController
                                         item.expire = Utilities.CurrentTimeMillis + item.getTemp().getExpire();
                                     }
                                     player.addItemToInventory(item);
-                                    player.okDialog(Utilities.Format("Bạn đã mua thành công %s", item.getTemp().getName()));
+                                    player.okDialog(string.Format(player.Language.YouBuyItemOK, item.getTemp().getName()));
                                 }
                                 else
                                 {
                                     if (!player.controller.objectPerformed.ContainsKey(OBJKEY_NAME_PET_WANT))
                                     {
-                                        player.controller.showInputDialog(INPUT_TYPE_NAME_PET_WHEN_BUY_PET, "Nhập tên pet", new string[] { " Tên:" });
+                                        player.controller.showInputDialog(INPUT_TYPE_NAME_PET_WHEN_BUY_PET, player.Language.InputNamePetTitle, new string[] { player.Language.NameDesctription });
                                         player.controller.objectPerformed[OBJKEY_ID_MENU_BUY_PET_TO_NAME] = menuId;
                                         player.controller.objectPerformed[OBJKEY_INDEX_MENU_BUY_PET_TO_NAME] = index;
                                         player.controller.objectPerformed[OBJKEY_PAYMENT_INDEX_WANT_TO_NAME_PET] = paymentIndex;
@@ -702,7 +702,7 @@ public partial class MenuController
                                     Pet p = new Pet(shopTemplateItem.getPetId());
                                     p.name = player.controller.objectPerformed[OBJKEY_NAME_PET_WANT];
                                     player.playerData.addPet(p, player);
-                                    player.okDialog(Utilities.Format("Bạn đã mua thành công %s", p.getNameWithStar()));
+                                    player.okDialog(string.Format(player.Language.YouBuyItemOK, p.getNameWithStar()));
                                     player.controller.objectPerformed.Remove(OBJKEY_ID_MENU_BUY_PET_TO_NAME);
                                     player.controller.objectPerformed.Remove(OBJKEY_INDEX_MENU_BUY_PET_TO_NAME);
                                     player.controller.objectPerformed.Remove(OBJKEY_PAYMENT_INDEX_WANT_TO_NAME_PET);
@@ -834,7 +834,7 @@ public partial class MenuController
                                     int petTemplateId = itemSelect.getTemp().getOptionValue()[0];
                                     if (GopetManager.ListPetMustntUpTier.Contains(petTemplateId))
                                     {
-                                        player.redDialog("Không thể ghép mảnh trực tiếp pet đã tiến hóa");
+                                        player.redDialog(player.Language.CannotMergePetWasUpTier);
                                         return;
                                     }
                                     if (itemSelect.count >= itemSelect.getTemp().getOptionValue()[1])
@@ -843,16 +843,16 @@ public partial class MenuController
 
                                         Pet pet = new Pet(petTemplateId);
                                         player.playerData.addPet(pet, player);
-                                        player.okDialog(Utilities.Format("Chức mừng bạn ghép thành công %s", pet.getNameWithStar()));
+                                        player.okDialog(string.Format(player.Language.MergePartPetOK, pet.getNameWithStar()));
                                     }
                                     else
                                     {
-                                        player.redDialog(Utilities.Format("Bạn không đủ", itemSelect.getTemp().getOptionValue()[1]));
+                                        player.redDialog(player.Language.NotEnough);
                                     }
                                 }
                                 else
                                 {
-                                    player.redDialog("Lỗi mảnh pet!!!!");
+                                    player.redDialog(player.Language.ErrorPartPet);
                                 }
                             }
                             break;
@@ -867,11 +867,11 @@ public partial class MenuController
                                     if (pet.skill[skillIndex][1] < 10)
                                     {
                                         player.controller.objectPerformed.put(OBJKEY_ITEM_UP_SKILL, itemSelect);
-                                        showYNDialog(DIALOG_UP_SKILL, Utilities.Format("Bạn có chắc muốn nâng cấp kỹ năng %s lên cấp %s \n với tỉ lệ (%s/) + %s/ bằng %s/ không?", petSkill.name, pet.skill[skillIndex][1] + 1, GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]], itemSelect.getTemp().getOptionValue()[0], GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]] + itemSelect.getTemp().getOptionValue()[0]).Replace("/", "%"), player);
+                                        showYNDialog(DIALOG_UP_SKILL, string.Format(player.Language.AskDoYouWantUpgradeSkill, petSkill.name, pet.skill[skillIndex][1] + 1, GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]], itemSelect.getTemp().getOptionValue()[0], GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]] + itemSelect.getTemp().getOptionValue()[0]).Replace("/", "%"), player);
                                     }
                                     else
                                     {
-                                        player.redDialog("Kỹ năng đạt cấp tối đa rồi");
+                                        player.redDialog(player.Language.SkillIsMaxLevel);
                                     }
                                 }
                             }
@@ -922,11 +922,11 @@ public partial class MenuController
                                     Item item = new Item(optionValue[0]);
                                     item.count = 1;
                                     player.addItemToInventory(item);
-                                    player.okDialog(Utilities.Format("Đổi thành công\n %s", item.getTemp().getName()));
+                                    player.okDialog(string.Format(player.Language.ChangeItemOK, item.getTemp().getName()));
                                 }
                                 else
                                 {
-                                    player.redDialog(Utilities.Format("Bạn phải đủ %s mảnh mới đổi được", optionValue[1]));
+                                    player.redDialog(string.Format(player.Language.MergePartItemFail, optionValue[1]));
                                 }
                             }
                             break;
@@ -958,7 +958,7 @@ public partial class MenuController
                                         int count = player.controller.objectPerformed[OBJKEY_COUNT_ITEM_TO_GET_BY_ADMIN];
                                         if (count > item.count)
                                         {
-                                            player.redDialog("Sai số lượng");
+                                            player.redDialog(player.Language.WrongNumOfItem);
                                             return;
                                         }
                                         else
@@ -979,7 +979,7 @@ public partial class MenuController
                                 }
                                 else
                                 {
-                                    player.redDialog("Người chơi đã offline");
+                                    player.redDialog(player.Language.PlayerOffline);
                                 }
                                 break;
                             }
@@ -995,7 +995,7 @@ public partial class MenuController
                                         int count = player.controller.objectPerformed[OBJKEY_COUNT_ITEM_TO_GIVE_BY_ADMIN];
                                         if (count > item.count)
                                         {
-                                            player.redDialog("Sai số lượng");
+                                            player.redDialog(player.Language.WrongNumOfItem);
                                             return;
                                         }
                                         else
@@ -1016,7 +1016,7 @@ public partial class MenuController
                                 }
                                 else
                                 {
-                                    player.redDialog("Người chơi đã offline");
+                                    player.redDialog(player.Language.PlayerOffline);
                                 }
                                 break;
                             }
@@ -1039,7 +1039,7 @@ public partial class MenuController
                                                 if (player.controller.checkCountItem(itemSelect, enchantWingData.NumItemMaterial))
                                                 {
                                                     player.controller.objectPerformed[OBJKEY_ID_MATERIAL_ENCHANT_WING] = itemSelect.itemTemplateId;
-                                                    showYNDialog(DIALOG_ASK_ENCHANT_WING, $"Bạn có chắc muốn cường hóa {wingItem.getEquipName()} lên cấp {wingItem.lvl + 1} với giá {PAYMENT_DISPLAY[typePayment]} và tỷ lệ thành công là {enchantWingData.Percent}% không? Và khi thất bại sẽ giảm {enchantWingData.NumDropLevelWing} cấp !!!", player);
+                                                    showYNDialog(DIALOG_ASK_ENCHANT_WING, string.Format(player.Language.AskDoYouWantEnchantWing, wingItem.getEquipName(), wingItem.lvl + 1, PAYMENT_DISPLAY[typePayment], enchantWingData.Percent, enchantWingData.NumDropLevelWing), player);
                                                 }
                                                 else
                                                 {
@@ -1094,7 +1094,7 @@ public partial class MenuController
                                     buffExp.set_buffPercent(itemSelect.getTemp().getOptionValue()[0]);
                                 }
                                 player.playerData.buffExp.addTime(GopetManager.TIME_BUFF_EXP);
-                                player.okDialog(Utilities.Format("Bạn đang được buff %s/ kinh nghiệm trong %s phút!", buffExp.getPercent(), Utilities.round(buffExp.getBuffExpTime() / 1000 / 60)).Replace("/", "%"));
+                                player.okDialog(string.Format(player.Language.UseBuffItem, buffExp.getPercent(), Utilities.round(buffExp.getBuffExpTime() / 1000 / 60)).Replace("/", "%"));
                                 player.controller.showExp();
                                 break;
                             }
@@ -1126,7 +1126,7 @@ public partial class MenuController
 
                                         if (numUse >= itemSelect.Template.itemOptionValue[1])
                                         {
-                                            player.redDialog("Bạn đã sử dụng đạt tối đa ngày hôm nay");
+                                            player.redDialog(player.Language.UseEnergyFailByMax);
                                             return;
                                         }
                                         else
@@ -1135,7 +1135,7 @@ public partial class MenuController
                                             player.playerData.star += itemSelect.Template.itemOptionValue[0];
                                             player.controller.updateUserInfo();
                                             player.playerData.numUseEnergy[itemSelect.itemTemplateId] = numUse;
-                                            player.okDialog($"Sử dụng thành công và hiện tại bạn đang có {Utilities.FormatNumber(player.playerData.star)} năng lượng");
+                                            player.okDialog(player.Language.UseEnergyItemOK, Utilities.FormatNumber(player.playerData.star));
                                         }
                                     }
                                 }
@@ -1160,7 +1160,7 @@ public partial class MenuController
                                 }
                                 else
                                 {
-                                    player.redDialog("Vật phẩm lỗi");
+                                    player.redDialog(player.Language.ErrorItem);
                                 }
                                 return;
                             }
@@ -1174,7 +1174,7 @@ public partial class MenuController
                                 }
                                 else
                                 {
-                                    player.redDialog("Vật phẩm lỗi");
+                                    player.redDialog(player.Language.ErrorItem);
                                 }
                                 return;
                             }
@@ -1186,7 +1186,7 @@ public partial class MenuController
                         /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/
                         default:
                             {
-                                player.redDialog("Không thể sử dụng vật phẩm này");
+                                player.redDialog(player.Language.CannotUseThisItem);
                                 return;
                             }
                     }

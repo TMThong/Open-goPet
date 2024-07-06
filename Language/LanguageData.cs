@@ -380,5 +380,20 @@ namespace Gopet.Language
         public string UpgradeOK { get; set; } = "Nâng cấp thành công";
         public string NotEnoughClanSkillPoint { get; set; } = "Điểm kỹ năng bang hội không đủ";
         public string ClanSkillIsMaxLevel { get; set; } = "Kỹ năng đạt cấp cao nhất rồi";
+        public string YouBuyItemOK { get; set; } = "Bạn đã mua thành công {0}";
+        public string InputNamePetTitle { get; set; } = "Nhập tên pet";
+        public string NameDesctription { get; set; } = " Tên: ";
+        public string CannotMergePetWasUpTier { get; set; } = "Không thể ghép mảnh trực tiếp pet đã tiến hóa";
+        public string MergePartPetOK { get; set; } = "Chức mừng bạn ghép thành công {0}";
+        public string NotEnough { get; set; } = "Bạn không đủ";
+        public string ErrorPartPet { get; set; } = "Lỗi mảnh pet!!!!";
+        public string AskDoYouWantUpgradeSkill { get; set; } = "Bạn có chắc muốn nâng cấp kỹ năng {0} lên cấp {1} \n với tỉ lệ ({2}/) + {3}/ bằng {4}/ không?";
+        public string ChangeItemOK { get; set; } = "Đổi thành công {0}";
+        public string MergePartItemFail { get; set; } = "Bạn phải đủ {0} mảnh mới đổi được";
+        public string AskDoYouWantEnchantWing { get; set; } = "Bạn có chắc muốn cường hóa {0} lên cấp {1} với giá {2} và tỷ lệ thành công là {3}% không? Và khi thất bại sẽ giảm {4} cấp !!!";
+        public string UseBuffItem { get; set; } = "Bạn đang được buff {0}/ kinh nghiệm trong {1} phút!";
+        public string UseEnergyItemOK { get; set; } = "Sử dụng thành công và hiện tại bạn đang có {0} năng lượng";
+        public string UseEnergyFailByMax { get; set; } = "Bạn đã sử dụng đạt tối đa ngày hôm nay";
+        public string CannotUseThisItem { get; set; } = "Không thể sử dụng vật phẩm này";
     }
 }
