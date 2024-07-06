@@ -327,7 +327,7 @@ public partial class MenuController
                             }
                             else
                             {
-                                player.redDialog("Không có item với id = " + itemTemplateId);
+                                player.redDialog(player.Language.CannotFoundItemWithId + itemTemplateId);
                             }
                         }
                     }
@@ -347,7 +347,7 @@ public partial class MenuController
                             player.mineGold(value);
                             long valueCoin = value * GopetManager.PERCENT_EXCHANGE_GOLD_TO_COIN;
                             player.addCoin(valueCoin);
-                            player.okDialog(string.Format(player.Language.ChangeGoldToCoinMessageOK, Utilities.FormatNumber(valueCoin)));
+                            player.okDialog(string.Format(player.Language.ChangeGoldToCoinMessageOK + "(ngoc)", Utilities.FormatNumber(valueCoin)));
                         }
                         else
                         {
@@ -498,7 +498,7 @@ public partial class MenuController
                                 }
                                 else
                                 {
-                                    player.redDialog("Sai tên tài khoản");
+                                    player.redDialog(player.Language.WrongUsername);
                                 }
                             }
 

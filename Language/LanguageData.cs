@@ -249,7 +249,7 @@ namespace Gopet.Language
         public string Correct { get; set; } = "Chính xác";
         public string Incorrect { get; set; } = "Không chính xác";
         public string Pricing { get; set; } = "Định giá";
-        public string ChangeGoldToCoinMessageOK { get; set; } = "Chúc mừng bạn đổi thành công {0} (ngoc)";
+        public string ChangeGoldToCoinMessageOK { get; set; } = "Chúc mừng bạn đổi thành công {0} ";
         public string ClanSetSloganLaw { get; set; } = "Khẩu hiệu không quá 500 từ";
         public string YouEnoughPermissionOnlyLeader { get; set; } = "Bạn không có quyền này, chỉ có bang chủ mới thao tác được.";
         public string CreateClanOK { get; set; } = "Tạo bang {0} thành công";
@@ -347,5 +347,27 @@ namespace Gopet.Language
         public string ChangeSloganClan { get; set; } = "Thay đổi khẩu hiệu bang hội";
         public string ClanMustReachLevel15 { get; set; } = "Bang hội chưa đạt cấp 15 trở lên";
         public string FeatureIsNotFound { get; set; } = "Tính năng đang được xây dựng";
+        public string CannotFoundItemWithId { get; set; } = "Không có item với id = ";
+        public string WrongUsername { get; set; } = "Sai tên tài khoản";
+        public string CurrentYouNotHaveAnySkin { get; set; } = "Hiện tại bạn không có mang bất kỳ trang phục nào!";
+        public string YouAreHaveJournalism { get; set; } = "Bạn đã báo danh rồi!";
+        public string EventJournalismOK { get; set; } = "Bạn đã báo danh thành công. Nếu rời khỏi Đấu trường xem như bạn bỏ cuộc!";
+        public string JournalismTimeOut { get; set; } = "Hết thời gian báo danh mời bạn quay lại sau";
+        public string AskSelectTattoEnchantLaw { get; set; } = "Bạn có chắc muốn cường hóa {0} lên cấp {1} với tỉ lệ {2}% thành công với giá {3} không? Thất bại sẽ rớt {4} cấp !!!";
+        public string InputExchangeGoldToCoinTitle { get; set; } = "Tỉ lệ 1 (vang) lấy {0} (ngoc)";
+        public string CongratulateGetNewPet { get; set; } = "Chúc mừng bạn nhận được {0}";
+        public string CongratulateGetNewTask { get; set; } = "Chúc mừng bạn đã nhận thành công nhiệm vụ";
+        public string ChangeGoldOK { get; set; } = "Đổi thành công {0} (vang)";
+        public string BugGold { get; set; } = "Bug gold";
+        public string UpdateOK { get; set; } = "Cập nhật thành công";
+        public string CancelOK { get; set; } = "Hủy thành công!";
+        public string YouAreNotYetEligible { get; set; } = "Bạn chưa đủ điều kiện";
+        public string YouCannotCancelTask { get; set; } = "Bạn không thể hủy nhiệm vụ này!!!";
+        public string GetPetFreeOK { get; set; } = "Nhận pet {0} thành công vào túi pet để xem";
+        public string YouHaveGotPetFreeBefore { get; set; } = "Trước đó bạn đã nhận rồi";
+        public string PetLearnDuplicateSkill { get; set; } = "Kỹ năng này học rồi";
+        public string LearnSkillPetOK { get; set; } = "Học kỹ năng thành công";
+        public string SkillPetNotFound { get; set; } = "Không có kỹ năng này";
+        public string LearnSkillPetLaw { get; set; } = "Pet của bạn phải đạt mốc lvl 3, 5, 10 để học skill 1 2 3 nhé";
     }
 }

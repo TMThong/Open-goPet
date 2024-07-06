@@ -53,7 +53,7 @@ public partial class MenuController
                                     player.playerData.petSelected = null;
                                     player.playerData.pets.Add(p);
                                     player.controller.unfollowPet(p);
-                                    player.okDialog("Thao tác thành công");
+                                    player.okDialog(player.Language.ManipulateOK);
                                     HistoryManager.addHistory(new History(player).setLog("Tháo pet"));
                                 }
                                 else
@@ -74,12 +74,12 @@ public partial class MenuController
                                     {
                                         p.applyInfo(player);
                                     }
-                                    player.okDialog("Thao tác thành công");
+                                    player.okDialog(player.Language.ManipulateOK);
                                     HistoryManager.addHistory(new History(player).setLog("Tháo cải trang " + it.getName()).setObj(it));
                                 }
                                 else
                                 {
-                                    player.redDialog("Hiện tại bạn không có mang bất kỳ trang phục nào!");
+                                    player.redDialog(player.Language.CurrentYouNotHaveAnySkin);
                                 }
                             }
                             break;
@@ -93,7 +93,7 @@ public partial class MenuController
 
                     if (ArenaEvent.Instance.IdPlayerJoin.Contains(player.playerData.user_id))
                     {
-                        player.okDialog("Bạn đã báo danh rồi!");
+                        player.okDialog(player.Language.YouAreHaveJournalism);
                         return;
                     }
 
@@ -105,11 +105,11 @@ public partial class MenuController
                         {
                             addMoney((sbyte)index, -(index == 0 ? GopetManager.PRICE_GOLD_ARENA_JOURNALISM : GopetManager.PRICE_COIN_ARENA_JOURNALISM), player);
                             ArenaEvent.Instance.IdPlayerJoin.Add(player.playerData.user_id);
-                            player.okDialog("Bạn đã báo danh thành công. Nếu rời khỏi Đấu trường xem như bạn bỏ cuộc!");
+                            player.okDialog(player.Language.EventJournalismOK);
                         }
                         else
                         {
-                            player.okDialog("Hết thời gian báo danh mời bạn quay lại sau");
+                            player.okDialog(player.Language.JournalismTimeOut);
                         }
                     }
                     break;
@@ -120,7 +120,7 @@ public partial class MenuController
                     {
                         PetTatto tatto = player.controller.objectPerformed[OBJKEY_ID_TATTO_TO_ENCHANT];
                         player.controller.objectPerformed[OBJKEY_TYPE_PRICE_TATTO_TO_ENCHANT] = index;
-                        showYNDialog(DIALOG_ASK_ENCHANT_TATTO, $"Bạn có chắc muốn cường hóa {tatto.Template.name} lên cấp {tatto.lvl + 1} với tỉ lệ {GopetManager.PERCENT_OF_ENCHANT_TATOO[tatto.lvl]}% thành công với giá {getMoneyText((sbyte)index, index == 0 ? GopetManager.PRICE_GOLD_ENCHANT_TATTO : GopetManager.PRICE_COIN_ENCHANT_TATTO, player)} không? Thất bại sẽ rớt {GopetManager.NUM_LVL_DROP_ENCHANT_TATTO_FAILED[tatto.lvl]} cấp !!!", player);
+                        showYNDialog(DIALOG_ASK_ENCHANT_TATTO, string.Format(player.Language.AskSelectTattoEnchantLaw, tatto.Template.name, tatto.lvl + 1, GopetManager.PERCENT_OF_ENCHANT_TATOO[tatto.lvl], getMoneyText((sbyte)index, index == 0 ? GopetManager.PRICE_GOLD_ENCHANT_TATTO : GopetManager.PRICE_COIN_ENCHANT_TATTO, player), GopetManager.NUM_LVL_DROP_ENCHANT_TATTO_FAILED[tatto.lvl]), player);
                     }
                     break;
                 }
@@ -132,7 +132,7 @@ public partial class MenuController
                             sendMenu(MENU_EXCHANGE_GOLD, player);
                             break;
                         case 1:
-                            player.controller.showInputDialog(INPUT_DIALOG_EXCHANGE_GOLD_TO_COIN, Utilities.Format("Tỉ lệ 1 (vang) lấy %s (ngoc)", GopetManager.PERCENT_EXCHANGE_GOLD_TO_COIN), new String[] { "Số gold :" });
+                            player.controller.showInputDialog(INPUT_DIALOG_EXCHANGE_GOLD_TO_COIN, string.Format(player.Language.InputExchangeGoldToCoinTitle, GopetManager.PERCENT_EXCHANGE_GOLD_TO_COIN), new String[] { "Số gold :" });
                             break;
                     }
                 }
@@ -147,7 +147,7 @@ public partial class MenuController
                             Pet p = new Pet(item.Template.itemOptionValue[index]);
                             player.playerData.addPet(p, player);
                             player.controller.subCountItem(item, 1, GopetManager.NORMAL_INVENTORY);
-                            player.okDialog($"Chúc mừng bạn nhận được {p.getNameWithStar()}");
+                            player.okDialog(string.Format(player.Language.CongratulateGetNewPet, p.getNameWithStar()));
                         }
                         else
                         {
@@ -168,18 +168,18 @@ public partial class MenuController
                             if (player.user.getCoin() >= 0)
                             {
                                 player.addGold(exchangeItemInfo.getExchangeData().getGold());
-                                player.okDialog(Utilities.Format("Đổi thành công %s (vang)", Utilities.FormatNumber(exchangeItemInfo.getExchangeData().getGold())));
+                                player.okDialog(string.Format(player.Language.ChangeGoldOK, Utilities.FormatNumber(exchangeItemInfo.getExchangeData().getGold())));
                                 HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Đổi %s vàng trong game thành công", Utilities.FormatNumber(exchangeItemInfo.getExchangeData().getGold()))));
                             }
                             else
                             {
-                                UserData.banBySQL(UserData.BAN_INFINITE, "Bug gold", long.MaxValue, player.user.user_id);
+                                UserData.banBySQL(UserData.BAN_INFINITE, player.Language.BugGold, long.MaxValue, player.user.user_id);
                                 player.session.Close();
                             }
                         }
                         else
                         {
-                            player.redDialog("Bạn không đủ tiền");
+                            player.redDialog(player.Language.NotEnoughMoney);
                         }
                     }
                 }
@@ -197,11 +197,11 @@ public partial class MenuController
                             player.playerData.tasking.Add(taskTemplate.getTaskId());
                             player.playerData.task.Add(new TaskData(taskTemplate));
                             player.controller.getTaskCalculator().update();
-                            player.okDialog("Chúc mừng bạn đã nhận thành công nhiệm vụ");
+                            player.okDialog(player.Language.CongratulateGetNewTask);
                         }
                         else
                         {
-                            player.redDialog("Trong khi nhận nhiệm vụ bạn vui lòng thao tác chậm lại!");
+                            player.fastAction();
                         }
                     }
                 }
@@ -229,7 +229,7 @@ public partial class MenuController
                             {
                                 case 0:
                                     player.controller.getTaskCalculator().onUpdateTask(taskData);
-                                    player.okDialog("Cập nhật thành công");
+                                    player.okDialog(player.Language.UpdateOK);
                                     break;
                                 case 1:
                                     if (player.controller.getTaskCalculator().taskSuccess(taskData))
@@ -239,19 +239,19 @@ public partial class MenuController
                                     }
                                     else
                                     {
-                                        player.redDialog("Bạn chưa đủ điều kiện");
+                                        player.redDialog(player.Language.YouAreNotYetEligible);
                                     }
                                     break;
                                 case 2:
                                     if (!taskData.CanCancelTask)
                                     {
-                                        player.redDialog("Bạn không thể hủy nhiệm vụ này!!!");
+                                        player.redDialog(player.Language.YouCannotCancelTask);
                                         return;
                                     }
                                     player.playerData.task.remove(taskData);
                                     player.playerData.tasking.remove(taskData.taskTemplateId);
                                     player.controller.getTaskCalculator().update();
-                                    player.okDialog("Hủy thành công!");
+                                    player.okDialog(player.Language.CancelOK);
                                     break;
                             }
                         }
@@ -268,12 +268,12 @@ public partial class MenuController
                         player.playerData.isFirstFree = true;
                         Pet p = new Pet(petMenuItemInfo.getPetTemplate().petId);
                         player.playerData.addPet(p, player);
-                        player.okDialog(Utilities.Format("Nhận pet %s thành công vào túi pet để xem", petMenuItemInfo.getPetTemplate().name));
+                        player.okDialog(string.Format(player.Language.GetPetFreeOK, petMenuItemInfo.getPetTemplate().name));
                         HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Nhận pet %s miễn phí tại NPC trân trân", petMenuItemInfo.getPetTemplate().name)).setObj(p));
                     }
                     else
                     {
-                        player.redDialog("Trước đó bạn đã nhận rồi");
+                        player.redDialog(player.Language.YouHaveGotPetFreeBefore);
                     }
                 }
                 break;
@@ -284,12 +284,12 @@ public partial class MenuController
                         int priceChallenge = (int)GopetManager.PRICE_BET_CHALLENGE[index];
                         if (priceChallenge <= 0)
                         {
-                            player.redDialog("Tính bug ha gì!");
+                            player.redDialog(player.Language.BugWarning);
                             return;
                         }
                         if (priceChallenge > 100000)
                         {
-                            player.redDialog(Utilities.Format("Giới hạn (ngoc) là %s", Utilities.FormatNumber(100000)));
+                            player.redDialog(string.Format(player.Language.GemLimitWarning, Utilities.FormatNumber(100000)));
                             return;
                         }
                         player.controller.sendChallenge((Player)player.controller.objectPerformed.get(OBJKEY_INVITE_CHALLENGE_PLAYER), priceChallenge);
@@ -309,7 +309,7 @@ public partial class MenuController
                         {
                             if (skillInfo[0] == petSkills[index].skillID)
                             {
-                                player.redDialog("Kỹ năng này học rồi");
+                                player.redDialog(player.Language.PetLearnDuplicateSkill);
                                 return;
                             }
                         }
@@ -320,7 +320,7 @@ public partial class MenuController
                             pet.addSkill(petSkills[index].skillID, 1);
                             player.addCoin(-GopetManager.PriceLearnSkill);
                             player.controller.magic(GopetCMD.MAGIC_LEARN_SKILL, true);
-                            player.okDialog("Học kỹ năng thành công");
+                            player.okDialog(player.Language.LearnSkillPetOK);
                             player.controller.getTaskCalculator().onLearnSkillPet();
                             if (pet.skill.Length >= 2)
                             {
@@ -349,22 +349,22 @@ public partial class MenuController
                                     pet.skill[skillIndex][1] = 1;
                                     player.addCoin(-GopetManager.PriceLearnSkill);
                                     player.controller.magic(GopetCMD.MAGIC_LEARN_SKILL, true);
-                                    player.okDialog("Học kỹ năng thành công");
+                                    player.okDialog(player.Language.LearnSkillPetOK);
                                     HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Học kỹ năng thành công cho pet %s", pet.getNameWithoutStar())).setObj(pet));
                                 }
                                 else
                                 {
-                                    player.redDialog("Không có kỹ năng này");
+                                    player.redDialog(player.Language.SkillPetNotFound);
                                 }
                             }
                             else
                             {
-                                player.redDialog("Pet của bạn phải đạt mốc clanLvl 3, 5, 10 để học skill 1 2 3 nhé");
+                                player.redDialog(player.Language.LearnSkillPetLaw);
                             }
                         }
                         else
                         {
-                            player.redDialog("Pet của bạn phải đạt mốc clanLvl 3, 5, 10 để học skill 1 2 3 nhé");
+                            player.redDialog(player.Language.LearnSkillPetLaw);
                         }
                     }
                 }
