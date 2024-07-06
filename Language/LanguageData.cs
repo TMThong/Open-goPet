@@ -457,5 +457,14 @@ namespace Gopet.Language
         public string TASK_REQUEST_LEARN_SKILL_PET { get; set; } = "Học %s / %s kỹ năng cho thú cưng";
         public string TASK_REQUEST_LEARN_SKILL2_PET { get; set; } = "Học %s / %s kỹ năng 2 cho thú cưng";
         public string TASK_REQUEST_BUY_RANDOM_WEAPON { get; set; } = "Mua %s / %s vũ khí bất kì của cửa hàng ở Tp Linh Thú";
+        public string TASK_REQUEST_UP_SKILL_PET { get; set; } = "Nâng cấp %s / %s kỹ năng pet lên cấp %s";
+        public string TASK_REQUEST_KILL_BOSS { get; set; } = "Tiêu diệt %s(tinh anh) %s / %s";
+        public string TASK_REQUEST_UP_TIER_ITEM { get; set; } = "Tiến hóa trang bị thú cưng %s / %s lần lên đời %s";
+        public string TASK_REQUEST_ENCHANT_ITEM { get; set; } = "Cường hóa trang bị thú cưng %s / %s lần lên cấp %s";
+        public string TASK_REQUEST_NEED_TASK { get; set; } = "Hoàn thành nhiệm vụ %s %s / %s";
+        public string TASK_REQUEST_ATTACK_BOSS { get; set; } = "Tấn công %s(tinh anh) %s / %s";
+        public string TASK_REQUEST_ITEM { get; set; } = "Vật phẩm %s %s / %s";
+        public string TASK_REQUEST_CHALLENGE_PLACE { get; set; } = "Vượt ải Đấu Trường tới ải %s / %s";
+        public string TASK_REQUEST_ITEM_AND_PLUS { get; set; } = "Vật phẩm %s %s / %s (vật phẩm sẽ tự trừ)";
     }
 }
