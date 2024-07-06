@@ -174,7 +174,6 @@ public partial class MenuController
     /**
      * Danh sách nhận pet miễn phí
      */
-    public static JArrayList<MenuItemInfo> PetFreeList = new();
 
     public static JArrayList<MenuItemInfo> EXCHANGE_ITEM_INFOS = new();
 
@@ -199,10 +198,6 @@ public partial class MenuController
      */
     public const sbyte TYPE_MENU_PAYMENT = 3;
 
-    /**
-     * Tùy chòn luyện chỉ số
-     */
-    public static readonly String[] gym_options = new String[] { "sức mạnh (str)", "tốc độ (agi)", "thông minh (int)", };
 
     public const int OP_MAIN_TASK = 0;
 
@@ -412,8 +407,9 @@ public partial class MenuController
     public const int INPUT_TYPE_NAME_BUFF_ENCHANT_TATTOO= 23;
     public const int IMGDIALOG_CAPTCHA = 0;
     #endregion
-    public static void init()
+    public static JArrayList<MenuItemInfo> getPetFreeLst(Player player)
     {
+        JArrayList < MenuItemInfo > menuItemInfos = new JArrayList<MenuItemInfo>();
         foreach (int petFreeId in GopetManager.petFreeIds)
         {
             if (GopetManager.PETTEMPLATE_HASH_MAP.ContainsKey(petFreeId))
@@ -421,11 +417,12 @@ public partial class MenuController
                 PetMenuItemInfo petMenuItemInfo = new PetMenuItemInfo(GopetManager.PETTEMPLATE_HASH_MAP.get(petFreeId));
                 petMenuItemInfo.setCloseScreenAfterClick(true);
                 petMenuItemInfo.setShowDialog(true);
-                petMenuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn nó không?"));
+                petMenuItemInfo.setDialogText(player.Language.DoWantSelectIt);
                 petMenuItemInfo.setLeftCmdText(CMD_CENTER_OK);
-                PetFreeList.add(petMenuItemInfo);
+                menuItemInfos.add(petMenuItemInfo);
             }
         }
+        return menuItemInfos;
     }
 
 

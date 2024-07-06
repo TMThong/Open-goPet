@@ -473,5 +473,9 @@ namespace Gopet.Language
         public string TASK_REQUEST_WAIT_NEW_TASK { get; set; } = "Con hãy chờ nhiệm vụ mới nhé !!!";
         public string Request { get; set; } = "Yêu cầu";
         public string OnTaskSuccess { get; set; } = "Chức mừng bạn hoàn thành nhiệm vụ {0} nhận được {1}";
+        public string DeleteTiemNangTitle { get; set; } = "Xóa 1 {0} với giá {1} (vang) và sẽ nhận lại 1 tiềm năng";
+        public string GymOptionStr { get; set; } = "sức mạnh (str)";
+        public string GymOptionAgi { get; set; } = "tốc độ (agi)";
+        public string GymOptionInt { get; set; } = "thông minh (int)";
     }
 }

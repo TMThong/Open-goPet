@@ -100,7 +100,7 @@ public partial class MenuController
                         menuInfos.add(menuItemInfo);
                     }
 
-                    player.controller.showMenuItem(menuId, TYPE_MENU_NONE, player.Language.AllTattoo , menuInfos);
+                    player.controller.showMenuItem(menuId, TYPE_MENU_NONE, player.Language.AllTattoo, menuInfos);
                     break;
                 }
             case MENU_ADMIN_SHOW_ALL_ACHIEVEMENT:
@@ -171,7 +171,7 @@ public partial class MenuController
             case MENU_LIST_FRIEND:
                 {
                     IEnumerable<int> ints = null;
-                    switch(menuId)
+                    switch (menuId)
                     {
                         case MENU_LIST_FRIEND:
                             ints = player.playerData.ListFriends;
@@ -184,9 +184,9 @@ public partial class MenuController
                             break;
                         default:
                             return;
-                    } 
+                    }
                     JArrayList<MenuItemInfo> menuInfos = new();
-                    if(ints.Any())
+                    if (ints.Any())
                     {
                         using (var conn = MYSQLManager.create())
                         {
@@ -206,9 +206,9 @@ public partial class MenuController
             case MENU_LIST_FRIEND_OPTION:
                 {
                     JArrayList<Option> list = new();
-                    list.Add(new Option(0, player.Language.GetPlayerLocation, true));  
-                    list.Add(new Option(1, player.Language.Remove, true));  
-                    list.Add(new Option(2, player.Language.RemoveAndBlock, true));  
+                    list.Add(new Option(0, player.Language.GetPlayerLocation, true));
+                    list.Add(new Option(1, player.Language.Remove, true));
+                    list.Add(new Option(2, player.Language.RemoveAndBlock, true));
                     player.controller.sendListOption(menuId, player.Language.Friend, string.Empty, list);
                 }
                 break;
@@ -349,7 +349,7 @@ public partial class MenuController
                 }
                 break;
             case MENU_LIST_PET_FREE:
-                player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.GetPetFree, PetFreeList);
+                player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.GetPetFree, getPetFreeLst(player));
                 break;
             case MENU_LEARN_NEW_SKILL:
                 {
@@ -381,7 +381,7 @@ public partial class MenuController
                     for (sbyte i = 0; i < GopetManager.TradeGiftPrice.Count; i++)
                     {
                         var tradeGiftTemplate = GopetManager.TradeGiftPrice[i];
-                        changeList[i] = new Option(tradeGiftTemplate.Item3,string.Format(player.Language.OptionTradeGift, getMoneyText((sbyte)tradeGiftTemplate.Item1[0], tradeGiftTemplate.Item2[0], player), getMoneyText((sbyte)tradeGiftTemplate.Item1[1], tradeGiftTemplate.Item2[1], player)));
+                        changeList[i] = new Option(tradeGiftTemplate.Item3, string.Format(player.Language.OptionTradeGift, getMoneyText((sbyte)tradeGiftTemplate.Item1[0], tradeGiftTemplate.Item2[0], player), getMoneyText((sbyte)tradeGiftTemplate.Item1[1], tradeGiftTemplate.Item2[1], player)));
                     }
                     showNpcOption(GopetManager.NPC_TIEN_NU, player, changeList);
                 }
@@ -465,11 +465,11 @@ public partial class MenuController
             case MENU_DELETE_TIEM_NANG:
                 {
                     JArrayList<MenuItemInfo> menuItemInfos = new();
-                    foreach (String option in gym_options)
+                    foreach (String option in player.controller.gym_options)
                     {
-                        MenuItemInfo menuItemInfo = new MenuItemInfo(Utilities.Format("Tẩy %s", option), Utilities.Format("Xóa 1 %s với giá %s (vang) và sẽ nhận lại 1 tiềm năng", option, PriceDeleteTiemNang), "", true);
+                        MenuItemInfo menuItemInfo = new MenuItemInfo(Utilities.Format(player.Language.Remove + " %s", option), string.Format(player.Language.DeleteTiemNangTitle, option, PriceDeleteTiemNang), "", true);
                         menuItemInfo.setShowDialog(true);
-                        menuItemInfo.setDialogText(Utilities.Format("Bạn có muốn chọn %s không?", Utilities.Format("Tẩy %s", option)));
+                        menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, Utilities.Format(player.Language.Remove + " %s", option)));
                         menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                         menuItemInfos.add(menuItemInfo);
                     }
@@ -664,7 +664,7 @@ public partial class MenuController
                             menuItemInfo.setCloseScreenAfterClick(true);
                             skillMenuItemInfos.add(menuItemInfo);
                         }
-                        player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT,player.Language.AddSkillClanLevelTitle, skillMenuItemInfos);
+                        player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.AddSkillClanLevelTitle, skillMenuItemInfos);
                     }
                     else
                     {
@@ -681,13 +681,13 @@ public partial class MenuController
                         Option option = new Option(i, Utilities.FormatNumber(l) + " (ngoc)", 1);
                         list.add(option);
                     }
-                    player.controller.sendListOption(menuId, player.Language.Bet , CMD_CENTER_OK, list);
+                    player.controller.sendListOption(menuId, player.Language.Bet, CMD_CENTER_OK, list);
                 }
                 break;
             case MENU_ATM:
                 {
                     JArrayList<Option> options = new();
-                    options.add(new Option(0, player.Language.Change +  " (vang)"));
+                    options.add(new Option(0, player.Language.Change + " (vang)"));
                     options.add(new Option(1, player.Language.Change + " (ngoc)"));
                     player.controller.sendListOption(menuId, "ATM", CMD_CENTER_OK, options);
                 }

@@ -936,7 +936,7 @@ public class GopetManager
             Language[VI_CODE].SkillDescLanguage[item.skillID] = item.description;
         }
 
-        SaveJsonFile(Language["vi"], "/lang/vi.json");
+        //SaveJsonFile(Language["vi"], "/lang/vi.json");
     }
 
     public static T ReadJsonFile<T>(string targetPath)

@@ -1657,13 +1657,21 @@ public class GameController
         }
     }
 
+    public string[] gym_options
+    {
+        get
+        {
+            return new string[] { player.Language.GymOptionStr, player.Language.GymOptionAgi, player.Language.GymOptionInt };
+        }
+    }
+
     private void upTiemNang(int num, sbyte index)
     {
         if (isHasBattleAndShowDialog())
         {
             return;
         }
-        if (index >= 0 && index < MenuController.gym_options.Length)
+        if (index >= 0 && index < gym_options.Length)
         {
             Pet pet = player.getPet();
             if (pet == null)

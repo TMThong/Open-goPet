@@ -260,20 +260,23 @@ public partial class MenuController
                 break;
 
             case MENU_LIST_PET_FREE:
-                if (index >= 0 && index < PetFreeList.Count)
                 {
-                    PetMenuItemInfo petMenuItemInfo = (PetMenuItemInfo)PetFreeList.get(index);
-                    if (!player.playerData.isFirstFree)
+                    var PetFreeList = getPetFreeLst(player);
+                    if (index >= 0 && index < PetFreeList.Count)
                     {
-                        player.playerData.isFirstFree = true;
-                        Pet p = new Pet(petMenuItemInfo.getPetTemplate().petId);
-                        player.playerData.addPet(p, player);
-                        player.okDialog(string.Format(player.Language.GetPetFreeOK, petMenuItemInfo.getPetTemplate().name));
-                        HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Nhận pet %s miễn phí tại NPC trân trân", petMenuItemInfo.getPetTemplate().name)).setObj(p));
-                    }
-                    else
-                    {
-                        player.redDialog(player.Language.YouHaveGotPetFreeBefore);
+                        PetMenuItemInfo petMenuItemInfo = (PetMenuItemInfo)PetFreeList.get(index);
+                        if (!player.playerData.isFirstFree)
+                        {
+                            player.playerData.isFirstFree = true;
+                            Pet p = new Pet(petMenuItemInfo.getPetTemplate().petId);
+                            player.playerData.addPet(p, player);
+                            player.okDialog(string.Format(player.Language.GetPetFreeOK, petMenuItemInfo.getPetTemplate().name));
+                            HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Nhận pet %s miễn phí tại NPC trân trân", petMenuItemInfo.getPetTemplate().name)).setObj(p));
+                        }
+                        else
+                        {
+                            player.redDialog(player.Language.YouHaveGotPetFreeBefore);
+                        }
                     }
                 }
                 break;
@@ -376,7 +379,7 @@ public partial class MenuController
             case MENU_DELETE_TIEM_NANG:
                 if (player.getPet() != null)
                 {
-                    if (index >= 0 && index < gym_options.Length)
+                    if (index >= 0 && index < player.controller.gym_options.Length)
                     {
                         Pet pet = player.getPet();
                         if (pet.tiemnang[index] > 0)
