@@ -358,10 +358,10 @@ public partial class MenuController
                         JArrayList<MenuItemInfo> skillMenuItem = new();
                         foreach (PetSkill petSkill in getPetSkills(player))
                         {
-                            MenuItemInfo menuItemInfo = new MenuItemInfo(petSkill.name, petSkill.description, petSkill.skillID + "", true);
+                            MenuItemInfo menuItemInfo = new MenuItemInfo(petSkill.getName(player), petSkill.getDescription(player), petSkill.skillID + "", true);
                             menuItemInfo.setImgPath(Utilities.Format("skills/skill_%s.png", petSkill.skillID));
                             menuItemInfo.setShowDialog(true);
-                            menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, petSkill.name));
+                            menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, petSkill.getName(player)));
                             menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                             skillMenuItem.add(menuItemInfo);
                         }

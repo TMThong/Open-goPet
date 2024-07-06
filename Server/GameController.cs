@@ -659,7 +659,7 @@ public class GameController
                 PetSkill petSkill = GopetManager.PETSKILL_HASH_MAP.get(skillId);
                 PetSkillLv petSkillLv = petSkill.skillLv.get(skilllvl);
                 message.putInt(skillId);
-                message.putUTF(petSkill.name + " " + skilllvl);
+                message.putUTF(petSkill.getName(player) + " " + skilllvl);
                 message.putUTF(petSkill.getDescription(petSkillLv, player));
                 message.putInt(petSkillLv.mpLost);
             }
@@ -3366,7 +3366,7 @@ public class GameController
                 {
                     pet.skill[skillIndex][1]++;
                     this.taskCalculator.onUpdateSkillPet(pet, pet.skill[skillIndex][1]);
-                    player.okDialog(string.Format(player.Language.UpTierPetOK, petSkill.name, pet.skill[skillIndex][1]));
+                    player.okDialog(string.Format(player.Language.UpTierPetOK, petSkill.getName(player), pet.skill[skillIndex][1]));
                     HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Bạn đã nâng cấp %s lên cấp %s  cho pet %s!", petSkill.name, pet.skill[skillIndex][1], pet.getNameWithoutStar(player))).setObj(pet));
                 }
                 else

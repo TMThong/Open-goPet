@@ -39,4 +39,13 @@ public class PetSkill {
         if (gameObject.Template.nclass <= 2) return PHANDOAN;
         else return PHANDON_SKY;
     }
+
+    public string getName(Player player) 
+    { 
+        return player.Language.SkillNameLanguage[this.skillID];
+    }
+    public string getDescription(Player player)
+    {
+        return player.Language.SkillDescLanguage[this.skillID];
+    }
 }

@@ -870,7 +870,7 @@ public partial class MenuController
                                     if (pet.skill[skillIndex][1] < 10)
                                     {
                                         player.controller.objectPerformed.put(OBJKEY_ITEM_UP_SKILL, itemSelect);
-                                        showYNDialog(DIALOG_UP_SKILL, string.Format(player.Language.AskDoYouWantUpgradeSkill, petSkill.name, pet.skill[skillIndex][1] + 1, GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]], itemSelect.getTemp().getOptionValue()[0], GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]] + itemSelect.getTemp().getOptionValue()[0]).Replace("/", "%"), player);
+                                        showYNDialog(DIALOG_UP_SKILL, string.Format(player.Language.AskDoYouWantUpgradeSkill, petSkill.getName(player), pet.skill[skillIndex][1] + 1, GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]], itemSelect.getTemp().getOptionValue()[0], GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]] + itemSelect.getTemp().getOptionValue()[0]).Replace("/", "%"), player);
                                     }
                                     else
                                     {

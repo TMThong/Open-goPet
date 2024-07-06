@@ -447,7 +447,7 @@ namespace Gopet.Battle
                 message.putsbyte(0);
                 writeMyPetInfo(activePlayer.getPet(), message, playerInZone);
                 message.putInt(passivePlayer.user.user_id);
-                writePetPassiveInfo(passivePlayer.getPet(), message);
+                writePetPassiveInfo(passivePlayer.getPet(), message, playerInZone);
                 message.cleanup();
                 playerInZone.session.sendMessage(message);
             }
@@ -462,7 +462,7 @@ namespace Gopet.Battle
             message.putsbyte(1);
             writeMyPetInfo(activePlayer.getPet(), message, activePlayer);
             message.putInt(passivePlayer.user.user_id);
-            writePetPassiveInfo(passivePlayer.getPet(), message);
+            writePetPassiveInfo(passivePlayer.getPet(), message, activePlayer);
             message.putbool(false);
             message.cleanup();
             activePlayer.session.sendMessage(message);
@@ -474,7 +474,7 @@ namespace Gopet.Battle
             message.putsbyte(0);
             writeMyPetInfo(passivePlayer.getPet(), message, passivePlayer);
             message.putInt(activePlayer.user.user_id);
-            writePetPassiveInfo(activePlayer.getPet(), message);
+            writePetPassiveInfo(activePlayer.getPet(), message, passivePlayer);
             message.putbool(false);
             message.cleanup();
             passivePlayer.session.sendMessage(message);
@@ -528,7 +528,7 @@ namespace Gopet.Battle
                 PetSkill petSkill = GopetManager.PETSKILL_HASH_MAP.get(skillId);
                 PetSkillLv petSkillLv = petSkill.skillLv.get(skilllvl - 1);
                 message.putInt(skillId);
-                message.putUTF(petSkill.name + " " + skilllvl);
+                message.putUTF(petSkill.getName(player) + " " + skilllvl);
                 message.putUTF(petSkill.getDescription(petSkillLv, player));
                 message.putInt(petSkillLv.mpLost);
             }
@@ -549,7 +549,7 @@ namespace Gopet.Battle
             message.putsbyte(0);
         }
 
-        public static void writePetPassiveInfo(Pet petPassive, Message message)
+        public static void writePetPassiveInfo(Pet petPassive, Message message, Player player)
         {
             message.putInt(petPassive.getPetIdTemplate());
             message.putUTF(petPassive.getPetTemplate().frameImg);
@@ -569,7 +569,7 @@ namespace Gopet.Battle
                 PetSkill petSkill = GopetManager.PETSKILL_HASH_MAP.get(skillId);
                 PetSkillLv petSkillLv = petSkill.skillLv.get(skilllvl - 1);
                 message.putInt(skillId);
-                message.putUTF(petSkill.name + " " + skilllvl);
+                message.putUTF(petSkill.getName(player) + " " + skilllvl);
             }
         }
 
