@@ -395,5 +395,13 @@ namespace Gopet.Language
         public string UseEnergyItemOK { get; set; } = "Sử dụng thành công và hiện tại bạn đang có {0} năng lượng";
         public string UseEnergyFailByMax { get; set; } = "Bạn đã sử dụng đạt tối đa ngày hôm nay";
         public string CannotUseThisItem { get; set; } = "Không thể sử dụng vật phẩm này";
+        public string from { get; set; } = "từ";
+        public string Count { get; set; } = "Số lượng";
+        public string PleaseDoUpToKioskItemHasPetEquip { get; set; } = "Vui lòng không treo trang bị đã được pet trang bị";
+        public string YouCannotSellPetTry { get; set; } = "Bạn không thể treo pet dùng thử";
+        public string ApprovalRequestIsApplyOrRemove { get; set; } = "Yêu cầu này đã được xét duyệt hoặc gỡ bỏ";
+        public string YourApplyToClanIsAccept { get; set; } = "Lời xin vào bang hội của bạn được chấp nhận";
+        public string ApplyOK { get; set; } = "Duyệt thành công";
+        public string ThisPlayerHaveClan { get; set; } = "Người chơi đã vào bang hội khác";
     }
 }

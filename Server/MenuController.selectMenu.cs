@@ -1170,7 +1170,7 @@ public partial class MenuController
                                 if (itemSelect.Template.itemOptionValue.Length == 2)
                                 {
                                     ItemTemplate itemTemplate = GopetManager.itemTemplate[itemSelect.Template.itemOptionValue[0]];
-                                    player.okDialog($"{itemTemplate.name} {itemTemplate.description} ngẫu nhiên chỉ số từ {itemTemplate.getAtk()} {itemTemplate.getDef()} {itemTemplate.getHp()} {itemTemplate.getMp()}");
+                                    player.okDialog($"{itemTemplate.name} {itemTemplate.description} {player.Language.from} {itemTemplate.getAtk()} {itemTemplate.getDef()} {itemTemplate.getHp()} {itemTemplate.getMp()}");
                                 }
                                 else
                                 {
@@ -1209,12 +1209,12 @@ public partial class MenuController
                             player.controller.objectPerformed.put(OBJKEY_MENU_OF_KIOSK, menuId);
                             if (sItem.count == 1)
                             {
-                                player.controller.showInputDialog(INPUT_DIALOG_KIOSK, "Định giá", new String[] { "  " }, new sbyte[] { 0 });
+                                player.controller.showInputDialog(INPUT_DIALOG_KIOSK, player.Language.Pricing, new String[] { "  " }, new sbyte[] { 0 });
                                 player.controller.objectPerformed.put(OBJKEY_COUNT_OF_ITEM_KIOSK, 1);
                             }
                             else if (sItem.count > 1)
                             {
-                                player.controller.showInputDialog(INPUT_DIALOG_COUNT_OF_KISOK_ITEM, "Số lượng", new String[] { "  " }, new sbyte[] { 0 });
+                                player.controller.showInputDialog(INPUT_DIALOG_COUNT_OF_KISOK_ITEM, player.Language.Count, new String[] { "  " }, new sbyte[] { 0 });
                             }
                         }
                     }
@@ -1232,16 +1232,16 @@ public partial class MenuController
                                     {
                                         player.controller.objectPerformed.put(OBJKEY_SELECT_SELL_ITEM, sItem);
                                         player.controller.objectPerformed.put(OBJKEY_MENU_OF_KIOSK, menuId);
-                                        player.controller.showInputDialog(INPUT_DIALOG_KIOSK, "Định giá", new String[] { "  " }, new sbyte[] { 0 });
+                                        player.controller.showInputDialog(INPUT_DIALOG_KIOSK, player.Language.Pricing, new String[] { "  " }, new sbyte[] { 0 });
                                     }
                                     else
                                     {
-                                        player.redDialog("Vui lòng tháo ngọc ra");
+                                        player.redDialog(player.Language.PleaseUnequipGem);
                                     }
                                 }
                                 else
                                 {
-                                    player.redDialog("Vui lòng không treo trang bị đã được pet mang theo");
+                                    player.redDialog(player.Language.PleaseDoUpToKioskItemHasPetEquip);
                                 }
                             }
                         }
@@ -1255,12 +1255,12 @@ public partial class MenuController
                         Pet pet = player.playerData.pets.get(index);
                         if (pet.Expire != null)
                         {
-                            player.redDialog("Bạn không thể treo pet dùng thử");
+                            player.redDialog(player.Language.YouCannotSellPetTry);
                             return;
                         }
                         player.controller.objectPerformed.put(OBJKEY_SELECT_SELL_ITEM, pet);
                         player.controller.objectPerformed.put(OBJKEY_MENU_OF_KIOSK, menuId);
-                        player.controller.showInputDialog(INPUT_DIALOG_KIOSK, "Định giá", new String[] { "  " }, new sbyte[] { 0 });
+                        player.controller.showInputDialog(INPUT_DIALOG_KIOSK, player.Language.Pricing, new String[] { "  " }, new sbyte[] { 0 });
                     }
                 }
                 break;
@@ -1313,12 +1313,12 @@ public partial class MenuController
                             }
                             else
                             {
-                                player.redDialog("Yêu cầu này đã được xét duyệt hoặc gỡ bỏ");
+                                player.redDialog(player.Language.ApprovalRequestIsApplyOrRemove);
                             }
                         }
                         else
                         {
-                            player.redDialog("Bạn chỉ là thành viên bình thường");
+                            player.redDialog(player.Language.YouOnlyIsMemeber);
                         }
                     }
                     else
@@ -1373,13 +1373,13 @@ public partial class MenuController
                                                     else
                                                     {
                                                         onlinePlayer.playerData.clanId = clanMember.getClan().getClanId();
-                                                        onlinePlayer.okDialog("Lời xin vào bang hội của bạn được chấp nhận");
+                                                        onlinePlayer.okDialog(player.Language.YourApplyToClanIsAccept);
                                                     }
-                                                    player.okDialog("Duyệt thành công");
+                                                    player.okDialog(player.Language.ApplyOK);
                                                 }
                                                 else
                                                 {
-                                                    player.redDialog("Người chơi đã vào bang hội khác");
+                                                    player.redDialog(player.Language.ThisPlayerHaveClan);
                                                 }
                                             }
                                             catch (Exception e)
