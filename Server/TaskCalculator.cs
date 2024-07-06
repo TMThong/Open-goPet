@@ -167,19 +167,19 @@ public class TaskCalculator
                     taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_ITEM_AND_PLUS, GopetManager.itemTemplate.get(taskI[2]).getName(), task[i], taskI[1]));
                     break;
                 case REQUEST_UP_TIER_PET:
-                    taskText.Add(Utilities.Format("Tiến hóa thú cưng %s / %s lần", task[i], taskI[1]));
+                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_UP_TIER_PET, task[i], taskI[1]));
                     break;
                 case REQUEST_PLUS_GYM_POINT:
-                    taskText.Add(Utilities.Format("Dùng điểm gym %s / %s lần", task[i], taskI[1]));
+                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_PLUS_GYM_POINT, task[i], taskI[1]));
                     break;
                 case REQUEST_MEET_NPC:
-                    taskText.Add(Utilities.Format($"Gặp {GopetManager.npcTemplate[taskI[2]].name} và trò chuyện %s / %s lần", task[i], taskI[1]));
+                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_MEET_NPC, GopetManager.npcTemplate[taskI[2]].name, task[i], taskI[1]));
                     break;
                 case REUQEST_BET_PLAYER_WIN:
-                    taskText.Add($"Thách đấu thắng người chơi {task[i]}/{taskI[1]} lần");
+                    taskText.Add(string.Format(player.Language.TASK_REUQEST_BET_PLAYER_WIN, task[i], taskI[1]));
                     break;
                 case REQUEST_WAIT_NEW_TASK:
-                    taskText.Add("Con hãy chờ nhiệm vụ mới nhé !!!");
+                    taskText.Add(player.Language.TASK_REQUEST_WAIT_NEW_TASK);
                     break;
             }
         }

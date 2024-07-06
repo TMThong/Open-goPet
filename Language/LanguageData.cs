@@ -466,5 +466,10 @@ namespace Gopet.Language
         public string TASK_REQUEST_ITEM { get; set; } = "Vật phẩm %s %s / %s";
         public string TASK_REQUEST_CHALLENGE_PLACE { get; set; } = "Vượt ải Đấu Trường tới ải %s / %s";
         public string TASK_REQUEST_ITEM_AND_PLUS { get; set; } = "Vật phẩm %s %s / %s (vật phẩm sẽ tự trừ)";
+        public string TASK_REQUEST_UP_TIER_PET { get; set; } = "Tiến hóa thú cưng %s / %s lần";
+        public string TASK_REQUEST_PLUS_GYM_POINT { get; set; } = "Dùng điểm gym %s / %s lần";
+        public string TASK_REQUEST_MEET_NPC { get; set; } = "Gặp %s và trò chuyện %s / %s lần";
+        public string TASK_REUQEST_BET_PLAYER_WIN { get; set; } = "Thách đấu thắng người chơi {0}/{1} lần";
+        public string TASK_REQUEST_WAIT_NEW_TASK { get; set; } = "Con hãy chờ nhiệm vụ mới nhé !!!";
     }
 }
