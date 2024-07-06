@@ -424,5 +424,11 @@ namespace Gopet.Language
         public string GiveUpClanPositionSeniorOption { get; set; } = "Phong làm trưởng lão";
         public string GiveUpClanPositionMemberOption { get; set; } = "Hạ chức xuống làm thành viên";
         public string RemoveFriendOK { get; set; } = "Xóa bạn thành công";
+        public string GetFriendLocationInfo { get; set; } = "Người chơi {0} đang ở map {1} khu {2}";
+        public string PlayerIsChangeMap { get; set; } = "Người chơi {0} đang chuyển map";
+        public string AddFriendOK { get; set; } = "Kết bạn thành công";
+        public string CannotFindMenu { get; set; } = "Không thể tìm thấy menu này (menuId={0})";
+        public string UnblockOK { get; set; } = "Bỏ chặn thành công";
+        public string UnblockAllOK { get; set; } = "Bỏ chặn tất cả thành công";
     }
 }

@@ -1803,11 +1803,11 @@ public partial class MenuController
                                             GopetPlace gopetPlace = friend.getPlace();
                                             if (gopetPlace != null)
                                             {
-                                                player.okDialog($"Người chơi {friend.playerData.name} đang ở map {gopetPlace.map.mapTemplate.name} khu {gopetPlace.zoneID}");
+                                                player.okDialog(player.Language.GetFriendLocationInfo, friend.playerData.name, gopetPlace.map.mapTemplate.name, gopetPlace.zoneID);
                                             }
                                             else
                                             {
-                                                player.redDialog($"Người chơi {friend.playerData.name} đang chuyển map");
+                                                player.redDialog(player.Language.PlayerIsChangeMap, friend.playerData.name);
                                             }
                                         }
                                         else
@@ -1849,7 +1849,7 @@ public partial class MenuController
                                         }
                                     }
                                     player.playerData.ListFriends.remove(friendId);
-                                    player.okDialog("Xóa bạn thành công");
+                                    player.okDialog(player.Language.RemoveFriendOK);
                                 }
                             }
                         }
@@ -1881,14 +1881,14 @@ public partial class MenuController
                                             }
                                             player.playerData.ListFriends.addIfAbsent(friendId);
                                             player.playerData.RequestAddFriends.remove(friendId);
-                                            player.okDialog("Kết bạn thành công");
+                                            player.okDialog(player.Language.AddFriendOK);
                                         }
                                         else
                                         {
                                             playerRequest.playerData.ListFriends.addIfAbsent(player.user.user_id);
                                             player.playerData.ListFriends.addIfAbsent(friendId);
                                             player.playerData.RequestAddFriends.remove(friendId);
-                                            player.okDialog("Kết bạn thành công");
+                                            player.okDialog(player.Language.AddFriendOK);
                                         }
                                     }
                                     break;
@@ -1906,7 +1906,7 @@ public partial class MenuController
                                 case 3:
                                     {
                                         player.playerData.ListFriends.Clear();
-                                        player.okDialog("Xóa bạn thành công");
+                                        player.okDialog(player.Language.RemoveFriendOK);
                                     }
                                     break;
 
@@ -1914,7 +1914,7 @@ public partial class MenuController
                         DeleteRequestAddFriends:
                             {
                                 player.playerData.RequestAddFriends.remove(friendId);
-                                player.okDialog("Xóa thành công");
+                                player.okDialog(player.Language.RemoveOK);
                             }
                         }
                     }
@@ -1934,13 +1934,13 @@ public partial class MenuController
                                 case 0:
                                     {
                                         player.playerData.BlockFriendLists.remove(friendId);
-                                        player.okDialog("Bỏ chặn thành công");
+                                        player.okDialog(player.Language.UnblockOK);
                                     }
                                     break;
                                 case 1:
                                     {
                                         player.playerData.BlockFriendLists.Clear();
-                                        player.okDialog("Bỏ chặn tất cả thành công");
+                                        player.okDialog(player.Language.UnblockAllOK);
                                     }
                                     break;
                             }
@@ -1950,7 +1950,7 @@ public partial class MenuController
                 break;
             default:
                 {
-                    player.redDialog("KHONG TON TAI MENU NAY");
+                    player.redDialog(string.Format(player.Language.CannotFindMenu, menuId));
                     Thread.Sleep(1000);
                 }
                 break;
