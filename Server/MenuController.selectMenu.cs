@@ -387,7 +387,7 @@ public partial class MenuController
                                 pet.tiemnang[index]--;
                                 pet.tiemnang_point++;
                                 pet.applyInfo(player);
-                                player.okDialog("Tẩy thành công");
+                                player.okDialog(player.Language.DeleteGymOK);
                                 HistoryManager.addHistory(new History(player).setLog("Tảy tìm năng cho pet" + pet.getNameWithoutStar()).setObj(pet));
                             }
                             else
@@ -397,7 +397,7 @@ public partial class MenuController
                         }
                         else
                         {
-                            player.redDialog("Chỉ số này đã xóa hết rồi");
+                            player.redDialog(player.Language.ThisIndicatorHasBeenErased);
                         }
                     }
                 }
@@ -423,7 +423,7 @@ public partial class MenuController
                     {
                         if (oldPet.TimeDieZ > Utilities.CurrentTimeMillis)
                         {
-                            player.redDialog("Pet của bạn đang bị thương!!!");
+                            player.redDialog(player.Language.YourPetIsDie);
                             return;
                         }
                     }
@@ -443,7 +443,7 @@ public partial class MenuController
                     {
                         player.playerData.PetDefLeague = pet;
                         pet.applyInfo(player);
-                        player.okDialog($"Đã chọn {pet.getNameWithStar()} phòng thủ thành công!");
+                        player.okDialog(string.Format(player.Language.SelectPetDefOK, pet.getNameWithStar()));
                     }
                 }
                 break;
@@ -475,7 +475,7 @@ public partial class MenuController
             case MENU_WING_INVENTORY:
                 if (index == -1)
                 {
-                    player.redDialog("Bạn đang sử dụng cành này!!!");
+                    player.redDialog(player.Language.YouAreUsingThisWing);
                     return;
                 }
                 CopyOnWriteArrayList<Item> listWingItems = player.playerData.getInventoryOrCreate(GopetManager.WING_INVENTORY);
@@ -495,7 +495,7 @@ public partial class MenuController
                         p.applyInfo(player);
                     }
                     player.controller.updateWing();
-                    player.okDialog("Trang bị thành công");
+                    player.okDialog(player.Language.EquipOK);
                 }
                 break;
             case MENU_SELECT_TYPE_MONEY_TO_RENT_SKILL_CLAN:
@@ -518,7 +518,7 @@ public partial class MenuController
                                     {
                                         if (clan.SkillRent.Any(p => p.SkillId == clanSkillTemplate.id))
                                         {
-                                            player.redDialog("Kỹ năng đã thuê rồi");
+                                            player.redDialog(player.Language.SkillsAreAlreadyHired);
                                         }
                                         else
                                         {
@@ -538,7 +538,7 @@ public partial class MenuController
                                                         {
                                                             clan.SkillRent.Add(clanSkill);
                                                         }
-                                                        player.okDialog("Thuê thành công");
+                                                        player.okDialog(player.Language.HiredOK);
                                                     }
                                                     else
                                                     {
@@ -588,26 +588,26 @@ public partial class MenuController
                                         {
                                             if (clanMember.clan.SkillInfo[clanSkillTemplate.id] >= clanSkillTemplate.clanSkillLvlTemplates.Length)
                                             {
-                                                player.redDialog("Kỹ năng đạt cấp cao nhất rồi");
+                                                player.redDialog(player.Language.ClanSkillIsMaxLevel);
                                             }
                                             else
                                             {
                                                 clanMember.clan.SkillInfo[clanSkillTemplate.id]++;
                                                 clanMember.clan.potentialSkill--;
-                                                player.okDialog("Nâng cấp thành công");
+                                                player.okDialog(player.Language.UpgradeOK);
                                             }
                                         }
                                         else
                                         {
                                             clanMember.clan.SkillInfo[clanSkillTemplate.id] = 1;
                                             clanMember.clan.potentialSkill--;
-                                            player.okDialog("Nâng cấp thành công");
+                                            player.okDialog(player.Language.UpgradeOK);
                                         }
                                     }
                                 }
                                 else
                                 {
-                                    player.redDialog("Điểm kỹ năng bang hội không đủ");
+                                    player.redDialog(player.Language.NotEnoughClanSkillPoint);
                                 }
                             }
                             finally
@@ -661,7 +661,7 @@ public partial class MenuController
 
                     if (shopTemplateItem == null)
                     {
-                        player.redDialog("Vật phẩm này đã bị người khác mua");
+                        player.redDialog(player.Language.ItemWasSell);
                         return;
                     }
                     sbyte[] typeMoney = shopTemplateItem.getMoneyType();

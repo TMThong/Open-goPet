@@ -369,5 +369,16 @@ namespace Gopet.Language
         public string LearnSkillPetOK { get; set; } = "Học kỹ năng thành công";
         public string SkillPetNotFound { get; set; } = "Không có kỹ năng này";
         public string LearnSkillPetLaw { get; set; } = "Pet của bạn phải đạt mốc lvl 3, 5, 10 để học skill 1 2 3 nhé";
+        public string DeleteGymOK { get; set; } = "Tẩy thành công";
+        public string ThisIndicatorHasBeenErased { get; set; } = "Chỉ số này đã xóa hết rồi";
+        public string YourPetIsDie { get; set; } = "Pet của bạn đang bị thương!!!";
+        public string SelectPetDefOK { get; set; } = "Đã chọn {0} phòng thủ thành công!";
+        public string EquipOK { get; set; } = "Trang bị thành công";
+        public string YouAreUsingThisWing { get; set; } = "Bạn đang sử dụng cánh này!!!";
+        public string SkillsAreAlreadyHired { get; set; } = "Kỹ năng đã thuê rồi";
+        public string HiredOK { get; set; } = "Thuê thành công";
+        public string UpgradeOK { get; set; } = "Nâng cấp thành công";
+        public string NotEnoughClanSkillPoint { get; set; } = "Điểm kỹ năng bang hội không đủ";
+        public string ClanSkillIsMaxLevel { get; set; } = "Kỹ năng đạt cấp cao nhất rồi";
     }
 }
