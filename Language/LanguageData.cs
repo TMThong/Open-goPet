@@ -452,5 +452,10 @@ namespace Gopet.Language
         public string CannotBuyThisItemByMaintenance { get; set; } = "Sắp bảo trì không thể mua vật phẩm này";
         public string CannotBuyThisItemOfYourself { get; set; } = "Bạn không thể mua chính vật phẩm mà bạn bán";
         public string MapRequireYouHaveClan { get; set; } = "Map này cần phải có bang hội mới vào được";
+        public string TASK_REQUEST_KILL_MOB { get; set; } = "Tiêu diệt %s %s / %s";
+        public string TASK_REQUEST_PET_LVL { get; set; } = "Pet đạt đạt cấp %s / %s";
+        public string TASK_REQUEST_LEARN_SKILL_PET { get; set; } = "Học %s / %s kỹ năng cho thú cưng";
+        public string TASK_REQUEST_LEARN_SKILL2_PET { get; set; } = "Học %s / %s kỹ năng 2 cho thú cưng";
+        public string TASK_REQUEST_BUY_RANDOM_WEAPON { get; set; } = "Mua %s / %s vũ khí bất kì của cửa hàng ở Tp Linh Thú";
     }
 }

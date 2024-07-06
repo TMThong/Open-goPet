@@ -110,7 +110,7 @@ public class TaskCalculator
         return taskTemplates;
     }
 
-    public static String getTaskText(int[] task, int[][] taskInfo, long timeTask)
+    public static String getTaskText(int[] task, int[][] taskInfo, long timeTask, Player player)
     {
         if (task == null)
         {
@@ -124,19 +124,19 @@ public class TaskCalculator
             switch (taskI[0])
             {
                 case REQUEST_KILL_MOB:
-                    taskText.Add(Utilities.Format("Tiêu diệt %s %s / %s", GopetManager.PETTEMPLATE_HASH_MAP.get(taskI[2]).name, task[i], taskI[1]));
+                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_KILL_MOB, GopetManager.PETTEMPLATE_HASH_MAP.get(taskI[2]).name, task[i], taskI[1]));
                     break;
                 case REQUEST_PET_LVL:
-                    taskText.Add(Utilities.Format("Pet đạt đạt cấp %s / %s", task[i], taskI[1]));
+                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_PET_LVL, task[i], taskI[1]));
                     break;
                 case REQUEST_LEARN_SKILL_PET:
-                    taskText.Add(Utilities.Format("Học %s / %s kỹ năng cho thú cưng", task[i], taskI[1]));
+                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_LEARN_SKILL_PET, task[i], taskI[1]));
                     break;
                 case REQUEST_LEARN_SKILL2_PET:
-                    taskText.Add(Utilities.Format("Học %s / %s kỹ năng 2 cho thú cưng", task[i], taskI[1]));
+                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_LEARN_SKILL2_PET, task[i], taskI[1]));
                     break;
                 case REQUEST_BUY_RANDOM_WEAPON:
-                    taskText.Add(Utilities.Format("Mua %s / %s vũ khí bất kì của cửa hàng ở Tp Linh Thú", task[i], taskI[1]));
+                    taskText.Add(Utilities.Format(player.Language.TASK_REQUEST_BUY_RANDOM_WEAPON, task[i], taskI[1]));
                     break;
                 case REQUEST_UP_SKILL_PET:
                     taskText.Add(Utilities.Format("Nâng cấp %s / %s kỹ năng pet lên cấp %s", task[i], taskI[1], taskI[2]));

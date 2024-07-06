@@ -257,7 +257,7 @@ public partial class MenuController
                         TaskTemplate taskTemplate = taskData.getTemplate();
                         MenuItemInfo menuItemInfo = new MenuItemInfo(taskTemplate.getName(), taskTemplate.getDescription(), "dialog/1.png", true);
                         menuItemInfo.setShowDialog(true);
-                        menuItemInfo.setDialogText(TaskCalculator.getTaskText(taskData.task, taskData.taskInfo, taskData.timeTask));
+                        menuItemInfo.setDialogText(TaskCalculator.getTaskText(taskData.task, taskData.taskInfo, taskData.timeTask, player));
                         menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                         menuItemInfo.setCloseScreenAfterClick(true);
                         taskMenuInfos.add(menuItemInfo);
@@ -334,7 +334,7 @@ public partial class MenuController
                             {
                                 MenuItemInfo menuItemInfo = new MenuItemInfo(taskTemplate.getName(), taskTemplate.getDescription(), "dialog/1.png", true);
                                 menuItemInfo.setShowDialog(true);
-                                menuItemInfo.setDialogText(player.Language.DoYouWantGetThisTask + TaskCalculator.getTaskText(null, taskTemplate.getTask(), taskTemplate.getTimeTask()));
+                                menuItemInfo.setDialogText(player.Language.DoYouWantGetThisTask + TaskCalculator.getTaskText(null, taskTemplate.getTask(), taskTemplate.getTimeTask(), player));
                                 menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                                 menuItemInfo.setCloseScreenAfterClick(true);
                                 taskMenuInfos.add(menuItemInfo);
