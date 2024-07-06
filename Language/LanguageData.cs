@@ -471,5 +471,6 @@ namespace Gopet.Language
         public string TASK_REQUEST_MEET_NPC { get; set; } = "Gặp %s và trò chuyện %s / %s lần";
         public string TASK_REUQEST_BET_PLAYER_WIN { get; set; } = "Thách đấu thắng người chơi {0}/{1} lần";
         public string TASK_REQUEST_WAIT_NEW_TASK { get; set; } = "Con hãy chờ nhiệm vụ mới nhé !!!";
+        public string Request { get; set; } = "Yêu cầu";
     }
 }

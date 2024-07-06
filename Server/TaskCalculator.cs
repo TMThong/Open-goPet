@@ -183,7 +183,7 @@ public class TaskCalculator
                     break;
             }
         }
-        return "\n  ---- Yêu cầu ----\n" + String.Join("\n", taskText);
+        return "\n  ---- "+ player.Language.Request +" ----\n" + String.Join("\n", taskText);
     }
 
     public void onTaskUpdate(TaskData taskData, int taskRequestType, params object[] dObjects)
