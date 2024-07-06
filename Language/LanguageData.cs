@@ -416,5 +416,13 @@ namespace Gopet.Language
         public string DoYouWantKickMember { get; set; } = "Bạn có chắc muốn đuổi người chơi {0} không?";
         public string Kick { get; set; } = "Đuổi";
         public string UseOK { get; set; } = "Sử dụng thành công !!!";
+        public string UnequipOK { get; set; } = "Tháo thành công !!!";
+        public string YouNotEquipArchievement { get; set; } = "Bạn chưa đeo danh hiệu";
+        public string GiveUpClanPositionTitle { get; set; } = "Phong chức?";
+        public string GiveUpClanPositionDeputyLeaderOption { get; set; } = "Phong làm phó bang";
+        public string GiveUpClanPositionLeaderOption { get; set; } = "Nhường chức";
+        public string GiveUpClanPositionSeniorOption { get; set; } = "Phong làm trưởng lão";
+        public string GiveUpClanPositionMemberOption { get; set; } = "Hạ chức xuống làm thành viên";
+        public string RemoveFriendOK { get; set; } = "Xóa bạn thành công";
     }
 }

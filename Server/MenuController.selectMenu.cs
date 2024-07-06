@@ -1687,11 +1687,11 @@ public partial class MenuController
                         ClanMember memberSelect = clan.getMemberByUserId(index);
                         if (memberSelect == null)
                         {
-                            player.redDialog("Người chơi này không còn trong bang hội");
+                            player.redDialog(player.Language.ThisPlayerIsNotInThisClan);
                         }
                         else if (clanMember == memberSelect)
                         {
-                            player.redDialog("Không thể thao tác trên chính bản thân của mình");
+                            player.redDialog(player.Language.YouCannotManipulateYourself);
                         }
                         else
                         {
@@ -1699,15 +1699,15 @@ public partial class MenuController
                             JArrayList<Option> list = new();
                             if (clanMember.duty == Clan.TYPE_LEADER)
                             {
-                                list.add(new Option(0, "Nhường chức", 1));
-                                list.add(new Option(1, "Phong làm phó bang", 1));
-                                list.add(new Option(2, "Phong làm trưởng lão", 1));
-                                list.add(new Option(3, "Phong làm thành viên", 1));
+                                list.add(new Option(0, player.Language.GiveUpClanPositionLeaderOption, 1));
+                                list.add(new Option(1, player.Language.GiveUpClanPositionDeputyLeaderOption, 1));
+                                list.add(new Option(2, player.Language.GiveUpClanPositionSeniorOption, 1));
+                                list.add(new Option(3, player.Language.GiveUpClanPositionMemberOption, 1));
                             }
                             else if (clanMember.duty == Clan.TYPE_DEPUTY_LEADER)
                             {
-                                list.add(new Option(2, "Phong làm trưởng lão", 1));
-                                list.add(new Option(3, "Phong làm thành viên", 1));
+                                list.add(new Option(2, player.Language.GiveUpClanPositionSeniorOption, 1));
+                                list.add(new Option(3, player.Language.GiveUpClanPositionMemberOption, 1));
                             }
 
                             if (clanMember.duty != Clan.TYPE_NORMAL)
@@ -1715,7 +1715,7 @@ public partial class MenuController
                                 list.add(new Option(4, player.Language.Kick, 1));
                             }
 
-                            player.controller.sendListOption(MENU_SELECT_TYPE_UPGRADE_DUTY, "Phong tước?", CMD_CENTER_OK, list);
+                            player.controller.sendListOption(MENU_SELECT_TYPE_UPGRADE_DUTY, player.Language.GiveUpClanPositionTitle, CMD_CENTER_OK, list);
                         }
                     }
                     else
@@ -1755,12 +1755,12 @@ public partial class MenuController
                             if (player.playerData.CurrentAchievementId > 0)
                             {
                                 player.playerData.CurrentAchievementId = -1;
-                                player.okDialog("Tháo thành công !!!");
+                                player.okDialog(player.Language.UnequipOK);
                                 player.getPlace()?.updatePlayerAnimation(player);
                             }
                             else
                             {
-                                player.redDialog("Bạn chưa đeo danh hiệu");
+                                player.redDialog(player.Language.YouNotEquipArchievement);
                             }
                             break;
                     }
@@ -1812,7 +1812,7 @@ public partial class MenuController
                                         }
                                         else
                                         {
-                                            player.redDialog("Bạn của bạn đã offline");
+                                            player.redDialog(player.Language.PlayerOffline);
                                         }
                                     }
                                     break;
@@ -1836,7 +1836,7 @@ public partial class MenuController
                                 {
                                     friend.playerData.ListFriends.remove(player.user.user_id);
                                     player.playerData.ListFriends.remove(friendId);
-                                    player.okDialog("Xóa bạn thành công");
+                                    player.okDialog(player.Language.RemoveFriendOK);
                                 }
                                 else
                                 {
