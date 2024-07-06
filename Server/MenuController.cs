@@ -645,7 +645,7 @@ public partial class MenuController
             menuItemInfos.add(menuItemInfo);
         }
 
-        player.controller.showMenuItem(type, TYPE_MENU_PAYMENT, shopTemplate.getName(), menuItemInfos);
+        player.controller.showMenuItem(type, TYPE_MENU_PAYMENT, shopTemplate.getName(player), menuItemInfos);
     }
 
     public static ShopTemplate getShop(sbyte type, Player player)

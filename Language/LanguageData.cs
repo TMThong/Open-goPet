@@ -430,5 +430,16 @@ namespace Gopet.Language
         public string CannotFindMenu { get; set; } = "Không thể tìm thấy menu này (menuId={0})";
         public string UnblockOK { get; set; } = "Bỏ chặn thành công";
         public string UnblockAllOK { get; set; } = "Bỏ chặn tất cả thành công";
+        public string SHOP_ARMOUR { get; set; } = "Cửa hàng giáp";
+        public string SHOP_SKIN { get; set; } = "Cửa hàng trang phục";
+        public string SHOP_HAT { get; set; } = "Cửa hàng nón";
+        public string SHOP_WEAPON { get; set; } = "Cửa hàng vũ khí";
+        public string SHOP_THUONG_NHAN { get; set; } = "Cửa hàng của thương nhân";
+        public string SHOP_PET { get; set; } = "Cửa hàng thú cưng";
+        public string SHOP_FOOD { get; set; } = "Cửa hàng thức ăn";
+        public string SHOP_ARENA { get; set; } = "Cửa hàng đấu trường";
+        public string SHOP_CLAN { get; set; } = "Cửa hàng bang hội";
+        public string SHOP_ENERGY { get; set; } = "Cửa hàng năng lượng";
+        public string SHOP_GIAN_THUONG { get; set; } = "Cửa hàng gian thương";
     }
 }

@@ -1,53 +1,15 @@
 
 using Gopet.Data.Collections;
+using System.Xml.Linq;
 
 public class ShopTemplate  {
 
-    private String name;
     public JArrayList<ShopTemplateItem> shopTemplateItems = new();
     private sbyte type;
 
     public ShopTemplate(sbyte type) {
         this.type = type;
-        switch (type) {
-            case MenuController.SHOP_ARMOUR:
-                name = "Cửa hàng giáp";
-                break;
-            case MenuController.SHOP_SKIN:
-                name = "Cửa hàng trang phục";
-                break;
-            case MenuController.SHOP_HAT:
-                name = "Cửa hàng nón";
-                break;
-            case MenuController.SHOP_WEAPON:
-                name = "Cửa hàng vũ khí";
-                break;
-            case MenuController.SHOP_THUONG_NHAN:
-                name = "Cửa hàng của thương nhân";
-                break;
-            case MenuController.SHOP_PET:
-                name = "Cửa hàng thú cưng";
-                break;
-            case MenuController.SHOP_FOOD:
-                name = "Cửa hàng thức ăn";
-                break;
-            case MenuController.SHOP_ARENA:
-                name = "Cửa hàng đấu trường";
-                nextArena();
-                break;
-            case MenuController.SHOP_CLAN:
-                name = "Cửa hàng bang hội";
-                break;
-            case MenuController.SHOP_ENERGY:
-                name = "Cửa hàng năng lượng";
-                break;
-            case MenuController.SHOP_GIAN_THUONG:
-                name = "Cửa hàng gian thương";
-                break;
-            default:
-                name = "Error shop type " + type;
-                break;
-        }
+        
     }
 
     public void nextArena() {
@@ -59,8 +21,35 @@ public class ShopTemplate  {
         return this.shopTemplateItems;
     }
 
-    public string getName()
+    public string getName(Player player)
     {
-        return this.name;
+        switch (type)
+        {
+            case MenuController.SHOP_ARMOUR:
+                return player.Language.SHOP_ARMOUR;
+            case MenuController.SHOP_SKIN:
+                return player.Language.SHOP_SKIN;
+            case MenuController.SHOP_HAT:
+                return player.Language.SHOP_HAT;
+            case MenuController.SHOP_WEAPON:
+                return player.Language.SHOP_WEAPON;
+            case MenuController.SHOP_THUONG_NHAN:
+                return player.Language.SHOP_THUONG_NHAN;
+            case MenuController.SHOP_PET:
+                return player.Language.SHOP_PET;
+            case MenuController.SHOP_FOOD:
+                return player.Language.SHOP_FOOD;
+            case MenuController.SHOP_ARENA:
+                nextArena();
+                return player.Language.SHOP_ARENA;
+            case MenuController.SHOP_CLAN:
+                return player.Language.SHOP_CLAN;
+            case MenuController.SHOP_ENERGY:
+                return player.Language.SHOP_ENERGY;
+            case MenuController.SHOP_GIAN_THUONG:
+                return player.Language.SHOP_GIAN_THUONG;
+            default:
+                return "Error shop type " + type;
+        }
     }
 }
