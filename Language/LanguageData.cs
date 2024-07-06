@@ -21,6 +21,7 @@ namespace Gopet.Language
         public Dictionary<int, string> SkillNameLanguage { get; set; } = new Dictionary<int, string>();
         public Dictionary<int, string> SkillDescLanguage { get; set; } = new Dictionary<int, string>();
         public Dictionary<int, string> BossNameLanguage { get; set; } = new Dictionary<int, string>();
+        public Dictionary<int, string> BannerLanguage { get; set; } = new Dictionary<int, string>();
 
         public string OldVersionNotify { get; set; } = "Phiên bản cũ rồi, bạn vui lòng tải bản mới nhất";
         public string AccountNonAcitve { get; set; } = "Tài khoản chưa được kích hoạt";

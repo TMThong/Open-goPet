@@ -37,7 +37,6 @@ namespace Gopet.App
             ClanManager.init();
             GopetManager.loadMarket();
             BXHManager.instance.start();
-            MenuController.init();
             FieldManager.Init();
             initRuntime();
             RuntimeServer.instance.start();

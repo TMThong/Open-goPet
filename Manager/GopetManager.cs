@@ -936,6 +936,11 @@ public class GopetManager
             Language[VI_CODE].SkillDescLanguage[item.skillID] = item.description;
         }
 
+        foreach (var item in boss)
+        {
+            Language[VI_CODE].BossNameLanguage[item.Key] = item.Value.name;
+        }
+
         //SaveJsonFile(Language["vi"], "/lang/vi.json");
     }
 
