@@ -10,6 +10,11 @@ public class TaskData {
     public DateTime? ExpireTask {  get; set; } = null;
     public bool CanCancelTask { get; set; } = true;
 
+    public TaskData()
+    {
+
+    }
+
     public TaskData(TaskTemplate taskTemplate) {
         this.taskTemplateId = taskTemplate.taskId;
         this.taskInfo = taskTemplate.task;

@@ -460,6 +460,7 @@ public class GameController
                 break;
             case GopetCMD.LETTER_BOX:
                 showLetterBox();
+                //testMsg65();
                 break;
             case GopetCMD.LETTER_COMMAND_REQUEST_ADD_FRIEND:
                 requestAddFriend(msg.readInt());
@@ -2728,7 +2729,7 @@ public class GameController
         Item skinItem = player.playerData.skin;
         if (skinItem != null)
         {
-            if (skinItem.expire < Utilities.CurrentTimeMillis)
+            if (skinItem.expire < Utilities.CurrentTimeMillis && skinItem.expire >= 0)
             {
                 player.playerData.skin = null;
             }
@@ -3980,6 +3981,39 @@ public class GameController
                         }
                         break;
                     }
+                case GopetManager.GIFT_TITLE:
+                    {
+                        int titleId = giftInfo[1];
+                        bool isInfinity = giftInfo[2] == 1;
+                        if (GopetManager.AchievementMAP.ContainsKey(titleId))
+                        {
+                            Achievement achievement = new Achievement(titleId);
+                            if (isInfinity)
+                            {
+                                var achsDuplicate = player.playerData.achievements.Where(p => p.IdTemplate == achievement.IdTemplate && !p.Expire.HasValue);
+                                if (achsDuplicate.Any())
+                                {
+                                    continue;
+                                }
+                                else
+                                    goto ADD_TITLE;
+                            }
+                            else
+                            {
+                                int min = giftInfo[3];
+                                int hours = giftInfo.Length > 4 ? giftInfo[4] : 0;
+                                int day = giftInfo.Length > 5 ? giftInfo[5] : 0;
+                                int month = giftInfo.Length > 6 ? giftInfo[6] : 0;
+                                int year = giftInfo.Length > 7 ? giftInfo[7] : 0;
+                                achievement.Expire = DateTime.Now.AddMinutes(min).AddHours(hours).AddDays(day).AddMonths(month).AddYears(year);
+                                goto ADD_TITLE;
+                            }
+                        ADD_TITLE:
+                            player.playerData.addAchivement(achievement, player);
+                            popups.add(new Popup(achievement.Template.getName(player)));
+                        }
+                    }
+                    break;
             }
         }
         return popups;
@@ -4832,6 +4866,23 @@ public class GameController
             m.putUTF("Này là cl gì " + i);
             m.putbool(true);
             m.putbool(true);
+        }
+        player.session.sendMessage(m);
+    }
+
+    public void testMsg65()
+    {
+        Message m = messagePetService(65);
+        m.putInt(0);
+        m.putInt(0);
+        m.putInt(0);
+        m.putInt(0);
+        for (int i = 0; i < 9; i++)
+        {
+            byte[] bytes = File.ReadAllBytes(Directory.GetCurrentDirectory() + "/assets/tatoos/1.png");
+            sbyte[] m_buffer = bytes.sbytes();
+            m.putInt(m_buffer.Length);
+            m.writer().write(m_buffer);
         }
         player.session.sendMessage(m);
     }

@@ -199,6 +199,10 @@ public class GopetManager
     /// Quà là điểm cống hiến bang hội
     /// </summary>
     public const int GIFT_FUND_CLAN = 12;
+    /// <summary>
+    /// Danh hiệu
+    /// </summary>
+    public const int GIFT_TITLE = 13;
     /**
      * thời gian chờ lượt đánh (mili giây)
      */
