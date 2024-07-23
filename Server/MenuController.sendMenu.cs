@@ -289,6 +289,10 @@ public partial class MenuController
                             player.controller.sendListOption(MENU_SELECT_MONEY_TO_PAY_FOR_ENCHANT_WING, player.Language.PayForEnchantWing, "", list);
                         }
                     }
+                    else
+                    {
+                        throw new NullReferenceException("Tml nào bug index cánh");
+                    }
                 }
                 break;
             case MENU_OPTION_TASK:

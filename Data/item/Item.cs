@@ -370,7 +370,7 @@ namespace Gopet.Data.GopetItem
             {
                 return getTemp().getName(player) + " x" + count + (canTrade ? "" : player.Language.LockItemDescrption);
             }
-            if (Template.type == GopetManager.WING_INVENTORY)
+            if (Template.type == GopetManager.WING_ITEM)
             {
                 return getTemp().getName(player) + player.Language.level + lvl + (canTrade ? "" : player.Language.LockItemDescrption);
             }

@@ -1520,7 +1520,7 @@ public partial class MenuController
                             player.controller.showInputDialog(INPUT_TYPE_NAME_BUFF_ENCHANT_TATTOO, "Buff cường hóa xăm", new String[] { "Tên nhân vật :" });
                             break;
                         case ADMIN_INDEX_PLAYER_LOCATION:
-                            player.okDialog($"{player.playerData.x}|{player.playerData.y}");
+                            player.okDialog($"{player.playerData.x}|{player.playerData.y}   zone {place.zoneID}  map {place.map.mapID}");
                             break;
                     }
                 }

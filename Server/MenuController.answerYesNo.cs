@@ -107,7 +107,7 @@ public partial class MenuController
                                                 }
                                                 else
                                                 {
-                                                    wingItem.lvl += enchantWingData.NumDropLevelWing;
+                                                    wingItem.lvl -= enchantWingData.NumDropLevelWing;
                                                     player.getPet()?.applyInfo(player);
                                                     player.redDialog(string.Format(player.Language.EnchantWingFail, enchantWingData.NumDropLevelWing));
                                                 }

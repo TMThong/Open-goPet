@@ -29,7 +29,7 @@ namespace Gopet.Language
         public Dictionary<int, string> BannerLanguage { get; set; } = new Dictionary<int, string>() 
         {
             [BANNER_SHOW_ARENA_EVENT_BANNER] = "Các người chơi nhanh chóng đến đấu trường báo danh tham gia lôi đài còn {0} phút nữa bắt đầu rồi!!! ",
-            [BANNER_SHOW_BOSS_SUMMON] = "Boss {0} đã xuất hiện tại {1} khu %s nhanh tay lên nào!!!!",
+            [BANNER_SHOW_BOSS_SUMMON] = "Boss {0} đã xuất hiện tại {1} khu {2} nhanh tay lên nào!!!!",
             [BANNER_MANTENANCE_MESSAGE] = "Sau {0} phút nữa sẽ bảo trì, các người chơi vui lòng thoát game sớm tránh bị mất dữ liệu",
         };
 

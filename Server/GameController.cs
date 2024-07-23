@@ -1021,6 +1021,9 @@ public class GameController
             case GopetCMD.WING:
                 {
                     sbyte type = message.readsbyte();
+#if DEBUG_LOG
+                    GopetManager.ServerMonitor.LogWarning($"Message cánh: {type}");
+#endif
                     switch (type)
                     {
                         case GopetCMD.WING_TYPE_INVENTORY:
@@ -1237,8 +1240,8 @@ public class GameController
         if (indexWing == -1) wingItem = player.playerData.wing;
         else
         {
-            var wingInventory = player.playerData[GopetManager.WING_INVENTORY];
-            if (indexWing <= 0 && wingInventory.Count > indexWing)
+            var wingInventory = player.playerData.getInventoryOrCreate(GopetManager.WING_INVENTORY);
+            if (indexWing >= 0 && wingInventory.Count > indexWing)
             {
                 wingItem = wingInventory[indexWing];
             }

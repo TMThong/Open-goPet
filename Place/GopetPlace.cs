@@ -609,7 +609,7 @@ public class GopetPlace : Place
                                 nGopetMobs.add(boss);
                                 PlayerManager.showBanner((l) => string.Format(l.BannerLanguage[LanguageData.BANNER_SHOW_BOSS_SUMMON], boss.Template.name, this.map.mapTemplate.name, this.zoneID));
                                 numMobDie[i] = 0;
-                                continue;
+                                goto END_INIT_MOB;
                             }
                         }
                     }
@@ -631,6 +631,7 @@ public class GopetPlace : Place
                     {
                         numMobDie[i]++;
                     }
+                END_INIT_MOB:;
                 }
                 sendMob(nGopetMobs);
             }
