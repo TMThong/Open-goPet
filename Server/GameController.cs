@@ -1277,10 +1277,10 @@ public class GameController
             message.putsbyte(GopetCMD.MY_PET_INFO);
             //hp
             message.putInt(player.playerData.petSelected.hp);
-            //mp
-            message.putInt(player.playerData.petSelected.mp);
             //max Hp
             message.putInt(player.playerData.petSelected.maxHp);
+            //mp
+            message.putInt(player.playerData.petSelected.mp);
             //max Mp
             message.putInt(player.playerData.petSelected.maxMp);
             message.cleanup();

@@ -349,7 +349,7 @@ public class Pet : GameObject, IBinaryObject<Pet>
         {
             otherItems.add(wingItem);
         }
-        
+
 
         var ach = player.controller.FindSeach(player.playerData.CurrentAchievementId);
         if (ach != null)
@@ -374,27 +374,27 @@ public class Pet : GameObject, IBinaryObject<Pet>
             this.def += it.getDef();
             this.maxHp += it.getHp();
             this.maxMp += it.getMp();
-            if (it == skinItem)
+        }
+        foreach (var it in otherItems)
+        {
+            if (it.Template.itemOption.Length > 0)
             {
-                if (it.Template.itemOption.Length > 0)
+                for (int i = 0; i < it.Template.itemOptionValue.Length; i++)
                 {
-                    for (int i = 0; i < it.Template.itemOptionValue.Length; i++)
+                    switch (it.Template.itemOption[i])
                     {
-                        switch (it.Template.itemOption[i])
-                        {
-                            case ItemInfo.OptionType.PERCENT_HP:
-                                this.maxHp += (int)Utilities.GetValueFromPercent(this.maxHp, it.Template.itemOptionValue[i] / 100);
-                                break;
-                            case ItemInfo.OptionType.PERCENT_MP:
-                                this.maxMp += (int)Utilities.GetValueFromPercent(this.maxMp, it.Template.itemOptionValue[i] / 100);
-                                break;
-                            case ItemInfo.OptionType.PERCENT_ATK:
-                                this.atk += (int)Utilities.GetValueFromPercent(this.atk, it.Template.itemOptionValue[i] / 100);
-                                break;
-                            case ItemInfo.OptionType.PERCENT_DEF:
-                                this.def += (int)Utilities.GetValueFromPercent(this.def, it.Template.itemOptionValue[i] / 100);
-                                break;
-                        }
+                        case ItemInfo.OptionType.PERCENT_HP:
+                            this.maxHp += (int)Utilities.GetValueFromPercent(this.maxHp, it.Template.itemOptionValue[i] / 100);
+                            break;
+                        case ItemInfo.OptionType.PERCENT_MP:
+                            this.maxMp += (int)Utilities.GetValueFromPercent(this.maxMp, it.Template.itemOptionValue[i] / 100);
+                            break;
+                        case ItemInfo.OptionType.PERCENT_ATK:
+                            this.atk += (int)Utilities.GetValueFromPercent(this.atk, it.Template.itemOptionValue[i] / 100);
+                            break;
+                        case ItemInfo.OptionType.PERCENT_DEF:
+                            this.def += (int)Utilities.GetValueFromPercent(this.def, it.Template.itemOptionValue[i] / 100);
+                            break;
                     }
                 }
             }
