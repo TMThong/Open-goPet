@@ -574,7 +574,7 @@ Thread.Sleep(1000);
 
     public void okDialog(String str, params object[] objects)
     {
-         okDialog(string.Format(str, objects));
+        okDialog(string.Format(str, objects));
     }
 
     public virtual void notEnoughHp()
@@ -806,11 +806,27 @@ Thread.Sleep(1000);
 
     public void showListServer(ServerInfo[] serverInfos)
     {
-        Message m = new Message(GopetCMD.SERVER_LIST);
-        m.putInt(serverInfos.Length);
-        for (int i = 0; i < serverInfos.Length; i++)
+        ServerInfo[] infos = serverInfos.Where((s) =>
         {
-            ServerInfo serverInfo = serverInfos[i];
+            if (s.GreaterThanEquals != null)
+            {
+                if (!(this.ApplicationVersion >= s.GreaterThanEquals))
+                    return false;
+            }
+            if (s.LessThan != null)
+            {
+                if (this.ApplicationVersion > s.LessThan)
+                    return false;
+            }
+            return true;
+        }).ToArray();
+
+
+        Message m = new Message(GopetCMD.SERVER_LIST);
+        m.putInt(infos.Length);
+        for (int i = 0; i < infos.Length; i++)
+        {
+            ServerInfo serverInfo = infos[i];
             m.putUTF(serverInfo.Name);
             m.putUTF(serverInfo.IpAddress);
             m.putInt(serverInfo.Port);
@@ -818,9 +834,9 @@ Thread.Sleep(1000);
             m.putInt(serverInfo.Port);
         }
 
-        for (int i = 0; i < serverInfos.Length; i++)
+        for (int i = 0; i < infos.Length; i++)
         {
-            ServerInfo serverInfo = serverInfos[i];
+            ServerInfo serverInfo = infos[i];
             m.putbool(true);
             m.putbool(true);
         }

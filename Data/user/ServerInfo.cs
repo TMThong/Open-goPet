@@ -15,5 +15,7 @@ namespace Gopet.Data.user
         public int Port { get; set; }
 
         public bool NeedAdmin { get; set; }
+        public Version GreaterThanEquals { get; set; }
+        public Version LessThan { get; set; }
     }
 }
