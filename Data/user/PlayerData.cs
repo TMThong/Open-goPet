@@ -52,6 +52,7 @@ public class PlayerData
     public int EventPoint { get; set; }
     public int NumOfUseKiteNormal { get; set; }
     public int NumOfUseKiteVip { get; set; }
+    public int KioskFund { get; set; }
 
     public Dictionary<int, int> numUseEnergy { get; set; } = new();
 
@@ -137,7 +138,8 @@ public class PlayerData
                             ListFriends = @ListFriends,
                             LastTimeOnline = @LastTimeOnline,
                             LettersSendTime = @LettersSendTime,
-                            MoneyDisplays = @MoneyDisplays
+                            MoneyDisplays = @MoneyDisplays,
+                            KioskFund = @KioskFund
                             WHERE ID = @ID", playerData);
     }
 

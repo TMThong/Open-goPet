@@ -138,7 +138,7 @@ namespace Gopet.Data.Map
 
         public void confirmBuy(Player player, SellItem sellItem)
         {
-            if(Maintenance.gI().isIsMaintenance())
+            if (Maintenance.gI().isIsMaintenance())
             {
                 player.redDialog(player.Language.CannotBuyThisItemByMaintenance);
                 return;
@@ -149,11 +149,12 @@ namespace Gopet.Data.Map
                 player.redDialog(player.Language.ItemWasSell);
                 return;
             }
-            if (player.checkCoin(sellItem.price))
+            if (MenuController.checkMoney(GopetManager.MONEY_TYPE_CRYSTAL_ITEM, sellItem.price, player))
             {
                 if (!sellItem.hasSell)
                 {
-                    player.addCoin(-sellItem.price);
+                    //player.addCoin(-sellItem.price);
+                    MenuController.addMoney(GopetManager.MONEY_TYPE_CRYSTAL_ITEM, -sellItem.price, player);
                     sellItem.setHasSell(true);
                     if (sellItem.ItemSell != null)
                     {
@@ -166,19 +167,19 @@ namespace Gopet.Data.Map
                     player.okDialog(player.Language.BuyOK);
                     kioskItems.remove(sellItem);
                     Player sellPlayer = PlayerManager.get(sellItem.user_id);
-                    long priceReiceived = Utilities.round(Utilities.GetValueFromPercent(sellItem.price, 100f - GopetManager.KIOSK_PER_SELL));
+                    int priceReiceived = Utilities.round(Utilities.GetValueFromPercent(sellItem.price, 100f - GopetManager.KIOSK_PER_SELL));
                     if (sellPlayer != null)
                     {
-                        sellPlayer.addCoin(priceReiceived);
+                        MenuController.addMoney(GopetManager.MONEY_TYPE_CRYSTAL_ITEM, priceReiceived, sellPlayer);
                         sellPlayer.playerData.save();
                         HistoryManager.addHistory(new History(sellItem.user_id).setObj(sellItem).setLog("Bán thành công vật phẩm trong ki ốt người mua là " + player.playerData.name));
                     }
                     else
                     {
-                        using(var conn = MYSQLManager.create())
+                        using (var conn = MYSQLManager.create())
                         {
-                            conn.Execute("Update `player` set coin = coin + @priceReiceived where user_id =@user_id",
-                                new { priceReiceived = priceReiceived,  user_id = sellItem.user_id });
+                            conn.Execute("Update `player` set KioskFund = KioskFund + @priceReiceived where user_id =@user_id",
+                                new { priceReiceived = priceReiceived, user_id = sellItem.user_id });
                             HistoryManager.addHistory(new History(sellItem.user_id).setObj(sellItem).setLog("Bán thành công vật phẩm trong ki ốt người mua là " + player.playerData.name));
                         }
                     }
@@ -237,10 +238,10 @@ namespace Gopet.Data.Map
                         HistoryManager.addHistory(new History(kioskItem.user_id).setObj(kioskItem).setLog("Lưu vật phẩm ki ốt vào cơ sở dữ liệu thành công"));
                         continue;
                     }
-                    using(var conn = MYSQLManager.create())
+                    using (var conn = MYSQLManager.create())
                     {
                         conn.Execute("INSERT INTO `kiosk_recovery`(`kioskType`, `user_id`, `item`) VALUES (@kioskType,@user_id,@jsonData)",
-                            new { kioskType = kioskType, user_id = kioskItem.user_id, jsonData =  JsonConvert.SerializeObject(kioskItem) });
+                            new { kioskType = kioskType, user_id = kioskItem.user_id, jsonData = JsonConvert.SerializeObject(kioskItem) });
                         HistoryManager.addHistory(new History(kioskItem.user_id).setObj(kioskItem).setLog("Lưu vật phẩm ki ốt vào cơ sở dữ liệu thành công"));
                     }
                 }

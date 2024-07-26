@@ -465,6 +465,11 @@ Thread.Sleep(1000);
                             }
                         }
 
+                        if (playerData.KioskFund > 0)
+                        {
+                            MenuController.addMoney(GopetManager.MONEY_TYPE_CRYSTAL_ITEM, playerData.KioskFund, this);
+                            playerData.KioskFund = 0;
+                        }
                         int goldPlus = 0;
                         JArrayList<String> listIdRemove = new();
                         var exhangeGoldData = gameconn.Query("SELECT * FROM `exchange_gold` WHERE `user_id` = @user_id", new { user_id = this.user.user_id });
