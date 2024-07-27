@@ -4894,15 +4894,20 @@ public class GameController
     {
         if (player.controller.checkCountItem(itemSell, count) || !itemSell.Template.isStackable)
         {
-            if(!itemSell.Template.isStackable)
-            {
-                count = 1;
-            }
             var inventory = player.playerData.items.Where(p => p.Value.Any(c => c == itemSell));
             if (!inventory.Any())
             {
                 player.redDialog(player.Language.BugWarning);
                 return;
+            }
+            if (!itemSell.Template.isStackable)
+            {
+                count = 1;
+                player.playerData.TrashItemBackup[itemSell] = DateTime.Now;
+            }
+            else
+            {
+                player.playerData.TrashItemBackup[new Item(itemSell.Template.itemId, count)] = DateTime.Now;
             }
             sbyte inentoryType = inventory.First().Key;
             int price = count * itemSell.Template.price;

@@ -508,7 +508,7 @@ public class GopetManager
     public const int PRICE_GOLD_ENCHANT_TATTO = 2000;
     public const int PRICE_COIN_ARENA_JOURNALISM = 2000;
     public const int PRICE_GOLD_ARENA_JOURNALISM = 500;
-    public const int PERCENT_EXCHANGE_GOLD_TO_COIN = 1;
+    public const int PERCENT_EXCHANGE_GOLD_TO_COIN = 10;
     public const int MAX_LVL_ENCHANT_WING = 10;
     public const float PERCENT_ADD_WHEN_ENCHANT_WING = 10f;
     public const int POINT_WHEN_KILL_MOB_CHALLENGE = 3;
@@ -588,6 +588,7 @@ public class GopetManager
         SqlMapper.AddTypeHandler(new JsonAdapter<Dictionary<int, DateTime>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<Waypoint[]>());
         SqlMapper.AddTypeHandler(new JsonAdapter<PetSkillInfo[]>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<Dictionary<Item, DateTime>>());
         SqlMapper.AddTypeHandler(new VersionAdapter());
         shopTemplate.put(MenuController.SHOP_ARMOUR, new ShopTemplate(MenuController.SHOP_ARMOUR));
         shopTemplate.put(MenuController.SHOP_SKIN, new ShopTemplate(MenuController.SHOP_SKIN));

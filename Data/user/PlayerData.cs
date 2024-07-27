@@ -70,6 +70,7 @@ public class PlayerData
     public DateTime LastTimeOnline { get; set; }
 
     public CopyOnWriteArrayList<int> MoneyDisplays { get; set; } = new();
+    public Dictionary<Item, DateTime> TrashItemBackup { get; set; } = new();
 
     public PlayerData()
     {
@@ -137,7 +138,8 @@ public class PlayerData
                             ListFriends = @ListFriends,
                             LastTimeOnline = @LastTimeOnline,
                             LettersSendTime = @LettersSendTime,
-                            MoneyDisplays = @MoneyDisplays
+                            MoneyDisplays = @MoneyDisplays,
+                            TrashItemBackup = @TrashItemBackup
                             WHERE ID = @ID", playerData);
     }
 
