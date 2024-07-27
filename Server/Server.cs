@@ -1,4 +1,4 @@
-
+﻿
 
 using Gopet.Data.Collections;
 using System.Net.Sockets;
@@ -25,9 +25,16 @@ namespace Gopet.MServer
                 serverSc.Start();
                 for (global::System.Int32 i = 0; i < 40; i++)
                 {
-                    serverSc.BeginAcceptTcpClient(new AsyncCallback(AcceptCallback), serverSc);
+                    CreateThreadsListener();
                 }
             }
+        }
+        /// <summary>
+        /// Tạo luồng lắng nghe máy khách
+        /// </summary>
+        public void CreateThreadsListener()
+        {
+            serverSc.BeginAcceptTcpClient(new AsyncCallback(AcceptCallback), serverSc);
         }
 
 

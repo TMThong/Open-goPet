@@ -154,6 +154,25 @@ namespace Gopet.APIs
             return Ok(GopetApiExtentsion.CreateOKRepository($" {min} phút nữa sẽ bảo trì"));
         }
 
+        [HttpGet("/api/addServerListenerThreads/{num}")]
+        public IActionResult addServerListenerThreads(int num)
+        {
+            int num_threads = 0;
+            for (int i = 0; i < num; i++)
+            {
+                try
+                {
+                    Main.server.CreateThreadsListener();
+                }
+                finally
+                {
+                    num_threads--;
+                }
+                num_threads++;
+            }
+            return Ok(GopetApiExtentsion.CreateOKRepository($"Tạo thành công {num_threads} luồng"));
+        }
+
         [HttpGet("/api/maintenance/reboot")]
         public IActionResult reboot()
         {

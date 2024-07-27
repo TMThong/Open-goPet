@@ -62,7 +62,7 @@ public class PetTatto : IBinaryObject<PetTatto>
 
         if (lvl > 0)
         {
-            infoStrings.add($" "+ player.Language.level +" {lvl}");
+            infoStrings.add($" "+ player.Language.level + $" {lvl}");
         }
 
         if (getAtk() > 0)
