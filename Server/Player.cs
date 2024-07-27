@@ -420,7 +420,7 @@ Thread.Sleep(1000);
                             gameconn.Execute("DELETE FROM `letter` WHERE `letter`.`targetId` = @targetId", new { targetId = playerData.user_id });
                         }
 
-                        foreach (var item in playerData.TrashItemBackup.Where(t => t.Value.AddDays(3) > DateTime.Now))
+                        foreach (var item in playerData.TrashItemBackup.Where(t => t.Value.AddDays(3) < DateTime.Now))
                         {
                             playerData.TrashItemBackup.Remove(item.Key);
                         }
