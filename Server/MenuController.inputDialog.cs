@@ -22,7 +22,7 @@ public partial class MenuController
             {
                 case INPUT_COUNT_OF_ITEM_TRASH_WANT_SELL:
                     {
-                        if (player.controller.objectPerformed.ContainsKey(OBJKEY_ITEM_TRASH_WANT_TO_SELL))
+                        if (!player.controller.objectPerformed.ContainsKey(OBJKEY_ITEM_TRASH_WANT_TO_SELL))
                         {
                             player.fastAction();
                             return;

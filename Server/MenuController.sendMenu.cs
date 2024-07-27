@@ -36,7 +36,7 @@ public partial class MenuController
                         MenuItemInfo menuItemInfo = new MenuItemInfo();
                         menuItemInfo.setCanSelect(true);
                         menuItemInfo.setDesc(string.Format(player.Language.PriceKioskDescription, item.Template.price) + " (ngoc)");
-                        menuItemInfo.setTitleMenu(item.Template.getName(player));
+                        menuItemInfo.setTitleMenu(item.getName(player));
                         menuItemInfo.setImgPath(item.Template.iconPath);
                         menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                         menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, item.Template.getName(player)));
