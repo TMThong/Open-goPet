@@ -560,12 +560,7 @@ public class GopetManager
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 100, 10),
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 1000, 100),
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 10000,  1000),
-            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 100000,  10000),
-            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_CRYSTAL_ITEM, 10, 1),
-            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_CRYSTAL_ITEM, 100, 10),
-            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_CRYSTAL_ITEM, 1000, 100),
-            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_CRYSTAL_ITEM, 10000,  1000),
-            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_CRYSTAL_ITEM, 100000,  10000)
+            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 100000,  10000)
             });
     static GopetManager()
     {
