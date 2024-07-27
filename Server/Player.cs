@@ -153,8 +153,8 @@ public class Player : IHandleMessage
         catch (Exception e)
         {
             e.printStackTrace();
-#if DEBUG
-            //throw e;
+#if DEBUG_LOG
+            throw e;
 #elif !DEBUG
 Thread.Sleep(1000);
 #endif

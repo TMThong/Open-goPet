@@ -114,6 +114,7 @@ public partial class MenuController
     public const int MENU_LIST_BLOCK_FRIEND_OPTION = 1064;
     public const int MENU_LIST_REQUEST_ADD_FRIEND_OPTION = 1065;
     public const int MENU_MONEY_DISPLAY_SETTING = 1066;
+    public const int MENU_SELL_TRASH_ITEM = 1067;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -210,9 +211,21 @@ public partial class MenuController
      * Tùy chọn tẩy tiềm năng
      */
     public const int OP_DELETE_TIEM_NANG = 24;
+    /// <summary>
+    /// Cửa hàng thú cưng
+    /// </summary>
     public const int OP_SHOP_PET = 2;
+    /// <summary>
+    /// Bảng xếp hạng Pet
+    /// </summary>
     public const int OP_TOP_PET = 3;
+    /// <summary>
+    /// Bảng xếp hạng người có gold nhiều nhất
+    /// </summary>
     public const int OP_TOP_GOLD = 4;
+    /// <summary>
+    /// Đổi thưởng
+    /// </summary>
     public const int OP_CHANGE_GIFT = 5;
     public const int OP_LIST_GIFT = 6;
     public const int OP_UPGRADE_PET = 7;
@@ -274,29 +287,46 @@ public partial class MenuController
     public const int OP_EVENT_SUMMER_2024_MAKE_KITE_VIP = 73;
     public const int OP_EVENT_SUMMER_2024_TOP_KITE_NORMAL = 74;
     public const int OP_EVENT_SUMMER_2024_TOP_KITE_VIP = 75;
+    /// <summary>
+    /// Hướng dẫn sự kiện mùa hè 2024
+    /// </summary>
     public const int OP_EVENT_SUMMER_2024_GUIDE = 76;
+    /// <summary>
+    /// Dùng danh hiệu
+    /// </summary>
     public const int OP_USE_ACHIEVEMENT = 77;
+    /// <summary>
+    /// Hiển thị shop gian thương
+    /// </summary>
     public const int OP_SHOP_GIAN_THUONG = 78;
+    /// <summary>
+    /// Bán vật phẩm để trống hành trang
+    /// </summary>
+    public const int OP_SELL_TRASH_ITEM = 79;
+    /// <summary>
+    /// Option Custom
+    /// Trao đổi thưởng bằng 
+    /// </summary>
     public const int OP_TRADE_GIFT_COIN = 1000000000;
     public const int OP_TRADE_GIFT_GOLD = 1000000001;
-    /**
-     * Văn bản khi hiện center dialog
-     */
+    /// <summary>
+    /// Văn bản khi hiện center dialog
+    /// </summary>
     public const String CMD_CENTER_OK = "OK";
 
-    /**
-     * Cửa hàng vũ khí
-     */
+    /// <summary>
+    /// Cửa hàng vũ khí
+    /// </summary>
     public const sbyte SHOP_WEAPON = 1;
 
-    /**
-     * Cửa hàng giáp
-     */
+    /// <summary>
+    /// Cửa hàng giáp
+    /// </summary>
     public const sbyte SHOP_ARMOUR = 2;
 
-    /**
-     * Cửa hàng nón
-     */
+    /// <summary>
+    /// Cửa hàng nón
+    /// </summary>
     public const sbyte SHOP_HAT = 3;
     public const sbyte SHOP_SKIN = 7;
     public const sbyte SHOP_FOOD = 4;
@@ -364,6 +394,10 @@ public partial class MenuController
     public const int OBJKEY_CLAN_SKILL_TEMPLATE_RENT = 50;
     public const int OBJKEY_INDEX_FRIEND = 51;
     public const int OBJKEY_INDEX_ITEM_MONEY = 52;
+    /// <summary>
+    /// Vật phẩm muốn thanh lý
+    /// </summary>
+    public const int OBJKEY_ITEM_TRASH_WANT_TO_SELL = 53;
     public const int DIALOG_CONFIRM_REMOVE_ITEM_EQUIP = 0;
     public const int DIALOG_CONFIRM_BUY_KIOSK_ITEM = 1;
     public const int DIALOG_ENCHANT = 3;
@@ -404,12 +438,13 @@ public partial class MenuController
     public const int INPUT_TYPE_NAME_PET_WHEN_BUY_PET = 20;
     public const int INPUT_TYPE_NAME_PLAYER_TO_GET_ITEM = 21;
     public const int INPUT_TYPE_NAME_PLAYER_TO_GIVE_ITEM = 22;
-    public const int INPUT_TYPE_NAME_BUFF_ENCHANT_TATTOO= 23;
+    public const int INPUT_TYPE_NAME_BUFF_ENCHANT_TATTOO = 23;
+    public const int INPUT_COUNT_OF_ITEM_TRASH_WANT_SELL = 24;
     public const int IMGDIALOG_CAPTCHA = 0;
     #endregion
     public static JArrayList<MenuItemInfo> getPetFreeLst(Player player)
     {
-        JArrayList < MenuItemInfo > menuItemInfos = new JArrayList<MenuItemInfo>();
+        JArrayList<MenuItemInfo> menuItemInfos = new JArrayList<MenuItemInfo>();
         foreach (int petFreeId in GopetManager.petFreeIds)
         {
             if (GopetManager.PETTEMPLATE_HASH_MAP.ContainsKey(petFreeId))
@@ -856,6 +891,7 @@ public partial class MenuController
                 return new sbyte[] { InputReader.FIELD_LONG };
             case INPUT_DIALOG_ADMIN_GET_HISTORY:
                 return new sbyte[] { InputReader.FIELD_STRING, InputReader.FIELD_STRING, InputReader.FIELD_STRING };
+            case INPUT_COUNT_OF_ITEM_TRASH_WANT_SELL:
             case INPUT_DIALOG_COUNT_OF_KISOK_ITEM:
             case INPUT_DIALOG_CHALLENGE_INVITE:
             case INPUT_DIALOG_KIOSK:

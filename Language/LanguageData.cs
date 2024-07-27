@@ -503,5 +503,8 @@ namespace Gopet.Language
         public string PercentBloodSuckingItemDesc { get; set; } = " hút máu ";
         public string ItemPartPetDesc { get; set; } = "Dùng {0} mảnh sẽ đổi được pet {1}";
         public string ItemPartItemDesc { get; set; } = "Dùng {0} mảnh sẽ đổi được {1}";
+        public string SellYourItemMenuTitle { get; set; } = "Bán vật phẩm";
+        public string CountOfItemTrashWantSell { get; set; } = "Số lượng vật phẩm múa bán";
+        public string SellTrashItemOK { get; set; } = "Bán {0} thành công và nhận được {1} ";
     }
 }

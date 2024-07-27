@@ -25,6 +25,7 @@ namespace Gopet.Data.Dialog
             setDesc("");
             setImgPath("");
             setRightCmdText("");
+            setLeftCmdText("");
         }
 
         public MenuItemInfo(string titleMenu, string desc, string imgPath, bool canSelect)

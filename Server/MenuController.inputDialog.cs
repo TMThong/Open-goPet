@@ -20,106 +20,127 @@ public partial class MenuController
         {
             switch (dialogInputId)
             {
+                case INPUT_COUNT_OF_ITEM_TRASH_WANT_SELL:
+                    {
+                        if (player.controller.objectPerformed.ContainsKey(OBJKEY_ITEM_TRASH_WANT_TO_SELL))
+                        {
+                            player.fastAction();
+                            return;
+                        }
+                        int count = reader.readInt(0);
+                        if (count > 0)
+                        {
+                            Item itemSell = player.controller.objectPerformed[OBJKEY_ITEM_TRASH_WANT_TO_SELL];
+                            player.controller.sellItem(count, itemSell);
+                        }
+                        else
+                        {
+                            player.redDialog(player.Language.BugWarning);
+                        }
+                    }
+                    break;
                 case INPUT_DIALOG_KIOSK:
-                    int priceItem = reader.readInt(0);
-                    if (priceItem <= 0)
                     {
-                        player.redDialog(player.Language.BugWarning);
-                        return;
-                    }
-                    if (priceItem > 2000000000)
-                    {
-                        player.redDialog(string.Format(player.Language.GemLimitWarning, Utilities.FormatNumber(2000000000)));
-                        return;
-                    }
-
-                    if (player.controller.objectPerformed.ContainsKey(OBJKEY_SELECT_SELL_ITEM) && player.controller.objectPerformed.ContainsKey(OBJKEY_MENU_OF_KIOSK))
-                    {
-                        int menuKioskId = (int)player.controller.objectPerformed.get(OBJKEY_MENU_OF_KIOSK);
-                        Item item = null;
-                        Pet pet = null;
-                        if (menuKioskId != MENU_KIOSK_PET_SELECT)
+                        int priceItem = reader.readInt(0);
+                        if (priceItem <= 0)
                         {
-                            item = (Item)player.controller.objectPerformed.get(OBJKEY_SELECT_SELL_ITEM);
+                            player.redDialog(player.Language.BugWarning);
+                            return;
                         }
-                        else if (menuKioskId == MENU_KIOSK_PET_SELECT)
+                        if (priceItem > 2000000000)
                         {
-                            pet = (Pet)player.controller.objectPerformed.get(OBJKEY_SELECT_SELL_ITEM);
-                        }
-
-                        if (item == null && pet == null)
-                        {
+                            player.redDialog(string.Format(player.Language.GemLimitWarning, Utilities.FormatNumber(2000000000)));
                             return;
                         }
 
-                        if (item != null)
+                        if (player.controller.objectPerformed.ContainsKey(OBJKEY_SELECT_SELL_ITEM) && player.controller.objectPerformed.ContainsKey(OBJKEY_MENU_OF_KIOSK))
                         {
-                            if (!item.getTemp().isCanTrade() || !item.canTrade)
+                            int menuKioskId = (int)player.controller.objectPerformed.get(OBJKEY_MENU_OF_KIOSK);
+                            Item item = null;
+                            Pet pet = null;
+                            if (menuKioskId != MENU_KIOSK_PET_SELECT)
                             {
-                                player.redDialog(player.Language.ItemCanNotTrade);
+                                item = (Item)player.controller.objectPerformed.get(OBJKEY_SELECT_SELL_ITEM);
+                            }
+                            else if (menuKioskId == MENU_KIOSK_PET_SELECT)
+                            {
+                                pet = (Pet)player.controller.objectPerformed.get(OBJKEY_SELECT_SELL_ITEM);
+                            }
+
+                            if (item == null && pet == null)
+                            {
                                 return;
                             }
-                        }
 
-                        player.controller.objectPerformed.Remove(OBJKEY_SELECT_SELL_ITEM);
-                        player.controller.objectPerformed.Remove(OBJKEY_MENU_OF_KIOSK);
-                        int count = 1;
-                        if (player.controller.objectPerformed.ContainsKey(OBJKEY_COUNT_OF_ITEM_KIOSK))
-                        {
-                            count = (int)player.controller.objectPerformed.get(OBJKEY_COUNT_OF_ITEM_KIOSK);
-                        }
-                        MarketPlace marketPlace = (MarketPlace)player.getPlace();
-                        switch (menuKioskId)
-                        {
-                            case MENU_KIOSK_PET_SELECT:
-                                player.playerData.pets.remove(pet);
-                                MarketPlace.getKiosk(GopetManager.KIOSK_PET).addKioskItem(pet, priceItem, player);
-                                player.controller.showKiosk(GopetManager.KIOSK_PET);
-                                break;
-                            case MENU_KIOSK_HAT_SELECT:
-                            case MENU_KIOSK_WEAPON_SELECT:
-                            case MENU_KIOSK_AMOUR_SELECT:
-                            case MENU_KIOSK_OHTER_SELECT:
-                            case MENU_KIOSK_GEM_SELECT:
-                                player.playerData.removeItem(menuKioskId != MENU_KIOSK_GEM_SELECT ? GopetManager.EQUIP_PET_INVENTORY : GopetManager.GEM_INVENTORY, item);
-                                switch (menuKioskId)
+                            if (item != null)
+                            {
+                                if (!item.getTemp().isCanTrade() || !item.canTrade)
                                 {
-                                    case MENU_KIOSK_HAT_SELECT:
-                                        MarketPlace.getKiosk(GopetManager.KIOSK_HAT).addKioskItem(item, priceItem, player);
-                                        player.controller.showKiosk(GopetManager.KIOSK_HAT);
-                                        break;
-                                    case MENU_KIOSK_GEM_SELECT:
-                                        MarketPlace.getKiosk(GopetManager.KIOSK_GEM).addKioskItem(item, priceItem, player);
-                                        player.controller.showKiosk(GopetManager.KIOSK_GEM);
-                                        break;
-                                    case MENU_KIOSK_WEAPON_SELECT:
-                                        MarketPlace.getKiosk(GopetManager.KIOSK_WEAPON).addKioskItem(item, priceItem, player);
-                                        player.controller.showKiosk(GopetManager.KIOSK_WEAPON);
-                                        break;
-                                    case MENU_KIOSK_AMOUR_SELECT:
-                                        MarketPlace.getKiosk(GopetManager.KIOSK_AMOUR).addKioskItem(item, priceItem, player);
-                                        player.controller.showKiosk(GopetManager.KIOSK_AMOUR);
-                                        break;
-                                    case MENU_KIOSK_PET_SELECT:
-                                        MarketPlace.getKiosk(GopetManager.KIOSK_PET).addKioskItem(pet, priceItem, player);
-                                        player.controller.showKiosk(GopetManager.KIOSK_PET);
-                                        break;
-                                    case MENU_KIOSK_OHTER_SELECT:
-                                        if (GameController.checkCount(item, count))
-                                        {
-                                            Item itemCopy = new Item(item.itemTemplateId);
-                                            itemCopy.count = count;
-                                            MarketPlace.getKiosk(GopetManager.KIOSK_OTHER).addKioskItem(itemCopy, priceItem, player);
-                                            player.controller.showKiosk(GopetManager.KIOSK_OTHER);
-                                            player.controller.subCountItem(item, count, GopetManager.NORMAL_INVENTORY);
-                                        }
-                                        else
-                                        {
-                                            player.redDialog(player.Language.EnoughCountOfItem);
-                                        }
-                                        break;
+                                    player.redDialog(player.Language.ItemCanNotTrade);
+                                    return;
                                 }
-                                break;
+                            }
+
+                            player.controller.objectPerformed.Remove(OBJKEY_SELECT_SELL_ITEM);
+                            player.controller.objectPerformed.Remove(OBJKEY_MENU_OF_KIOSK);
+                            int count = 1;
+                            if (player.controller.objectPerformed.ContainsKey(OBJKEY_COUNT_OF_ITEM_KIOSK))
+                            {
+                                count = (int)player.controller.objectPerformed.get(OBJKEY_COUNT_OF_ITEM_KIOSK);
+                            }
+                            MarketPlace marketPlace = (MarketPlace)player.getPlace();
+                            switch (menuKioskId)
+                            {
+                                case MENU_KIOSK_PET_SELECT:
+                                    player.playerData.pets.remove(pet);
+                                    MarketPlace.getKiosk(GopetManager.KIOSK_PET).addKioskItem(pet, priceItem, player);
+                                    player.controller.showKiosk(GopetManager.KIOSK_PET);
+                                    break;
+                                case MENU_KIOSK_HAT_SELECT:
+                                case MENU_KIOSK_WEAPON_SELECT:
+                                case MENU_KIOSK_AMOUR_SELECT:
+                                case MENU_KIOSK_OHTER_SELECT:
+                                case MENU_KIOSK_GEM_SELECT:
+                                    player.playerData.removeItem(menuKioskId != MENU_KIOSK_GEM_SELECT ? GopetManager.EQUIP_PET_INVENTORY : GopetManager.GEM_INVENTORY, item);
+                                    switch (menuKioskId)
+                                    {
+                                        case MENU_KIOSK_HAT_SELECT:
+                                            MarketPlace.getKiosk(GopetManager.KIOSK_HAT).addKioskItem(item, priceItem, player);
+                                            player.controller.showKiosk(GopetManager.KIOSK_HAT);
+                                            break;
+                                        case MENU_KIOSK_GEM_SELECT:
+                                            MarketPlace.getKiosk(GopetManager.KIOSK_GEM).addKioskItem(item, priceItem, player);
+                                            player.controller.showKiosk(GopetManager.KIOSK_GEM);
+                                            break;
+                                        case MENU_KIOSK_WEAPON_SELECT:
+                                            MarketPlace.getKiosk(GopetManager.KIOSK_WEAPON).addKioskItem(item, priceItem, player);
+                                            player.controller.showKiosk(GopetManager.KIOSK_WEAPON);
+                                            break;
+                                        case MENU_KIOSK_AMOUR_SELECT:
+                                            MarketPlace.getKiosk(GopetManager.KIOSK_AMOUR).addKioskItem(item, priceItem, player);
+                                            player.controller.showKiosk(GopetManager.KIOSK_AMOUR);
+                                            break;
+                                        case MENU_KIOSK_PET_SELECT:
+                                            MarketPlace.getKiosk(GopetManager.KIOSK_PET).addKioskItem(pet, priceItem, player);
+                                            player.controller.showKiosk(GopetManager.KIOSK_PET);
+                                            break;
+                                        case MENU_KIOSK_OHTER_SELECT:
+                                            if (GameController.checkCount(item, count))
+                                            {
+                                                Item itemCopy = new Item(item.itemTemplateId);
+                                                itemCopy.count = count;
+                                                MarketPlace.getKiosk(GopetManager.KIOSK_OTHER).addKioskItem(itemCopy, priceItem, player);
+                                                player.controller.showKiosk(GopetManager.KIOSK_OTHER);
+                                                player.controller.subCountItem(item, count, GopetManager.NORMAL_INVENTORY);
+                                            }
+                                            else
+                                            {
+                                                player.redDialog(player.Language.EnoughCountOfItem);
+                                            }
+                                            break;
+                                    }
+                                    break;
+                            }
                         }
                     }
                     break;
@@ -188,7 +209,7 @@ public partial class MenuController
                                                         }
                                                         else
                                                         {
-                                                            if(giftCodeData.isClanCode)
+                                                            if (giftCodeData.isClanCode)
                                                                 giftCodeData.getUsersOfUseThis().add(clanMember.clan.clanId);
                                                             else
                                                                 giftCodeData.getUsersOfUseThis().add(player.user.user_id);

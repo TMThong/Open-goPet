@@ -32,16 +32,13 @@ namespace Gopet.Data.GopetItem
         public bool canTrade { get; private set; }
         public sbyte petNClass { get; private set; }
         public int iconId { get; private set; }
+        public int price { get; private set; }
         public sbyte element { get; private set; }
 
         public void setIconId(int iconId)
         {
             this.iconId = iconId;
         }
-
-
-
-
 
         public int getItemId()
         {

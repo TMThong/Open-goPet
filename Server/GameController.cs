@@ -3072,7 +3072,7 @@ public class GameController
         }
         else
         {
-            throw new Exception("Có phải item dạng stack đâu");
+            player.playerData.getInventoryOrCreate(typeInventory).remove(item);
         }
     }
 
@@ -3411,7 +3411,7 @@ public class GameController
         }
     }
 
-    public void showInputDialog(int dialogId, String dialogTitle, String[] optionText)
+    public void showInputDialog(int dialogId, String dialogTitle, params string[] optionText)
     {
         this.showInputDialog(dialogId, dialogTitle, optionText, null);
     }
@@ -4888,6 +4888,32 @@ public class GameController
             m.writer().write(m_buffer);
         }
         player.session.sendMessage(m);
+    }
+
+    public void sellItem(int count, Item itemSell)
+    {
+        if (player.controller.checkCountItem(itemSell, count) || !itemSell.Template.isStackable)
+        {
+            if(!itemSell.Template.isStackable)
+            {
+                count = 1;
+            }
+            var inventory = player.playerData.items.Where(p => p.Value.Any(c => c == itemSell));
+            if (!inventory.Any())
+            {
+                player.redDialog(player.Language.BugWarning);
+                return;
+            }
+            sbyte inentoryType = inventory.First().Key;
+            int price = count * itemSell.Template.price;
+            player.controller.subCountItem(itemSell, count, inentoryType);
+            player.addCoin(price);
+            player.okDialog(string.Format(player.Language.SellTrashItemOK, itemSell.Template.getName(player), Utilities.FormatNumber(price)) + "(ngoc)");
+        }
+        else
+        {
+            player.redDialog(player.Language.EnoughCountOfItem);
+        }
     }
 
     public void removePetTrial()

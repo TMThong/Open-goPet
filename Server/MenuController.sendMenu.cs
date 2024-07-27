@@ -23,6 +23,30 @@ public partial class MenuController
     {
         switch (menuId)
         {
+            case MENU_SELL_TRASH_ITEM:
+                {
+                    List<Item> items = new List<Item>();
+                    foreach (var itemKeypair in player.playerData.items)
+                    {
+                        items.AddRange(itemKeypair.Value);
+                    }
+                    JArrayList<MenuItemInfo> menuItemInfos = new();
+                    foreach (var item in items)
+                    {
+                        MenuItemInfo menuItemInfo = new MenuItemInfo();
+                        menuItemInfo.setCanSelect(true);
+                        menuItemInfo.setDesc(string.Format(player.Language.PriceKioskDescription, item.Template.price) + " (ngoc)");
+                        menuItemInfo.setTitleMenu(item.Template.getName(player));
+                        menuItemInfo.setImgPath(item.Template.iconPath);
+                        menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
+                        menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, item.Template.getName(player)));
+                        menuItemInfo.setCloseScreenAfterClick(true);
+                        menuItemInfo.setShowDialog(true);
+                        menuItemInfos.Add(menuItemInfo);
+                    }
+                    player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.SellYourItemMenuTitle, menuItemInfos);
+                }
+                break;
             case MENU_SELECT_PET_TO_DEF_LEAGUE:
             case MENU_KIOSK_PET_SELECT:
             case MENU_PET_INVENTORY:

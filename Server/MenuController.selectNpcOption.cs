@@ -436,6 +436,9 @@ public partial class MenuController
             case OP_SHOP_GIAN_THUONG:
                 showShop(MenuController.SHOP_GIAN_THUONG, player);
                 break;
+            case OP_SELL_TRASH_ITEM:
+                sendMenu(MenuController.MENU_SELL_TRASH_ITEM, player);
+                break;
             default:
                 player.redDialog(player.Language.FeatureIsNotFound); 
                 break;

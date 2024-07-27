@@ -1951,6 +1951,26 @@ public partial class MenuController
                     }
                 }
                 break;
+            case MENU_SELL_TRASH_ITEM:
+                {
+                    List<Item> items = new List<Item>();
+                    foreach (var itemKeypair in player.playerData.items)
+                    {
+                        items.AddRange(itemKeypair.Value);
+                    }
+                    if (index >= 0 && index < items.Count)
+                    {
+                        Item item = items[index];
+                        player.controller.objectPerformed[OBJKEY_ITEM_TRASH_WANT_TO_SELL] = item;
+                        if(item.count <= 1)
+                        {
+                            player.controller.sellItem(1, item);
+                            return;
+                        }
+                        player.controller.showInputDialog(INPUT_COUNT_OF_ITEM_TRASH_WANT_SELL, player.Language.CountOfItemTrashWantSell, player.Language.Count);
+                    }
+                }
+                break;
             default:
                 {
                     player.redDialog(string.Format(player.Language.CannotFindMenu, menuId));
