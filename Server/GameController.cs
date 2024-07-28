@@ -4928,11 +4928,11 @@ public class GameController
             if (!itemSell.Template.isStackable)
             {
                 count = 1;
-                player.playerData.TrashItemBackup[itemSell] = DateTime.Now;
+                player.playerData.TrashItemBackup[DateTime.Now] = itemSell;
             }
             else
             {
-                player.playerData.TrashItemBackup[new Item(itemSell.Template.itemId, count)] = DateTime.Now;
+                player.playerData.TrashItemBackup[DateTime.Now] = new Item(itemSell.Template.itemId, count);
             }
             sbyte inentoryType = inventory.First().Key;
             int price = count * itemSell.Template.price;

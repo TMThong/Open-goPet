@@ -595,7 +595,7 @@ public class GopetManager
         SqlMapper.AddTypeHandler(new JsonAdapter<Dictionary<int, DateTime>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<Waypoint[]>());
         SqlMapper.AddTypeHandler(new JsonAdapter<PetSkillInfo[]>());
-        SqlMapper.AddTypeHandler(new JsonAdapter<Dictionary<Item, DateTime>>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<Dictionary<DateTime, Item>>());
         SqlMapper.AddTypeHandler(new VersionAdapter());
         shopTemplate.put(MenuController.SHOP_ARMOUR, new ShopTemplate(MenuController.SHOP_ARMOUR));
         shopTemplate.put(MenuController.SHOP_SKIN, new ShopTemplate(MenuController.SHOP_SKIN));

@@ -70,7 +70,7 @@ public class PlayerData
     public DateTime LastTimeOnline { get; set; }
 
     public CopyOnWriteArrayList<int> MoneyDisplays { get; set; } = new();
-    public Dictionary<Item, DateTime> TrashItemBackup { get; set; } = new();
+    public Dictionary<DateTime, Item> TrashItemBackup { get; set; } = new();
 
     public PlayerData()
     {
