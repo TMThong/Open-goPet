@@ -720,7 +720,9 @@ public class GameController
 
             }
             PlayerData.create(player.user.user_id, name, gender);
-            player.login(player.user.username, player.user.password, "");
+            UserData user = player.user;
+            player.user = null;
+            player.login(user.username, user.password, "");
         }
     }
 
@@ -4015,6 +4017,29 @@ public class GameController
                             player.playerData.addAchivement(achievement, player);
                             popups.add(new Popup(achievement.Template.getName(player)));
                         }
+                    }
+                    break;
+                case GopetManager.GIFT_SKIN:
+                    {
+                        int itemId = giftInfo[1];
+                        bool isInfinity = giftInfo[2] == 1;
+                        if (!GopetManager.itemTemplate.ContainsKey(itemId))
+                            continue;
+                        Item item = new Item(itemId);
+                        item.count = 1;
+                        if(isInfinity)
+                        {
+                            player.addItemToInventory(item, GopetManager.SKIN_INVENTORY);
+                            popups.add(new Popup(item.getName(player)));
+                            continue;
+                        }
+
+                        int min = giftInfo[3];
+                        int hours = giftInfo.Length > 4 ? giftInfo[4] : 0;
+                        int day = giftInfo.Length > 5 ? giftInfo[5] : 0;
+                        item.expire = Utilities.CurrentTimeMillis + (min * 60 * 1000) + (hours * 60 * 60 * 1000) + (day * 24 * 60 * 60 * 1000);
+                        player.addItemToInventory(item, GopetManager.SKIN_INVENTORY);
+                        popups.add(new Popup(item.getName(player)));
                     }
                     break;
             }

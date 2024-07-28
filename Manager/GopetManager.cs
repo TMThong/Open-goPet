@@ -203,6 +203,10 @@ public class GopetManager
     /// Danh hiệu
     /// </summary>
     public const int GIFT_TITLE = 13;
+    /// <summary>
+    /// Quà là trang phục
+    /// </summary>
+    public const int GIFT_SKIN = 14;
     /**
      * thời gian chờ lượt đánh (mili giây)
      */
