@@ -4294,12 +4294,13 @@ public class GameController
 
     private void showListClan()
     {
+        var listClan = ClanManager.clans.ToArray().Where(p => p != null).ToArray();
         Message m = clanMessage(GopetCMD.GUILD_LIST);
         m.putUTF("");
         m.putsbyte(0);
         m.putsbyte(0);
-        m.putInt(ClanManager.clans.Count);
-        foreach (Clan clan in ClanManager.clans)
+        m.putInt(listClan.Length);
+        foreach (Clan clan in listClan)
         {
             m.putInt(clan.getClanId());
             m.putInt(-1);

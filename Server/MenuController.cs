@@ -478,11 +478,19 @@ public partial class MenuController
         {
             addMoney((sbyte)price.Item1[i], -price.Item2[i], player);
         }
-
-        TradeGiftTemplate tradeGift = Utilities.RandomArray(GopetManager.TradeGift[type]);
-        var it = new Item(tradeGift.ItemTemplateId, tradeGift.Count);
-        player.addItemToInventory(it);
-        player.okDialog($"{player.Language.TradeOKMessage} {it.Template.getName(player)} x{tradeGift.Count}");
+        DateTime breakTime = DateTime.Now.AddMilliseconds(20);
+        while (breakTime > DateTime.Now)
+        {
+            TradeGiftTemplate tradeGift = Utilities.RandomArray(GopetManager.TradeGift[type]);
+            if (!(tradeGift.Percent < Utilities.NextFloatPer()))
+            {
+                continue;
+            }
+            var it = new Item(tradeGift.ItemTemplateId, tradeGift.Count);
+            player.addItemToInventory(it);
+            player.okDialog($"{player.Language.TradeOKMessage} {it.Template.getName(player)} x{tradeGift.Count}");
+            break;
+        }
     }
 
     public static JArrayList<int> typeSelectItemMaterial(int menuId, Player player)

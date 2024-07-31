@@ -12,6 +12,7 @@ namespace Gopet.Data.item
         public int ItemTemplateId { get; private set; }
         public int Count { get; private set; }
         public sbyte Type { get; private set; }
+        public float Percent { get; private set; }
 
         public const sbyte TYPE_COIN = 0;
         public const sbyte TYPE_GOLD = 1;
