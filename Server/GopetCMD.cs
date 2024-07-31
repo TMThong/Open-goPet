@@ -181,4 +181,5 @@ public class GopetCMD
     public const sbyte LETTER_COMMAND_REMOVE_LETTER = 17;
     public const sbyte LETTER_COMMAND_HAS_LETTER = 18;
     public const sbyte LETTER_BOX = 13;
+    public const sbyte FAST_REMOVE_MOB = 99;
 }

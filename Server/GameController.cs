@@ -214,7 +214,7 @@ public class GameController
                         player.playerData.y = points[points.Length - 1];
                         place.sendMove(player.user.user_id, b1, points);
                     }
-                    if (points.Length > 30 && !player.playerData.isAdmin)
+                    /*if (points.Length > 30 && !player.playerData.isAdmin)
                     {
                         hackMoveCounter++;
                     }
@@ -228,7 +228,7 @@ public class GameController
                     if (hackMoveCounter > 200)
                     {
                         player.session.Close();
-                    }
+                    }*/
                 }
                 break;
             case GopetCMD.ON_PLACE_CHAT:

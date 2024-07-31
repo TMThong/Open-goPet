@@ -63,6 +63,15 @@ public abstract class Place
         }
     }
 
+    public void sendMessage(Message ms, Player ex)
+    {
+        foreach (Player player in players)
+        {
+            if (player != ex)
+                player.session.sendMessage(ms);
+        }
+    }
+
     public void sendMessageWithCheckVersion(Dictionary<Message, Func<Version, bool>> messages)
     {
         List<Player> sentPlayer = new List<Player>();

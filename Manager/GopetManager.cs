@@ -422,28 +422,18 @@ public class GopetManager
     public const sbyte WING_INVENTORY = 3;
     public const sbyte GEM_INVENTORY = 4;
     public const sbyte MONEY_INVENTORY = 5;
-
     public const sbyte MONEY_TYPE_COIN = 1;
-
     public const sbyte MONEY_TYPE_GOLD = 0;
-
     public const sbyte MONEY_TYPE_SILVER_BAR = 2;
-
     public const sbyte MONEY_TYPE_GOLD_BAR = 3;
-
     public const sbyte MONEY_TYPE_BLOOD_GEM = 4;
-
     public const sbyte MONEY_TYPE_FUND_CLAN = 5;
-
     public const sbyte MONEY_TYPE_GROWTH_POINT_CLAN = 6;
     public const sbyte MONEY_TYPE_CRYSTAL_ITEM = 7;
-
     public const int DAILY_STAR = 20;
-
     public const int STAR_JOIN_CHALLENGE = 2;
     public const int ITEM_OP_HP = 7;
     public const int ITEM_OP_MP = 8;
-
     public const string EMPTY_IMG_PATH = "dialog/empty.png";
     public const sbyte KIOSK_HAT = 0;
     public const sbyte KIOSK_WEAPON = 1;
@@ -648,7 +638,6 @@ public class GopetManager
                 {
                     NonAdminItemList.add(itemTemp);
                 }
-
                 assetsId++;
             });
             ServerMonitor.LogInfo("Tải dữ liệu vật phẩm từ cơ sở dữ liệu OK");
@@ -658,7 +647,6 @@ public class GopetManager
                 MOBLVLINFO_HASH_MAP[mobLvInfo.lvl] = mobLvInfo;
             }
             ServerMonitor.LogInfo("Tải dữ liệu quái từ cơ sở dữ liệu OK");
-
             IEnumerable<EnchantWingData> enchantWing = conn.Query<EnchantWingData>("SELECT * FROM `enchant_wing_data`");
             foreach (var wingData in enchantWing)
             {
@@ -676,39 +664,31 @@ public class GopetManager
                 {
                     throw new UnsupportedOperationException(" khong ho tro loai shop " + shopTemplate1.shopId);
                 }
-
             }
             ServerMonitor.LogInfo("Tải dữ liệu cửa hàng từ cơ sở dữ liệu OK");
-
             IEnumerable<BossTemplate> bossTemArr = conn.Query<BossTemplate>("SELECT * FROM `boss`");
             foreach (var bossTemplate in bossTemArr)
             {
                 boss[bossTemplate.bossId] = bossTemplate;
             }
             ServerMonitor.LogInfo("Tải dữ liệu boss từ cơ sở dữ liệu OK");
-
             IEnumerable<MapTemplate> mapTemplates = conn.Query<MapTemplate>("SELECT * FROM `map` WHERE `map`.`enable` = true;");
             foreach (var mTem in mapTemplates)
             {
                 mapTemplate[mTem.mapId] = mTem;
             }
             ServerMonitor.LogInfo("Tải dữ liệu map từ cơ sở dữ liệu OK");
-
             TradeGift[TradeGiftTemplate.TYPE_COIN] = conn.Query<TradeGiftTemplate>("SELECT * FROM `trade_gift` where Type = " + TradeGiftTemplate.TYPE_COIN).ToArray();
             TradeGift[TradeGiftTemplate.TYPE_GOLD] = conn.Query<TradeGiftTemplate>("SELECT * FROM `trade_gift` where Type = " + TradeGiftTemplate.TYPE_GOLD).ToArray();
-
             ServerMonitor.LogInfo("Tải dữ liệu trao đổi thưởng từ cơ sở dữ liệu OK");
-
             SHOP_ARENA_TEMPLATE = conn.Query<ShopArenaTemplate>("SELECT * FROM `shoparena`").ToArray();
             ServerMonitor.LogInfo("Tải dữ liệu shop đấu trường từ cơ sở dữ liệu OK");
-
             var listExp = conn.Query("SELECT * FROM `petexp`");
             foreach (var exp in listExp)
             {
                 PetExp.put(exp.petLvl, exp.exp);
             }
             ServerMonitor.LogInfo("Tải dữ liệu exps từ cơ sở dữ liệu OK");
-
             var listIteminfo = conn.Query("SELECT * FROM `iteminfo`");
             foreach (var item in listIteminfo)
             {
@@ -746,9 +726,7 @@ public class GopetManager
                 NCLASS_PETSKILL_HASH_MAP.get(petSkill.nClass).add(petSkill);
                 PET_SKILLS.add(petSkill);
             }
-
             ServerMonitor.LogInfo("Tải dữ liệu kỹ năng pet từ cơ sở dữ liệu OK");
-
             HashMap<int, JArrayList<MobLvlMap>> mobLvlMap_ = new();
             var mobLvlMapList = conn.Query("SELECT * FROM `gopet_map_moblvl`");
             foreach (var item in mobLvlMapList)
@@ -777,26 +755,22 @@ public class GopetManager
                 }
                 mobLoc.get(mobLocation1.getMapId()).add(mobLocation1);
             }
-
             foreach (var entry in mobLoc)
             {
                 int key = entry.Key;
                 JArrayList<MobLocation> val = entry.Value;
                 mobLocation.put(key, val.ToArray());
             }
-
             var npcList = conn.Query<NpcTemplate>("SELECT * FROM `npc`");
             foreach (var npcTemp in npcList)
             {
                 npcTemplate.put(npcTemp.getNpcId(), npcTemp);
             }
-
             var tattoList = conn.Query<PetTattoTemplate>("SELECT * FROM `tattoo`");
             foreach (var petTattoTemplate in tattoList)
             {
                 tattos.put(petTattoTemplate.tattooId, petTattoTemplate);
             }
-
             var dropItemList = conn.Query<DropItem>("SELECT * FROM `drop_item`");
             foreach (var dropItem1 in dropItemList)
             {
@@ -804,32 +778,27 @@ public class GopetManager
                 {
                     dropItem.put(dropItem1.getMapId(), new());
                 }
-
                 if (dropItem1.getPercent() < 0f)
                 {
                     continue;
                 }
                 dropItem.get(dropItem1.getMapId()).add(dropItem1);
             }
-
             var itemTierList = conn.Query<TierItem>("SELECT * FROM `tier_item`");
             foreach (var tierItem1 in itemTierList)
             {
                 tierItem.put(tierItem1.itemTemplateIdTier1, tierItem1);
             }
-
             var petTierList = conn.Query<PetTier>("SELECT * FROM `pet_tier`");
             foreach (var petTier1 in petTierList)
             {
                 petTier.put(petTier1.getPetTemplateId1(), petTier1);
             }
-
             var clanTemplateData = conn.Query<ClanTemplate>("SELECT * FROM `clan_template` ORDER BY `clan_template`.`clanLvl` ASC");
             foreach (var clanTemplate in clanTemplateData)
             {
                 clanTemp.put(clanTemplate.getLvl(), clanTemplate);
             }
-
             var taskDataTemp = conn.Query<TaskTemplate>("SELECT * FROM `task`");
             foreach (var taskTemp in taskDataTemp)
             {
@@ -840,24 +809,19 @@ public class GopetManager
                     taskTemplateByType.put(taskTemp.getType(), new());
                 }
                 taskTemplateByType.get(taskTemp.getType()).add(taskTemp);
-
                 if (!taskTemplateByNpcId.ContainsKey(taskTemp.getFromNpc()))
                 {
                     taskTemplateByNpcId.put(taskTemp.getFromNpc(), new());
                 }
-
                 taskTemplateByNpcId.get(taskTemp.getFromNpc()).add(taskTemp);
             }
-
             achievements = conn.Query<AchievementTemplate>("SELECT * FROM `achievement`");
             foreach (var item in achievements)
             {
                 AchievementMAP[item.IdTemplate] = item;
             }
             ServerMonitor.LogInfo("Tải dữ liệu danh hiệu từ cơ sở dữ liệu OK");
-
             Summer2024Event.EventDatas = conn.Query<Summer2024Event.EventData>("SELECT * FROM `summer_2024_event`");
-
             var clanSKillTemplates = conn.Query<ClanSkillTemplate>("SELECT * FROM `clan_skill`");
             clanSkillTemplateList.AddRange(clanSKillTemplates);
             foreach (var template in clanSKillTemplates)
@@ -866,14 +830,12 @@ public class GopetManager
                 template.clanSkillLvlTemplates = conn.Query<ClanSkillLvlTemplate>("SELECT * FROM `clan_skill_lvl` WHERE skillId = @skillId ORDER BY `clan_skill_lvl`.`lvl` ASC", new { skillId = template.id }).ToArray();
             }
         }
-
         using (var connWeb = MYSQLManager.createWebMySqlConnection())
         {
             EXCHANGE_DATAS.AddRange(connWeb.Query<ExchangeData>("SELECT * FROM `exchange`"));
             EXCHANGE_DATAS.ForEach(exchangeData => MenuController.EXCHANGE_ITEM_INFOS.add(new ExchangeItemInfo(exchangeData)));
             ServerInfos = connWeb.Query<ServerInfo>("SELECT * FROM `server`");
         }
-
         foreach (var petTemplate in PET_TEMPLATES)
         {
             if (!ListPetMustntUpTier.Contains(petTemplate.petId) && petTier.Where(p => p.Value.petTemplateId2 == petTemplate.petId).Any())
@@ -896,7 +858,6 @@ public class GopetManager
                 tierItemHashMap.put(get, i + 2);
             }
         }
-
         foreach (var item in npcTemplate)
         {
             Language[VI_CODE].NpcNameLanguage[item.Key] = item.Value.name;
@@ -905,56 +866,46 @@ public class GopetManager
                 Language[VI_CODE].NpcOptionLanguage[item.Value.optionId[i]] = item.Value.optionName[i];
             }
         }
-
         foreach (var item in itemTemplates)
         {
             Language[VI_CODE].ItemLanguage[item.itemId] = item.name;
             Language[VI_CODE].ItemDescLanguage[item.itemId] = item.description;
         }
-
         foreach (var item in tattos)
         {
             Language[VI_CODE].TattoLanguage[item.Key] = item.Value.name;
         }
-
         foreach (var item in mapTemplate)
         {
             Language[VI_CODE].MapLanguage[item.Key] = item.Value.name;
         }
-
         foreach (var item in taskTemplate)
         {
             Language[VI_CODE].TaskNameLanguage[item.Key] = item.Value.name;
             Language[VI_CODE].TaskDescLanguage[item.Key] = item.Value.description;
         }
-
         foreach (var item in PETTEMPLATE_HASH_MAP)
         {
             Language[VI_CODE].PetNameLanguage[item.Key] = item.Value.name;
         }
-
         foreach (var item in itemInfoName)
         {
             Language[VI_CODE].ItemInfoNameLanguage[item.Key] = item.Value;
         }
-
         foreach (var item in PET_SKILLS)
         {
             Language[VI_CODE].SkillNameLanguage[item.skillID] = item.name;
             Language[VI_CODE].SkillDescLanguage[item.skillID] = item.description;
         }
-
         foreach (var item in AchievementMAP)
         {
             Language[VI_CODE].AchievementNameLanguage[item.Key] = item.Value.Name;
             Language[VI_CODE].AchievementDescLanguage[item.Key] = item.Value.Description;
         }
-
         foreach (var item in boss)
         {
             Language[VI_CODE].BossNameLanguage[item.Key] = item.Value.name;
         }
-
         //SaveJsonFile(Language["vi"], "/lang/vi.json");
     }
 

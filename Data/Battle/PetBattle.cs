@@ -39,7 +39,6 @@ namespace Gopet.Battle
             setDelaTimeTurn(Utilities.CurrentTimeMillis + GopetManager.TimeNextTurn);
             setActiveBattleInfo(new PetBattleInfo(activePlayer));
             PassiveBattleInfo = new PetBattleInfo(passivePlayer);
-
             getActiveBattleInfo().addBuff(new Debuff(new ItemInfo[] { new ItemInfo(10, Utilities.round(GopetManager.MitigatePetData[activePet.Template.element][passivePet.Template.element] * 100)) }, int.MaxValue));
             PassiveBattleInfo.addBuff(new Debuff(new ItemInfo[] { new ItemInfo(10, Utilities.round(GopetManager.MitigatePetData[passivePet.Template.element][activePet.Template.element] * 100)) }, int.MaxValue));
             addWingBuff(activePlayer, activeBattleInfo, passiveBattleInfo);
@@ -594,7 +593,7 @@ namespace Gopet.Battle
                 {
                     return;
                 }
-                else
+                /*else
                 {
                     if (petAttackMob)
                     {
@@ -607,7 +606,7 @@ namespace Gopet.Battle
                             }
                         }
                     }
-                }
+                }*/
                 if (Utilities.CurrentTimeMillis > delaTimeTurn)
                 {
                     if (isPetAttackMob())
@@ -704,7 +703,6 @@ namespace Gopet.Battle
                 {
                     if (!(mob is Boss))
                     {
-
                         ClanMember clanMember = activePlayer.controller.getClan();
                         float perExpPlus = 0f;
                         float coinPlus = 0f;
@@ -780,6 +778,7 @@ namespace Gopet.Battle
                 {
                     activePlayer.controller.delayTimeHealPet = Utilities.CurrentTimeMillis + GopetManager.TIME_DELAY_HEAL_WHEN_MOB_KILL_PET;
                 }
+
                 win(petBattleTexts.ToArray(), coin, exp);
                 activePlayer.controller.setLastTimeKillMob(Utilities.CurrentTimeMillis);
             }
@@ -841,7 +840,8 @@ namespace Gopet.Battle
 
         private void win(Popup[] petBattleTexts, int coin, int exp)
         {
-            place.sendMessage(win(petBattleTexts, coin, exp, activePlayer.user.user_id));
+            activePlayer.session.sendMessage(win(petBattleTexts, coin, exp, activePlayer.user.user_id));
+            sendFastRemove();
             activePlayer.controller.sendMyPetInfo();
             if (!petAttackMob)
             {
@@ -1548,6 +1548,18 @@ namespace Gopet.Battle
             }
             begin = Math.Max(0, (int)Utilities.GetValueFromPercent(begin, 100 - Utilities.nextInt(-10, 10)));
             return Utilities.round(Utilities.GetValueFromPercent(begin, FieldManager.PERCENT_EXP));
+        }
+
+
+        public void sendFastRemove()
+        {
+            Message message = GameController.messagePetService(GopetCMD.FAST_REMOVE_MOB);
+            message.putInt(activePlayer.user.user_id);
+            message.cleanup();
+            if (petAttackMob)
+                place.sendMessage(message, activePlayer);
+            else
+                place.sendMessage(message);
         }
     }
 }
