@@ -2472,6 +2472,7 @@ public class GameController
                 {
                     MenuController.addMoney(clanMemberDonateInfo.getPriceType(), -(int)clanMemberDonateInfo.getPrice(), player);
                     clanMember.getClan().addFund(clanMemberDonateInfo.getFund(), clanMember);
+                    player.controller.getTaskCalculator().onDonateFund();
                     player.okDialog(player.Language.DonateFundOK);
                 }
                 else

@@ -322,6 +322,7 @@ public class TaskCalculator
                     case REUQEST_BET_PLAYER_WIN:
                     case REQUEST_PLUS_GYM_POINT:
                     case REQUEST_UP_TIER_PET:
+                    case REQUEST_NUM_OF_FUND_CLAN:
                         taskData.task[i]++;
                         break;
                 }
@@ -382,6 +383,11 @@ public class TaskCalculator
     {
         this.onAllTaskUpdate(REQUEST_KILL_BOSS, boss);
         this.onAllTaskUpdate(REQUEST_KILL_SPECIAL_BOSS, boss);
+    }
+
+    public void onDonateFund()
+    {
+        this.onAllTaskUpdate(REQUEST_NUM_OF_FUND_CLAN);
     }
 
     public void onUpdateSkillPet(Pet pet, int skillLv)
