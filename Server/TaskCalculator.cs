@@ -47,6 +47,7 @@ public class TaskCalculator
     public const int REQUEST_KILL_SPECIAL_BOSS = 17;
     public const int REQUEST_WAIT_NEW_TASK = 18;
     public const int REUQEST_BET_PLAYER_WIN = 19;
+    public const int REQUEST_NUM_OF_FUND_CLAN = 20;
     public Player player { get; }
 
     private HashMap<int, JArrayList<TaskTemplate>> cacheTask = new();
@@ -74,7 +75,7 @@ public class TaskCalculator
             {
                 foreach (TaskTemplate taskTemplate in taskFromNPC)
                 {
-                    if (!playerData.wasTask.Contains(taskTemplate.getTaskId()) && !playerData.tasking.Contains(taskTemplate.getTaskId()) && taskTemplate.type == TASK_TYPE_MAIN)
+                    if (!playerData.wasTask.Contains(taskTemplate.getTaskId()) && !playerData.ClanTasked.Contains(taskTemplate.getTaskId()) && !playerData.tasking.Contains(taskTemplate.getTaskId()) && (taskTemplate.type == TASK_TYPE_MAIN || taskTemplate.type == TASK_TYPE_CLAN))
                     {
                         bool flag = true;
                         foreach (int taskIdNeed in taskTemplate.getTaskNeed())
@@ -178,12 +179,15 @@ public class TaskCalculator
                 case REUQEST_BET_PLAYER_WIN:
                     taskText.Add(string.Format(player.Language.TASK_REUQEST_BET_PLAYER_WIN, task[i], taskI[1]));
                     break;
+                case REQUEST_NUM_OF_FUND_CLAN:
+                    taskText.Add(string.Format(player.Language.REQUEST_NUM_OF_FUND_CLAN, task[i], taskI[1]));
+                    break;
                 case REQUEST_WAIT_NEW_TASK:
                     taskText.Add(player.Language.TASK_REQUEST_WAIT_NEW_TASK);
                     break;
             }
         }
-        return "\n  ---- "+ player.Language.Request +" ----\n" + String.Join("\n", taskText);
+        return "\n  ---- " + player.Language.Request + " ----\n" + String.Join("\n", taskText);
     }
 
     public void onTaskUpdate(TaskData taskData, int taskRequestType, params object[] dObjects)
@@ -361,10 +365,7 @@ public class TaskCalculator
 
     public void onItemEnchant(Item item)
     {
-
-        {
-            this.onAllTaskUpdate(REQUEST_ENCHANT_ITEM, item.lvl);
-        }
+        this.onAllTaskUpdate(REQUEST_ENCHANT_ITEM, item.lvl);
     }
 
     public void onUpTierItem(int tier)
@@ -457,6 +458,12 @@ public class TaskCalculator
         }
         getTaskDatas().remove(taskData);
         player.playerData.tasking.remove(taskData.taskTemplateId);
+        switch(taskData.getTemplate().type)
+        {
+            case TASK_TYPE_CLAN:
+                player.playerData.ClanTasked.remove(taskData.taskTemplateId);
+                break;
+        }
         JArrayList<Popup> list = player.controller.onReiceiveGift(taskData.gift);
         JArrayList<String> txtInfo = new();
         foreach (Popup petBattleText in list)

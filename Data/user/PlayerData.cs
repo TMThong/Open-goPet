@@ -21,6 +21,7 @@ public class PlayerData
     public HashMap<sbyte, CopyOnWriteArrayList<Item>> items { get; set; } = new();
     public CopyOnWriteArrayList<Pet> pets { get; set; } = new();
     public CopyOnWriteArrayList<int> tasking { get; set; } = new();
+    public CopyOnWriteArrayList<int> ClanTasked { get; set; } = new();
     public CopyOnWriteArrayList<TaskData> task { get; set; } = new();
     public CopyOnWriteArrayList<int> wasTask { get; set; } = new();
     public Pet petSelected { get; set; }
@@ -139,7 +140,8 @@ public class PlayerData
                             LastTimeOnline = @LastTimeOnline,
                             LettersSendTime = @LettersSendTime,
                             MoneyDisplays = @MoneyDisplays,
-                            TrashItemBackup = @TrashItemBackup
+                            TrashItemBackup = @TrashItemBackup,
+                            ClanTasked = @ClanTasked
                             WHERE ID = @ID", playerData);
     }
 

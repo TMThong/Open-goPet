@@ -1515,6 +1515,7 @@ public class GameController
         {
             this.player.playerData.numUseEnergy.Clear();
             this.player.playerData.star = GopetManager.DAILY_STAR;
+            this.player.playerData.ClanTasked.Clear();
         }
         player.playerData.loginDate = DateTime.Now;
         HistoryManager.addHistory(new History(player).setLog("Vào game và kiểm tra có phải qua ngày mới nếu qua ngày mới thì nhận 20 năng lượng và năng lượng hiện tại là:" + player.playerData.star).setObj(player.playerData));
@@ -4294,7 +4295,7 @@ public class GameController
 
     private void showListClan()
     {
-        var listClan = ClanManager.clans.ToArray().Where(p => p != null).ToArray();
+        var listClan = ClanManager.clans.ToArray().Where(p => p != null && p.getMemberByUserId(p.getLeaderId()) != null).ToArray();
         Message m = clanMessage(GopetCMD.GUILD_LIST);
         m.putUTF("");
         m.putsbyte(0);
