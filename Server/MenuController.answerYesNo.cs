@@ -212,6 +212,7 @@ public partial class MenuController
                                         if (clanMember.duty == Clan.TYPE_LEADER)
                                         {
                                             memberSelect.duty = clanMember.duty;
+                                            memberSelect.clan.leaderId = memberSelect.user_id;
                                             clanMember.duty = Clan.TYPE_NORMAL;
                                             player.okDialog(player.Language.GiveUpGuildPositionOK);
                                             Player onPlayer = PlayerManager.get(memberSelect.name);

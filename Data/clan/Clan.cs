@@ -313,13 +313,11 @@ namespace Gopet.Data.GopetClan
             clanMember.user_id = user_id;
             clanMember.fundDonate = 0l;
             clanMember.duty = (user_id == leaderId ? TYPE_LEADER : TYPE_NORMAL);
-
             if (player != null)
             {
                 clanMember.avatarPath = player.playerData.avatarPath;
             }
             members.Add(clanMember);
-
             members.Sort(new ClanMemeberComparer());
         }
 
@@ -377,7 +375,6 @@ namespace Gopet.Data.GopetClan
             {
                 members.remove(clanMember);
             }
-
             Player player = PlayerManager.get(user_id);
             if (player != null)
             {

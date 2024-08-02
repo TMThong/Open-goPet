@@ -39,6 +39,10 @@ public class ClanManager
                 foreach (ClanMember member in clan.getMembers())
                 {
                     member.clan = clan;
+                    if (member.duty == Clan.TYPE_LEADER && clan.leaderId != member.user_id)
+                    {
+                        clan.leaderId = member.user_id;
+                    }
                 }
                 clan.setShopClan(new ShopClan(clan));
                 clan.initClan();
