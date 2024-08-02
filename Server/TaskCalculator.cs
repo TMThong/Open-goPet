@@ -467,7 +467,7 @@ public class TaskCalculator
         switch(taskData.getTemplate().type)
         {
             case TASK_TYPE_CLAN:
-                player.playerData.ClanTasked.remove(taskData.taskTemplateId);
+                player.playerData.ClanTasked.Add(taskData.taskTemplateId);
                 break;
         }
         JArrayList<Popup> list = player.controller.onReiceiveGift(taskData.gift);
