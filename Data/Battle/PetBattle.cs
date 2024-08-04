@@ -1556,10 +1556,7 @@ namespace Gopet.Battle
             Message message = GameController.messagePetService(GopetCMD.FAST_REMOVE_MOB);
             message.putInt(activePlayer.user.user_id);
             message.cleanup();
-            if (petAttackMob)
-                place.sendMessage(message, activePlayer);
-            else
-                place.sendMessage(message);
+            place.sendMessage(message);
         }
     }
 }
