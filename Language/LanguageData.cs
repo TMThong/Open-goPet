@@ -507,5 +507,6 @@ namespace Gopet.Language
         public string SellYourItemMenuTitle { get; set; } = "Bán vật phẩm";
         public string CountOfItemTrashWantSell { get; set; } = "Số lượng vật phẩm múa bán";
         public string SellTrashItemOK { get; set; } = "Bán {0} thành công và nhận được {1} ";
+        public string USE_ITEM_UP_COIN_OK { get; set; } = "Sử dụng {0} thành công và thời gian hết tác dụng là {1}";
     }
 }

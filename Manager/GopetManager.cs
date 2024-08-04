@@ -180,6 +180,7 @@ public class GopetManager
     public const int ITEM_PET_PACKAGE = 22;
     public const int ITEM_MATERIAL_ENCHANT_TATOO = 23;
     public const int ITEM_EVENT = 24;
+    public const int ITEM_NEED_TO_TRAIN_COIN = 25;
     public const int GIFT_GOLD = 0;
     public const int GIFT_COIN = 1;
     public const int GIFT_ITEM = 2;

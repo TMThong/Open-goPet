@@ -1185,7 +1185,15 @@ public partial class MenuController
                         case GopetManager.ITEM_EVENT:
                             EventManager.FindAndUseItemEvent(itemSelect.itemTemplateId, player);
                             return;
-
+                        case GopetManager.ITEM_NEED_TO_TRAIN_COIN:
+                            if (itemSelect.Template.itemOption[0] != ItemInfo.OptionType.OPTION_HOURS_UP_COIN)
+                            {
+                                throw new UnsupportedOperationException();
+                            }
+                            int hours = itemSelect.Template.itemOptionValue[0];
+                            player.playerData.TimeDropCoin = DateTime.Now.AddHours(hours);
+                            player.okDialog(player.Language.USE_ITEM_UP_COIN_OK, itemSelect.Template.getName(player) , Utilities.ToDateString(player.playerData.TimeDropCoin));
+                            break;
                         /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/
                         default:
                             {
@@ -1962,7 +1970,7 @@ public partial class MenuController
                     {
                         Item item = items[index];
                         player.controller.objectPerformed[OBJKEY_ITEM_TRASH_WANT_TO_SELL] = item;
-                        if(item.count <= 1)
+                        if (item.count <= 1)
                         {
                             player.controller.sellItem(1, item);
                             return;

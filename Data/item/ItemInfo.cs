@@ -148,6 +148,7 @@ namespace Gopet.Data.GopetItem
             /// Buff dành cho người mang trang bị hay người đối diện
             /// </summary>
             public const int OPTION_BATTLE_IS_FOR_ACTIVE = 16;
+            public const int OPTION_HOURS_UP_COIN = 17;
         }
     }
 }

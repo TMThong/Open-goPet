@@ -73,6 +73,8 @@ public class PlayerData
     public CopyOnWriteArrayList<int> MoneyDisplays { get; set; } = new();
     public Dictionary<DateTime, Item> TrashItemBackup { get; set; } = new();
 
+    public DateTime TimeDropCoin { get; set; } = DateTime.Now;
+    
     public PlayerData()
     {
         x = 24 * 4;
@@ -141,7 +143,8 @@ public class PlayerData
                             LettersSendTime = @LettersSendTime,
                             MoneyDisplays = @MoneyDisplays,
                             TrashItemBackup = @TrashItemBackup,
-                            ClanTasked = @ClanTasked
+                            ClanTasked = @ClanTasked,
+                            TimeDropCoin = @TimeDropCoin
                             WHERE ID = @ID", playerData);
     }
 

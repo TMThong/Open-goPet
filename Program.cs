@@ -10,6 +10,7 @@ namespace Gopet
         [STAThread]
         static void Main(string[] args)
         {
+            Console.Title = "Máy chủ goPet";
             Gopet.App.Main.StartServer(args);
             CommandManager.StartReadingKeys();
         }

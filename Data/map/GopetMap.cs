@@ -40,7 +40,7 @@ namespace Gopet.Data.Map
 
         public virtual void createZoneDefault()
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 30; i++)
             {
                 try
                 {

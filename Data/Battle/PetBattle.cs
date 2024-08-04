@@ -1510,6 +1510,11 @@ namespace Gopet.Battle
 
         public static int genGemWhenMobDie(Player player, Pet p, Mob mob)
         {
+            if (player.playerData.TimeDropCoin < DateTime.Now)
+            {
+                return 0;
+            }
+
             int begin = mob.getMobLvInfo().lvl * 10;
             bool minus = Math.Abs(p.lvl - mob.getMobLvInfo().lvl) >= 5;
             if (minus)
