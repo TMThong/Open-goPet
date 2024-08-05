@@ -65,5 +65,6 @@ public class BXHManager
         listTop.Add(TopSpendGold.Instance);
         listTop.Add(TopAccumulatedPoint.Instance);
         listTop.Add(TopEvent.Instance);
+        listTop.Add(TopChallenge.Instance);
     }
 }

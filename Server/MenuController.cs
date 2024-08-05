@@ -303,6 +303,7 @@ public partial class MenuController
     /// Bán vật phẩm để trống hành trang
     /// </summary>
     public const int OP_SELL_TRASH_ITEM = 79;
+    public const int OP_SHOW_TOP_CHALLENGE = 80;
     /// <summary>
     /// Option Custom
     /// Trao đổi thưởng bằng 

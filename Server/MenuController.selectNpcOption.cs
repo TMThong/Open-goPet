@@ -439,8 +439,11 @@ public partial class MenuController
             case OP_SELL_TRASH_ITEM:
                 sendMenu(MenuController.MENU_SELL_TRASH_ITEM, player);
                 break;
+            case OP_SHOW_TOP_CHALLENGE:
+                showTop(TopChallenge.Instance, player);
+                break;
             default:
-                player.redDialog(player.Language.FeatureIsNotFound); 
+                player.redDialog(player.Language.FeatureIsNotFound);
                 break;
         }
     }

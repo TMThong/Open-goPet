@@ -37,7 +37,6 @@ public class TopGem : Top
     {
         try
         {
-
             lastDatas.Clear();
             lastDatas.AddRange(datas);
             datas.Clear();

@@ -1,12 +1,15 @@
 
+using Dapper;
+using Gopet.Data.Collections;
 using Gopet.Data.Map;
 using Gopet.Data.Mob;
+using Gopet.Data.User;
 using Gopet.IO;
 using Gopet.Util;
+using System.Diagnostics;
 
 public class ChallengePlace : GopetPlace
 {
-    
     public const long TIME_WAIT = 60 * 1000;
     public const long TIME_ATTACK = 60 * 3 * 1000;
     public const int MAX_PLAYER_JOIN = 4;
@@ -26,7 +29,9 @@ public class ChallengePlace : GopetPlace
         new int[]{402, 261}
     };
 
-   
+    private Stopwatch stopwatch = new Stopwatch();
+    private CopyOnWriteArrayList<int> TeamId = new CopyOnWriteArrayList<int>();
+    private CopyOnWriteArrayList<string> TeamName = new CopyOnWriteArrayList<string>();
 
     public ChallengePlace(GopetMap m, int ID) : base(m, ID)
     {
@@ -38,26 +43,29 @@ public class ChallengePlace : GopetPlace
 
     public override void add(Player player)
     {
-        base.add(player); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        base.add(player); 
         player.controller.sendPlaceTime(Utilities.round(placeTime - Utilities.CurrentTimeMillis) / 1000);
         player.controller.showBigTextEff(player.Language.WaitRoomPlace);
+        TeamId.Add(player.user.user_id);
+        TeamName.Add(player.playerData.name);
     }
 
 
     public override bool canAdd(Player player)
     {
-        return base.canAdd(player) && isWait; // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        return base.canAdd(player) && isWait; 
     }
 
 
     public override void update()
     {
-        base.update(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        base.update(); 
         if (isWait)
         {
             if (placeTime < Utilities.CurrentTimeMillis)
             {
                 isWait = false;
+                stopwatch.Start();
                 nextTurn();
             }
         }
@@ -88,6 +96,12 @@ public class ChallengePlace : GopetPlace
         foreach (Player player in players)
         {
             player.controller.LoadMap();
+        }
+        this.stopwatch.Stop();
+        TopChallengeData topChallengeData = new TopChallengeData(0, 0, this.stopwatch.Elapsed, turn, this.TeamName.ToArray(), this.TeamId.ToArray());
+        using(var conn = MYSQLManager.create())
+        {
+            conn.Execute("INSERT INTO `top_challenge`(`Type`, `Time`, `Turn`, `Name`, `TeamId`) VALUES (@Type, @Time, @Turn, @Name, @TeamId)", topChallengeData);
         }
     }
 
@@ -143,13 +157,13 @@ public class ChallengePlace : GopetPlace
 
     private int getNumMob()
     {
-        if (this.numPlayer <= 2)
+        if (this.numPlayer <= 1)
         {
             return 4;
         }
         else
         {
-            return 4 + (numPlayer - 2) * 2;
+            return 4 + (numPlayer - 1) * 4;
         }
     }
 
@@ -166,5 +180,10 @@ public class ChallengePlace : GopetPlace
     public void mobDie(Mob gopetMob)
     {
         this.mobs.remove(gopetMob);
+    }
+
+    ~ChallengePlace()
+    {
+        this.stopwatch.Stop();
     }
 }
