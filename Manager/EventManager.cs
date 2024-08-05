@@ -16,8 +16,8 @@ namespace Gopet.Manager
 
         static EventManager()
         {
-            _events.Add(ArenaEvent.Instance);
-            _events.Add(Summer2024Event.Instance);
+            //_events.Add(ArenaEvent.Instance);
+            //_events.Add(Summer2024Event.Instance);
         }
 
         public static void Start()

@@ -750,6 +750,10 @@ namespace Gopet.Battle
                             }
                         }
                         activePlayer.controller.getTaskCalculator().onKillMob(mob.getPetTemplate().petId);
+                        if (place is ChallengePlace)
+                        {
+                            activePlayer.playerData.AccumulatedPoint++;
+                        }
                     }
                     else
                     {
@@ -769,6 +773,10 @@ namespace Gopet.Battle
                             }
                             activePlayer.okDialog(Utilities.Format("Chức mừng bạn kích sát %s nhận được :\n%s", boss.Template.getName(activePlayer), string.Join(",", txtInfo)));
                             activePlayer.controller.getTaskCalculator().onKillBoss(boss);
+                            if (place is ChallengePlace)
+                            {
+                                activePlayer.playerData.AccumulatedPoint += 5;
+                            }
                         }
                     }
                     HistoryManager.addHistory(new History(activePlayer).setLog(Utilities.Format("Tiếu diệt quái %s", mob.getName(activePlayer))).setObj(mob).setSpceialType(History.KILL_MOB));
@@ -1514,7 +1522,6 @@ namespace Gopet.Battle
             {
                 return 0;
             }
-
             int begin = mob.getMobLvInfo().lvl * 10;
             bool minus = Math.Abs(p.lvl - mob.getMobLvInfo().lvl) >= 5;
             if (minus)
