@@ -516,6 +516,7 @@ public class GopetManager
     public static readonly Version VERSION_134 = Version.Parse("1.3.4");
     public static readonly Version VERSION_135 = Version.Parse("1.3.5");
     public static readonly Version VERSION_136 = Version.Parse("1.3.6");
+    public static readonly Version VERSION_137 = Version.Parse("1.3.7");
     /// <summary>
     /// Giá tiền kích hoạt tài khoản
     /// </summary>

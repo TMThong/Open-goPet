@@ -79,7 +79,7 @@ public class Player : IHandleMessage
 
     public virtual void onMessage(Message ms)
     {
-#if DEBUG
+#if DEBUG_LOG
         Console.WriteLine("PLAYER:  " + ms.id);
 #endif
         try
@@ -110,7 +110,7 @@ public class Player : IHandleMessage
                             break;
                         }
                         Refcode = ms.reader().readUTF();
-                        if (ApplicationVersion > GopetManager.VERSION_133)
+                        if (ApplicationVersion >= GopetManager.VERSION_137)
                         {
                             session.setClientOK(true);
                         }

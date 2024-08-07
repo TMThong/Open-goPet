@@ -75,6 +75,11 @@ public class TaskCalculator
             {
                 foreach (TaskTemplate taskTemplate in taskFromNPC)
                 {
+                    if (taskTemplate.type == TASK_TYPE_CLAN && player.controller.getClan() == null)
+                    {
+                        continue;
+                    }
+
                     if (!playerData.wasTask.Contains(taskTemplate.getTaskId()) && !playerData.ClanTasked.Contains(taskTemplate.getTaskId()) && !playerData.tasking.Contains(taskTemplate.getTaskId()) && (taskTemplate.type == TASK_TYPE_MAIN || taskTemplate.type == TASK_TYPE_CLAN))
                     {
                         bool flag = true;

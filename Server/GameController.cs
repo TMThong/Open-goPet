@@ -853,7 +853,7 @@ public class GameController
 
     private void requestImg(sbyte gameType, sbyte type, String path)
     {
-#if DEBUG
+#if DEBUG_LOG
         GopetManager.ServerMonitor.LogWarning($"CLIENT REQUEST IMAGE: {path}");
 #endif
         String originPath = path;
@@ -932,7 +932,7 @@ public class GameController
 
     private void processPet(sbyte subCmd, Message message)
     {
-#if DEBUG
+#if DEBUG_LOG
         GopetManager.ServerMonitor.LogInfo($" MESSAGE SERVICE: {subCmd}");
 #endif
         switch (subCmd)
@@ -1292,7 +1292,7 @@ public class GameController
 
     private void requestPetImg(sbyte type, String path)
     {
-#if DEBUG
+#if DEBUG_LOG
         GopetManager.ServerMonitor.LogWarning($"CLIENT REQUEST IMAGE: {type} {path}");
 #endif
         String originPath = path;
@@ -2760,6 +2760,18 @@ public class GameController
                 else
                 {
                     val.remove(item);
+                }
+            }
+        }
+
+        foreach (var item in player.playerData.achievements)
+        {
+            if (item.Expire < DateTime.Now)
+            {
+                player.playerData.achievements.remove(item);
+                if (item.Id == player.playerData.CurrentAchievementId)
+                {
+                    player.playerData.CurrentAchievementId = -1;
                 }
             }
         }
