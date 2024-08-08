@@ -622,6 +622,18 @@ Thread.Sleep(1000);
         }
     }
 
+    public virtual void AddLua(long lua)
+    {
+        playerData.lua += lua;
+        controller.updateUserInfo();
+    }
+
+    public virtual void MineLua(long lua)
+    {
+        playerData.lua -= lua;
+        controller.updateUserInfo();
+    }
+
     public virtual void mineCoin(long coin)
     {
         playerData.coin -= coin;
@@ -657,6 +669,11 @@ Thread.Sleep(1000);
     public virtual bool checkStar(int value)
     {
         return playerData.star >= value;
+    }
+
+    public virtual bool checkLua(long value)
+    {
+        return playerData.lua >= value;
     }
 
     public virtual void addStar(int star)

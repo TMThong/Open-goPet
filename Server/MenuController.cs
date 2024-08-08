@@ -441,6 +441,7 @@ public partial class MenuController
     public const int INPUT_TYPE_NAME_PLAYER_TO_GIVE_ITEM = 22;
     public const int INPUT_TYPE_NAME_BUFF_ENCHANT_TATTOO = 23;
     public const int INPUT_COUNT_OF_ITEM_TRASH_WANT_SELL = 24;
+    public const int INPUT_DIALOG_EXCHANGE_COIN_TO_LUA = 25;
     public const int IMGDIALOG_CAPTCHA = 0;
     #endregion
     public static JArrayList<MenuItemInfo> getPetFreeLst(Player player)
@@ -896,6 +897,7 @@ public partial class MenuController
     {
         switch (dialogId)
         {
+            case INPUT_DIALOG_EXCHANGE_COIN_TO_LUA:
             case INPUT_DIALOG_EXCHANGE_GOLD_TO_COIN:
                 return new sbyte[] { InputReader.FIELD_LONG };
             case INPUT_DIALOG_ADMIN_GET_HISTORY:

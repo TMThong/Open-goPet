@@ -1537,6 +1537,7 @@ public class GameController
         message.putInt(player.playerData.star);
         message.putlong(player.playerData.gold);
         message.putlong(player.playerData.coin);
+        message.putlong(player.playerData.lua);
         message.putInt(player.playerData.MoneyDisplays.Count);
         foreach (var itemId in player.playerData.MoneyDisplays)
         {

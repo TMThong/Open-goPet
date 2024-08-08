@@ -374,6 +374,7 @@ namespace Gopet.Language
         public string JournalismTimeOut { get; set; } = "Hết thời gian báo danh mời bạn quay lại sau";
         public string AskSelectTattoEnchantLaw { get; set; } = "Bạn có chắc muốn cường hóa {0} lên cấp {1} với tỉ lệ {2}% thành công với giá {3} không? Thất bại sẽ rớt {4} cấp !!!";
         public string InputExchangeGoldToCoinTitle { get; set; } = "Tỉ lệ 1 (vang) lấy {0} (ngoc)";
+        public string InputExchangeCninToLuaTitle { get; set; } = "Tỉ lệ {0} (ngoc) lấy {1} (lua)";
         public string CongratulateGetNewPet { get; set; } = "Chúc mừng bạn nhận được {0}";
         public string CongratulateGetNewTask { get; set; } = "Chúc mừng bạn đã nhận thành công nhiệm vụ";
         public string ChangeGoldOK { get; set; } = "Đổi thành công {0} (vang)";
@@ -508,5 +509,6 @@ namespace Gopet.Language
         public string CountOfItemTrashWantSell { get; set; } = "Số lượng vật phẩm múa bán";
         public string SellTrashItemOK { get; set; } = "Bán {0} thành công và nhận được {1} ";
         public string USE_ITEM_UP_COIN_OK { get; set; } = "Sử dụng {0} thành công và thời gian hết tác dụng là {1}";
+        public string IncorrectCoinValueWhenExchangeLua { get; set; } = "Số (ngoc) sai. Dư {0} (ngoc) nên không đổi được!";
     }
 }

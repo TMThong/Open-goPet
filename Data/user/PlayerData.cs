@@ -14,6 +14,7 @@ public class PlayerData
     public string name { get; set; }
     public long gold { get; set; }
     public long coin { get; set; }
+    public long lua { get; set; }
     public long spendGold { get; set; }
     public int ID { get; set; }
     public int user_id { get; set; }

@@ -504,6 +504,14 @@ public class GopetManager
     public const int PRICE_COIN_ARENA_JOURNALISM = 2000;
     public const int PRICE_GOLD_ARENA_JOURNALISM = 500;
     public const int PERCENT_EXCHANGE_GOLD_TO_COIN = 10;
+    /// <summary>
+    /// Cái này là cần bao nhiêu ngọc
+    /// </summary>
+    public const int PERCENT_EXCHANGE_CON_TO_LUA_1 = 10500;
+    /// <summary>
+    /// Cái này là đổi xong được bao nhiêu lúa
+    /// </summary>
+    public const int PERCENT_EXCHANGE_CON_TO_LUA_2 = 1;
     public const int MAX_LVL_ENCHANT_WING = 10;
     public const float PERCENT_ADD_WHEN_ENCHANT_WING = 10f;
     public const int POINT_WHEN_KILL_MOB_CHALLENGE = 3;

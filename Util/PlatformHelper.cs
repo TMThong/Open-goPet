@@ -24,7 +24,7 @@ public class PlatformHelper
         sbyte[] buffer = null;
         try
         {
-#if DEBUG
+#if DEBUG_LOG
             GopetManager.ServerMonitor.LogWarning($"Load ASSETS: {path}");
 #endif
             buffer = File.ReadAllBytes(Path.Combine(assetsPath + path.Replace('\\', '/'))).sbytes();

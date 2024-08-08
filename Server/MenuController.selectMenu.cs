@@ -134,6 +134,9 @@ public partial class MenuController
                         case 1:
                             player.controller.showInputDialog(INPUT_DIALOG_EXCHANGE_GOLD_TO_COIN, string.Format(player.Language.InputExchangeGoldToCoinTitle, GopetManager.PERCENT_EXCHANGE_GOLD_TO_COIN), new String[] { "Số gold :" });
                             break;
+                        case 2:
+                            player.controller.showInputDialog(INPUT_DIALOG_EXCHANGE_COIN_TO_LUA, string.Format(player.Language.InputExchangeCninToLuaTitle, GopetManager.PERCENT_EXCHANGE_CON_TO_LUA_1, GopetManager.PERCENT_EXCHANGE_CON_TO_LUA_2), new String[] { "(ngoc) :" });
+                            break;
                     }
                 }
                 break;

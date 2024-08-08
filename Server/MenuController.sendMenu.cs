@@ -717,6 +717,7 @@ public partial class MenuController
                     JArrayList<Option> options = new();
                     options.add(new Option(0, player.Language.Change + " (vang)"));
                     options.add(new Option(1, player.Language.Change + " (ngoc)"));
+                    options.add(new Option(2, player.Language.Change + " (lua)"));
                     player.controller.sendListOption(menuId, "ATM", CMD_CENTER_OK, options);
                 }
                 break;

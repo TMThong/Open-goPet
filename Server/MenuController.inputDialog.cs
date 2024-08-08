@@ -363,7 +363,7 @@ public partial class MenuController
                             return;
                         }*/
                         long value = Math.Abs(reader.readlong(0));
-                        if (player.checkGold(value))
+                        if (player.checkGold(value) && value > 0)
                         {
                             player.mineGold(value);
                             long valueCoin = value * GopetManager.PERCENT_EXCHANGE_GOLD_TO_COIN;
@@ -376,7 +376,28 @@ public partial class MenuController
                         }
                     }
                     break;
-
+                case INPUT_DIALOG_EXCHANGE_COIN_TO_LUA:
+                    {
+                        long value = Math.Abs(reader.readlong(0));
+                        long sodu = value % GopetManager.PERCENT_EXCHANGE_CON_TO_LUA_1;
+                        if (sodu != 0 || value == 0)
+                        {
+                            player.redDialog(player.Language.IncorrectCoinValueWhenExchangeLua, Utilities.FormatNumber(sodu));
+                            return;
+                        } 
+                        if (player.checkCoin(value))
+                        {
+                            player.mineCoin(value);
+                            long valueLua = (value / GopetManager.PERCENT_EXCHANGE_CON_TO_LUA_1) * GopetManager.PERCENT_EXCHANGE_CON_TO_LUA_2;
+                            player.AddLua(valueLua);
+                            player.okDialog(string.Format(player.Language.ChangeGoldToCoinMessageOK + "(lua)", Utilities.FormatNumber(valueLua)));
+                        }
+                        else
+                        {
+                            player.controller.notEnoughGold();
+                        }
+                    }
+                    break;
                 case INPUT_DIALOG_ADMIN_GET_HISTORY:
                     {
                         if (player.checkIsAdmin())
