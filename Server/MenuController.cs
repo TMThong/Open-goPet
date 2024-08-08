@@ -736,6 +736,8 @@ public partial class MenuController
                 str += player.Language.GetMoneyTextFundClan; break;
             case GopetManager.MONEY_TYPE_CRYSTAL_ITEM:
                 str += player.Language.GetMoneyTextCrystalItem; break;
+            case GopetManager.MONEY_TYPE_LUA:
+                str += " (lua)"; break;
         }
         return str;
     }
@@ -788,6 +790,8 @@ public partial class MenuController
                         return false;
                     }
                 }
+            case GopetManager.MONEY_TYPE_LUA:
+                return player.checkLua(value);
         }
         return false;
     }
@@ -816,6 +820,9 @@ public partial class MenuController
                         clanMember.fundDonate += value;
                     }
                 }
+                break;
+            case GopetManager.MONEY_TYPE_LUA:
+                player.AddLua(value);
                 break;
         }
     }

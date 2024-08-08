@@ -4677,6 +4677,11 @@ public class GameController
         player.redDialog(player.Language.NotEnoughGrowthPoint);
     }
 
+    public void notEnoughLua()
+    {
+        player.redDialog(player.Language.NotEnoughLua + " (lua)");
+    }
+
     private void kickClanMem(int memberId)
     {
         ClanMember mem = getClan();

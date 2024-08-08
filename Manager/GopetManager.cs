@@ -423,14 +423,42 @@ public class GopetManager
     public const sbyte WING_INVENTORY = 3;
     public const sbyte GEM_INVENTORY = 4;
     public const sbyte MONEY_INVENTORY = 5;
+    /// <summary>
+    /// Ngọc
+    /// </summary>
     public const sbyte MONEY_TYPE_COIN = 1;
+    /// <summary>
+    /// Vàng
+    /// </summary>
     public const sbyte MONEY_TYPE_GOLD = 0;
+    /// <summary>
+    /// Thỏi bạc
+    /// </summary>
     public const sbyte MONEY_TYPE_SILVER_BAR = 2;
+    /// <summary>
+    /// Thỏi vàng
+    /// </summary>
     public const sbyte MONEY_TYPE_GOLD_BAR = 3;
+    /// <summary>
+    /// Huyết ngọc
+    /// </summary>
     public const sbyte MONEY_TYPE_BLOOD_GEM = 4;
+    /// <summary>
+    /// Quỹ bang
+    /// </summary>
     public const sbyte MONEY_TYPE_FUND_CLAN = 5;
+    /// <summary>
+    /// Điểm phát triển bang
+    /// </summary>
     public const sbyte MONEY_TYPE_GROWTH_POINT_CLAN = 6;
+    /// <summary>
+    /// Tinh thạch
+    /// </summary>
     public const sbyte MONEY_TYPE_CRYSTAL_ITEM = 7;
+    /// <summary>
+    /// Lúa
+    /// </summary>
+    public const sbyte MONEY_TYPE_LUA = 8;
     public const int DAILY_STAR = 20;
     public const int STAR_JOIN_CHALLENGE = 2;
     public const int ITEM_OP_HP = 7;

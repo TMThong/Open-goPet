@@ -754,6 +754,9 @@ public partial class MenuController
                                 case GopetManager.MONEY_TYPE_GROWTH_POINT_CLAN:
                                     player.controller.notEnoughGrowthPointClan();
                                     break;
+                                case GopetManager.MONEY_TYPE_LUA:
+                                    player.controller.notEnoughLua();
+                                    break;
                             }
                         }
                     }
@@ -1195,7 +1198,7 @@ public partial class MenuController
                             }
                             int hours = itemSelect.Template.itemOptionValue[0];
                             player.playerData.TimeDropCoin = DateTime.Now.AddHours(hours);
-                            player.okDialog(player.Language.USE_ITEM_UP_COIN_OK, itemSelect.Template.getName(player) , Utilities.ToDateString(player.playerData.TimeDropCoin));
+                            player.okDialog(player.Language.USE_ITEM_UP_COIN_OK, itemSelect.Template.getName(player), Utilities.ToDateString(player.playerData.TimeDropCoin));
                             break;
                         /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/
                         default:

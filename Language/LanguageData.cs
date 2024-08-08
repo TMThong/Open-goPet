@@ -207,6 +207,7 @@ namespace Gopet.Language
         public string YouEnoughPermission { get; set; } = "Bạn không đủ quyền";
         public string NotEnoughFundClan { get; set; } = "Điểm góp quỹ cá nhân không đủ";
         public string NotEnoughGrowthPoint { get; set; } = "Điểm cống hiến cá nhân không đủ";
+        public string NotEnoughLua { get; set; } = "Bạn không đủ";
         public string YouCannotManipulateYourself { get; set; } = "Không thể thao tác trên chính bản thân";
         public string OtherPlayerIsNotInClan { get; set; } = "Người chơi không còn trong bang hội nữa";
         public string ClanKickOK { get; set; } = "Đuổi thành công";
