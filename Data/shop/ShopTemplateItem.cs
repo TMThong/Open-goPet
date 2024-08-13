@@ -18,10 +18,11 @@ public class ShopTemplateItem
     public int clanLvl;
     public int perCount = 0;
     public const int TYPE_RESET_SHOP_ARENA = 1;
-    public bool hasId;
+    public bool hasId = false;
     public int menuId;
     public int petId;
     public bool isSellItem = true;
+    public bool isLock = false;
 
     public void setShopId(sbyte shopId)
     {

@@ -1173,6 +1173,9 @@ public class GameController
                     }
                 }
                 break;
+            case GopetCMD.CHECK_SPEED:
+                player.onClientSpeedRespose();
+                break;
         }
     }
 
@@ -1555,6 +1558,15 @@ public class GameController
         }
         message.cleanup();
         player.session.sendMessage(message);
+
+
+        Message messageEnergy = messagePetService(GopetCMD.ENERGY_INFO);
+        messageEnergy.putInt(player.playerData.star);
+        messageEnergy.putInt(0);
+        messageEnergy.putInt(0);
+        messageEnergy.putInt(0);
+        messageEnergy.cleanup();
+        player.session.sendMessage(messageEnergy);
     }
 
     public void updatePetSelected(bool isRemove)
@@ -3379,7 +3391,7 @@ public class GameController
         Item itemSelect = (Item)objectPerformed.get(OBJKEY_ITEM_UP_SKILL);
         if (itemSelect.count > 0)
         {
-            if (pet.skill[skillIndex][1] < 11)
+            if (pet.skill[skillIndex][1] < 10)
             {
                 subCountItem(itemSelect, 1, GopetManager.NORMAL_INVENTORY);
                 bool succes = GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]] + itemSelect.getTemp().getOptionValue()[0] > Utilities.NextFloatPer();
@@ -4042,7 +4054,7 @@ public class GameController
                             continue;
                         Item item = new Item(itemId);
                         item.count = 1;
-                        if(isInfinity)
+                        if (isInfinity)
                         {
                             player.addItemToInventory(item, GopetManager.SKIN_INVENTORY);
                             popups.add(new Popup(item.getName(player)));

@@ -145,7 +145,8 @@ public class PlayerData
                             MoneyDisplays = @MoneyDisplays,
                             TrashItemBackup = @TrashItemBackup,
                             ClanTasked = @ClanTasked,
-                            TimeDropCoin = @TimeDropCoin
+                            TimeDropCoin = @TimeDropCoin,
+                            lua = @lua
                             WHERE ID = @ID", playerData);
     }
 

@@ -15,6 +15,7 @@ using System.Net.WebSockets;
 using static Gopet.Util.Utilities;
 using Gopet.Data.user;
 using Gopet.Language;
+using System.Diagnostics;
 public class Player : IHandleMessage
 {
     public static readonly string[] BANNAME = new string[] { "admin", "test", "banquantri", "gofarm" };
@@ -253,6 +254,7 @@ Thread.Sleep(1000);
 
     public virtual void update()
     {
+        checkSpeed();
         UpdateHP_MP();
 
         if (playerData != null)
@@ -261,6 +263,70 @@ Thread.Sleep(1000);
 
             playerData.buffExp.update();
             updatePkPoint();
+        }
+    }
+
+    private Mutex m_SpeedMutex = new Mutex();
+    private Stopwatch s_SpeedStopWatch = new Stopwatch();
+    private TimeSpan m_SpeedTime = TimeSpan.Zero;
+    private void checkSpeed()
+    {
+        m_SpeedMutex.WaitOne();
+        try
+        {
+            if(s_SpeedStopWatch.IsRunning)
+            {
+                if(s_SpeedStopWatch.Elapsed > m_SpeedTime * 3)
+                {
+                    s_SpeedStopWatch.Stop();
+                    session.Close();
+                    return;
+                }
+            }
+            else
+            {
+                m_SpeedTime = TimeSpan.FromSeconds(Utilities.nextInt(15, 30));
+                Message message = GameController.messagePetService(GopetCMD.CHECK_SPEED);
+                message.putInt((int)m_SpeedTime.TotalMilliseconds);
+                message.cleanup();
+                session.sendMessage(message);
+                s_SpeedStopWatch.Restart();
+                s_SpeedStopWatch.Start();
+            }
+        }
+        finally
+        {
+            m_SpeedMutex.ReleaseMutex();
+        }
+    }
+
+    public void onClientSpeedRespose()
+    {
+#if DEBUG_LOG
+        GopetManager.ServerMonitor.LogInfo("onClientSpeedRespose");
+#endif
+        m_SpeedMutex.WaitOne();
+        try
+        {
+            if (s_SpeedStopWatch.IsRunning) 
+            { 
+                s_SpeedStopWatch.Stop();
+                if(s_SpeedStopWatch.Elapsed < m_SpeedTime)
+                {
+                    user.ban(UserData.BAN_TIME, "HackSpeed", Utilities.CurrentTimeMillis + (1000 * 60 * 60));
+                    session.Close();
+                    return;
+                }
+            }
+            else
+            {
+                session.Close();
+                return;
+            }
+        }
+        finally
+        {
+            m_SpeedMutex.ReleaseMutex();
         }
     }
 
@@ -341,7 +407,7 @@ Thread.Sleep(1000);
                     return;
                 }
 
-                switch (user.isBanned)
+                switch (user.isBaned)
                 {
                     case UserData.BAN_INFINITE:
                         {
@@ -366,8 +432,8 @@ Thread.Sleep(1000);
                             }
                             else
                             {
-                                user.isBanned = UserData.BAN_NONE;
-                                conn.Execute(Utilities.Format("update user set isBaned = DEFAULT where user_id = @user_id", user));
+                                user.isBaned = UserData.BAN_NONE;
+                                conn.Execute("update user set isBaned = DEFAULT where user_id = @user_id", new { user_id = user.user_id });
                             }
                             break;
                         }

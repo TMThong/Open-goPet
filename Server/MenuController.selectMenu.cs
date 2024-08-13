@@ -686,7 +686,7 @@ public partial class MenuController
                             {
                                 if (shopTemplateItem.isSellItem)
                                 {
-                                    Item item = new Item(shopTemplateItem.getItemTempalteId());
+                                    Item item = new Item(shopTemplateItem.getItemTempalteId()) { canTrade = !shopTemplateItem.isLock };
                                     item.count = shopTemplateItem.getCount();
                                     if (item.getTemp().expire > 0)
                                     {
@@ -1199,6 +1199,12 @@ public partial class MenuController
                             int hours = itemSelect.Template.itemOptionValue[0];
                             player.playerData.TimeDropCoin = DateTime.Now.AddHours(hours);
                             player.okDialog(player.Language.USE_ITEM_UP_COIN_OK, itemSelect.Template.getName(player), Utilities.ToDateString(player.playerData.TimeDropCoin));
+                            break;
+
+                        case GopetManager.ITEM_NATIVE_TITLE:
+                            int[] optionValue = itemSelect.Template.itemOptionValue;
+                            player.controller.onReiceiveGift(new int[][] { new int[] { GopetManager.GIFT_TITLE, optionValue[0], 0, optionValue[1], optionValue[2], optionValue[3], optionValue[4], optionValue[5] } });
+                            player.okDialog(player.Language.UseOK);
                             break;
                         /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/
                         default:

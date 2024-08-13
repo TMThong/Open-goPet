@@ -11,7 +11,7 @@ public class UserData
 
     public int user_id;
     public String username, password, phone, email, banReason, ipv4Create;
-    public sbyte isBanned = BAN_NONE;
+    public sbyte isBaned = BAN_NONE;
     public long banTime = 0;
     public sbyte role;
     public const sbyte BAN_NONE = 0;

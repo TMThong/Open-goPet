@@ -24,6 +24,7 @@ namespace Gopet.Data.GopetClan
         public CopyOnWriteArrayList<ClanChat> clanChats = new();
         public CopyOnWriteArrayList<ClanSkill> SkillRent = new CopyOnWriteArrayList<ClanSkill>();
         public Dictionary<int, int> SkillInfo = new Dictionary<int, int>();
+        public int[] Options = new int[0];
         public ClanPlace clanPlace;
         public String slogan = "GOPET TAE";
         public ShopClan shopClan;
@@ -74,15 +75,10 @@ namespace Gopet.Data.GopetClan
             this.fund = fund;
         }
 
-
         public void setLvl(int lvl)
         {
             this.lvl = lvl;
         }
-
-
-
-
 
         public void setMembers(CopyOnWriteArrayList<ClanMember> members)
         {
@@ -210,7 +206,6 @@ namespace Gopet.Data.GopetClan
         {
             return this.LOCKObject;
         }
-
 
 
         public ClanTemplate getTemp()

@@ -1,4 +1,4 @@
-
+﻿
 using Gopet.Data.GopetClan;
 using Gopet.Data.Collections;
 using Gopet.Data.User;
@@ -11,6 +11,17 @@ public class ClanManager
     public static CopyOnWriteArrayList<Clan> clans = new();
     public static ConcurrentHashMap<int, Clan> clanHashMap = new();
     public static ConcurrentHashMap<String, Clan> clanHashMapName = new();
+
+    /// <summary>
+    /// Thêm danh hiệu đệ nhất bang 
+    /// Giá 2,500 vàng
+    /// </summary>
+    public const int OPTION_ADD_TITLE_9 = 0;
+    /// <summary>
+    /// Thêm danh hiệu đệ nhất bang 
+    /// Giá 2,500 vàng
+    /// </summary>
+    public const int OPTION_ADD_TITLE_10 = 1;
 
     public static void addClan(Clan clan)
     {

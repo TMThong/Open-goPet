@@ -379,13 +379,13 @@ public partial class MenuController
                     if (clanMember != null)
                     {
                         Clan clan = clanMember.getClan();
-                        if (clan.getLvl() >= 15)
+                        if (clan.getLvl() >= 5)
                         {
                             showShop(SHOP_CLAN, player);
                         }
                         else
                         {
-                            player.redDialog(player.Language.ClanMustReachLevel15);
+                            player.redDialog(player.Language.ClanMustReachLevel5);
                         }
                     }
                     else

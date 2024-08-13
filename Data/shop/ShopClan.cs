@@ -20,6 +20,38 @@ public class ShopClan : ShopTemplate
     {
         timeRefresh = Utilities.CurrentTimeMillis;
         this.shopTemplateItems.Clear();
+        foreach (int item in clan.Options)
+        {
+            switch (item)
+            {
+                case ClanManager.OPTION_ADD_TITLE_9:
+                    this.shopTemplateItems.Add(new ShopTemplateItem()
+                    {
+                        itemTemTempleId = 240009,
+                        count = 1,
+                        isSellItem = true,
+                        price = new int[] { 2500 },
+                        moneyType = new sbyte[] { GopetManager.MONEY_TYPE_GOLD },
+                        isLock = true,
+                        hasId = true,
+                        menuId = 999991
+                    });
+                    continue;
+                case ClanManager.OPTION_ADD_TITLE_10:
+                    this.shopTemplateItems.Add(new ShopTemplateItem()
+                    {
+                        itemTemTempleId = 240010,
+                        count = 1,
+                        isSellItem = true,
+                        price = new int[] { 2500 },
+                        moneyType = new sbyte[] { GopetManager.MONEY_TYPE_GOLD },
+                        isLock = true,
+                        hasId = true,
+                        menuId = 999992
+                    });
+                    continue;
+            }
+        }
     }
 
     public ShopTemplateItem getShopTemplateItem(int mneuId)

@@ -365,7 +365,7 @@ namespace Gopet.Language
         public string ClanLeaderCannotOutClan { get; set; } = "Bang chủ không thể rời bang.";
         public string DoYouWantUpgradeClanLevel { get; set; } = "Bạn có muốn năng cấp nhà chính lên cấp {0} không?";
         public string ChangeSloganClan { get; set; } = "Thay đổi khẩu hiệu bang hội";
-        public string ClanMustReachLevel15 { get; set; } = "Bang hội chưa đạt cấp 15 trở lên";
+        public string ClanMustReachLevel5 { get; set; } = "Bang hội chưa đạt cấp 5 trở lên";
         public string FeatureIsNotFound { get; set; } = "Tính năng đang được xây dựng";
         public string CannotFoundItemWithId { get; set; } = "Không có item với id = ";
         public string WrongUsername { get; set; } = "Sai tên tài khoản";

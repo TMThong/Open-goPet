@@ -181,6 +181,12 @@ public class GopetManager
     public const int ITEM_MATERIAL_ENCHANT_TATOO = 23;
     public const int ITEM_EVENT = 24;
     public const int ITEM_NEED_TO_TRAIN_COIN = 25;
+    /// <summary>
+    /// Vật phẩm này bán trong shop để đại diện cho danh hiệu
+    /// Sau khi mua sẽ tự động sử dụng 
+    /// Danh hiệu sẽ tự vào nhân vật
+    /// </summary>
+    public const int ITEM_NATIVE_TITLE = 26;
     public const int GIFT_GOLD = 0;
     public const int GIFT_COIN = 1;
     public const int GIFT_ITEM = 2;
