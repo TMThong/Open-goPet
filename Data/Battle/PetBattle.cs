@@ -709,7 +709,7 @@ namespace Gopet.Battle
                         if (clanMember != null)
                         {
                             perExpPlus += clanMember.clan.Search(ItemInfo.Type.PERCENT_EXP).value / 100f;
-                            coinPlus += clanMember.clan.Search(ItemInfo.Type.PERCENT_GEM).value / 100f;
+                            //coinPlus += clanMember.clan.Search(ItemInfo.Type.PERCENT_GEM).value / 100f;
                         }
                         exp = genExpWhenMobDie(activePlayer, activePet, mob, mob.getMobLvInfo().exp);
                         exp = Math.Max(0, exp + Utilities.round(Utilities.GetValueFromPercent(exp, activePlayer.playerData.buffExp.getPercent() + perExpPlus)));
@@ -962,7 +962,7 @@ namespace Gopet.Battle
                             {
                                 if (isPetAttackMob())
                                 {
-                                    mpdelta = Utilities.round(Utilities.GetValueFromPercent(mob.mp, ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) / 100f) + Utilities.GetValueFromPercent(damageInfo.getDamge(), ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA_BY_ATK) / 100f));
+                                    mpdelta = Utilities.round(Utilities.GetValueFromPercent(damageInfo.getDamge(), ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) / 100f) + Utilities.GetValueFromPercent(damageInfo.getDamge(), ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA_BY_ATK) / 100f));
                                     if (mob.mp - mpdelta > 0)
                                     {
                                         mob.mp -= mpdelta;
@@ -975,7 +975,7 @@ namespace Gopet.Battle
                                 }
                                 else
                                 {
-                                    mpdelta = Utilities.round(Utilities.GetValueFromPercent(nonPet.mp, ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) / 100f) + Utilities.GetValueFromPercent(damageInfo.getDamge(), ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA_BY_ATK) / 100f));
+                                    mpdelta = Utilities.round(Utilities.GetValueFromPercent(damageInfo.getDamge(), ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) / 100f) + Utilities.GetValueFromPercent(damageInfo.getDamge(), ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA_BY_ATK) / 100f));
                                     if (nonPet.mp - mpdelta > 0)
                                     {
                                         nonPet.mp -= mpdelta;
@@ -1056,7 +1056,7 @@ namespace Gopet.Battle
         private bool randMiss(PetBattleInfo nonPetBattleInfo)
         {
             ItemInfo[] itemInfos = nonPetBattleInfo.getBuff();
-            return ItemInfo.getValueById(itemInfos, ItemInfo.Type.MISS_IN_3_TURN) > 0 && ActiveObject.AccuracyPercent - ItemInfo.getValueById(itemInfos, ItemInfo.Type.MISS_IN_3_TURN) / 100f - PassiveObject.SkipPercent > Utilities.NextFloatPer();
+            return ItemInfo.getValueById(itemInfos, ItemInfo.Type.MISS_IN_99999_TURN) > 0 && ActiveObject.AccuracyPercent - ItemInfo.getValueById(itemInfos, ItemInfo.Type.MISS_IN_99999_TURN) / 100f - PassiveObject.SkipPercent > Utilities.NextFloatPer();
         }
 
         private bool dotmana(PetSkillLv petSkillLv)
@@ -1102,7 +1102,7 @@ namespace Gopet.Battle
                     }
                 }
                 damgeInfo.setHpRecovery((int)(damgeInfo.getHpRecovery() + Utilities.GetValueFromPercent(sum, ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.RECOVERY_HP) / 100f)));
-
+                damgeInfo.setHpRecovery((int)(damgeInfo.getHpRecovery() + ItemInfo.getValueById(petBattleInfo.getBuff(), ItemInfo.Type.RECOVERY_HP_IN_4_TURN)));
             }
 
 
@@ -1135,9 +1135,9 @@ namespace Gopet.Battle
 
                 if (def > 0) sum -= def;
 
-                if (ItemInfo.getValueById(nonPetBattleInfo.getBuff(), ItemInfo.Type.PHANDOAN_2_TURN) > 0)
+                if (ItemInfo.getValueById(nonPetBattleInfo.getBuff(), ItemInfo.Type.PHANDOAN_4_TURN) > 0)
                 {
-                    float damagePer = ItemInfo.getValueById(nonPetBattleInfo.getBuff(), ItemInfo.Type.PHANDOAN_2_TURN) / 100f;
+                    float damagePer = ItemInfo.getValueById(nonPetBattleInfo.getBuff(), ItemInfo.Type.PHANDOAN_4_TURN) / 100f;
                     int valueDg = Utilities.round(Utilities.GetValueFromPercent(sum, damagePer));
                     if (valueDg <= 0)
                     {
@@ -1157,6 +1157,7 @@ namespace Gopet.Battle
             }
             damgeInfo.setTrueDamge(trueDamge);
             damgeInfo.setHpRecovery((int)(damgeInfo.getHpRecovery() + Utilities.GetValueFromPercent(sum, ItemInfo.getValueById(petBattleInfo.getBuff(), ItemInfo.Type.RECOVERY_HP) / 100f)));
+            damgeInfo.setHpRecovery((int)(damgeInfo.getHpRecovery() + ItemInfo.getValueById(petBattleInfo.getBuff(), ItemInfo.Type.RECOVERY_HP_IN_4_TURN)));
             return damgeInfo;
         }
 
@@ -1190,9 +1191,9 @@ namespace Gopet.Battle
 
                     if (!(mob is Boss))
                     {
-                        if (ItemInfo.getValueById(activeBattleInfo.getBuff(), ItemInfo.Type.PHANDOAN_2_TURN) > 0)
+                        if (ItemInfo.getValueById(activeBattleInfo.getBuff(), ItemInfo.Type.PHANDOAN_4_TURN) > 0)
                         {
-                            float damagePer = ItemInfo.getValueById(activeBattleInfo.getBuff(), ItemInfo.Type.PHANDOAN_2_TURN) / 100f;
+                            float damagePer = ItemInfo.getValueById(activeBattleInfo.getBuff(), ItemInfo.Type.PHANDOAN_4_TURN) / 100f;
                             int valueDg = Utilities.round(Utilities.GetValueFromPercent(sum, damagePer));
                             sum -= valueDg;
                             passiveBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.DAMAGE_PHANDOAN, valueDg) }, 2));
@@ -1260,7 +1261,7 @@ namespace Gopet.Battle
                     PetDamgeInfo damageInfo = makeDamage(petBattleInfo, nonPetBattleInfo, petSkillLv);
                     if (dotmana(petSkillLv))
                     {
-                        mpdelta = Utilities.round(Utilities.GetValueFromPercent(mob.mp, ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) / 100f));
+                        mpdelta = Utilities.round(Utilities.GetValueFromPercent(damageInfo.getDamge(), ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.DOT_MANA) / 100f));
                         if (activePet.mp - mpdelta > 0)
                         {
                             activePet.mp -= mpdelta;
@@ -1356,8 +1357,8 @@ namespace Gopet.Battle
             {
                 switch (i.id)
                 {
-                    case ItemInfo.Type.MISS_IN_3_TURN:
-                        petBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 3));
+                    case ItemInfo.Type.MISS_IN_99999_TURN:
+                        petBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 999999));
                         break;
                     case ItemInfo.Type.POWER_DOWN_4_TURN:
                         nonBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.BUFF_DAMGE, -i.value) }, 4));
@@ -1396,11 +1397,18 @@ namespace Gopet.Battle
                     case ItemInfo.Type.PER_STUN_1_TURN:
                         nonBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 2));
                         break;
+                    case ItemInfo.Type.RECOVERY_HP_IN_4_TURN:
+                        petBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 4));
+                        break;
                     case ItemInfo.Type.BUFF_ATK_3_TURN:
                         petBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.BUFF_DAMGE, i.value) }, 4));
                         break;
-                    case ItemInfo.Type.PHANDOAN_2_TURN:
-                        petBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 1));
+                    case ItemInfo.Type.BUFF_DEF_IN_4_TURN:
+                        petBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.DEF_PER, i.value) }, 4));
+                        break;
+
+                    case ItemInfo.Type.PHANDOAN_4_TURN:
+                        petBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 3));
                         break;
                 }
             }

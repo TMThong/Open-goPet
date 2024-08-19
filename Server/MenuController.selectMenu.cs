@@ -686,7 +686,7 @@ public partial class MenuController
                             {
                                 if (shopTemplateItem.isSellItem)
                                 {
-                                    Item item = new Item(shopTemplateItem.getItemTempalteId()) { canTrade = !shopTemplateItem.isLock };
+                                    Item item = new Item(shopTemplateItem.getItemTempalteId()) { canTrade = !shopTemplateItem.isLock  && (shopTemplateItem.itemTemTempleId != 240009 || shopTemplateItem.itemTemTempleId != 240010) };
                                     item.count = shopTemplateItem.getCount();
                                     if (item.getTemp().expire > 0)
                                     {

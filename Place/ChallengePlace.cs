@@ -117,7 +117,7 @@ public class ChallengePlace : GopetPlace
             {
                 for (int i = 0; i < getNumMob(); i++)
                 {
-                    int[] XY = MOB_XY[i];
+                    int[] XY = MOB_XY[getNumMob() > MOB_XY.Length ? i % MOB_XY.Length : i];
                     PetTemplate petTemplate = Utilities.RandomArray(templates);
                     MobLocation mobLocation = new MobLocation(this.map.mapID, XY[0], XY[1]);
                     MobLvlMap mobLvlMap = new MobLvlMap(map.mapID, turn, turn, petTemplate.petId);

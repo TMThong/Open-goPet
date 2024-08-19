@@ -175,7 +175,7 @@ Thread.Sleep(1000);
             redDialog("Chức năng này bị khóa. Để đăng ký tài khoản vui lòng vào trang web\n gopettae.com vào mục diễn đàn.");
             return;
         }*/
-        if (CheckString(username, "^[a-z0-9]+$") && CheckString(password, "^[a-z0-9]+$"))
+        if (CheckString(username, "^[a-z0-9]+$"))
         {
             if (username.Length >= 6 && password.Length >= 6 && username.Length < 25 && password.Length < 60)
             {
@@ -223,8 +223,7 @@ Thread.Sleep(1000);
     {
         if (oldPass.Equals(user.password))
         {
-            if (!CheckString(newPass, "^[a-z0-9]+$")
-                    || newPass.Length < 5)
+            if (newPass.Length < 5)
             {
                 Message mW = new Message(GopetCMD.CHANGE_PASSWORD);
                 mW.putUTF(Language.ChangePasswordLaw);
@@ -311,10 +310,11 @@ Thread.Sleep(1000);
             if (s_SpeedStopWatch.IsRunning) 
             { 
                 s_SpeedStopWatch.Stop();
-                if(s_SpeedStopWatch.Elapsed < m_SpeedTime)
+                if(s_SpeedStopWatch.Elapsed + TimeSpan.FromSeconds(2) < m_SpeedTime)
                 {
-                    user.ban(UserData.BAN_TIME, "HackSpeed", Utilities.CurrentTimeMillis + (1000 * 60 * 60));
-                    session.Close();
+                    //user.ban(UserData.BAN_TIME, "HackSpeed", Utilities.CurrentTimeMillis + (1000 * 60 * 60));
+                    //session.Close();
+                    HistoryManager.Instance.add(new History(this).setLog($"Hệ thống ban acc do người dùng speed. Trạng thái TimeSpeedCheck={m_SpeedTime}, TimeSpeedCheck + 2 giây={m_SpeedTime + TimeSpan.FromSeconds(2)}, Đồng hồ đo = {s_SpeedStopWatch.Elapsed} "));
                     return;
                 }
             }
@@ -388,7 +388,7 @@ Thread.Sleep(1000);
             okDialog(ServerSetting.instance.messageWhenLogin);
             return;
         }
-        if (!CheckString(username, "^[a-z0-9]+$") || !CheckString(password, "^[a-z0-9]+$"))
+        if (!CheckString(username, "^[a-z0-9]+$"))
         {
             redDialog(Language.HaveSpecialChar);
             return;
@@ -669,7 +669,7 @@ Thread.Sleep(1000);
     {
         get
         {
-            return DateTime.Now <= new DateTime(2024, 8, 28);
+            return DateTime.Now <= new DateTime(2024, 8, 14);
         }
     }
 

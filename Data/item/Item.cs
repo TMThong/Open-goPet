@@ -243,7 +243,7 @@ namespace Gopet.Data.GopetItem
                                         case ItemInfo.Type.DEF_PER:
                                             wingBuffDesc += getSign(buff.OptionValue) + Utilities.round(buff.OptionValue / 100f) + "%(def)";
                                             break;
-                                        case ItemInfo.Type.PHANDOAN_2_TURN:
+                                        case ItemInfo.Type.PHANDOAN_4_TURN:
                                             wingBuffDesc += player.Language.CounterAttack + Utilities.round(buff.OptionValue / 100f) + player.Language.PercentDamageItemDesc;
                                             break;
                                         case ItemInfo.Type.PER_STUN_1_TURN:

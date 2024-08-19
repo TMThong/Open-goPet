@@ -117,14 +117,14 @@ namespace Gopet.Data.GopetItem
             public const int POWER_DOWN_3_TURN = 22;
             public const int SELECT_DEF_IN_3_TURN = 23;
             public const int RECOVERY_HP = 24;
-            public const int MISS_IN_3_TURN = 25;
+            public const int MISS_IN_99999_TURN = 25;
             public const int SKILL_MISS = 26;
             public const int DAMGE_TOXIC_IN_3_TURN_PER = 27;
             public const int DAMGE_TOXIC_IN_5_TURN = 28;
             public const int POWER_DOWN_1_TURN = 29;
             public const int STUN = 30;
             public const int BUFF_ATK_3_TURN = 31;
-            public const int PHANDOAN_2_TURN = 32;
+            public const int PHANDOAN_4_TURN = 32;
             public const int DAMAGE_PHANDOAN = 33;
             public const int PER_STUN_1_TURN= 36;
             public const int PER_DEF_BUFF_3_TURN = 37;
@@ -133,6 +133,8 @@ namespace Gopet.Data.GopetItem
             public const int PERCENT_EXP = 40;
             public const int PERCENT_GEM = 41;
             public const int PERCENT_ALL_INFO = 42;
+            public const int BUFF_DEF_IN_4_TURN = 44;
+            public const int RECOVERY_HP_IN_4_TURN = 45;
         }
 
         public static class OptionType

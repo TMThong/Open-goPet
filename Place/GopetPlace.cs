@@ -407,12 +407,15 @@ public class GopetPlace : Place
 
     public void startFightMob(int mobId, Player player)
     {
-        /*if (Utilities.CurrentTimeMillis - player.controller.getLastTimeKillMob() < 4000)
+        if (this.map.mapID == 12)
         {
-            player.user.ban(UserData.BAN_TIME, player.Language.BanUserByAutoAttackMob, Utilities.CurrentTimeMillis + 60000L * 5);
-            player.session.Close();
-            return;
-        }*/
+            if (Utilities.CurrentTimeMillis - player.controller.getLastTimeKillMob() < 4500)
+            {
+                player.user.ban(UserData.BAN_TIME, player.Language.BanUserByAutoAttackMob, Utilities.CurrentTimeMillis + 60000L * 5);
+                player.session.Close();
+                return;
+            }
+        }
         Mob mob = getMob(mobId);
         if (mob != null)
         {

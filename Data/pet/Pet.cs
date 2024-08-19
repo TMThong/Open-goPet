@@ -2,6 +2,7 @@
 using Gopet.Data.Collections;
 using Gopet.Data.GopetClan;
 using Gopet.Data.GopetItem;
+using Gopet.Data.user;
 using Gopet.Util;
 using Newtonsoft.Json;
 
@@ -351,14 +352,30 @@ public class Pet : GameObject, IBinaryObject<Pet>
         }
 
 
-        var ach = player.controller.FindSeach(player.playerData.CurrentAchievementId);
+        /*var ach = player.controller.FindSeach(player.playerData.CurrentAchievementId);
         if (ach != null)
         {
             this.atk += ach.Template.Atk;
             this.def += ach.Template.Def;
             this.maxHp += ach.Template.Hp;
             this.maxMp += ach.Template.Mp;
+        }*/
+
+        List<AchievementTemplate> achievementTemplates = new List<AchievementTemplate>();
+
+        foreach (var ach in player.playerData.achievements)
+        {
+            if (achievementTemplates.Contains(ach.Template))
+            {
+                continue;
+            }
+            achievementTemplates.Add(ach.Template);
+            this.atk += ach.Template.Atk;
+            this.def += ach.Template.Def;
+            this.maxHp += ach.Template.Hp;
+            this.maxMp += ach.Template.Mp;
         }
+
         ClanMember clanMember = player.controller.getClan();
         if (clanMember != null)
         {
