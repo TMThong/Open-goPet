@@ -34,7 +34,9 @@ public class ShopClan : ShopTemplate
                         moneyType = new sbyte[] { GopetManager.MONEY_TYPE_GOLD },
                         isLock = true,
                         hasId = true,
-                        menuId = 999991
+                        menuId = 999991,
+                        TimeNeedReset = TimeSpan.FromDays(7),
+                        NeedFund = 2000
                     });
                     continue;
                 case ClanManager.OPTION_ADD_TITLE_10:
@@ -47,7 +49,9 @@ public class ShopClan : ShopTemplate
                         moneyType = new sbyte[] { GopetManager.MONEY_TYPE_GOLD },
                         isLock = true,
                         hasId = true,
-                        menuId = 999992
+                        menuId = 999992,
+                        TimeNeedReset = TimeSpan.FromDays(7),
+                        NeedFund = 2000
                     });
                     continue;
             }

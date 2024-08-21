@@ -13,7 +13,7 @@ public class ChallengePlace : GopetPlace
     public const long TIME_WAIT = 60 * 1000;
     public const long TIME_ATTACK = 60 * 3 * 1000;
     public const int MAX_PLAYER_JOIN = 4;
-    public const int MAX_TURN = 20;
+    public const int MAX_TURN = 25;
     public bool isWait = true;
     public bool isFinish = false;
     public bool isWaitForNewTurn = false;
@@ -26,7 +26,39 @@ public class ChallengePlace : GopetPlace
         new int[]{35, 181},
         new int[]{79, 59},
         new int[]{347, 377},
-        new int[]{402, 261}
+        new int[]{402, 261},
+        new int[]{200, 161},
+        new int[]{301, 97},
+        new int[]{353, 229},
+        new int[]{135, 323},
+        new int[]{55, 181},
+        new int[]{119, 59},
+        new int[]{347, 347},
+        new int[]{302, 261},
+        new int[]{12, 90}
+    };
+    public static readonly Dictionary<int, int> MOB_LVL = new Dictionary<int, int>()
+    {
+        [1] = 3,
+        [2] = 4,
+        [3] = 5,
+        [4] = 6,
+        [6] = 11,
+        [7] = 12,
+        [8] = 13,
+        [9] = 14,
+        [11] = 21,
+        [12] = 22,
+        [13] = 23,
+        [14] = 24,
+        [16] = 31,
+        [17] = 32,
+        [18] = 33,
+        [19] = 34,
+        [21] = 42,
+        [22] = 43,
+        [23] = 44,
+        [24] = 45,
     };
 
     private Stopwatch stopwatch = new Stopwatch();
@@ -43,7 +75,7 @@ public class ChallengePlace : GopetPlace
 
     public override void add(Player player)
     {
-        base.add(player); 
+        base.add(player);
         player.controller.sendPlaceTime(Utilities.round(placeTime - Utilities.CurrentTimeMillis) / 1000);
         player.controller.showBigTextEff(player.Language.WaitRoomPlace);
         TeamId.Add(player.user.user_id);
@@ -53,13 +85,13 @@ public class ChallengePlace : GopetPlace
 
     public override bool canAdd(Player player)
     {
-        return base.canAdd(player) && isWait; 
+        return base.canAdd(player) && isWait;
     }
 
 
     public override void update()
     {
-        base.update(); 
+        base.update();
         if (isWait)
         {
             if (placeTime < Utilities.CurrentTimeMillis)
@@ -99,7 +131,7 @@ public class ChallengePlace : GopetPlace
         }
         this.stopwatch.Stop();
         TopChallengeData topChallengeData = new TopChallengeData(0, 0, this.stopwatch.Elapsed, turn, this.TeamName.ToArray(), this.TeamId.ToArray());
-        using(var conn = MYSQLManager.create())
+        using (var conn = MYSQLManager.create())
         {
             conn.Execute("INSERT INTO `top_challenge`(`Type`, `Time`, `Turn`, `Name`, `TeamId`) VALUES (@Type, @Time, @Turn, @Name, @TeamId)", topChallengeData);
         }
@@ -120,8 +152,13 @@ public class ChallengePlace : GopetPlace
                     int[] XY = MOB_XY[getNumMob() > MOB_XY.Length ? i % MOB_XY.Length : i];
                     PetTemplate petTemplate = Utilities.RandomArray(templates);
                     MobLocation mobLocation = new MobLocation(this.map.mapID, XY[0], XY[1]);
-                    MobLvlMap mobLvlMap = new MobLvlMap(map.mapID, turn, turn, petTemplate.petId);
-                    MobLvInfo mobLvInfo = GopetManager.MOBLVLINFO_HASH_MAP.get(turn);
+                    int lvlMob = turn;
+                    if (MOB_LVL.ContainsKey(turn))
+                    {
+                        lvlMob = MOB_LVL[turn];
+                    }
+                    MobLvlMap mobLvlMap = new MobLvlMap(map.mapID, lvlMob, lvlMob, petTemplate.petId);
+                    MobLvInfo mobLvInfo = GopetManager.MOBLVLINFO_HASH_MAP.get(lvlMob);
                     Mob mob = new Mob(petTemplate, this, mobLvlMap, mobLocation, mobLvInfo);
                     mob.setMobId(-(i + 1));
                     this.addNewMob(mob);

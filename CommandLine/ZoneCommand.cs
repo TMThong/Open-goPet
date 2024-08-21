@@ -43,7 +43,7 @@ namespace Gopet.CommandLine
                     var m = (MapManager.maps[mapId].places.Where(p => p.zoneID == zoneId).First() as ChallengePlace);
                     m.isWait = false;
                     m.placeTime = 0;
-                    
+                    m.mobs.Clear();
                     m.turn = int.Parse(args[3]);
                     m.isWaitForNewTurn = true;
                     GopetManager.ServerMonitor.LogWarning("Thao tác thành công");

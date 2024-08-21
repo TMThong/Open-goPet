@@ -657,6 +657,25 @@ public partial class MenuController
                         if (clanMember != null)
                         {
                             shopTemplateItem = clanMember.getClan().getShopClan().getShopTemplateItem(index);
+                            if (shopTemplateItem != null)
+                            {
+                                if (shopTemplateItem.TimeNeedReset.HasValue && shopTemplateItem.TimeNeedReset.Value > TimeSpan.Zero)
+                                {
+                                    if (clanMember.shopData.TryGetValue(shopTemplateItem.itemTemTempleId, out DateTime dateTime))
+                                    {
+                                        if (dateTime > DateTime.Now)
+                                        {
+                                            player.redDialog("Vui lòng chờ đến {0}", Utilities.ToDateString(dateTime));
+                                            return;
+                                        }
+                                    }
+                                }
+                                if (shopTemplateItem.NeedFund > clanMember.fundDonate)
+                                {
+                                    player.redDialog("Bạn cần đóng góp {0} quỹ để mua vật phẩm này", Utilities.FormatNumber(shopTemplateItem.NeedFund));
+                                    return;
+                                }
+                            }
                         }
                         else
                         {
@@ -686,7 +705,7 @@ public partial class MenuController
                             {
                                 if (shopTemplateItem.isSellItem)
                                 {
-                                    Item item = new Item(shopTemplateItem.getItemTempalteId()) { canTrade = !shopTemplateItem.isLock  && (shopTemplateItem.itemTemTempleId != 240009 || shopTemplateItem.itemTemTempleId != 240010) };
+                                    Item item = new Item(shopTemplateItem.getItemTempalteId()) { canTrade = !shopTemplateItem.isLock && (shopTemplateItem.itemTemTempleId != 240009 || shopTemplateItem.itemTemTempleId != 240010) };
                                     item.count = shopTemplateItem.getCount();
                                     if (item.getTemp().expire > 0)
                                     {
@@ -694,6 +713,14 @@ public partial class MenuController
                                     }
                                     player.addItemToInventory(item);
                                     player.okDialog(string.Format(player.Language.YouBuyItemOK, item.getTemp().getName(player)));
+                                    if (menuId == SHOP_CLAN)
+                                    {
+                                        ClanMember clanMember = player.controller.getClan();
+                                        if (shopTemplateItem.TimeNeedReset.HasValue && shopTemplateItem.TimeNeedReset.Value > TimeSpan.Zero)
+                                        {
+                                            clanMember.shopData[shopTemplateItem.itemTemTempleId] = DateTime.Now + shopTemplateItem.TimeNeedReset.Value;
+                                        }
+                                    }
                                 }
                                 else
                                 {
@@ -713,6 +740,7 @@ public partial class MenuController
                                     player.controller.objectPerformed.Remove(OBJKEY_INDEX_MENU_BUY_PET_TO_NAME);
                                     player.controller.objectPerformed.Remove(OBJKEY_PAYMENT_INDEX_WANT_TO_NAME_PET);
                                     player.controller.objectPerformed.Remove(OBJKEY_NAME_PET_WANT);
+
                                 }
                                 if (shopTemplateItem.isCloseScreenAfterClick())
                                 {

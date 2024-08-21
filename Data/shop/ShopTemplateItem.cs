@@ -23,7 +23,8 @@ public class ShopTemplateItem
     public int petId;
     public bool isSellItem = true;
     public bool isLock = false;
-
+    public TimeSpan? TimeNeedReset { get; set; } = null;
+    public int NeedFund = 0;
     public void setShopId(sbyte shopId)
     {
         this.shopId = shopId;

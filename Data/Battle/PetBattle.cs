@@ -948,7 +948,7 @@ namespace Gopet.Battle
                     {
                         PetBattleInfo nonPetBattleInfo = getNonUserPetBattleInfo();
                         PetSkill petSkill = GopetManager.PETSKILL_HASH_MAP.get(pet.skill[skillindex][0]);
-                        PetSkillLv petSkillLv = petSkill.skillLv.get(pet.skill[skillindex][1]);
+                        PetSkillLv petSkillLv = petSkill.skillLv.get(pet.skill[skillindex][1] - 1);
                         if (pet.mp - petSkillLv.mpLost >= 0)
                         {
                             int mpdelta = 0;
@@ -1101,8 +1101,6 @@ namespace Gopet.Battle
                         break;
                     }
                 }
-                damgeInfo.setHpRecovery((int)(damgeInfo.getHpRecovery() + Utilities.GetValueFromPercent(sum, ItemInfo.getValueById(petSkillLv.skillInfo, ItemInfo.Type.RECOVERY_HP) / 100f)));
-                damgeInfo.setHpRecovery((int)(damgeInfo.getHpRecovery() + ItemInfo.getValueById(petBattleInfo.getBuff(), ItemInfo.Type.RECOVERY_HP_IN_4_TURN)));
             }
 
 
@@ -1372,6 +1370,9 @@ namespace Gopet.Battle
                     case ItemInfo.Type.DAMGE_TOXIC_IN_3_TURN_PER:
                         nonBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 3));
                         break;
+                    case ItemInfo.Type.DAMGE_TOXIC_IN_999999_TURN:
+                        nonBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 999999));
+                        break;
                     case ItemInfo.Type.BUFF_STR:
                         petBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 2));
                         break;
@@ -1400,13 +1401,15 @@ namespace Gopet.Battle
                     case ItemInfo.Type.RECOVERY_HP_IN_4_TURN:
                         petBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 4));
                         break;
+                    case ItemInfo.Type.RECOVERY_HP:
+                        petBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 1));
+                        break;
                     case ItemInfo.Type.BUFF_ATK_3_TURN:
                         petBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.BUFF_DAMGE, i.value) }, 4));
                         break;
                     case ItemInfo.Type.BUFF_DEF_IN_4_TURN:
                         petBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.DEF_PER, i.value) }, 4));
                         break;
-
                     case ItemInfo.Type.PHANDOAN_4_TURN:
                         petBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 3));
                         break;
@@ -1453,6 +1456,7 @@ namespace Gopet.Battle
             Pet nonPet = getNonPet();
             JArrayList<TurnEffect> turnEffects = new();
             float damagePer = ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.DAMGE_TOXIC_IN_3_TURN_PER) / 100f;
+            int damageToxic = ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.DAMGE_TOXIC_IN_999999_TURN);
 
             if (damagePer > 0)
             {
@@ -1480,8 +1484,39 @@ namespace Gopet.Battle
                         turnEffects.add(new TurnEffect(TurnEffect.NONE, getFocus(), PetSkill.GetToxicSkill(getNonPet()), -damage, 0));
                     }
                 }
-                sendPetAttack(turnEffects, new TurnEffect(TurnEffect.NONE, -1, 0, 0, 0));
             }
+            if (damageToxic > 0)
+            {
+                if (petAttackMob)
+                {
+                    if (pet != null)
+                    {
+                        int damage = damageToxic;
+                        mob.subHp(damage);
+                        turnEffects.add(new TurnEffect(TurnEffect.NONE, mob.getMobId(), PetSkill.GetToxicSkill(activePet), -damage, 0));
+                    }
+                    else
+                    {
+                        int damage = damageToxic;
+                        activePet.addHp(damage);
+                        turnEffects.add(new TurnEffect(TurnEffect.NONE, activePlayer.playerData.user_id, PetSkill.GetToxicSkill(mob), -damage, 0));
+                    }
+                }
+                else
+                {
+                    if (pet != null)
+                    {
+                        int damage = damageToxic;
+                        getNonPet().subHp(damage);
+                        turnEffects.add(new TurnEffect(TurnEffect.NONE, getFocus(), PetSkill.GetToxicSkill(getNonPet()), -damage, 0));
+                    }
+                }
+            }
+            else
+            {
+                return;
+            }
+            sendPetAttack(turnEffects, new TurnEffect(TurnEffect.NONE, -1, 0, 0, 0));
         }
 
         public void useItem(Player player, Item itemSelect)
@@ -1532,6 +1567,10 @@ namespace Gopet.Battle
             {
                 return 0;
             }*/
+            if (Utilities.NextFloatPer() > 30f)
+            {
+                return 0;
+            }
             int begin = mob.getMobLvInfo().lvl * 10;
             bool minus = Math.Abs(p.lvl - mob.getMobLvInfo().lvl) >= 5;
             if (minus)

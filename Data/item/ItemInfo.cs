@@ -133,6 +133,7 @@ namespace Gopet.Data.GopetItem
             public const int PERCENT_EXP = 40;
             public const int PERCENT_GEM = 41;
             public const int PERCENT_ALL_INFO = 42;
+            public const int DAMGE_TOXIC_IN_999999_TURN = 43;
             public const int BUFF_DEF_IN_4_TURN = 44;
             public const int RECOVERY_HP_IN_4_TURN = 45;
         }

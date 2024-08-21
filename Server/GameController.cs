@@ -658,7 +658,7 @@ public class GameController
                 int skillId = pet.skill[i][0];
                 int skilllvl = pet.skill[i][1];
                 PetSkill petSkill = GopetManager.PETSKILL_HASH_MAP.get(skillId);
-                PetSkillLv petSkillLv = petSkill.skillLv.get(skilllvl);
+                PetSkillLv petSkillLv = petSkill.skillLv.get(skilllvl - 1);
                 message.putInt(skillId);
                 message.putUTF(petSkill.getName(player) + " " + skilllvl);
                 message.putUTF(petSkill.getDescription(petSkillLv, player));
