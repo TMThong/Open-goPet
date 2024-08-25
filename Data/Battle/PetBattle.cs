@@ -1356,6 +1356,10 @@ namespace Gopet.Battle
                 switch (i.id)
                 {
                     case ItemInfo.Type.MISS_IN_99999_TURN:
+                        if (ItemInfo.hasId(petBattleInfo.getBuff(), ItemInfo.Type.MISS_IN_99999_TURN))
+                        {
+                            continue;
+                        }
                         petBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 999999));
                         break;
                     case ItemInfo.Type.POWER_DOWN_4_TURN:
@@ -1371,6 +1375,10 @@ namespace Gopet.Battle
                         nonBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 3));
                         break;
                     case ItemInfo.Type.DAMGE_TOXIC_IN_999999_TURN:
+                        if (ItemInfo.hasId(nonBattleInfo.getBuff(), ItemInfo.Type.DAMGE_TOXIC_IN_999999_TURN))
+                        {
+                            continue;
+                        }
                         nonBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 999999));
                         break;
                     case ItemInfo.Type.BUFF_STR:

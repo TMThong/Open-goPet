@@ -563,7 +563,7 @@ public class GopetManager
     /// Giá tiền kích hoạt tài khoản
     /// </summary>
     public const int PRICE_ACTIVE_USER = 20000;
-    public const int TIME_DELAY_HEAL_WHEN_MOB_KILL_PET = 10000;
+    public const int TIME_DELAY_HEAL_WHEN_MOB_KILL_PET = 30000;
     /// <summary>
     /// Giá mở khóa ô kỹ năng bang hội
     /// </summary>
@@ -580,8 +580,8 @@ public class GopetManager
 
     public static readonly Dictionary<sbyte, Tuple<int[], int[], int>> TradeGiftPrice = new()
     {
-        [TradeGiftTemplate.TYPE_COIN] = new Tuple<int[], int[], int>(new int[] { GopetManager.MONEY_TYPE_SILVER_BAR, GopetManager.MONEY_TYPE_COIN }, new int[] { 3, 200 }, MenuController.OP_TRADE_GIFT_COIN),
-        [TradeGiftTemplate.TYPE_GOLD] = new Tuple<int[], int[], int>(new int[] { GopetManager.MONEY_TYPE_GOLD_BAR, GopetManager.MONEY_TYPE_GOLD }, new int[] { 3, 100 }, MenuController.OP_TRADE_GIFT_GOLD)
+        [TradeGiftTemplate.TYPE_COIN] = new Tuple<int[], int[], int>(new int[] { GopetManager.MONEY_TYPE_SILVER_BAR, GopetManager.MONEY_TYPE_COIN }, new int[] { 3, 50000 }, MenuController.OP_TRADE_GIFT_COIN),
+        [TradeGiftTemplate.TYPE_GOLD] = new Tuple<int[], int[], int>(new int[] { GopetManager.MONEY_TYPE_GOLD_BAR, GopetManager.MONEY_TYPE_GOLD }, new int[] { 3, 5000 }, MenuController.OP_TRADE_GIFT_GOLD)
     };
     /// <summary>
     /// Id npc trần chân

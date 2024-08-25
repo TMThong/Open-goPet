@@ -90,7 +90,7 @@ namespace Gopet.Data.GopetItem
 
         public static bool hasId(ItemInfo[] itemInfos, int ID)
         {
-            return itemInfos.Any(p => p.id == ID);
+            return itemInfos.Any(p => p.id == ID && p.value > 0);
         }
 
 
