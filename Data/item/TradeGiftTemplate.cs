@@ -16,5 +16,6 @@ namespace Gopet.Data.item
 
         public const sbyte TYPE_COIN = 0;
         public const sbyte TYPE_GOLD = 1;
+        public const sbyte TYPE_LUA = 2;
     }
 }

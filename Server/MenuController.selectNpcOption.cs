@@ -122,6 +122,9 @@ public partial class MenuController
             case OP_TRADE_GIFT_GOLD:
                 Trade(TradeGiftTemplate.TYPE_GOLD, player);
                 break;
+            case OP_TRADE_GIFT_LUA:
+                Trade(TradeGiftTemplate.TYPE_LUA, player);
+                break;
             case OP_SHOP_ENERGY:
                 showShop(SHOP_ENERGY, player);
                 break;

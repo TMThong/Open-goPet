@@ -581,6 +581,7 @@ public class GopetManager
     public static readonly Dictionary<sbyte, Tuple<int[], int[], int>> TradeGiftPrice = new()
     {
         [TradeGiftTemplate.TYPE_COIN] = new Tuple<int[], int[], int>(new int[] { GopetManager.MONEY_TYPE_SILVER_BAR, GopetManager.MONEY_TYPE_COIN }, new int[] { 3, 50000 }, MenuController.OP_TRADE_GIFT_COIN),
+        [TradeGiftTemplate.TYPE_LUA] = new Tuple<int[], int[], int>(new int[] { GopetManager.MONEY_TYPE_SILVER_BAR, GopetManager.MONEY_TYPE_LUA }, new int[] { 3, 5 }, MenuController.OP_TRADE_GIFT_LUA),
         [TradeGiftTemplate.TYPE_GOLD] = new Tuple<int[], int[], int>(new int[] { GopetManager.MONEY_TYPE_GOLD_BAR, GopetManager.MONEY_TYPE_GOLD }, new int[] { 3, 5000 }, MenuController.OP_TRADE_GIFT_GOLD)
     };
     /// <summary>
@@ -726,6 +727,7 @@ public class GopetManager
             ServerMonitor.LogInfo("Tải dữ liệu map từ cơ sở dữ liệu OK");
             TradeGift[TradeGiftTemplate.TYPE_COIN] = conn.Query<TradeGiftTemplate>("SELECT * FROM `trade_gift` where Type = " + TradeGiftTemplate.TYPE_COIN).ToArray();
             TradeGift[TradeGiftTemplate.TYPE_GOLD] = conn.Query<TradeGiftTemplate>("SELECT * FROM `trade_gift` where Type = " + TradeGiftTemplate.TYPE_GOLD).ToArray();
+            TradeGift[TradeGiftTemplate.TYPE_LUA] = TradeGift[TradeGiftTemplate.TYPE_COIN];
             ServerMonitor.LogInfo("Tải dữ liệu trao đổi thưởng từ cơ sở dữ liệu OK");
             SHOP_ARENA_TEMPLATE = conn.Query<ShopArenaTemplate>("SELECT * FROM `shoparena`").ToArray();
             ServerMonitor.LogInfo("Tải dữ liệu shop đấu trường từ cơ sở dữ liệu OK");

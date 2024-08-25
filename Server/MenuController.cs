@@ -310,6 +310,7 @@ public partial class MenuController
     /// </summary>
     public const int OP_TRADE_GIFT_COIN = 1000000000;
     public const int OP_TRADE_GIFT_GOLD = 1000000001;
+    public const int OP_TRADE_GIFT_LUA = 1000000002;
     /// <summary>
     /// Văn bản khi hiện center dialog
     /// </summary>
