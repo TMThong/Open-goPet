@@ -262,7 +262,20 @@ namespace Gopet.Battle
                     }
                     if (petAttackMob)
                     {
-                        mob.addHp(damge.getDamge());
+                        try
+                        {
+                            mob.Mutex.WaitOne();
+                            mob.addHp(damge.getDamge(), activePlayer);
+                            mob.SetWinnerIfHpZero(activePlayer);
+                        }
+                        finally
+                        {
+                            mob.Mutex.ReleaseMutex();
+                        }
+                        if (mob is Boss)
+                        {
+                            this.place.UpdateHpMob(this.mob.GetId(), mob.hp);
+                        }
                     }
                     else
                     {
@@ -758,24 +771,28 @@ namespace Gopet.Battle
                     else
                     {
                         Boss boss = (Boss)mob;
-                        if (Math.Abs(boss.Template.lvl - activePet.lvl) > 20 && boss.Template.typeBoss == 0)
+                        if (boss.getLastHitPlayer() == activePlayer)
                         {
-                            activePlayer.okDialog("Không nhận được gì cả do sự chênh lệch cấp độ đã làm quái không rơi món gì cả");
-                        }
-                        else
-                        {
-                            petBattleTexts.AddRange(activePlayer.controller.onReiceiveGift(boss.Template.gift));
-                            place.mobDie(mob);
-                            JArrayList<string> txtInfo = new();
-                            foreach (Popup petBattleText in petBattleTexts)
+                            if (Math.Abs(boss.Template.lvl - activePet.lvl) > 20 && boss.Template.typeBoss == 0)
                             {
-                                txtInfo.add(petBattleText.getText());
+                                activePlayer.okDialog("Không nhận được gì cả do sự chênh lệch cấp độ đã làm quái không rơi món gì cả");
                             }
-                            activePlayer.okDialog(Utilities.Format("Chức mừng bạn kích sát %s nhận được :\n%s", boss.Template.getName(activePlayer), string.Join(",", txtInfo)));
-                            activePlayer.controller.getTaskCalculator().onKillBoss(boss);
-                            if (place is ChallengePlace)
+                            else
                             {
-                                activePlayer.playerData.AccumulatedPoint += 5;
+                                petBattleTexts.AddRange(activePlayer.controller.onReiceiveGift(boss.Template.gift));
+                                place.mobDie(mob);
+                                JArrayList<string> txtInfo = new();
+                                foreach (Popup petBattleText in petBattleTexts)
+                                {
+                                    txtInfo.add(petBattleText.getText());
+                                }
+                                activePlayer.okDialog(Utilities.Format("Chức mừng bạn kích sát %s nhận được :\n%s", boss.Template.getName(activePlayer), string.Join(",", txtInfo)));
+                                activePlayer.controller.getTaskCalculator().onKillBoss(boss);
+                                if (place is ChallengePlace)
+                                {
+                                    activePlayer.playerData.AccumulatedPoint += 5;
+                                }
+                                place.RemoveBattleByMobId(boss.GetId());
                             }
                         }
                     }
@@ -905,7 +922,7 @@ namespace Gopet.Battle
             if (petAttackMob)
             {
                 activePlayer.controller.setPetBattle(null);
-                mob.setPetBattle(null);
+                mob.setPetBattle(null, activePlayer);
             }
             else
             {
@@ -991,8 +1008,21 @@ namespace Gopet.Battle
                             {
                                 if (isPetAttackMob())
                                 {
-                                    mob.addHp(damageInfo.getDamge());
-                                    mob.addHp(damageInfo.getTrueDamge());
+                                    try
+                                    {
+                                        mob.Mutex.WaitOne();
+                                        mob.addHp(damageInfo.getDamge(), activePlayer);
+                                        mob.addHp(damageInfo.getTrueDamge(), activePlayer);
+                                        mob.SetWinnerIfHpZero(player);
+                                    }
+                                    finally
+                                    {
+                                        mob.Mutex.ReleaseMutex();
+                                    }
+                                    if (mob is Boss)
+                                    {
+                                        this.place.UpdateHpMob(this.mob.GetId(), mob.hp);
+                                    }
                                 }
                                 else
                                 {
@@ -1047,7 +1077,7 @@ namespace Gopet.Battle
         {
             if (damageInfo.getHpRecovery() > 0 && !damageInfo.isSkillMiss() && !isMiss)
             {
-                pet.addHp(damageInfo.getHpRecovery());
+                pet.addHpPet(damageInfo.getHpRecovery());
                 player.controller.sendMyPetInfo();
                 turnEffects.add(new TurnEffect(TurnEffect.NONE, player.user.user_id, -1, damageInfo.getHpRecovery(), 0));
             }
@@ -1287,7 +1317,7 @@ namespace Gopet.Battle
                     }
                     if (damageInfo.getHpRecovery() > 0 && !damageInfo.isSkillMiss() && !isMiss)
                     {
-                        mob.addHp(damageInfo.getHpRecovery());
+                        mob.addHpPet(damageInfo.getHpRecovery());
                         activePlayer.controller.sendMyPetInfo();
                         turnEffects.add(new TurnEffect(TurnEffect.NONE, mob.getMobId(), -1, damageInfo.getHpRecovery(), 0));
                     }
@@ -1442,7 +1472,7 @@ namespace Gopet.Battle
                     }
                     else
                     {
-                        mob.addHp(damagePhandoan);
+                        mob.addHp(damagePhandoan, activePlayer);
                         turnEffects.add(new TurnEffect(TurnEffect.NONE, activePlayer.playerData.user_id, PetSkill.GetTPhanDonSkill(mob), -damagePhandoan, 0));
                     }
                 }
@@ -1473,13 +1503,13 @@ namespace Gopet.Battle
                     if (pet != null)
                     {
                         int damage = (int)Utilities.GetValueFromPercent(PassiveObject.maxHp, damagePer);
-                        mob.subHp(damage);
+                        mob.addHp(damage, activePlayer);
                         turnEffects.add(new TurnEffect(TurnEffect.NONE, mob.getMobId(), PetSkill.GetToxicSkill(activePet), -damage, 0));
                     }
                     else
                     {
                         int damage = (int)Utilities.GetValueFromPercent(ActiveObject.maxHp, damagePer);
-                        activePet.addHp(damage);
+                        activePet.addHpPet(damage);
                         turnEffects.add(new TurnEffect(TurnEffect.NONE, activePlayer.playerData.user_id, PetSkill.GetToxicSkill(mob), -damage, 0));
                     }
                 }
@@ -1500,13 +1530,13 @@ namespace Gopet.Battle
                     if (pet != null)
                     {
                         int damage = damageToxic;
-                        mob.subHp(damage);
+                        mob.addHp(damage, activePlayer);
                         turnEffects.add(new TurnEffect(TurnEffect.NONE, mob.getMobId(), PetSkill.GetToxicSkill(activePet), -damage, 0));
                     }
                     else
                     {
                         int damage = damageToxic;
-                        activePet.addHp(damage);
+                        activePet.addHpPet(damage);
                         turnEffects.add(new TurnEffect(TurnEffect.NONE, activePlayer.playerData.user_id, PetSkill.GetToxicSkill(mob), -damage, 0));
                     }
                 }
@@ -1543,7 +1573,7 @@ namespace Gopet.Battle
                         switch (j)
                         {
                             case GopetManager.ITEM_OP_HP:
-                                p.addHp(opValue);
+                                p.addHpPet(opValue);
                                 break;
                             case GopetManager.ITEM_OP_MP:
                                 p.addMp(opValue);

@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Gopet.Data.Event.Year2024;
+using Gopet.Data.Collections;
 namespace Gopet.Manager
 {
     public class EventManager
     {
-        private static readonly List<EventBase> _events = new List<EventBase>();
+        private static readonly CopyOnWriteArrayList<EventBase> _events = new CopyOnWriteArrayList<EventBase>();
         static Thread thread = new Thread(Run);
         public static AutoResetEvent ResetEvent = new AutoResetEvent(false);
         public static bool IsRunning { get; private set; } = false;
@@ -18,6 +19,11 @@ namespace Gopet.Manager
         {
             //_events.Add(ArenaEvent.Instance);
             //_events.Add(Summer2024Event.Instance);
+        }
+
+        public static void AddEvent(EventBase eventBase)
+        {
+            _events.Add(eventBase);
         }
 
         public static void Start()

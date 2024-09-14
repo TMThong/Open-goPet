@@ -32,6 +32,12 @@ public class GameController
     public TaskCalculator taskCalculator { get; set; }
 
 
+    public MergeData mergeData { get; } = new MergeData();
+
+
+    public PlayerData MergePlayerData { get; set; }
+
+
     public long lastTimeKillMob { get; set; } = 0;
 
     private long lastTimeTypeGiftCode = 0L;
@@ -3847,9 +3853,13 @@ public class GameController
         }
     }
 
-    public JArrayList<Popup> onReiceiveGift(int[][] gift)
+    public JArrayList<Popup> onReiceiveGift(int[][]? gift)
     {
         JArrayList<Popup> popups = new();
+        if (gift == null)
+        {
+            return popups;
+        }
         bool flagDrop = false;
         for (int i = 0; i < gift.Length; i++)
         {

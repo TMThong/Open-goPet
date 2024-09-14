@@ -43,7 +43,7 @@ public class ShopArena : ShopTemplate
             if (this.shopTemplateItems.Count < numSlot)
             {
                 ShopArenaTemplate shopArenaTemplate = Utilities.RandomArray(GopetManager.SHOP_ARENA_TEMPLATE);
-                if (shopArenaTemplate.percent > Utilities.NextFloatPer())
+                if (shopArenaTemplate.percent > Utilities.NextFloatPer() && !this.shopTemplateItems.Any(x => x.itemTemTempleId == shopArenaTemplate.itemTemTempleId))
                 {
                     this.shopTemplateItems.add(shopArenaTemplate.ToShopTemplateItem(MenuController.SHOP_ARENA));
                 }

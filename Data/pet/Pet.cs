@@ -137,7 +137,7 @@ public class Pet : GameObject, IBinaryObject<Pet>
         this.exp += exp;
     }
 
-    public void addHp(int i)
+    public void addHpPet(int i)
     {
         if (hp + i > maxHp)
         {

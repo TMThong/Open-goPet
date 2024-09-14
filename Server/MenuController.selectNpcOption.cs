@@ -445,6 +445,16 @@ public partial class MenuController
             case OP_SHOW_TOP_CHALLENGE:
                 showTop(TopChallenge.Instance, player);
                 break;
+            case OP_MENU_MERGE_SERVER:
+                if (!player.playerData.IsMergeServer)
+                {
+                    sendMenu(MenuController.MENU_SELECT_ITEM_MERGE, player);
+                }
+                else
+                {
+                    player.redDialog("Ở server cũ bạn không có nhân vật hoặc đã nhận đồ gộp rồi");
+                }
+                break;
             default:
                 player.redDialog(player.Language.FeatureIsNotFound);
                 break;

@@ -155,16 +155,28 @@ namespace Gopet.Util
 
         public static T RandomArray<T>(T[] arr)
         {
+            if (arr.Length == 1)
+            {
+                return arr[0];
+            }
             return arr[nextInt(arr.Length)];
         }
 
         public static T RandomArray<T>(IEnumerable<T> arr)
         {
+            if (arr.Count() == 1)
+            {
+                return arr.ElementAt(0);
+            }
             return arr.ElementAt(nextInt(arr.Count()));
         }
 
         public static T RandomArray<T>(List<T> arr)
         {
+            if (arr.Count == 1)
+            {
+                return arr[0];
+            }
             return arr[nextInt(arr.Count)];
         }
 

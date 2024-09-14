@@ -808,6 +808,7 @@ public partial class MenuController
                     }
                 }
                 break;
+            case MENU_SELECT_ALL_ITEM_MERGE:
             case MENU_SELECT_ITEM_TO_GET_BY_ADMIN:
             case MENU_SELECT_ITEM_TO_GIVE_BY_ADMIN:
             case MENU_SELECT_MATERIAL2_TO_ENCHANT_TATOO:
@@ -1091,6 +1092,16 @@ public partial class MenuController
                                     }
                                 }
                             }
+                            break;
+                        case MENU_SELECT_ALL_ITEM_MERGE:
+                            if (player.controller.mergeData.Items.Contains(itemSelect))
+                            {
+                                player.redDialog("Vật phẩm này trong hàng chờ rồi!");
+                                return;
+                            }
+
+                            player.controller.mergeData.Items.Add(itemSelect);
+                            player.okDialog("Thêm thành công");
                             break;
                     }
                 }
@@ -2019,6 +2030,101 @@ public partial class MenuController
                     }
                 }
                 break;
+            case MENU_SELECT_ITEM_MERGE:
+                {
+                    if (player.playerData.IsMergeServer)
+                    {
+                        return;
+                    }
+
+                    switch (index)
+                    {
+                        case 0:
+                            sendMenu(MENU_SELECT_ALL_ITEM_MERGE, player);
+                            return;
+                        case 1:
+                            sendMenu(MENU_SELECT_ALL_PET_MERGE, player);
+                            return;
+                        case 2:
+                            player.controller.mergeData.pets.Clear();
+                            player.controller.mergeData.Items.Clear();
+                            player.okDialog("Xoá vật phẩm đã chọn thành công");
+                            return;
+                        case 3:
+                            {
+                                if (!player.playerData.IsMergeServer)
+                                {
+                                    if (player.controller.mergeData.pets.Count > GopetManager.MAX_PET_MERGE_SERVER || player.controller.mergeData.Items.Where(x => !x.Template.isStackable).Sum(x => x.count) > GopetManager.MAX_ITEM_MERGE_SERVER)
+                                    {
+                                        player.redDialog($"Tối đa {GopetManager.MAX_PET_MERGE_SERVER} thú cưng");
+                                        return;
+                                    }
+
+                                    if (player.controller.mergeData.Items.Any(x => !GopetManager.ID_ITEM_EQUIP_SILVER_MERGE_SERVER.Contains(x.itemTemplateId) && !GopetManager.ID_ITEM_EQUIP_TINH_VAN_MERGE_SERVER.Contains(x.itemTemplateId) && !GopetManager.ID_ITEM_EQUIP_HAI_TAC_MERGE_SERVER.Contains(x.itemTemplateId) && !GopetManager.ID_ITEM_MERGE_SERVER.Contains(x.itemTemplateId)))
+                                    {
+                                        player.redDialog($"Vật phẩm bạn đã chọn không nằm trong danh sạch cho phép gộp");
+                                        return;
+                                    }
+
+                                    if (player.controller.mergeData.Items.Count(x => GopetManager.ID_ITEM_EQUIP_SILVER_MERGE_SERVER.Contains(x.itemTemplateId)) > 3)
+                                    {
+                                        player.redDialog("Đồ bạc không quá 3 món");
+                                        return;
+                                    }
+                                    if (player.controller.mergeData.Items.Count(x => GopetManager.ID_ITEM_EQUIP_HAI_TAC_MERGE_SERVER.Contains(x.itemTemplateId)) > 8)
+                                    {
+                                        player.redDialog("Đồ hải tặc không quá 8 món");
+                                        return;
+                                    }
+
+                                    if (player.controller.mergeData.Items.Count(x => GopetManager.ID_ITEM_EQUIP_TINH_VAN_MERGE_SERVER.Contains(x.itemTemplateId)) > 8)
+                                    {
+                                        player.redDialog("Đồ tinh vân không quá 8 món");
+                                        return;
+                                    }
+
+                                    player.playerData.pets.AddRange(player.controller.mergeData.pets);
+                                    foreach (var item in player.controller.mergeData.Items)
+                                    {
+                                        player.addItemToInventory(item);
+                                    }
+                                    player.playerData.IsMergeServer = true;
+                                    player.playerData.save();
+                                    player.okDialog("Gộp thành công vật phẩm và thú cưng đã về tay");
+                                }
+                                else
+                                {
+                                    player.redDialog("Lấy đồ về rồi");
+                                }
+                            }
+                            return;
+                    }
+                }
+                break;
+            case MENU_SELECT_ALL_PET_MERGE:
+                {
+                    if (!player.playerData.IsMergeServer && player.controller.MergePlayerData != null)
+                    {
+                        CopyOnWriteArrayList<Pet> listPet = (CopyOnWriteArrayList<Pet>)player.controller.MergePlayerData.pets.clone();
+                        Pet p = player.controller.MergePlayerData.petSelected;
+                        if (p != null)
+                        {
+                            listPet.add(0, p);
+                        }
+
+                        if (index >= 0 && index < listPet.Count)
+                        {
+                            if (player.controller.mergeData.pets.Contains(listPet[index]))
+                            {
+                                player.redDialog("Thú cưng đã trong hàng chờ");
+                                return;
+                            }
+                            player.controller.mergeData.pets.Add(listPet[index]);
+                            player.okDialog("Thêm thành công");
+                        }
+                    }
+                }
+                return;
             default:
                 {
                     player.redDialog(string.Format(player.Language.CannotFindMenu, menuId));

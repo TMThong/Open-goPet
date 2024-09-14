@@ -1,6 +1,6 @@
 {
   "portGopetServer": 19180,
-  "portHttpServer": 8080,
+  "portHttpServer": 8082,
   "domainName": "gopetvn.me",
   "initLog": false,
   "outputFileName": "output.txt",

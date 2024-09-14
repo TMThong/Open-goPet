@@ -184,4 +184,6 @@ public class GopetCMD
     public const sbyte FAST_REMOVE_MOB = 99;
     public const sbyte ENERGY_INFO = 102;
     public const sbyte CHECK_SPEED = 103;
+    public const sbyte REMOVE_BATTLE_BY_MOB_ID = 96;
+    public const sbyte UPDATE_HP_BOSS = 89;
 }

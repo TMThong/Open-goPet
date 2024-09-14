@@ -1,5 +1,7 @@
 ﻿using Gopet.App;
+using Gopet.Data.Event;
 using Gopet.Data.GopetItem;
+using Gopet.Data.Mob;
 using Gopet.IO;
 using Gopet.Manager;
 using Microsoft.AspNetCore.DataProtection.Repositories;
@@ -184,6 +186,26 @@ namespace Gopet.APIs
         public IActionResult okDialog(string text)
         {
             PlayerManager.okDialog(text);
+            return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
+        }
+
+        [HttpGet("/api/test/set_boss/{mapid}/{place}/{bossId}")]
+        public IActionResult TestBoss(int mapid, int place, int bossId)
+        {
+            GopetPlace gopetPlace = (GopetPlace)MapManager.maps[mapid].places[place];
+            for (int i = 0; i < 1; i++)
+            {
+                Mob mob = gopetPlace.mobs[i];
+                gopetPlace.mobs[i] = new Boss(bossId, mob.getMobLocation());
+                gopetPlace.mobs[i].SetId(mob.GetId());
+            }
+            return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
+        }
+
+        [HttpGet("/api/test/TestBossDaily")]
+        public IActionResult TestBossDaily()
+        {
+            EventManager.AddEvent(DailyBossEvent.Instance);
             return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
         }
 

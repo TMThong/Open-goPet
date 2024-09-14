@@ -33,30 +33,9 @@ public class MysqlSetting : Settings
         password_web = settingsFile.Data.password_web;
     }
 
-    public string getUrl()
-    {
-        return "jdbc:mysql://" + host + ":" + port + "/" + database;
-    }
-
-    public string getUrlWeb()
-    {
-        return "jdbc:mysql://" + host_web + ":" + port_web + "/" + database_web;
-    }
-
-    public static MysqlSetting getInstance()
-    {
-        return SINGLETON.INSTANCE;
-    }
-
     public static class SINGLETON
     {
 
         public static readonly MysqlSetting INSTANCE = new MysqlSetting();
-    }
-
-
-    public string toString()
-    {
-        return "MysqlSetting{" + "host=" + host + ", port=" + port + ", database=" + database + ", username=" + username + ", password=" + password + ", host_web=" + host_web + ", port_web=" + port_web + ", database_web=" + database_web + ", username_web=" + username_web + ", password_web=" + password_web + '}';
     }
 }

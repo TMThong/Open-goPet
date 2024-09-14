@@ -1,5 +1,6 @@
 
 using Gopet.APIs;
+using Gopet.Data.Event;
 using Gopet.Data.GopetClan;
 using Gopet.Manager;
 using Gopet.Util;
@@ -12,7 +13,7 @@ namespace Gopet.App
         public static int PORT_SERVER = ServerSetting.instance.portGopetServer;
         public static bool isNetBeans = true;
         public static int HTTP_PORT = ServerSetting.instance.portHttpServer;
-        public static HttpServer APIServer ;
+        public static HttpServer APIServer;
 
         /**
          * hàm chính
@@ -30,7 +31,6 @@ namespace Gopet.App
 
             //        AutoMaintenance autoMaintenance = new AutoMaintenance();
             //        autoMaintenance.start(ServerSetting.instance.getHourMaintenance(), ServerSetting.instance.getMinMaintenance());
-            MYSQLManager.init();
             GopetManager.init();
             HistoryManager.Instance.start();
             MapManager.init();
@@ -40,6 +40,8 @@ namespace Gopet.App
             FieldManager.Init();
             initRuntime();
             RuntimeServer.instance.start();
+            DailyBossEvent.Instance = new DailyBossEvent();
+            //EventManager.AddEvent(DailyBossEvent.Instance);
             EventManager.Start();
             APIServer = new HttpServer(HTTP_PORT);
             APIServer.Start();

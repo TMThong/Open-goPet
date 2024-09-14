@@ -518,10 +518,10 @@ public class GopetManager
     public static readonly float[] PERCENT_OF_ENCHANT_GEM = new float[] { 70f, 65f, 60f, 55f, 50f, 40f, 30f, 20f, 10f, 2f };
     public static readonly float[] PERCENT_OF_ENCHANT_TATOO = new float[] { 60f, 55f, 50f, 40f, 30f, 20f, 15f, 10f, 5f, 2f };
     public const int PRICE_KEEP_GEM = 5000;
-    public const int MAX_SLOT_SHOP_ARENA = 6;
+    public const int MAX_SLOT_SHOP_ARENA = 10;
     public const int DEFAULT_FREE_RESET_ARENA_SHOP = 2;
     public const int PRICE_RESET_SHOP_ARENA = 1000;
-    public const int MAX_RESET_SHOP_ARENA = 5;
+    public const int MAX_RESET_SHOP_ARENA = 3;
     public const long TIME_UNEQUIP_GEM = 1000 * 60 * 60;
     public const int PRICE_UNEQUIP_GEM = 2500;
     public const long COIN_CREATE_CLAN = 200000;
@@ -582,7 +582,7 @@ public class GopetManager
     {
         [TradeGiftTemplate.TYPE_COIN] = new Tuple<int[], int[], int>(new int[] { GopetManager.MONEY_TYPE_SILVER_BAR, GopetManager.MONEY_TYPE_COIN }, new int[] { 3, 50000 }, MenuController.OP_TRADE_GIFT_COIN),
         [TradeGiftTemplate.TYPE_LUA] = new Tuple<int[], int[], int>(new int[] { GopetManager.MONEY_TYPE_SILVER_BAR, GopetManager.MONEY_TYPE_LUA }, new int[] { 3, 5 }, MenuController.OP_TRADE_GIFT_LUA),
-        [TradeGiftTemplate.TYPE_GOLD] = new Tuple<int[], int[], int>(new int[] { GopetManager.MONEY_TYPE_GOLD_BAR, GopetManager.MONEY_TYPE_GOLD }, new int[] { 3, 5000 }, MenuController.OP_TRADE_GIFT_GOLD)
+        [TradeGiftTemplate.TYPE_GOLD] = new Tuple<int[], int[], int>(new int[] { GopetManager.MONEY_TYPE_GOLD_BAR, GopetManager.MONEY_TYPE_GOLD }, new int[] { 3, 2500 }, MenuController.OP_TRADE_GIFT_GOLD)
     };
     /// <summary>
     /// Id npc trần chân
@@ -606,6 +606,30 @@ public class GopetManager
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 10000,  1000),
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 100000,  10000)
             });
+
+    public const int MAX_ITEM_MERGE_SERVER = int.MaxValue;
+    public const int MAX_PET_MERGE_SERVER = 1;
+
+    public static readonly int[] ID_ITEM_MERGE_SERVER = new int[]
+    {
+        150,151,152,153,154,154111,154112,154113,154114,154115,154116,154117,154118,154119,154120,154020,154121,154122,154123,154124,154125,154126,154127,154128,154129,154130,154131,121,122,123,124,
+    };
+
+    public static readonly int[] ID_ITEM_EQUIP_HAI_TAC_MERGE_SERVER = new int[]
+    {
+        59,60,61,13008,62,63,64,65,66,67,68,69,70,71,2001,72,73,2002
+    };
+    public static readonly int[] ID_ITEM_EQUIP_TINH_VAN_MERGE_SERVER = new int[]
+    {
+         74,75,76,13009,77,78,79,80,81,82,83,84,85,86,2003,87,88,2004
+    };
+
+    public static readonly int[] ID_ITEM_EQUIP_SILVER_MERGE_SERVER = new int[]
+    {
+         392,393,394,395,396,397,398,399,400,401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,419
+    };
+
+    public static BossTemplate[] HourDailyBoss;
     static GopetManager()
     {
         SqlMapper.AddTypeHandler(new JsonAdapter<int[]>());
@@ -718,6 +742,7 @@ public class GopetManager
             {
                 boss[bossTemplate.bossId] = bossTemplate;
             }
+            HourDailyBoss = bossTemArr.Where(x => x.typeBoss == 4).ToArray();
             ServerMonitor.LogInfo("Tải dữ liệu boss từ cơ sở dữ liệu OK");
             IEnumerable<MapTemplate> mapTemplates = conn.Query<MapTemplate>("SELECT * FROM `map` WHERE `map`.`enable` = true;");
             foreach (var mTem in mapTemplates)

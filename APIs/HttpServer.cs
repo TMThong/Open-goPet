@@ -64,7 +64,7 @@ namespace Gopet.APIs
 
         public void Start()
         {
-            Application.RunAsync("http://0.0.0.0:" + this.Port);
+            Application.RunAsync($"http://localhost:{this.Port}");
         }
 
         public void Stop()

@@ -110,7 +110,7 @@ public class GopetPlace : Place
     {
         mobs.remove(gopetMob);
         long timeGen = Utilities.CurrentTimeMillis + TIME_NEW_MOB;
-        newMob.put(gopetMob.getMobLocation(), timeGen);
+        newMob.TryAdd(gopetMob.getMobLocation(), timeGen);
     }
 
     public Mob getMob(int mobId)
@@ -152,11 +152,9 @@ public class GopetPlace : Place
             message.putInt(mob.getMobLocation().getX());
             message.putInt(mob.getMobLocation().getY());
             message.putsbyte(0);
-            if (player.ApplicationVersion > GopetManager.VERSION_133)
-            {
-                message.putsbyte(mob.Template.frameNum);
-                message.putShort(mob.Template.vY);
-            }
+            message.putsbyte(mob.Template.frameNum);
+            message.putShort(mob.Template.vY);
+            message.putbool(mob is Boss);
         }
         message.cleanup();
         player.session.sendMessage(message);
@@ -165,7 +163,7 @@ public class GopetPlace : Place
     public void sendMob()
     {
         CopyOnWriteArrayList<Mob> gopetMobs = (CopyOnWriteArrayList<Mob>)mobs.clone();
-        ListWriterMessage message = new ListWriterMessage(2, GopetCMD.PET_SERVICE);
+        Message message = new Message(GopetCMD.PET_SERVICE);
         message.putsbyte(GopetCMD.SEND_LIST_MOB_ZONE);
         message.putInt(gopetMobs.Count);
         foreach (Mob mob in gopetMobs)
@@ -177,20 +175,17 @@ public class GopetPlace : Place
             message.putInt(mob.getMobLocation().getX());
             message.putInt(mob.getMobLocation().getY());
             message.putsbyte(0);
-            message[1].putsbyte(mob.Template.frameNum);
-            message[1].putShort(mob.Template.vY);
+            message.putsbyte(mob.Template.frameNum);
+            message.putShort(mob.Template.vY);
+            message.putbool(mob is Boss);
         }
         message.cleanup();
-        sendMessageWithCheckVersion(new Dictionary<Message, Func<Version, bool>>()
-        {
-            [message[0]] = GopetManager.LessThanAndEquals(GopetManager.VERSION_133),
-            [message[1]] = GopetManager.GreaterThan(GopetManager.VERSION_133)
-        });
+        sendMessage(message);
     }
 
-    private void sendMob(JArrayList<Mob> newMobs)
+    public void sendMob(JArrayList<Mob> newMobs)
     {
-        ListWriterMessage message = new ListWriterMessage(2, GopetCMD.PET_SERVICE);
+        Message message = new Message(GopetCMD.PET_SERVICE);
         message.putsbyte(GopetCMD.SEND_LIST_MOB_ZONE);
         message.putInt(newMobs.Count);
         foreach (Mob mob in newMobs)
@@ -202,15 +197,12 @@ public class GopetPlace : Place
             message.putInt(mob.getMobLocation().getX());
             message.putInt(mob.getMobLocation().getY());
             message.putsbyte(0);
-            message[1].putsbyte(mob.Template.frameNum);
-            message[1].putShort(mob.Template.vY);
+            message.putsbyte(mob.Template.frameNum);
+            message.putShort(mob.Template.vY);
+            message.putbool(mob is Boss);
         }
         message.cleanup();
-        sendMessageWithCheckVersion(new Dictionary<Message, Func<Version, bool>>()
-        {
-            [message[0]] = GopetManager.LessThanAndEquals(GopetManager.VERSION_133),
-            [message[1]] = GopetManager.GreaterThan(GopetManager.VERSION_133)
-        });
+        sendMessage(message);
     }
 
     public void sendListPet(Player player)
@@ -423,7 +415,7 @@ public class GopetPlace : Place
             {
                 if (player.playerData.petSelected.hp > 0)
                 {
-                    if (mob.getPetBattle() == null && player.controller.getPetBattle() == null)
+                    if (mob.getPetBattle(player) == null && player.controller.getPetBattle() == null)
                     {
                         if (mob is Boss && !(this is ChallengePlace))
                         {
@@ -441,7 +433,7 @@ public class GopetPlace : Place
                         PetBattle petBattle = new PetBattle(mob, this, player);
                         player.controller.setPetBattle(petBattle);
                         addPetBattle(petBattle);
-                        mob.setPetBattle(petBattle);
+                        mob.setPetBattle(petBattle, player);
                         petBattle.sendStartFightMob(mob, player);
                     }
                 }
@@ -509,7 +501,7 @@ public class GopetPlace : Place
             if (mob is Boss)
             {
                 Boss b = (Boss)mob;
-                if (b.isTimeOut && b.getPetBattle() == null)
+                if (b.isTimeOut && !b.HasBattle)
                 {
                     if (Utilities.CurrentTimeMillis > b.timeoutMilis)
                     {
@@ -597,7 +589,6 @@ public class GopetPlace : Place
                                             }
                                         }
                                     }
-
                                     if (!flag)
                                     {
                                         numMobDie[i] = 0;
@@ -607,7 +598,6 @@ public class GopetPlace : Place
                                 Boss boss = new Boss(map.mapTemplate.boss[i], mobLocation);
                                 boss.isTimeOut = true;
                                 boss.timeoutMilis = Utilities.CurrentTimeMillis + GopetManager.TIME_BOSS_DISPOINTED;
-
                                 addNewMob(boss);
                                 nGopetMobs.add(boss);
                                 PlayerManager.showBanner((l) => string.Format(l.BannerLanguage[LanguageData.BANNER_SHOW_BOSS_SUMMON], boss.Template.name, this.map.mapTemplate.name, this.zoneID));
@@ -863,5 +853,21 @@ public class GopetPlace : Place
             }
         }
         player.session.sendMessage(message);
+    }
+
+    public void RemoveBattleByMobId(int mobId)
+    {
+        Message message = GameController.messagePetService(GopetCMD.REMOVE_BATTLE_BY_MOB_ID);
+        message.putInt(mobId);
+        message.cleanup();
+        sendMessage(message);
+    }
+    public void UpdateHpMob(int mobId, int hp)
+    {
+        Message message = GameController.messagePetService(GopetCMD.UPDATE_HP_BOSS);
+        message.putInt(mobId);
+        message.putInt(hp);
+        message.cleanup();
+        sendMessage(message);
     }
 }

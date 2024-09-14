@@ -75,7 +75,9 @@ public class PlayerData
     public Dictionary<DateTime, Item> TrashItemBackup { get; set; } = new();
 
     public DateTime TimeDropCoin { get; set; } = DateTime.Now;
-    
+
+    public bool IsMergeServer { get; set; } = false;
+
     public PlayerData()
     {
         x = 24 * 4;
@@ -146,7 +148,8 @@ public class PlayerData
                             TrashItemBackup = @TrashItemBackup,
                             ClanTasked = @ClanTasked,
                             TimeDropCoin = @TimeDropCoin,
-                            lua = @lua
+                            lua = @lua,
+                            IsMergeServer = @IsMergeServer
                             WHERE ID = @ID", playerData);
     }
 

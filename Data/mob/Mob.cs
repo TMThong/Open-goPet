@@ -14,18 +14,27 @@ namespace Gopet.Data.Mob
         private int mobId;
 
         private PetBattle petBattle;
+        public Mutex Mutex { get; } = new Mutex();
 
         public Rectangle bound;
 
-        public virtual PetBattle getPetBattle()
+        public virtual PetBattle getPetBattle(Player player)
         {
             return petBattle;
         }
 
-        public virtual void setPetBattle(PetBattle petBattle)
+        public virtual void setPetBattle(PetBattle petBattle, Player player)
         {
 
             this.petBattle = petBattle;
+        }
+
+        public virtual bool HasBattle
+        {
+            get
+            {
+                return petBattle != null;
+            }
         }
 
         public virtual MobLvlMap getMobLvlMap()
@@ -124,7 +133,7 @@ namespace Gopet.Data.Mob
             bound = new Rectangle(mobLocation.getX() - 24 * xTile, mobLocation.getY() - 24 * xTile, 24 * xTile * 2, 24 * xTile * 2);
         }
 
-        public void addHp(int damage)
+        public virtual void addHp(int damage, Player player)
         {
             hp -= damage;
             if (hp < 0)
@@ -133,17 +142,13 @@ namespace Gopet.Data.Mob
             }
         }
 
-        public void addHpReal(int hpPlus)
+        public virtual void SetWinnerIfHpZero(Player player)
         {
-            if (hpPlus + hp > maxHp)
-            {
-                hp = maxHp;
-            }
-            else
-            {
-                hp += hpPlus;
-            }
+
         }
+
+        public virtual Player getLastHitPlayer() => null;
+
 
         public void setMobLvInfo(MobLvInfo mobLvInfo)
         {

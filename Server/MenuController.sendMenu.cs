@@ -47,6 +47,7 @@ public partial class MenuController
                     player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.SellYourItemMenuTitle, menuItemInfos);
                 }
                 break;
+
             case MENU_SELECT_PET_TO_DEF_LEAGUE:
             case MENU_KIOSK_PET_SELECT:
             case MENU_PET_INVENTORY:
@@ -524,6 +525,7 @@ public partial class MenuController
             case MENU_SKIN_INVENTORY:
                 showInventory(player, GopetManager.SKIN_INVENTORY, menuId, player.Language.SkinInventory);
                 break;
+            case MENU_SELECT_ALL_ITEM_MERGE:
             case MENU_SELECT_ITEM_TO_GET_BY_ADMIN:
             case MENU_SELECT_ITEM_TO_GIVE_BY_ADMIN:
             case MENU_SELECT_MATERIAL1_TO_ENCHANT_TATOO:
@@ -565,7 +567,7 @@ public partial class MenuController
                         menuItemInfo.setShowDialog(true);
                         menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, item.getName(player)));
                         menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
-                        menuItemInfo.setCloseScreenAfterClick(true);
+                        menuItemInfo.setCloseScreenAfterClick(CloseScreenAfterClick(menuId));
                         menuItemMaterial1Infos.add(menuItemInfo);
                     }
                     player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.SelectMaterial, menuItemMaterial1Infos);
@@ -614,6 +616,39 @@ public partial class MenuController
                     player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.SelectItem, menuItemEquipInfos);
                 }
                 break;
+            case MENU_SELECT_ITEM_MERGE:
+                {
+                    if (player.playerData.IsMergeServer)
+                    {
+                        return;
+                    }
+
+                    if (player.controller.MergePlayerData == null)
+                    {
+                        player.okDialog("Đang truy vấn");
+                        using(var conn = MYSQLManager.createOld())
+                        {
+                            PlayerData playerData = conn.QueryFirstOrDefault<PlayerData>("Select * from player where user_id = @user_id", new { user_id = player.user.user_id });
+                            if (playerData != null)
+                            {
+                                player.controller.MergePlayerData = playerData;
+                            }
+                            else
+                            {
+                                player.redDialog("Ở máy chủ cũ bạn không có tài khoản này");
+                                return;
+                            }
+                        }
+                    }
+
+                    JArrayList<Option> approvalOptions = new();
+                    approvalOptions.add(new Option(0, "Chọn vật phẩm ở server cũ", 1));
+                    approvalOptions.add(new Option(1, "Chọn thú cưng ở server cũ", 1));
+                    approvalOptions.add(new Option(2, "Bỏ chọn tất cả", 1));
+                    approvalOptions.add(new Option(3, "Gộp", 1));
+                    player.controller.sendListOption(menuId, "Gộp đồ", "", approvalOptions);
+                    break;
+                }
             case MENU_APPROVAL_CLAN_MEM_OPTION:
                 {
                     JArrayList<Option> approvalOptions = new();
@@ -807,6 +842,28 @@ public partial class MenuController
                     }
                 }
                 break;
+            case MENU_SELECT_ALL_PET_MERGE:
+                if (!player.playerData.IsMergeServer && player.controller.MergePlayerData != null)
+                {
+                    CopyOnWriteArrayList<Pet> listPet = (CopyOnWriteArrayList<Pet>)player.controller.MergePlayerData.pets.clone();
+                    JArrayList<MenuItemInfo> petItemInfos = new();
+                    Pet p = player.controller.MergePlayerData.petSelected;
+                    if (p != null)
+                    {
+                        listPet.add(0, p);
+                    }
+                    foreach (Pet pet in listPet)
+                    {
+                        MenuItemInfo menuItemInfo = new PetMenuItemInfo(pet, player);
+                        menuItemInfo.setCloseScreenAfterClick(true);
+                        menuItemInfo.setShowDialog(true);
+                        menuItemInfo.setDialogText(string.Format(player.Language.DoYouWantSelectItem, pet.getNameWithStar(player)));
+                        menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
+                        petItemInfos.add(menuItemInfo);
+                    }
+                    player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.YourPet, petItemInfos);
+                }
+                return;
         }
     }
 }

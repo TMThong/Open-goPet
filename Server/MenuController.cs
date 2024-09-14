@@ -115,6 +115,9 @@ public partial class MenuController
     public const int MENU_LIST_REQUEST_ADD_FRIEND_OPTION = 1065;
     public const int MENU_MONEY_DISPLAY_SETTING = 1066;
     public const int MENU_SELL_TRASH_ITEM = 1067;
+    public const int MENU_SELECT_ITEM_MERGE = 1068;
+    public const int MENU_SELECT_ALL_ITEM_MERGE = 1069;
+    public const int MENU_SELECT_ALL_PET_MERGE = 1070;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -304,6 +307,7 @@ public partial class MenuController
     /// </summary>
     public const int OP_SELL_TRASH_ITEM = 79;
     public const int OP_SHOW_TOP_CHALLENGE = 80;
+    public const int OP_MENU_MERGE_SERVER = 81;
     /// <summary>
     /// Option Custom
     /// Trao đổi thưởng bằng 
@@ -481,19 +485,38 @@ public partial class MenuController
         {
             addMoney((sbyte)price.Item1[i], -price.Item2[i], player);
         }
-        DateTime breakTime = DateTime.Now.AddMilliseconds(20);
-        while (breakTime > DateTime.Now)
+        string join = string.Empty;
+        Dictionary<int, int> keyValuePairs = new Dictionary<int, int>();
+        /*
+         * FOR TESTER
+         * for (int i = 0; i < 50000; i++)
+         */
         {
-            TradeGiftTemplate tradeGift = Utilities.RandomArray(GopetManager.TradeGift[type]);
-            if (!(tradeGift.Percent < Utilities.NextFloatPer()))
+            DateTime breakTime = DateTime.Now.AddMilliseconds(20);
+            while (breakTime > DateTime.Now)
             {
-                continue;
+                var queryItem = GopetManager.TradeGift[type].Where(t => t.Percent > Utilities.NextFloatPer()).ToArray();
+                if (!queryItem.Any()) continue;
+                TradeGiftTemplate tradeGift = Utilities.RandomArray(queryItem);
+                var it = new Item(tradeGift.ItemTemplateId, tradeGift.Count);
+                if (keyValuePairs.ContainsKey(tradeGift.ItemTemplateId))
+                {
+                    keyValuePairs[tradeGift.ItemTemplateId]++;
+                }
+                else
+                {
+                    keyValuePairs[tradeGift.ItemTemplateId] = 1;
+                }
+                player.addItemToInventory(it);
+                //join += ($"{it.Template.getName(player)} x{tradeGift.Count},");
+                break;
             }
-            var it = new Item(tradeGift.ItemTemplateId, tradeGift.Count);
-            player.addItemToInventory(it);
-            player.okDialog($"{player.Language.TradeOKMessage} {it.Template.getName(player)} x{tradeGift.Count}");
-            break;
         }
+        foreach (var item in keyValuePairs)
+        {
+            join += ($"{GopetManager.itemTemplate[item.Key].name} x{item.Value},");
+        }
+        player.okDialog($"{player.Language.TradeOKMessage} {join}");
     }
 
     public static JArrayList<int> typeSelectItemMaterial(int menuId, Player player)
@@ -983,10 +1006,34 @@ public partial class MenuController
                     }
                     return items;
                 }
-
+            case MENU_SELECT_ALL_ITEM_MERGE:
+                {
+                    CopyOnWriteArrayList<Item> items = new CopyOnWriteArrayList<Item>();
+                    if (player.controller.MergePlayerData != null)
+                    {
+                        foreach (var item in player.controller.MergePlayerData.items)
+                        {
+                            items.AddRange(item.Value);
+                        }
+                    }
+                    return items;
+                }
             default:
                 return Item.search(typeSelectItemMaterial(menuId, player), player.playerData.getInventoryOrCreate(getTypeInventorySelect(menuId)), filter);
         }
         return new CopyOnWriteArrayList<Item>();
+    }
+
+    public static bool CloseScreenAfterClick(int menuId)
+    {
+        switch (menuId)
+        {
+            case MENU_SELECT_ALL_ITEM_MERGE:
+                return false;
+
+            default:
+                return true;
+        }
+
     }
 }
