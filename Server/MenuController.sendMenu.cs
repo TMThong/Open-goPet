@@ -525,6 +525,8 @@ public partial class MenuController
             case MENU_SKIN_INVENTORY:
                 showInventory(player, GopetManager.SKIN_INVENTORY, menuId, player.Language.SkinInventory);
                 break;
+            case MENU_UNLOCK_ITEM_PLAYER:
+            case MENU_LOCK_ITEM_PLAYER:
             case MENU_SELECT_ALL_ITEM_MERGE:
             case MENU_SELECT_ITEM_TO_GET_BY_ADMIN:
             case MENU_SELECT_ITEM_TO_GIVE_BY_ADMIN:
@@ -626,7 +628,7 @@ public partial class MenuController
                     if (player.controller.MergePlayerData == null)
                     {
                         player.okDialog("Đang truy vấn");
-                        using(var conn = MYSQLManager.createOld())
+                        using (var conn = MYSQLManager.createOld())
                         {
                             PlayerData playerData = conn.QueryFirstOrDefault<PlayerData>("Select * from player where user_id = @user_id", new { user_id = player.user.user_id });
                             if (playerData != null)
@@ -649,6 +651,24 @@ public partial class MenuController
                     player.controller.sendListOption(menuId, "Gộp đồ", "", approvalOptions);
                     break;
                 }
+            case MENU_OPTION_ADMIN_GET_ITEM:
+                {
+                    JArrayList<Option> adminOption = new();
+                    adminOption.add(new Option(0, "Chọn", 1));
+                    adminOption.add(new Option(1, "Bỏ chọn", 1));
+                    adminOption.add(new Option(2, "Lấy vật phẩm", 1));
+                    player.controller.sendListOption(menuId, "Admin", "", adminOption);
+                }
+                break;
+            case MENU_OPTION_ADMIN_GIVE_ITEM:
+                {
+                    JArrayList<Option> adminOption = new();
+                    adminOption.add(new Option(0, "Chọn", 1));
+                    adminOption.add(new Option(1, "Bỏ chọn", 1));
+                    adminOption.add(new Option(2, "Đưa vật phẩm", 1));
+                    player.controller.sendListOption(menuId, "Admin", "", adminOption);
+                }
+                break;
             case MENU_APPROVAL_CLAN_MEM_OPTION:
                 {
                     JArrayList<Option> approvalOptions = new();

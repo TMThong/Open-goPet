@@ -808,6 +808,8 @@ public partial class MenuController
                     }
                 }
                 break;
+            case MENU_UNLOCK_ITEM_PLAYER:
+            case MENU_LOCK_ITEM_PLAYER:
             case MENU_SELECT_ALL_ITEM_MERGE:
             case MENU_SELECT_ITEM_TO_GET_BY_ADMIN:
             case MENU_SELECT_ITEM_TO_GIVE_BY_ADMIN:
@@ -989,31 +991,15 @@ public partial class MenuController
                                 Player playerOnline = player.controller.objectPerformed[OBJKEY_PLAYER_GET_ITEM];
                                 if (PlayerManager.players.Contains(playerOnline))
                                 {
-                                    sbyte inventory = playerOnline.playerData.items.Where(p => p.Value.Any(ic => ic == itemSelect)).First().Key;
-                                    Item item = itemSelect;
+                                    player.controller.objectPerformed[OBJKEY_ITEM_ADMIN_GET] = itemSelect;
                                     if (itemSelect.Template.isStackable)
                                     {
-                                        int count = player.controller.objectPerformed[OBJKEY_COUNT_ITEM_TO_GET_BY_ADMIN];
-                                        if (count > item.count)
-                                        {
-                                            player.redDialog(player.Language.WrongNumOfItem);
-                                            return;
-                                        }
-                                        else
-                                        {
-                                            playerOnline.controller.subCountItem(itemSelect, count, inventory);
-                                            item = new Item(itemSelect.Template.itemId, count);
-                                        }
+                                        player.controller.showInputDialog(INPUT_TYPE_COUNT_ADMIN_GET, itemSelect.Template.name, "Số lượng: ");
                                     }
                                     else
                                     {
-                                        playerOnline.playerData.removeItem(inventory, itemSelect);
+                                        sendMenu(MENU_OPTION_ADMIN_GET_ITEM, player);
                                     }
-                                    playerOnline.playerData.save();
-
-                                    player.addItemToInventory(item, inventory);
-                                    player.okDialog($"Bạn đã lấy thành công {item.Template.getName(player)}");
-                                    playerOnline.redDialog($"Bạn đã bị lấy mất {item.Template.getName(player)}");
                                 }
                                 else
                                 {
@@ -1026,31 +1012,15 @@ public partial class MenuController
                                 Player playerOnline = player.controller.objectPerformed[OBJKEY_PLAYER_GIVE_ITEM];
                                 if (PlayerManager.players.Contains(playerOnline))
                                 {
-                                    sbyte inventory = player.playerData.items.Where(p => p.Value.Any(ic => ic == itemSelect)).First().Key;
-                                    Item item = itemSelect;
+                                    player.controller.objectPerformed[OBJKEY_ITEM_ADMIN_GIVE] = itemSelect;
                                     if (itemSelect.Template.isStackable)
                                     {
-                                        int count = player.controller.objectPerformed[OBJKEY_COUNT_ITEM_TO_GIVE_BY_ADMIN];
-                                        if (count > item.count)
-                                        {
-                                            player.redDialog(player.Language.WrongNumOfItem);
-                                            return;
-                                        }
-                                        else
-                                        {
-                                            player.controller.subCountItem(itemSelect, count, inventory);
-                                            item = new Item(itemSelect.Template.itemId, count);
-                                        }
+                                        player.controller.showInputDialog(INPUT_TYPE_COUNT_ADMIN_GIVE, itemSelect.Template.name, "Số lượng: ");
                                     }
                                     else
                                     {
-                                        player.playerData.removeItem(inventory, itemSelect);
+                                        sendMenu(MENU_OPTION_ADMIN_GIVE_ITEM, player);
                                     }
-
-                                    playerOnline.addItemToInventory(item, inventory);
-                                    player.okDialog($"Bạn đã đưa thành công {item.Template.getName(player)}");
-                                    playerOnline.okDialog($"Bạn đã nhận được {item.Template.getName(player)}");
-                                    playerOnline.playerData.save();
                                 }
                                 else
                                 {
@@ -1102,6 +1072,24 @@ public partial class MenuController
 
                             player.controller.mergeData.Items.Add(itemSelect);
                             player.okDialog("Thêm thành công");
+                            break;
+                        case MENU_UNLOCK_ITEM_PLAYER:
+                            {
+                                if (player.checkIsAdmin())
+                                {
+                                    itemSelect.canTrade = true;
+                                    player.okDialog("Mở khoá thành công");
+                                }
+                            }
+                            break;
+                        case MENU_LOCK_ITEM_PLAYER:
+                            {
+                                if (player.checkIsAdmin())
+                                {
+                                    itemSelect.canTrade = false;
+                                    player.okDialog("Khoá thành công");
+                                }
+                            }
                             break;
                     }
                 }
@@ -1536,10 +1524,12 @@ public partial class MenuController
                             player.controller.showInputDialog(INPUT_TYPE_NAME_TO_BUFF_ENCHANT, "Buff đập đồ", new String[] { "Tên nhân vật :" });
                             break;
                         case ADMIN_INDEX_GET_ITEM_FROM_PLAYER:
-                            player.controller.showInputDialog(INPUT_TYPE_NAME_PLAYER_TO_GET_ITEM, "Lấy item", new String[] { "Tên nv lấy:", "Số lượng  :" });
+                            player.controller.adminSelectItemDatas.Clear();
+                            player.controller.showInputDialog(INPUT_TYPE_NAME_PLAYER_TO_GET_ITEM, "Lấy item", new String[] { "Tên nv lấy:" });
                             break;
                         case ADMIN_INDEX_GIVE_ITEM_TO_PLAYER:
-                            player.controller.showInputDialog(INPUT_TYPE_NAME_PLAYER_TO_GIVE_ITEM, "Đưa item", new String[] { "Tên nv đưa :", "Số lượng  :" });
+                            player.controller.adminSelectItemDatas.Clear();
+                            player.controller.showInputDialog(INPUT_TYPE_NAME_PLAYER_TO_GIVE_ITEM, "Đưa item", new String[] { "Tên nv đưa :" });
                             break;
                         case ADMIN_INDEX_COIN:
                             player.controller.showInputDialog(INPUT_TYPE_NAME_TO_BUFF_COIN, "Cộng từ tiền", new String[] { "Tiền :", "Tài khoản :" });
@@ -1580,6 +1570,15 @@ public partial class MenuController
                             break;
                         case ADMIN_INDEX_PLAYER_LOCATION:
                             player.okDialog($"{player.playerData.x}|{player.playerData.y}   zone {place.zoneID}  map {place.map.mapID}");
+                            break;
+                        case ADMIN_INDEX_SET_MERGE_SERVER:
+                            player.controller.showInputDialog(INPUT_TYPE_NAME_PLAYER_TO_ENBALE_MERGE_SERVER, "Bật gộp cho nhân vật", "Tên nhân vật :");
+                            break;
+                        case ADMIN_INDEX_LOCK_ITEM_PLAYER:
+                            player.controller.showInputDialog(INPUT_TYPE_NAME_LOCK_ITEM_PLAYER, "Khoá item", new String[] { "Tên nv:" });
+                            break;
+                        case ADMIN_INDEX_UNLOCK_ITEM_PLAYER:
+                            player.controller.showInputDialog(INPUT_TYPE_NAME_UNLOCK_ITEM_PLAYER, "Mở khoá item", new String[] { "Tên nv:" });
                             break;
                     }
                 }
@@ -2054,34 +2053,34 @@ public partial class MenuController
                             {
                                 if (!player.playerData.IsMergeServer)
                                 {
-                                    if (player.controller.mergeData.pets.Count > GopetManager.MAX_PET_MERGE_SERVER || player.controller.mergeData.Items.Where(x => !x.Template.isStackable).Sum(x => x.count) > GopetManager.MAX_ITEM_MERGE_SERVER)
-                                    {
-                                        player.redDialog($"Tối đa {GopetManager.MAX_PET_MERGE_SERVER} thú cưng");
-                                        return;
-                                    }
+                                    /* if (player.controller.mergeData.pets.Where(p => !GopetManager.ID_PET_MERGE_SERVER.Contains(p.petIdTemplate)).Count() > GopetManager.MAX_PET_MERGE_SERVER || player.controller.mergeData.Items.Where(x => !x.Template.isStackable).Sum(x => x.count) > GopetManager.MAX_ITEM_MERGE_SERVER)
+                                     {
+                                         player.redDialog($"Tối đa {GopetManager.MAX_PET_MERGE_SERVER} thú cưng");
+                                         return;
+                                     }
 
-                                    if (player.controller.mergeData.Items.Any(x => !GopetManager.ID_ITEM_EQUIP_SILVER_MERGE_SERVER.Contains(x.itemTemplateId) && !GopetManager.ID_ITEM_EQUIP_TINH_VAN_MERGE_SERVER.Contains(x.itemTemplateId) && !GopetManager.ID_ITEM_EQUIP_HAI_TAC_MERGE_SERVER.Contains(x.itemTemplateId) && !GopetManager.ID_ITEM_MERGE_SERVER.Contains(x.itemTemplateId)))
-                                    {
-                                        player.redDialog($"Vật phẩm bạn đã chọn không nằm trong danh sạch cho phép gộp");
-                                        return;
-                                    }
+                                     if (player.controller.mergeData.Items.Any(x => !GopetManager.ID_ITEM_EQUIP_SILVER_MERGE_SERVER.Contains(x.itemTemplateId) && !GopetManager.ID_ITEM_MERGE_SERVER.Contains(x.itemTemplateId)))
+                                     {
+                                         player.redDialog($"Vật phẩm bạn đã chọn không nằm trong danh sạch cho phép gộp");
+                                         return;
+                                     }
 
-                                    if (player.controller.mergeData.Items.Count(x => GopetManager.ID_ITEM_EQUIP_SILVER_MERGE_SERVER.Contains(x.itemTemplateId)) > 3)
-                                    {
-                                        player.redDialog("Đồ bạc không quá 3 món");
-                                        return;
-                                    }
-                                    if (player.controller.mergeData.Items.Count(x => GopetManager.ID_ITEM_EQUIP_HAI_TAC_MERGE_SERVER.Contains(x.itemTemplateId)) > 8)
-                                    {
-                                        player.redDialog("Đồ hải tặc không quá 8 món");
-                                        return;
-                                    }
+                                     if (player.controller.mergeData.Items.Count(x => GopetManager.ID_ITEM_EQUIP_SILVER_MERGE_SERVER.Contains(x.itemTemplateId)) > 3)
+                                     {
+                                         player.redDialog("Đồ bạc không quá 3 món");
+                                         return;
+                                     }
+                                     if (player.controller.mergeData.Items.Count(x => GopetManager.ID_ITEM_EQUIP_HAI_TAC_MERGE_SERVER.Contains(x.itemTemplateId)) > 8)
+                                     {
+                                         player.redDialog("Đồ hải tặc không quá 8 món");
+                                         return;
+                                     }
 
-                                    if (player.controller.mergeData.Items.Count(x => GopetManager.ID_ITEM_EQUIP_TINH_VAN_MERGE_SERVER.Contains(x.itemTemplateId)) > 8)
-                                    {
-                                        player.redDialog("Đồ tinh vân không quá 8 món");
-                                        return;
-                                    }
+                                     if (player.controller.mergeData.Items.Count(x => GopetManager.ID_ITEM_EQUIP_TINH_VAN_MERGE_SERVER.Contains(x.itemTemplateId)) > 8)
+                                     {
+                                         player.redDialog("Đồ tinh vân không quá 8 món");
+                                         return;
+                                     }*/
 
                                     player.playerData.pets.AddRange(player.controller.mergeData.pets);
                                     foreach (var item in player.controller.mergeData.Items)
@@ -2125,6 +2124,116 @@ public partial class MenuController
                     }
                 }
                 return;
+            case MENU_OPTION_ADMIN_GET_ITEM:
+                {
+                    if (player.controller.objectPerformed.ContainsKeyZ(OBJKEY_ITEM_ADMIN_GET, OBJKEY_PLAYER_GET_ITEM))
+                    {
+                        Player ThatPlayer = player.controller.objectPerformed[OBJKEY_PLAYER_GET_ITEM];
+                        Item ItemSelect = player.controller.objectPerformed[OBJKEY_ITEM_ADMIN_GET];
+                        int count = 1;
+                        if (player.controller.objectPerformed.ContainsKey(OBJKEY_COUNT_ITEM_TO_GET_BY_ADMIN))
+                        {
+                            count = player.controller.objectPerformed[OBJKEY_COUNT_ITEM_TO_GET_BY_ADMIN];
+                        }
+                        switch (index)
+                        {
+                            case 0:
+                                {
+                                    var queryList = player.controller.adminSelectItemDatas.Where(x => x.Item == ItemSelect);
+                                    if (queryList.Any())
+                                    {
+                                        player.redDialog("Vật phẩm đã tồn tại");
+                                        return;
+                                    }
+                                    if (count > ItemSelect.count && ItemSelect.Template.isStackable)
+                                    {
+                                        player.redDialog(player.Language.WrongNumOfItem);
+                                        return;
+                                    }
+                                    player.controller.adminSelectItemDatas.Add(new AdminSelectItemData(count, ItemSelect));
+                                    player.okDialog(player.Language.OK);
+                                }
+                                break;
+                            case 1:
+                                {
+                                    var queryList = player.controller.adminSelectItemDatas.Where(x => x.Item == ItemSelect);
+                                    if (!queryList.Any())
+                                    {
+                                        player.redDialog("Vật phẩm chưa thêm vào");
+                                        return;
+                                    }
+                                    player.controller.adminSelectItemDatas.Remove(queryList.FirstOrDefault());
+                                    player.okDialog(player.Language.OK);
+                                }
+                                break;
+                            case 2:
+                                {
+                                    if (Move(ThatPlayer, player, player.controller.adminSelectItemDatas))
+                                    {
+                                        player.okDialog("Lấy vật phẩm thành công");
+                                        ThatPlayer.okDialog($"Người chơi {player.playerData.name} lấy vật phẩm thành công");
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                }
+                break;
+            case MENU_OPTION_ADMIN_GIVE_ITEM:
+                {
+                    if (player.controller.objectPerformed.ContainsKeyZ(OBJKEY_ITEM_ADMIN_GIVE, OBJKEY_PLAYER_GIVE_ITEM))
+                    {
+                        Player ThatPlayer = player.controller.objectPerformed[OBJKEY_PLAYER_GIVE_ITEM];
+                        Item ItemSelect = player.controller.objectPerformed[OBJKEY_ITEM_ADMIN_GIVE];
+                        int count = 1;
+                        if (player.controller.objectPerformed.ContainsKey(OBJKEY_COUNT_ITEM_TO_GIVE_BY_ADMIN))
+                        {
+                            count = player.controller.objectPerformed[OBJKEY_COUNT_ITEM_TO_GIVE_BY_ADMIN];
+                        }
+                        switch (index)
+                        {
+                            case 0:
+                                {
+                                    var queryList = player.controller.adminSelectItemDatas.Where(x => x.Item == ItemSelect);
+                                    if (queryList.Any())
+                                    {
+                                        player.redDialog("Vật phẩm đã tồn tại");
+                                        return;
+                                    }
+                                    if (count > ItemSelect.count && ItemSelect.Template.isStackable)
+                                    {
+                                        player.redDialog(player.Language.WrongNumOfItem);
+                                        return;
+                                    }
+                                    player.controller.adminSelectItemDatas.Add(new AdminSelectItemData(count, ItemSelect));
+                                    player.okDialog(player.Language.OK);
+                                }
+                                break;
+                            case 1:
+                                {
+                                    var queryList = player.controller.adminSelectItemDatas.Where(x => x.Item == ItemSelect);
+                                    if (!queryList.Any())
+                                    {
+                                        player.redDialog("Vật phẩm chưa thêm vào");
+                                        return;
+                                    }
+                                    player.controller.adminSelectItemDatas.Remove(queryList.FirstOrDefault());
+                                    player.okDialog(player.Language.OK);
+                                }
+                                break;
+                            case 2:
+                                {
+                                    if (Move(player, ThatPlayer, player.controller.adminSelectItemDatas))
+                                    {
+                                        player.okDialog("Chuyển vật phẩm thành công");
+                                        ThatPlayer.okDialog($"Người chơi {player.playerData.name} chuyển vật phẩm thành công");
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                }
+                break;
             default:
                 {
                     player.redDialog(string.Format(player.Language.CannotFindMenu, menuId));

@@ -118,6 +118,10 @@ public partial class MenuController
     public const int MENU_SELECT_ITEM_MERGE = 1068;
     public const int MENU_SELECT_ALL_ITEM_MERGE = 1069;
     public const int MENU_SELECT_ALL_PET_MERGE = 1070;
+    public const int MENU_OPTION_ADMIN_GIVE_ITEM = 1071;
+    public const int MENU_OPTION_ADMIN_GET_ITEM = 1072;
+    public const int MENU_LOCK_ITEM_PLAYER = 1073;
+    public const int MENU_UNLOCK_ITEM_PLAYER = 1074;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -146,6 +150,9 @@ public partial class MenuController
         new AdminItemInfo("Xóa tất cả cánh", "Dùng sẽ hiện xóa tất cả cánh trong túi đồ", "items/4000766.png"),
         new AdminItemInfo("Buff cường hóa xăm", "Dùng sẽ khiến người chỉ định luôn cường hóa xăm thành công", "items/4000766.png"),
         new AdminItemInfo("Vị trí đứng", "Dùng để lấy tọa độ trên map", "items/4000766.png"),
+        new AdminItemInfo("Mở gộp cho nhân vật", "Cung cấp quyền gộp cho nhân vật", "items/4000766.png"),
+        new AdminItemInfo("Khoá vật phẩm", "Khoá vật phẩm của người chơi", "items/4000766.png"),
+        new AdminItemInfo("Mở khoá vật phẩm", "Mở khoá vật phẩm của người chơi", "items/4000766.png"),
     };
     public const int ADMIN_INDEX_SET_PET_INFO = 0;
     public const int ADMIN_INDEX_TELE_TO_PLAYER = 1;
@@ -174,6 +181,9 @@ public partial class MenuController
     public const int ADMIN_INDEX_DELETE_ALL_WING = 24;
     public const int ADMIN_INDEX_BUFF_ENCHANT_TATTOO = 25;
     public const int ADMIN_INDEX_PLAYER_LOCATION = 26;
+    public const int ADMIN_INDEX_SET_MERGE_SERVER = 27;
+    public const int ADMIN_INDEX_LOCK_ITEM_PLAYER = 28;
+    public const int ADMIN_INDEX_UNLOCK_ITEM_PLAYER = 29;
 
     /**
      * Danh sách nhận pet miễn phí
@@ -404,6 +414,12 @@ public partial class MenuController
     /// Vật phẩm muốn thanh lý
     /// </summary>
     public const int OBJKEY_ITEM_TRASH_WANT_TO_SELL = 53;
+    public const int OBJKEY_ITEM_ADMIN_GET = 54;
+    public const int OBJKEY_ITEM_ADMIN_GIVE = 55;
+    public const int OBJKEY_ITEM_ADMIN_GET_COUNT = 56;
+    public const int OBJKEY_ITEM_ADMIN_GIVE_COUNT = 57;
+    public const int OBJKEY_PLAYER_LOCK_ITEM = 58;
+    public const int OBJKEY_PLAYER_UNLOCK_ITEM = 59;
     public const int DIALOG_CONFIRM_REMOVE_ITEM_EQUIP = 0;
     public const int DIALOG_CONFIRM_BUY_KIOSK_ITEM = 1;
     public const int DIALOG_ENCHANT = 3;
@@ -447,6 +463,11 @@ public partial class MenuController
     public const int INPUT_TYPE_NAME_BUFF_ENCHANT_TATTOO = 23;
     public const int INPUT_COUNT_OF_ITEM_TRASH_WANT_SELL = 24;
     public const int INPUT_DIALOG_EXCHANGE_COIN_TO_LUA = 25;
+    public const int INPUT_TYPE_NAME_PLAYER_TO_ENBALE_MERGE_SERVER = 26;
+    public const int INPUT_TYPE_NAME_LOCK_ITEM_PLAYER = 27;
+    public const int INPUT_TYPE_NAME_UNLOCK_ITEM_PLAYER = 28;
+    public const int INPUT_TYPE_COUNT_ADMIN_GIVE = 29;
+    public const int INPUT_TYPE_COUNT_ADMIN_GET = 30;
     public const int IMGDIALOG_CAPTCHA = 0;
     #endregion
     public static JArrayList<MenuItemInfo> getPetFreeLst(Player player)
@@ -933,6 +954,8 @@ public partial class MenuController
                 return new sbyte[] { InputReader.FIELD_LONG };
             case INPUT_DIALOG_ADMIN_GET_HISTORY:
                 return new sbyte[] { InputReader.FIELD_STRING, InputReader.FIELD_STRING, InputReader.FIELD_STRING };
+            case INPUT_TYPE_COUNT_ADMIN_GIVE:
+            case INPUT_TYPE_COUNT_ADMIN_GET:
             case INPUT_COUNT_OF_ITEM_TRASH_WANT_SELL:
             case INPUT_DIALOG_COUNT_OF_KISOK_ITEM:
             case INPUT_DIALOG_CHALLENGE_INVITE:
@@ -948,7 +971,11 @@ public partial class MenuController
                 return new sbyte[] { InputReader.FIELD_INT, InputReader.FIELD_INT };
             case INPUT_DIALOG_SET_PET_SELECTED_INFo:
                 return new sbyte[] { InputReader.FIELD_INT, InputReader.FIELD_INT, InputReader.FIELD_INT };
-
+            case INPUT_TYPE_NAME_PLAYER_TO_GET_ITEM:
+            case INPUT_TYPE_NAME_PLAYER_TO_GIVE_ITEM:
+            case INPUT_TYPE_NAME_LOCK_ITEM_PLAYER:
+            case INPUT_TYPE_NAME_UNLOCK_ITEM_PLAYER:
+            case INPUT_TYPE_NAME_PLAYER_TO_ENBALE_MERGE_SERVER:
             case INPUT_DIALOG_CREATE_CLAN:
             case INPUT_DIALOG_ADMIN_ADD_GOLD:
             case INPUT_DIALOG_ADMIN_ADD_COIN:
@@ -962,10 +989,6 @@ public partial class MenuController
 
             case INPUT_TYPE_NAME_TO_BUFF_COIN:
                 return new sbyte[] { InputReader.FIELD_STRING, InputReader.FIELD_INT };
-
-            case INPUT_TYPE_NAME_PLAYER_TO_GET_ITEM:
-            case INPUT_TYPE_NAME_PLAYER_TO_GIVE_ITEM:
-                return new sbyte[] { InputReader.FIELD_INT, InputReader.FIELD_STRING };
         }
         return null;
     }
@@ -986,6 +1009,28 @@ public partial class MenuController
     {
         switch (menuId)
         {
+            case MENU_UNLOCK_ITEM_PLAYER:
+            case MENU_LOCK_ITEM_PLAYER:
+                {
+                    CopyOnWriteArrayList<Item> items = new CopyOnWriteArrayList<Item>();
+                    if (player.controller.objectPerformed.ContainsKey(OBJKEY_PLAYER_LOCK_ITEM) || player.controller.objectPerformed.ContainsKey(OBJKEY_PLAYER_UNLOCK_ITEM))
+                    {
+                        Player playerOnline = menuId == MENU_LOCK_ITEM_PLAYER ? player.controller.objectPerformed[OBJKEY_PLAYER_LOCK_ITEM] : player.controller.objectPerformed[OBJKEY_PLAYER_UNLOCK_ITEM];
+                        if (PlayerManager.players.Contains(playerOnline))
+                        {
+                            foreach (var inventory in playerOnline.playerData.items)
+                            {
+                                foreach (var item in inventory.Value)
+                                {
+                                    items.Add(item);
+                                }
+                            }
+                        }
+                    }
+                    return items;
+                }
+                break;
+
             case MENU_SELECT_ITEM_TO_GIVE_BY_ADMIN:
             case MENU_SELECT_ITEM_TO_GET_BY_ADMIN:
                 {
@@ -1011,6 +1056,10 @@ public partial class MenuController
                     CopyOnWriteArrayList<Item> items = new CopyOnWriteArrayList<Item>();
                     if (player.controller.MergePlayerData != null)
                     {
+                        if (player.controller.MergePlayerData.wing != null)
+                        {
+                            items.Add(player.controller.MergePlayerData.wing);
+                        }
                         foreach (var item in player.controller.MergePlayerData.items)
                         {
                             items.AddRange(item.Value);
@@ -1028,6 +1077,10 @@ public partial class MenuController
     {
         switch (menuId)
         {
+            case MENU_UNLOCK_ITEM_PLAYER:
+            case MENU_LOCK_ITEM_PLAYER:
+            case MENU_SELECT_ITEM_TO_GET_BY_ADMIN:
+            case MENU_SELECT_ITEM_TO_GIVE_BY_ADMIN:
             case MENU_SELECT_ALL_ITEM_MERGE:
                 return false;
 
@@ -1035,5 +1088,33 @@ public partial class MenuController
                 return true;
         }
 
+    }
+
+    public static bool Move(Player From, Player To, CopyOnWriteArrayList<AdminSelectItemData> adminSelectItemDatas)
+    {
+        if (PlayerManager.player_name.TryGetValue(From.playerData.name, out From) && PlayerManager.player_name.TryGetValue(To.playerData.name, out To))
+        {
+            foreach (var item in adminSelectItemDatas)
+            {
+                sbyte Type = From.playerData.items.Where(x => x.Value.Contains(item.Item)).First().Key;
+                if (item.Item.count - item.Count == 0 || !item.Item.Template.isStackable)
+                {
+                    From.playerData.items[Type].Remove(item.Item);
+                    To.addItemToInventory(item.Item);
+                }
+                else
+                {
+                    item.Item.count -= item.Count;
+                    To.addItemToInventory(new Item(item.Item.itemTemplateId, item.Count));
+                }
+            }
+            return true;
+        }
+        else
+        {
+            From.redDialog(From.Language.PlayerOffline);
+            To.redDialog(To.Language.PlayerOffline);
+        }
+        return false;
     }
 }

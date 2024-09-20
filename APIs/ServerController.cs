@@ -4,6 +4,7 @@ using Gopet.Data.GopetItem;
 using Gopet.Data.Mob;
 using Gopet.IO;
 using Gopet.Manager;
+using Gopet.Util;
 using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -189,6 +190,13 @@ namespace Gopet.APIs
             return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
         }
 
+        [HttpGet("/api/BannerZ/{text}")]
+        public IActionResult BannerZ(string text)
+        {
+            PlayerManager.showBannerZ(text);
+            return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
+        }
+
         [HttpGet("/api/test/set_boss/{mapid}/{place}/{bossId}")]
         public IActionResult TestBoss(int mapid, int place, int bossId)
         {
@@ -206,6 +214,66 @@ namespace Gopet.APIs
         public IActionResult TestBossDaily()
         {
             EventManager.AddEvent(DailyBossEvent.Instance);
+            return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
+        }
+
+        [HttpGet("/api/addAutoBanner/{Text}/{secondTimeSpan}/{Min}/{Hours}/{Day}/{Month}")]
+        public IActionResult addAutoBanner(string Text, int secondTimeSpan, int Min, int Hours, int Day, int Month)
+        {
+            BannerEvent.Instance.Banners.Add(new Tuple<string, TimeSpan, DateTime>(Text, TimeSpan.FromSeconds(secondTimeSpan), new DateTime(DateTime.Now.Year, Month, Day, Hours, Min, 0)));
+            return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
+        }
+
+        [HttpGet("/api/BuffItem/{name}/{itemId}/{LevelUpTier}/{MaxTier}/{count}/{MaxOption}/{EndLevel}")]
+        public IActionResult BuffItem(string name, int itemId, int LevelUpTier, int MaxTier, int count, bool MaxOption, int EndLevel)
+        {
+            if (PlayerManager.player_name.TryGetValue(name , out var p))
+            {
+                
+                for (int i = 0; i < count; i++)
+                {
+                    Item item = new Item(itemId, 1, MaxOption);
+                    if (MaxOption)
+                    {
+                        item.atk = Item.GetMaxOption(item.Template.atkRange);
+                        item.def = Item.GetMaxOption(item.Template.defRange);
+                        item.hp = Item.GetMaxOption(item.Template.hpRange);
+                        item.mp = Item.GetMaxOption(item.Template.mpRange);
+                    }
+                    for (global::System.Int32 j = 0; j <= LevelUpTier; j++)
+                    {
+                        item.AddEnchantInfo();
+                        item.lvl = j;
+                    }
+                    for (global::System.Int32 j = 0; j < MaxTier; j++)
+                    {
+                        item.hp = Utilities.round(Utilities.GetValueFromPercent(item.getHp() + item.hp, GopetManager.PERCENT_ITEM_TIER_INFO));
+                        item.mp = (Utilities.round(Utilities.GetValueFromPercent(item.getMp() + item.mp, GopetManager.PERCENT_ITEM_TIER_INFO)));
+                        item.atk = (Utilities.round(Utilities.GetValueFromPercent(item.getAtk() + item.atk, GopetManager.PERCENT_ITEM_TIER_INFO)));
+                        item.def = (Utilities.round(Utilities.GetValueFromPercent(item.getDef() + item.def, GopetManager.PERCENT_ITEM_TIER_INFO)));
+                        for (global::System.Int32 t = 0; t <= LevelUpTier; t++)
+                        {
+                            item.AddEnchantInfo();
+                            item.lvl = t;
+                        }
+                        if (GopetManager.tierItem.TryGetValue(item.itemTemplateId, out var tierItem))
+                        {
+                            item.itemTemplateId = tierItem.itemTemplateIdTier2;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    for (global::System.Int32 j = 0; j <= EndLevel; j++)
+                    {
+                        item.AddEnchantInfo();
+                        item.lvl = j;
+                    }
+                    p.addItemToInventory(item);
+                    p.Popup($"Bạn được buff bẩn {item.getName(p)}");
+                }
+            }
             return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
         }
 

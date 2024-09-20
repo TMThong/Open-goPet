@@ -37,6 +37,7 @@ public class GameController
 
     public PlayerData MergePlayerData { get; set; }
 
+    public CopyOnWriteArrayList<AdminSelectItemData> adminSelectItemDatas { get; } = new CopyOnWriteArrayList<AdminSelectItemData>();
 
     public long lastTimeKillMob { get; set; } = 0;
 

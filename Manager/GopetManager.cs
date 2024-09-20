@@ -608,11 +608,11 @@ public class GopetManager
             });
 
     public const int MAX_ITEM_MERGE_SERVER = int.MaxValue;
-    public const int MAX_PET_MERGE_SERVER = 1;
+    public const int MAX_PET_MERGE_SERVER = 0;
 
     public static readonly int[] ID_ITEM_MERGE_SERVER = new int[]
     {
-        150,151,152,153,154,154111,154112,154113,154114,154115,154116,154117,154118,154119,154120,154020,154121,154122,154123,154124,154125,154126,154127,154128,154129,154130,154131,121,122,123,124,
+        150,151,152,153,154,154111,154112,154113,154114,154115,154116,154117,154118,154119,154120,154020,154121,154122,154123,154124,154125,154126,154127,154128,154129,154130,154131,121,122,123,124,145146,147,148,149,
     };
 
     public static readonly int[] ID_ITEM_EQUIP_HAI_TAC_MERGE_SERVER = new int[]
@@ -626,8 +626,16 @@ public class GopetManager
 
     public static readonly int[] ID_ITEM_EQUIP_SILVER_MERGE_SERVER = new int[]
     {
-         392,393,394,395,396,397,398,399,400,401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,419
+         392,393,394,395,396,397,398,399,400,401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,419,31,32 ,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,
     };
+
+    public static readonly int[] ID_PET_MERGE_SERVER = new int[]
+   {
+       3091,
+       92,
+       2098,
+       3098
+   };
 
     public static BossTemplate[] HourDailyBoss;
     static GopetManager()
@@ -1013,7 +1021,6 @@ public class GopetManager
     {
         JArrayList<int> list = new();
         list.add(tInfo.itemTemplateIdTier2);
-
         foreach (var entry in tierItem)
         {
             TierItem val = entry.Value;
@@ -1022,7 +1029,6 @@ public class GopetManager
                 list.AddRange(findListTierId(val));
             }
         }
-
         return list;
     }
     /// <summary>

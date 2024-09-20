@@ -384,7 +384,7 @@ public partial class MenuController
                         {
                             player.redDialog(player.Language.IncorrectCoinValueWhenExchangeLua, Utilities.FormatNumber(sodu));
                             return;
-                        } 
+                        }
                         if (player.checkCoin(value))
                         {
                             player.mineCoin(value);
@@ -588,27 +588,43 @@ public partial class MenuController
                         selectMenu(player.controller.objectPerformed[OBJKEY_ID_MENU_BUY_PET_TO_NAME], player.controller.objectPerformed[OBJKEY_INDEX_MENU_BUY_PET_TO_NAME], player.controller.objectPerformed[OBJKEY_PAYMENT_INDEX_WANT_TO_NAME_PET], player);
                         break;
                     }
+                case INPUT_TYPE_NAME_LOCK_ITEM_PLAYER:
+                case INPUT_TYPE_NAME_UNLOCK_ITEM_PLAYER:
                 case INPUT_TYPE_NAME_PLAYER_TO_GIVE_ITEM:
                 case INPUT_TYPE_NAME_PLAYER_TO_GET_ITEM:
                     {
-                        string name = reader.readString(1);
-                        int count = reader.readInt(0);
+                        string name = reader.readString(0);
                         if (player.checkIsAdmin())
                         {
                             Player playerOnline = PlayerManager.get(name);
                             if (playerOnline != null)
                             {
-                                if (dialogInputId == INPUT_TYPE_NAME_PLAYER_TO_GET_ITEM)
+                                switch(dialogInputId)
                                 {
-                                    player.controller.objectPerformed[OBJKEY_PLAYER_GET_ITEM] = playerOnline;
-                                    player.controller.objectPerformed[OBJKEY_COUNT_ITEM_TO_GET_BY_ADMIN] = count;
-                                    sendMenu(MENU_SELECT_ITEM_TO_GET_BY_ADMIN, player);
-                                }
-                                else
-                                {
-                                    player.controller.objectPerformed[OBJKEY_PLAYER_GIVE_ITEM] = playerOnline;
-                                    player.controller.objectPerformed[OBJKEY_COUNT_ITEM_TO_GIVE_BY_ADMIN] = count;
-                                    sendMenu(MENU_SELECT_ITEM_TO_GIVE_BY_ADMIN, player);
+                                    case INPUT_TYPE_NAME_PLAYER_TO_GET_ITEM:
+                                        {
+                                            player.controller.objectPerformed[OBJKEY_PLAYER_GET_ITEM] = playerOnline;
+                                            sendMenu(MENU_SELECT_ITEM_TO_GET_BY_ADMIN, player);
+                                        }
+                                        break;
+                                    case INPUT_TYPE_NAME_PLAYER_TO_GIVE_ITEM:
+                                        {
+                                            player.controller.objectPerformed[OBJKEY_PLAYER_GIVE_ITEM] = playerOnline;
+                                            sendMenu(MENU_SELECT_ITEM_TO_GIVE_BY_ADMIN, player);
+                                        }
+                                        break;
+                                    case INPUT_TYPE_NAME_UNLOCK_ITEM_PLAYER:
+                                        {
+                                            player.controller.objectPerformed[OBJKEY_PLAYER_UNLOCK_ITEM] = playerOnline;
+                                            sendMenu(MENU_UNLOCK_ITEM_PLAYER, player);
+                                        }
+                                        break;
+                                    case INPUT_TYPE_NAME_LOCK_ITEM_PLAYER:
+                                        {
+                                            player.controller.objectPerformed[OBJKEY_PLAYER_LOCK_ITEM] = playerOnline;
+                                            sendMenu(MENU_LOCK_ITEM_PLAYER, player);
+                                        }
+                                        break;
                                 }
                             }
                             else
@@ -618,6 +634,43 @@ public partial class MenuController
                         }
                         break;
                     }
+                case INPUT_TYPE_NAME_PLAYER_TO_ENBALE_MERGE_SERVER:
+                    {
+                        string name = reader.readString(0);
+                        if (player.checkIsAdmin())
+                        {
+                            Player playerOnline = PlayerManager.get(name);
+                            if (playerOnline != null)
+                            {
+                                playerOnline.playerData.IsMergeServer = false;
+                                player.okDialog($"Người chơi {name} có thể gộp được rồi");
+                            }
+                            else
+                            {
+                                player.redDialog(player.Language.PlayerOffline);
+                            }
+                        }
+                    }
+                    break;
+                case INPUT_TYPE_COUNT_ADMIN_GIVE:
+                case INPUT_TYPE_COUNT_ADMIN_GET:
+                    {
+                        if (player.checkIsAdmin())
+                        {
+                            int count = reader.readInt(0);
+                            if (dialogInputId == INPUT_TYPE_COUNT_ADMIN_GET)
+                            {
+                                player.controller.objectPerformed[OBJKEY_COUNT_ITEM_TO_GET_BY_ADMIN] = count;
+                                sendMenu(MENU_OPTION_ADMIN_GET_ITEM, player);
+                            }
+                            else
+                            {
+                                player.controller.objectPerformed[OBJKEY_COUNT_ITEM_TO_GIVE_BY_ADMIN] = count;
+                                sendMenu(MENU_OPTION_ADMIN_GIVE_ITEM, player);
+                            }
+                        }
+                    }
+                    break;
                 case INPUT_DIALOG_CREATE_CLAN:
                     {
                         String clanName = reader.readString(0);
