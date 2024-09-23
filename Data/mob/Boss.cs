@@ -1,4 +1,5 @@
 using Gopet.Battle;
+using Gopet.Data.GopetClan;
 
 namespace Gopet.Data.Mob
 {
@@ -9,10 +10,12 @@ namespace Gopet.Data.Mob
 
         public bool isTimeOut = false;
 
-        public long timeoutMilis = 0L;
+        public DateTime TimeOut = DateTime.MinValue;
 
         public Dictionary<Player, PetBattle> Battle { get; } = new Dictionary<Player, PetBattle>();
         public Dictionary<Player, int> Damage { get; } = new Dictionary<Player, int>();
+
+        public GopetClan.Clan OwnerClan { get; set; }
 
         public Player[] GetRank()
         {

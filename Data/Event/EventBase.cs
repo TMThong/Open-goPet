@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gopet.Manager;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,7 +28,7 @@ namespace Gopet.Data.Event
         /// <returns>Trả về true có nghĩa là sự kiện vẫn còn</returns>
         public virtual bool CheckEventStatus(Player player)
         {
-            if (NeedRemove)
+            if (NeedRemove || !EventManager._events.Contains(this))
             {
                 player.redDialog("Sự kiện đã kết thúc");
                 return false;
@@ -36,6 +37,11 @@ namespace Gopet.Data.Event
         }
 
         public virtual void UseItem(int itemId, Player player)
+        {
+
+        }
+
+        public virtual void NpcOption(Player player, int optionId)
         {
 
         }

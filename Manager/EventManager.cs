@@ -10,7 +10,7 @@ namespace Gopet.Manager
 {
     public class EventManager
     {
-        private static readonly CopyOnWriteArrayList<EventBase> _events = new CopyOnWriteArrayList<EventBase>();
+        public static readonly CopyOnWriteArrayList<EventBase> _events = new CopyOnWriteArrayList<EventBase>();
         static Thread thread = new Thread(Run);
         public static AutoResetEvent ResetEvent = new AutoResetEvent(false);
         public static bool IsRunning { get; private set; } = false;
@@ -20,6 +20,7 @@ namespace Gopet.Manager
             //_events.Add(ArenaEvent.Instance);
             //_events.Add(Summer2024Event.Instance);
             _events.Add(BannerEvent.Instance);
+            _events.Add(Winter2024Event.Instance);
         }
 
         public static void AddEvent(EventBase eventBase)

@@ -417,8 +417,14 @@ public class GopetPlace : Place
                 {
                     if (mob.getPetBattle(player) == null && player.controller.getPetBattle() == null)
                     {
-                        if (mob is Boss && !(this is ChallengePlace))
+                        if (mob is Boss boss && !(this is ChallengePlace))
                         {
+                            if (boss.OwnerClan != null && boss.OwnerClan != player.controller.getClan()?.getClan())
+                            {
+                                player.Popup($"Boss này không thuộc bang hội của bạn. Boss này thuộc bang {boss.OwnerClan.name}");
+                                return;
+                            }
+
                             if (player.playerData.star - 1 >= 0)
                             {
                                 player.playerData.star--;
@@ -503,7 +509,7 @@ public class GopetPlace : Place
                 Boss b = (Boss)mob;
                 if (b.isTimeOut && !b.HasBattle)
                 {
-                    if (Utilities.CurrentTimeMillis > b.timeoutMilis)
+                    if (DateTime.Now > b.TimeOut)
                     {
                         this.mobDie(mob);
                     }
@@ -597,7 +603,7 @@ public class GopetPlace : Place
                                 }
                                 Boss boss = new Boss(map.mapTemplate.boss[i], mobLocation);
                                 boss.isTimeOut = true;
-                                boss.timeoutMilis = Utilities.CurrentTimeMillis + GopetManager.TIME_BOSS_DISPOINTED;
+                                boss.TimeOut = DateTime.Now.AddMilliseconds(GopetManager.TIME_BOSS_DISPOINTED);
                                 addNewMob(boss);
                                 nGopetMobs.add(boss);
                                 PlayerManager.showBanner((l) => string.Format(l.BannerLanguage[LanguageData.BANNER_SHOW_BOSS_SUMMON], boss.Template.name, this.map.mapTemplate.name, this.zoneID));
