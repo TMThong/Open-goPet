@@ -108,7 +108,10 @@ namespace Gopet.Data.Mob
 
         internal BossTemplate Template
         {
-            get { return bossTemplate; }
+            get 
+            { 
+                return bossTemplate; 
+            }
         }
     }
 }

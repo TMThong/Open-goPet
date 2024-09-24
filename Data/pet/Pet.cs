@@ -297,8 +297,6 @@ public class Pet : GameObject, IBinaryObject<Pet>
     {
         this.atk = 0;
         this.def = 0;
-        //        this.maxHp = 0;   
-        //        this.maxMp = 0;
         this.maxHp = getHpViaPrice();
         this.maxMp = getMpViaPrice();
         foreach (var next in equip.ToArray())
@@ -352,16 +350,16 @@ public class Pet : GameObject, IBinaryObject<Pet>
         }
 
 
-        /*var ach = player.controller.FindSeach(player.playerData.CurrentAchievementId);
+        var ach = player.controller.FindSeach(player.playerData.CurrentAchievementId);
         if (ach != null)
         {
             this.atk += ach.Template.Atk;
             this.def += ach.Template.Def;
             this.maxHp += ach.Template.Hp;
             this.maxMp += ach.Template.Mp;
-        }*/
+        }
 
-        List<AchievementTemplate> achievementTemplates = new List<AchievementTemplate>();
+        /*List<AchievementTemplate> achievementTemplates = new List<AchievementTemplate>();
 
         foreach (var ach in player.playerData.achievements)
         {
@@ -374,7 +372,7 @@ public class Pet : GameObject, IBinaryObject<Pet>
             this.def += ach.Template.Def;
             this.maxHp += ach.Template.Hp;
             this.maxMp += ach.Template.Mp;
-        }
+        }*/
 
         ClanMember clanMember = player.controller.getClan();
         if (clanMember != null)

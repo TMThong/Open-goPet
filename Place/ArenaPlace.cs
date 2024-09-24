@@ -34,11 +34,6 @@ public class ArenaPlace : GopetPlace
         sendTimePlace();
     }
 
-    public override void update()
-    {
-        base.update();
-    }
-
     public override bool needRemove()
     {
         return placeTime < Utilities.CurrentTimeMillis || PlayerOne.playerData.petSelected.hp <= 0 || PlayerTwo.playerData.petSelected.hp <= 0;

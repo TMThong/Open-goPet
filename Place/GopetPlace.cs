@@ -413,6 +413,11 @@ public class GopetPlace : Place
         {
             if (player.playerData.petSelected != null)
             {
+                if (!(mob is Boss) && mob.hp <= 0 && mob.getPetBattle(player) == null)
+                {
+                    mobDie(mob);
+                    return;
+                }
                 if (player.playerData.petSelected.hp > 0)
                 {
                     if (mob.getPetBattle(player) == null && player.controller.getPetBattle() == null)
@@ -424,7 +429,6 @@ public class GopetPlace : Place
                                 player.Popup($"Boss này không thuộc bang hội của bạn. Boss này thuộc bang {boss.OwnerClan.name}");
                                 return;
                             }
-
                             if (player.playerData.star - 1 >= 0)
                             {
                                 player.playerData.star--;
