@@ -20,6 +20,7 @@ using Gopet.Data.Event.Year2024;
 using System.Diagnostics;
 using Gopet.Data.Clan;
 using Gopet.Language;
+using System.Runtime;
 
 public class GopetManager
 {
@@ -692,6 +693,7 @@ public class GopetManager
 
     public static void init()
     {
+        ServerMonitor.LogInfo($"Trình dọn rác: {GCSettings.IsServerGC}");
         using (var conn = MYSQLManager.create())
         {
             PET_TEMPLATES.AddRange(conn.Query<PetTemplate>("SELECT * FROM `gopet_pet`"));

@@ -1580,6 +1580,9 @@ public partial class MenuController
                         case ADMIN_INDEX_UNLOCK_ITEM_PLAYER:
                             player.controller.showInputDialog(INPUT_TYPE_NAME_UNLOCK_ITEM_PLAYER, "Mở khoá item", new String[] { "Tên nv:" });
                             break;
+                        case ADMIN_INDEX_FAST_UP_ITEM:
+                            player.controller.showInputRevertDialog(INPUT_TYPE_FAST_UP_ITEM, "Đập đồ nhanh", "Id vật phẩm", "Cấp từng món", "Lần tiến hoá", "Số lượng VP", "Max dòng chỉ số", "Cấp cuối");
+                            break;
                     }
                 }
                 break;

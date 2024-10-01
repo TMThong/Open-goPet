@@ -11,7 +11,7 @@ namespace Gopet.Server.IO
     internal class NoSession : ISession
     {
         public bool clientOK { get; set; } = true;
-        public Socket sc { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Socket CSocket { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public void Close()
         {

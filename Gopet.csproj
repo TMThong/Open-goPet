@@ -8,11 +8,11 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <DefineConstants>$(DefineConstants);NEW_SERVER;DEBUG_LOG</DefineConstants>
+		<DefineConstants>$(DefineConstants);NEW_SERVER;DEBUG_LOG</DefineConstants>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <DefineConstants>$(DefineConstants);NEW_SERVER</DefineConstants>
+		<DefineConstants>$(DefineConstants);NEW_SERVER</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -50,9 +50,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="Language\en.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
+		<None Update="Language\en.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
-
+	<PropertyGroup>
+		<ServerGarbageCollection>true</ServerGarbageCollection>
+	</PropertyGroup>
 </Project>

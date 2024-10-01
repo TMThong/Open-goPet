@@ -46,14 +46,14 @@ namespace Gopet.APIs
         [HttpGet("checksocket")]
         public IActionResult checksocket()
         {
-            return Ok(GopetApiExtentsion.CreateOKRepository(Main.server.isRunning));
+            return Ok(GopetApiExtentsion.CreateOKRepository(Main.server.IsRunning));
         }
         [HttpGet("opensqlweb")]
         public IActionResult opensqlweb()
         {
             using (var conn = MYSQLManager.createWebMySqlConnection())
             {
-                return Ok(GopetApiExtentsion.CreateOKRepository(Main.server.isRunning));
+                return Ok(GopetApiExtentsion.CreateOKRepository(Main.server.IsRunning));
             }
         }
         [HttpGet("opensqlgame")]
@@ -61,7 +61,7 @@ namespace Gopet.APIs
         {
             using (var conn = MYSQLManager.create())
             {
-                return Ok(GopetApiExtentsion.CreateOKRepository(Main.server.isRunning));
+                return Ok(GopetApiExtentsion.CreateOKRepository(Main.server.IsRunning));
             }
         }
         [HttpGet("ReleaseLock")]
@@ -71,13 +71,13 @@ namespace Gopet.APIs
             {
                 sender.Release();
             }
-            return Ok(GopetApiExtentsion.CreateOKRepository(Main.server.isRunning));
+            return Ok(GopetApiExtentsion.CreateOKRepository(Main.server.IsRunning));
         }
         [HttpGet("gc")]
         public IActionResult gc()
         {
             System.GC.Collect();
-            return Ok(GopetApiExtentsion.CreateOKRepository(Main.server.isRunning));
+            return Ok(GopetApiExtentsion.CreateOKRepository(Main.server.IsRunning));
         }
         [HttpGet("socketCount")]
         public IActionResult socketCount()
@@ -157,24 +157,6 @@ namespace Gopet.APIs
             return Ok(GopetApiExtentsion.CreateOKRepository($" {min} phút nữa sẽ bảo trì"));
         }
 
-        [HttpGet("/api/addServerListenerThreads/{num}")]
-        public IActionResult addServerListenerThreads(int num)
-        {
-            int num_threads = 0;
-            for (int i = 0; i < num; i++)
-            {
-                try
-                {
-                    Main.server.CreateThreadsListener();
-                }
-                finally
-                {
-                    num_threads--;
-                }
-                num_threads++;
-            }
-            return Ok(GopetApiExtentsion.CreateOKRepository($"Tạo thành công {num_threads} luồng"));
-        }
 
         [HttpGet("/api/maintenance/reboot")]
         public IActionResult reboot()
@@ -224,12 +206,10 @@ namespace Gopet.APIs
             return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
         }
 
-        [HttpGet("/api/BuffItem/{name}/{itemId}/{LevelUpTier}/{MaxTier}/{count}/{MaxOption}/{EndLevel}")]
-        public IActionResult BuffItem(string name, int itemId, int LevelUpTier, int MaxTier, int count, bool MaxOption, int EndLevel)
+        public static void BuffItem(string name, int itemId, int LevelUpTier, int MaxTier, int count, bool MaxOption, int EndLevel)
         {
-            if (PlayerManager.player_name.TryGetValue(name , out var p))
+            if (PlayerManager.player_name.TryGetValue(name, out var p))
             {
-                
                 for (int i = 0; i < count; i++)
                 {
                     Item item = new Item(itemId, 1, MaxOption);
@@ -274,6 +254,12 @@ namespace Gopet.APIs
                     p.Popup($"Bạn được buff bẩn {item.getName(p)}");
                 }
             }
+        }
+
+        [HttpGet("/api/BuffItem/{name}/{itemId}/{LevelUpTier}/{MaxTier}/{count}/{MaxOption}/{EndLevel}")]
+        public IActionResult ApiBuffItem(string name, int itemId, int LevelUpTier, int MaxTier, int count, bool MaxOption, int EndLevel)
+        {
+            BuffItem(name, itemId, LevelUpTier, MaxTier, count, MaxOption, EndLevel);
             return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
         }
 

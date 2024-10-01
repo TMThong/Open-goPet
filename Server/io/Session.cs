@@ -131,7 +131,7 @@ namespace Gopet.IO
         public static int socketCount = 0;
 
         bool ISession.clientOK { get => clientOK; set => clientOK = value; }
-        Socket ISession.sc { get => sc; set => sc = value; }
+        Socket ISession.CSocket { get => sc; set => sc = value; }
 
         public void Close()
         {

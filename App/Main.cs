@@ -3,13 +3,15 @@ using Gopet.APIs;
 using Gopet.Data.Event;
 using Gopet.Data.GopetClan;
 using Gopet.Manager;
+using Gopet.Server;
+using Gopet.Server.IO;
 using Gopet.Util;
 namespace Gopet.App
 {
     public class Main
     {
 
-        public static Gopet.MServer.Server server;
+        public static IServerBase server;
         public static int PORT_SERVER = ServerSetting.instance.portGopetServer;
         public static bool isNetBeans = true;
         public static int HTTP_PORT = ServerSetting.instance.portHttpServer;
@@ -46,7 +48,7 @@ namespace Gopet.App
             APIServer = new HttpServer(HTTP_PORT);
             APIServer.Start();
             server = new Gopet.MServer.Server(PORT_SERVER);
-            server.start();
+            server.StartServer();
         }
 
         public static void initRuntime()
@@ -65,7 +67,7 @@ namespace Gopet.App
         {
             MapManager.stopUpdate();
             GopetManager.saveMarket();
-            server.stopServer();
+            server.StopServer();
             APIServer.Stop();
             RuntimeServer.isRunning = false;
             Thread.Sleep(1000);
@@ -88,11 +90,6 @@ namespace Gopet.App
                     e.printStackTrace();
                 }
             }
-        }
-
-        public static void SocketLog(Exception e)
-        {
-
         }
     }
 

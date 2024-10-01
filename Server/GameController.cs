@@ -3452,6 +3452,11 @@ public class GameController
         this.showInputDialog(dialogId, dialogTitle, optionText, null);
     }
 
+    public void showInputRevertDialog(int dialogId, String dialogTitle, params string[] optionText)
+    {
+        this.showInputDialog(dialogId, dialogTitle, optionText.Reverse().ToArray(), null);
+    }
+
     public void showInputDialog(int dialogId, String dialogTitle, String[] optionText, sbyte[] optionTextType)
     {
         Message m = new Message(GopetCMD.COMMAND_GUIDER);

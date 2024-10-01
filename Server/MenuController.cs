@@ -153,6 +153,7 @@ public partial class MenuController
         new AdminItemInfo("Mở gộp cho nhân vật", "Cung cấp quyền gộp cho nhân vật", "items/4000766.png"),
         new AdminItemInfo("Khoá vật phẩm", "Khoá vật phẩm của người chơi", "items/4000766.png"),
         new AdminItemInfo("Mở khoá vật phẩm", "Mở khoá vật phẩm của người chơi", "items/4000766.png"),
+        new AdminItemInfo("Đập đồ nhanh", "Dùng để đập đồ nhanh và nó sẽ tự động tiến cấp", "items/4000766.png"),
     };
     public const int ADMIN_INDEX_SET_PET_INFO = 0;
     public const int ADMIN_INDEX_TELE_TO_PLAYER = 1;
@@ -184,6 +185,7 @@ public partial class MenuController
     public const int ADMIN_INDEX_SET_MERGE_SERVER = 27;
     public const int ADMIN_INDEX_LOCK_ITEM_PLAYER = 28;
     public const int ADMIN_INDEX_UNLOCK_ITEM_PLAYER = 29;
+    public const int ADMIN_INDEX_FAST_UP_ITEM = 30;
 
     /**
      * Danh sách nhận pet miễn phí
@@ -468,6 +470,7 @@ public partial class MenuController
     public const int INPUT_TYPE_NAME_UNLOCK_ITEM_PLAYER = 28;
     public const int INPUT_TYPE_COUNT_ADMIN_GIVE = 29;
     public const int INPUT_TYPE_COUNT_ADMIN_GET = 30;
+    public const int INPUT_TYPE_FAST_UP_ITEM = 31;
     public const int IMGDIALOG_CAPTCHA = 0;
     #endregion
     public static JArrayList<MenuItemInfo> getPetFreeLst(Player player)
@@ -989,6 +992,9 @@ public partial class MenuController
 
             case INPUT_TYPE_NAME_TO_BUFF_COIN:
                 return new sbyte[] { InputReader.FIELD_STRING, InputReader.FIELD_INT };
+
+            case INPUT_TYPE_FAST_UP_ITEM:
+                return new sbyte[] { InputReader.FIELD_INT, InputReader.FIELD_INT, InputReader.FIELD_INT, InputReader.FIELD_INT, InputReader.FIELD_INT, InputReader.FIELD_INT };
         }
         return null;
     }

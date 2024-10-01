@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Gopet.APIs;
 using Gopet.Data.Collections;
 using Gopet.Data.Dialog;
 using Gopet.Data.GopetClan;
@@ -451,7 +452,8 @@ public partial class MenuController
                                     dynamic queryData = gameconn.QueryFirstOrDefault("Select user_id from player where name ='" + namePlayer + "'");
                                     if (queryData != null)
                                     {
-                                        webconn.Execute("Update `User` set isBenned = 0 where user_id = @user_id", new { user_id = queryData.user_id });
+                                        webconn.Execute("Update `User` set isBaned = 0 where user_id = @user_id", new { user_id = queryData.user_id });
+                                        player.okDialog(player.Language.OK);
                                     }
                                     else
                                     {
@@ -485,6 +487,7 @@ public partial class MenuController
                                         {
                                             playerPassive.session.Close();
                                         }
+                                        player.okDialog(player.Language.OK);
                                     }
                                     else
                                     {
@@ -599,7 +602,7 @@ public partial class MenuController
                             Player playerOnline = PlayerManager.get(name);
                             if (playerOnline != null)
                             {
-                                switch(dialogInputId)
+                                switch (dialogInputId)
                                 {
                                     case INPUT_TYPE_NAME_PLAYER_TO_GET_ITEM:
                                         {
@@ -668,6 +671,20 @@ public partial class MenuController
                                 player.controller.objectPerformed[OBJKEY_COUNT_ITEM_TO_GIVE_BY_ADMIN] = count;
                                 sendMenu(MENU_OPTION_ADMIN_GIVE_ITEM, player);
                             }
+                        }
+                    }
+                    break;
+                case INPUT_TYPE_FAST_UP_ITEM:
+                    {
+                        if (player.checkIsAdmin())
+                        {
+                            int itemId = reader.readInt(0);
+                            int LevelUpTier = reader.readInt(1);
+                            int MaxTier = reader.readInt(2);
+                            int count = reader.readInt(3);
+                            int MaxOption = reader.readInt(4);
+                            int EndLevel = reader.readInt(5);
+                            ServerController.BuffItem(player.playerData.name, itemId, LevelUpTier, MaxTier, count, MaxOption == 1, EndLevel);
                         }
                     }
                     break;

@@ -4,75 +4,77 @@ using Gopet.Data.Collections;
 using System.Net.Sockets;
 using Gopet.Util;
 using Gopet.IO;
+using Gopet.Server.IO;
+using System.Net;
+using System.Diagnostics;
 namespace Gopet.MServer
 {
-    public class Server
+    public class Server : IServerBase
     {
+        private Socket _socket;
 
-        private TcpListener serverSc;
-        public bool isRunning { get; private set; } = false;
         public CopyOnWriteArrayList<Session> sessions { get; } = new();
+        public bool IsRunning { get; set; } = false;
+
+        private SocketAsyncEventArgs _event = new SocketAsyncEventArgs();
+
         public Server(int port)
         {
-            serverSc = new TcpListener(port);
+            IPEndPoint iPEndPoint = new IPEndPoint(IPAddress.Any, port);
+            _socket = new Socket(iPEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            _socket.Bind(iPEndPoint);
+            _event.Completed += OnCompleted;
         }
 
-        public void start()
+        private void OnCompleted(object sender, SocketAsyncEventArgs e)
         {
-            if (!isRunning)
+            if (!IsRunning) 
+                return;
+            ProccessAcceptSocket(e);
+        }
+
+
+        public void StartServer()
+        {
+            if (!IsRunning)
             {
-                isRunning = true;
-                serverSc.Start();
-                for (global::System.Int32 i = 0; i < 40; i++)
-                {
-                    CreateThreadsListener();
-                }
+                IsRunning = true;
+                _socket.Listen();
+                StartAccept(_event);
             }
         }
-        /// <summary>
-        /// Tạo luồng lắng nghe máy khách
-        /// </summary>
-        public void CreateThreadsListener()
+
+        private void StartAccept(SocketAsyncEventArgs eventArgs)
         {
-            serverSc.BeginAcceptTcpClient(new AsyncCallback(AcceptCallback), serverSc);
+            eventArgs.AcceptSocket = null;
+            if (!_socket.AcceptAsync(eventArgs))
+                ProccessAcceptSocket(eventArgs);
         }
 
-
-        void AcceptCallback(IAsyncResult ar)
+        private void ProccessAcceptSocket(SocketAsyncEventArgs eventArgs)
         {
-            TcpListener listener = (TcpListener)ar.AsyncState;
-            try
+            if (eventArgs.SocketError == SocketError.Success)
             {
-                TcpClient client = listener.EndAcceptTcpClient(ar);
-                Session session = new Session(client.Client);
+                Session session = new Session(eventArgs.AcceptSocket);
                 session.setHandler(new Player(session));
                 session.run();
                 sessions.Add(session);
                 Session.socketCount++;
             }
-            catch (Exception e)
+            else
             {
-                e.printStackTrace();
+                eventArgs.AcceptSocket?.Close();
             }
-            try
+
+            if (IsRunning)
             {
-                listener.BeginAcceptTcpClient(new AsyncCallback(AcceptCallback), listener);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
+                StartAccept(eventArgs);
             }
         }
 
-
-        public void stopServer()
+        public void StopServer()
         {
-            isRunning = false;
-            Task.Run(() =>
-            {
-                Thread.Sleep(1000);
-                serverSc.Stop();
-            });
+            IsRunning = false;
         }
     }
 }

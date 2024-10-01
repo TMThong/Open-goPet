@@ -31,7 +31,7 @@ public class UserData
     {
         using (var conn = MYSQLManager.createWebMySqlConnection())
         {
-            conn.Execute(Utilities.Format("UPDATE `user` SET `user`.`isBaned` = %s , `user`.`banReason` = '%s', `user`.`banTime` = %s WHERE user_id = %s;", typeBan, reason, timeBan, user_id));
+            conn.Execute("UPDATE `user` SET `user`.`isBaned` = @isBaned , `user`.`banReason` = @banReason, `user`.`banTime` = @banTime WHERE user_id = @user_id;" , new { isBaned = typeBan , banTime  = timeBan, banReason  = reason, user_id  = user_id });
         }
     }
 

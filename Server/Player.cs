@@ -201,7 +201,7 @@ Thread.Sleep(1000);
                             {
                                 username = username,
                                 password = password,
-                                ipv4Create = ((IPEndPoint)session.sc.RemoteEndPoint).Address.ToString(),
+                                ipv4Create = ((IPEndPoint)session.CSocket.RemoteEndPoint).Address.ToString(),
                                 dayCreate = Utilities.CurrentTimeMillis
                             });
                         okDialog(Language.RegisterOK);
@@ -669,7 +669,7 @@ Thread.Sleep(1000);
     {
         get
         {
-            return DateTime.Now <= new DateTime(2024, 9, 4);
+            return DateTime.Now <= new DateTime(2024, 9, 30)  && DateTime.Now >= new DateTime(2024, 9, 26).AddHours(21);
         }
     }
 
@@ -930,5 +930,4 @@ Thread.Sleep(1000);
         }
         session.sendMessage(m);
     }
-
 }

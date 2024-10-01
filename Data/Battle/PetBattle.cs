@@ -796,7 +796,7 @@ namespace Gopet.Battle
                             }
                         }
                     }
-                    HistoryManager.addHistory(new History(activePlayer).setLog(Utilities.Format("Tiếu diệt quái %s", mob.getName(activePlayer))).setObj(mob).setSpceialType(History.KILL_MOB));
+                    //HistoryManager.addHistory(new History(activePlayer).setLog(Utilities.Format("Tiếu diệt quái %s", mob.getName(activePlayer))).setObj(mob).setSpceialType(History.KILL_MOB));
                     activePlayer.controller.randomCaptcha();
                 }
                 else
