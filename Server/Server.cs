@@ -7,11 +7,12 @@ using Gopet.IO;
 using Gopet.Server.IO;
 using System.Net;
 using System.Diagnostics;
+using System;
 namespace Gopet.MServer
 {
     public class Server : IServerBase
     {
-        private Socket _socket;
+        private TcpListener _listener;
 
         public CopyOnWriteArrayList<Session> sessions { get; } = new();
         public bool IsRunning { get; set; } = false;
@@ -21,17 +22,11 @@ namespace Gopet.MServer
         public Server(int port)
         {
             IPEndPoint iPEndPoint = new IPEndPoint(IPAddress.Any, port);
-            _socket = new Socket(iPEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            _socket.Bind(iPEndPoint);
-            _event.Completed += OnCompleted;
+            _listener = new TcpListener(iPEndPoint);
         }
 
-        private void OnCompleted(object sender, SocketAsyncEventArgs e)
-        {
-            if (!IsRunning) 
-                return;
-            ProccessAcceptSocket(e);
-        }
+        public Thread RunnerThread { get; protected set; }
+
 
 
         public void StartServer()
@@ -39,36 +34,31 @@ namespace Gopet.MServer
             if (!IsRunning)
             {
                 IsRunning = true;
-                _socket.Listen();
-                StartAccept(_event);
+                _listener.Start();
+                RunnerThread = new Thread(Runner);
+                RunnerThread.Name = "Listener Thread";
+                RunnerThread.IsBackground = true;
+                RunnerThread.Start();
             }
         }
 
-        private void StartAccept(SocketAsyncEventArgs eventArgs)
+        private void Runner()
         {
-            eventArgs.AcceptSocket = null;
-            if (!_socket.AcceptAsync(eventArgs))
-                ProccessAcceptSocket(eventArgs);
-        }
+            while (IsRunning)
+            {
+                try
+                {
+                    Session session = new Session(_listener.AcceptSocket());
+                    session.setHandler(new Player(session));
+                    session.run();
+                    sessions.Add(session);
+                    Session.socketCount++;
+                }
+                catch (Exception e)
+                {
 
-        private void ProccessAcceptSocket(SocketAsyncEventArgs eventArgs)
-        {
-            if (eventArgs.SocketError == SocketError.Success)
-            {
-                Session session = new Session(eventArgs.AcceptSocket);
-                session.setHandler(new Player(session));
-                session.run();
-                sessions.Add(session);
-                Session.socketCount++;
-            }
-            else
-            {
-                eventArgs.AcceptSocket?.Close();
-            }
-
-            if (IsRunning)
-            {
-                StartAccept(eventArgs);
+                    e.printStackTrace();
+                }
             }
         }
 
