@@ -59,7 +59,6 @@ namespace Gopet.IO
                 sendThread.IsBackground = true;
                 sendThread.Name = "SEND THREAD " + sc.RemoteEndPoint.ToString();
                 sendThread.Start();
-
                 Thread readThread = new Thread(this.reader.run);
                 readThread.IsBackground = true;
                 readThread.Name = "READ THREAD " + sc.RemoteEndPoint.ToString();

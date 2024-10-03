@@ -48,20 +48,24 @@ namespace Gopet.MServer
             {
                 try
                 {
-                    Session session = new Session(_listener.AcceptSocket());
-                    session.setHandler(new Player(session));
-                    session.run();
-                    sessions.Add(session);
-                    Session.socketCount++;
+                    TcpClient client = _listener.AcceptTcpClient();
+                    ThreadPool.QueueUserWorkItem(setupClient, client);
                 }
                 catch (Exception e)
                 {
-
                     e.printStackTrace();
                 }
             }
         }
-
+        private void setupClient(object obj)
+        {
+            TcpClient client = (TcpClient)obj;
+            Session session = new Session(client.Client);
+            session.setHandler(new Player(session));
+            session.run();
+            sessions.Add(session);
+            Session.socketCount++;
+        }
         public void StopServer()
         {
             IsRunning = false;

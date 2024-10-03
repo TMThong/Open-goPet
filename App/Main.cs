@@ -30,7 +30,6 @@ namespace Gopet.App
             {
                 initLog();
             }
-
             //        AutoMaintenance autoMaintenance = new AutoMaintenance();
             //        autoMaintenance.start(ServerSetting.instance.getHourMaintenance(), ServerSetting.instance.getMinMaintenance());
             GopetManager.init();

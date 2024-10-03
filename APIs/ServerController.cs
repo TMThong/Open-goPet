@@ -262,6 +262,23 @@ namespace Gopet.APIs
             BuffItem(name, itemId, LevelUpTier, MaxTier, count, MaxOption, EndLevel);
             return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
         }
+        [HttpGet("/api/ThreadCount")]
+        public int ThreadCount()
+        {
+             return ThreadPool.ThreadCount;
+        }
+
+        [HttpGet("/api/PendingWorkItemCount")]
+        public long PendingWorkItemCount()
+        {
+            return ThreadPool.PendingWorkItemCount;
+        }
+
+        [HttpGet("/api/CompletedWorkItemCount")]
+        public long CompletedWorkItemCount()
+        {
+            return ThreadPool.CompletedWorkItemCount;
+        }
 
         private string GetDebuggerDisplay()
         {
