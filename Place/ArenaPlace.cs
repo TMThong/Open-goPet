@@ -96,7 +96,7 @@ public class ArenaPlace : GopetPlace
 
         public bool needRemove()
         {
-            return PlayerOne.playerData.petSelected.hp <= 0 || PlayerTwo.playerData.petSelected.hp <= 0;
+            return placeTime < Utilities.CurrentTimeMillis || PlayerOne.playerData.petSelected.hp <= 0 || PlayerTwo.playerData.petSelected.hp <= 0;
         }
 
 
@@ -132,7 +132,6 @@ public class ArenaPlace : GopetPlace
                     ArenaEvent.Instance.IdPlayerJoin.addIfAbsent(PlayerOne.playerData.user_id);
                     HistoryManager.addHistory(new History(PlayerOne).setLog($"Thắng đối thủ trong map lôi đài nhận 1 điểm hiện tại có {PlayerOne.playerData.AccumulatedPoint}"));
                 }
-
                 foreach (var p in new Player[] { PlayerOne, PlayerTwo })
                 {
                     p.playerData.x = 154;
