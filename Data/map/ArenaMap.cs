@@ -21,7 +21,7 @@ namespace Gopet.Data.map
 
         }
 
-        public virtual void AddBattle(Player One, Player Two)
+        public void AddBattle(Player One, Player Two)
         {
             mutex.WaitOne();
             try
