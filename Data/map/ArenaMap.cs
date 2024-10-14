@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace Gopet.Data.map
 {
     public class ArenaMap : GopetMap
     {
+        private Mutex mutex = new Mutex();
         public ArenaMap(int mapId_, bool canUpdate, MapTemplate mapTemplate) : base(mapId_, canUpdate, mapTemplate)
         {
 
@@ -16,7 +18,30 @@ namespace Gopet.Data.map
 
         public override void addRandom(Player player)
         {
-             
+
+        }
+
+        public virtual void AddBattle(Player One, Player Two)
+        {
+            mutex.WaitOne();
+            try
+            {
+                foreach (ArenaPlace place in places)
+                {
+                    if (place.canAdd(One) && place.players.Count < place.maxPlayer / 2)
+                    {
+                        place.addArena(One, Two);
+                        return;
+                    }
+                }
+                ArenaPlace place_L = new ArenaPlace(this, places.Count);
+                place_L.addArena(One, Two);
+                addPlace(place_L);
+            }
+            finally
+            {
+                mutex.ReleaseMutex();
+            }
         }
 
         public override void update()
@@ -24,6 +49,6 @@ namespace Gopet.Data.map
             base.update();
         }
 
-        public override bool CanChangeZone  => false;
+        public override bool CanChangeZone => false;
     }
 }
