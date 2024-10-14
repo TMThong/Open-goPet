@@ -41,7 +41,7 @@ public class ArenaPlace : GopetPlace
 
     public override bool canAdd(Player player)
     {
-        return base.canAdd(player);
+        return this._data.Count < 5;
     }
 
     public override bool needRemove()
