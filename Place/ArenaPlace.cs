@@ -14,26 +14,34 @@ public class ArenaPlace : GopetPlace
 {
     private CopyOnWriteArrayList<ArenaData> _data = new CopyOnWriteArrayList<ArenaData>();
 
+    public static readonly PointArena[] POINTS = new PointArena[]
+    {
+        new (174, 181 + 39, 258, 181 + 39),
+        new (174, 181 + 39, 258, 181 + 39),
+        new (174, 181 + 39, 258, 181 + 39),
+        new (174, 181 + 39, 258, 181 + 39),
+        new (174, 181 + 39, 258, 181 + 39)
+    };
 
-    protected ArenaPlace(GopetMap m, int ID) : base(m, ID)
+    public ArenaPlace(GopetMap m, int ID) : base(m, ID)
     {
 
     }
 
-    public ArenaPlace(Player playerOne, Player playerTwo, GopetMap m, int ID) : this(m, ID)
-    {
-        placeTime = Utilities.CurrentTimeMillis + 60000 * 2;
-        startFightPlayer(playerOne.user.user_id, playerTwo, false, 0);
-        sendTimePlace();
-    }
 
     public void addArena(Player playerOne, Player playerTwo)
     {
-        _data.Add(new ArenaData(playerOne, playerTwo));
+        PointArena pointArena = POINTS.Where(x => !this._data.Any(m => m.arena == x)).FirstOrDefault();
+        _data.Add(new ArenaData(playerOne, playerTwo, pointArena));
         this.add(playerOne);
         this.add(playerTwo);
         startFightPlayer(playerOne.user.user_id, playerTwo, false, 0);
         sendTimePlace();
+    }
+
+    public override bool canAdd(Player player)
+    {
+        return base.canAdd(player);
     }
 
     public override bool needRemove()
@@ -64,12 +72,54 @@ public class ArenaPlace : GopetPlace
         }
     }
 
+    public struct PointArena : IEquatable<PointArena>
+    {
+        public int X1 { get; }
+        public int Y1 { get; }
+        public int X2 { get; }
+
+        public int Y2 { get; }
+
+        public PointArena(int x1, int y1, int x2, int y2)
+        {
+            X1 = x1;
+            Y1 = y1;
+            X2 = x2;
+            Y2 = y2;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is PointArena arena && Equals(arena);
+        }
+
+        public bool Equals(PointArena other)
+        {
+            return X1 == other.X1 &&
+                   Y1 == other.Y1 &&
+                   X2 == other.X2 &&
+                   Y2 == other.Y2;
+        }
+
+        public static bool operator ==(PointArena left, PointArena right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(PointArena left, PointArena right)
+        {
+            return !(left == right);
+        }
+    }
+
     public class ArenaData
     {
         public Player PlayerOne { get; }
         public Player PlayerTwo { get; }
 
         public long placeTime { get; }
+
+        public PointArena arena { get; }
 
         public void sendTimePlace()
         {
@@ -82,14 +132,15 @@ public class ArenaPlace : GopetPlace
             }
         }
 
-        public ArenaData(Player playerOne, Player playerTwo)
+        public ArenaData(Player playerOne, Player playerTwo, PointArena arena)
         {
             PlayerOne = playerOne ?? throw new ArgumentNullException(nameof(playerOne));
             PlayerTwo = playerTwo ?? throw new ArgumentNullException(nameof(playerTwo));
-            PlayerTwo.playerData.x = 174;
-            PlayerTwo.playerData.y = 181 + 39;
-            PlayerOne.playerData.x = 258;
-            PlayerOne.playerData.y = 181 + 39;
+            this.arena = arena;
+            PlayerTwo.playerData.x = arena.X1;
+            PlayerTwo.playerData.y = arena.Y1;
+            PlayerOne.playerData.x = arena.X2;
+            PlayerOne.playerData.y = arena.Y2;
             placeTime = Utilities.CurrentTimeMillis + 60000 * 2;
             sendTimePlace();
         }
