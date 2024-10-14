@@ -1,4 +1,5 @@
 ﻿using Gopet.Data.Collections;
+using Gopet.Data.map;
 using Gopet.Language;
 using Gopet.Util;
 using System;
@@ -156,7 +157,7 @@ namespace Gopet.Data.Event
 
                     if (player1 != null && player2 != null)
                     {
-                        MapManager.maps[MapManager.ID_MAP_INSIDE_ARENA].addPlace(new ArenaPlace(player1, player2, MapManager.maps[MapManager.ID_MAP_INSIDE_ARENA], Utilities.nextInt(0, 232421341)));
+                        ((ArenaMap)MapManager.maps[MapManager.ID_MAP_INSIDE_ARENA]).AddBattle(player1, player2);
                     }
                     else if (player2 != null)
                     {
