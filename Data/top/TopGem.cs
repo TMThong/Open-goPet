@@ -45,7 +45,7 @@ public class TopGem : Top
 
                 using (var conn = MYSQLManager.create())
                 {
-                    var topDataDynamic = conn.Query("SELECT * FROM `player` WHERE coin > 0 && isAdmin = 0 ORDER BY `player`.`coin` DESC LIMIT 10");
+                    var topDataDynamic = conn.Query("SELECT user_id,name,avatarPath,coin FROM `player` WHERE coin > 0 && isAdmin = 0 ORDER BY `player`.`coin` DESC LIMIT 10");
                     int index = 1;
                     foreach
                         (dynamic data in topDataDynamic)

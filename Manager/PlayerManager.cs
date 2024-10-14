@@ -4,6 +4,7 @@ using Gopet.IO;
 using Gopet.Language;
 using Gopet.Util;
 using MySqlX.XDevAPI;
+using System.Numerics;
 using static System.Net.Mime.MediaTypeNames;
 
 public class PlayerManager
@@ -16,25 +17,19 @@ public class PlayerManager
 
     public static Player get(String ID)
     {
-
         return player_name.get(ID);
-
     }
 
     public static Player get(int ID)
     {
-
         return player_ID.get(ID);
-
     }
 
     public static void put(Player player)
     {
-
         players.Add(player);
         player_ID.put(player.user.user_id, player);
         player_name.put(player.playerData.name, player);
-
     }
 
     public static void remove(Player player)
@@ -63,6 +58,14 @@ public class PlayerManager
         {
             return time - Utilities.CurrentTimeMillis;
         }
+    }
+
+    public static void chatGlobal(string Name, string Text)
+    {
+        Message message = GameController.messagePetService(GopetCMD.CHAT_GLOBAL);
+        message.putString(Name);
+        message.putString(Text);
+        PlayerManager.sendMessage(message);
     }
 
     public async static void sendMessage(Message ms)
@@ -106,6 +109,8 @@ public class PlayerManager
         m.putUTF(text);
         m.writer().flush();
         sendMessage(m);
+
+        chatGlobal("Máy chủ", text);
     }
 
     public static void showBanner(Func<LanguageData, string> func)
@@ -113,12 +118,17 @@ public class PlayerManager
         Dictionary<LanguageData, Message> messages = new Dictionary<LanguageData, Message>();
         foreach (var item in GopetManager.Language)
         {
+            string text = func.Invoke(item.Value);
             Message m = new Message(45);
             m.putsbyte(1);
-            m.putUTF(func.Invoke(item.Value));
+            m.putUTF(text);
             m.writer().flush();
             sendMessage(m);
             messages[item.Value] = m;
+            if (item.Key == "vi")
+            {
+                chatGlobal("Máy chủ", text);
+            }
         }
         foreach (var p in players)
         {

@@ -98,6 +98,7 @@ namespace Gopet.Data.Event
             }
         }
 
+
         public void NextTurn()
         {
             foreach (var id in IdPlayerJoin.ToArray())

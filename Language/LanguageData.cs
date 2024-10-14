@@ -375,7 +375,8 @@ namespace Gopet.Language
         public string JournalismTimeOut { get; set; } = "Hết thời gian báo danh mời bạn quay lại sau";
         public string AskSelectTattoEnchantLaw { get; set; } = "Bạn có chắc muốn cường hóa {0} lên cấp {1} với tỉ lệ {2}% thành công với giá {3} không? Thất bại sẽ rớt {4} cấp !!!";
         public string InputExchangeGoldToCoinTitle { get; set; } = "Tỉ lệ 1 (vang) lấy {0} (ngoc)";
-        public string InputExchangeCninToLuaTitle { get; set; } = "Tỉ lệ {0} (ngoc) lấy {1} (lua)";
+        public string InputExchangeNgocToLuaTitle { get; set; } = "Tỉ lệ {0} (ngoc) lấy {1} (lua)";
+        public string InputExchangeLuaToNgocTitle { get; set; } = "Tỉ lệ {0} (lua) lấy {1} (ngoc)";
         public string CongratulateGetNewPet { get; set; } = "Chúc mừng bạn nhận được {0}";
         public string CongratulateGetNewTask { get; set; } = "Chúc mừng bạn đã nhận thành công nhiệm vụ";
         public string ChangeGoldOK { get; set; } = "Đổi thành công {0} (vang)";

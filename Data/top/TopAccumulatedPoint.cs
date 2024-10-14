@@ -44,7 +44,7 @@ namespace Gopet.Data.top
                 datas.Clear();
                 using (var conn = MYSQLManager.create())
                 {
-                    var topDataDynamic = conn.Query("SELECT * FROM `player` WHERE  isAdmin = 0 ORDER BY `player`.`AccumulatedPoint` DESC LIMIT 10");
+                    var topDataDynamic = conn.Query("SELECT user_id, name,avatarPath,AccumulatedPoint  FROM `player` WHERE  isAdmin = 0 ORDER BY `player`.`AccumulatedPoint` DESC LIMIT 50");
                     int index = 1;
                     foreach
                         (dynamic data in topDataDynamic)

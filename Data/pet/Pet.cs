@@ -295,10 +295,10 @@ public class Pet : GameObject, IBinaryObject<Pet>
     /// <param name="player"></param>
     public void applyInfo(Player player)
     {
-        this.atk = 0;
-        this.def = 0;
-        this.maxHp = getHpViaPrice();
-        this.maxMp = getMpViaPrice();
+        this.atk = (this.getStr() * 30);
+        this.def = (this.getStr() * 20);
+        this.maxHp = getHpViaPrice() + (this.getInt() * 50);
+        this.maxMp = getMpViaPrice() + (this.getInt() * 50);
         foreach (var next in equip.ToArray())
         {
             Item it = player.controller.selectItemEquipByItemId(next);

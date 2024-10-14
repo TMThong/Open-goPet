@@ -471,6 +471,7 @@ public partial class MenuController
     public const int INPUT_TYPE_COUNT_ADMIN_GIVE = 29;
     public const int INPUT_TYPE_COUNT_ADMIN_GET = 30;
     public const int INPUT_TYPE_FAST_UP_ITEM = 31;
+    public const int INPUT_TYPE_EXCHANGE_LUA_TO_COIN = 32;
     public const int IMGDIALOG_CAPTCHA = 0;
     #endregion
     public static JArrayList<MenuItemInfo> getPetFreeLst(Player player)
@@ -952,6 +953,7 @@ public partial class MenuController
     {
         switch (dialogId)
         {
+            case INPUT_TYPE_EXCHANGE_LUA_TO_COIN:
             case INPUT_DIALOG_EXCHANGE_COIN_TO_LUA:
             case INPUT_DIALOG_EXCHANGE_GOLD_TO_COIN:
                 return new sbyte[] { InputReader.FIELD_LONG };

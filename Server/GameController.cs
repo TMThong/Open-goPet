@@ -18,6 +18,7 @@ using System.Xml.Linq;
 using Gopet.Data.dialog;
 using Gopet.Data.Clan;
 using Gopet.Data.user;
+using static System.Net.Mime.MediaTypeNames;
 
 [NonController]
 public class GameController
@@ -1183,6 +1184,53 @@ public class GameController
             case GopetCMD.CHECK_SPEED:
                 player.onClientSpeedRespose();
                 break;
+            case GopetCMD.ADMIN_GET_ITEM:
+                MenuController.selectMenu(MenuController.MENU_OPTION_ADMIN_GET_ITEM, 2, 0, this.player);
+                break;
+            case GopetCMD.ADMIN_GIVE_ITEM:
+                MenuController.selectMenu(MenuController.MENU_OPTION_ADMIN_GIVE_ITEM, 2, 0, this.player);
+                break;
+            case GopetCMD.CHAT_GLOBAL:
+                sendGlobalChat(message.readUTF());
+                break;
+        }
+    }
+
+    private DateTime LastTimeChat = DateTime.Now;
+
+    private void GlobalChat(string Text)
+    {
+        Message message = GameController.messagePetService(GopetCMD.CHAT_GLOBAL);
+        message.putString(player.playerData.name);
+        message.putString(Text);
+        player.session.sendMessage(message);
+    }
+
+    public void sendGlobalChat(string Text)
+    {
+        if (this.player.checkGold(GopetManager.GOLD_NEED_CHAT_GLOBAL))
+        {
+            if (Text.Length <= 40)
+            {
+                if (LastTimeChat < DateTime.Now)
+                {
+                    this.player.mineGold(GopetManager.GOLD_NEED_CHAT_GLOBAL);
+                    PlayerManager.chatGlobal(player.playerData.name, Text);
+                    LastTimeChat = DateTime.Now.AddSeconds(5);
+                }
+                else
+                {
+                    player.Popup("Sau khi chat vui lòng chờ 15 giây");
+                }
+            }
+            else
+            {
+                player.Popup("Số kí tự chat tối đa 40 kí tự");
+            }
+        }
+        else
+        {
+            GlobalChat($"Cần {GopetManager.GOLD_NEED_CHAT_GLOBAL} (vang) để chat kênh thế giới");
         }
     }
 

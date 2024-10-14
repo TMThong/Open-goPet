@@ -43,7 +43,7 @@ public class TopSpendGold : Top
             {
                 using (var conn = MYSQLManager.create())
                 {
-                    var topDataDynamic = conn.Query("SELECT * FROM `player`  WHERE isAdmin = 0 ORDER BY  `spendGold` DESC LIMIT 300;");
+                    var topDataDynamic = conn.Query("SELECT user_id,name,avatarPath,spendGold FROM `player`  WHERE isAdmin = 0 ORDER BY  `spendGold` DESC LIMIT 300;");
                     int index = 1;
                     foreach (dynamic data in topDataDynamic)
                     {
@@ -56,6 +56,7 @@ public class TopSpendGold : Top
                         datas.Add(topData);
                         index++;
                     }
+                    topDataDynamic = null;
                 }
             }
             catch (Exception e)

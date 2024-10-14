@@ -28,7 +28,7 @@ namespace Gopet.Data.Map
                     item.wasSell = true;
                 }
                 addKioskItem(new SellItem(item, price, GopetManager.HOUR_UPLOAD_ITEM), player);
-                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Treo vật phẩm %s với giá %s lúa", item.getTemp().getName(player), Utilities.FormatNumber(price))).setObj(item));
+                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Treo vật phẩm %s với giá %s ngoc", item.getTemp().getName(player), Utilities.FormatNumber(price))).setObj(item));
             }
             else
             {
@@ -45,7 +45,7 @@ namespace Gopet.Data.Map
                     pet.wasSell = true;
                 }
                 addKioskItem(new SellItem(price, pet, GopetManager.HOUR_UPLOAD_ITEM), player);
-                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Treo pet %s với giá %s lúa", pet.getPetTemplate().getName(player), Utilities.FormatNumber(price))).setObj(pet));
+                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Treo pet %s với giá %s ngoc", pet.getPetTemplate().getName(player), Utilities.FormatNumber(price))).setObj(pet));
                 return;
             }
         }
@@ -143,17 +143,16 @@ namespace Gopet.Data.Map
                 player.redDialog(player.Language.CannotBuyThisItemByMaintenance);
                 return;
             }
-
             if (!kioskItems.Contains(sellItem))
             {
                 player.redDialog(player.Language.ItemWasSell);
                 return;
             }
-            if (player.checkLua(sellItem.price))
+            if (player.checkCoin(sellItem.price))
             {
                 if (!sellItem.hasSell)
                 {
-                    player.AddLua(-sellItem.price);
+                    player.addCoin(-sellItem.price);
                     sellItem.setHasSell(true);
                     if (sellItem.ItemSell != null)
                     {
@@ -169,7 +168,7 @@ namespace Gopet.Data.Map
                     long priceReiceived = Utilities.round(Utilities.GetValueFromPercent(sellItem.price, 100f - GopetManager.KIOSK_PER_SELL));
                     if (sellPlayer != null)
                     {
-                        sellPlayer.AddLua(priceReiceived);
+                        sellPlayer.addCoin(priceReiceived);
                         sellPlayer.playerData.save();
                         HistoryManager.addHistory(new History(sellItem.user_id).setObj(sellItem).setLog("Bán thành công vật phẩm trong ki ốt người mua là " + player.playerData.name));
                     }
@@ -177,7 +176,7 @@ namespace Gopet.Data.Map
                     {
                         using(var conn = MYSQLManager.create())
                         {
-                            conn.Execute("Update `player` set lua = lua + @priceReiceived where user_id =@user_id",
+                            conn.Execute("Update `player` set coin = coin + @priceReiceived where user_id =@user_id",
                                 new { priceReiceived = priceReiceived,  user_id = sellItem.user_id });
                             HistoryManager.addHistory(new History(sellItem.user_id).setObj(sellItem).setLog("Bán thành công vật phẩm trong ki ốt người mua là " + player.playerData.name));
                         }
@@ -190,7 +189,7 @@ namespace Gopet.Data.Map
             }
             else
             {
-                player.controller.notEnoughLua();
+                player.controller.notEnoughCoin();
             }
         }
 

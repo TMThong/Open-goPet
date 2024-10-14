@@ -135,7 +135,7 @@ public partial class MenuController
                             player.controller.showInputDialog(INPUT_DIALOG_EXCHANGE_GOLD_TO_COIN, string.Format(player.Language.InputExchangeGoldToCoinTitle, GopetManager.PERCENT_EXCHANGE_GOLD_TO_COIN), new String[] { "Số gold :" });
                             break;
                         case 2:
-                            player.controller.showInputDialog(INPUT_DIALOG_EXCHANGE_COIN_TO_LUA, string.Format(player.Language.InputExchangeCninToLuaTitle, GopetManager.PERCENT_EXCHANGE_CON_TO_LUA_1, GopetManager.PERCENT_EXCHANGE_CON_TO_LUA_2), new String[] { "(ngoc) :" });
+                            player.controller.showInputDialog(INPUT_TYPE_EXCHANGE_LUA_TO_COIN, string.Format(player.Language.InputExchangeLuaToNgocTitle, 1, GopetManager.PERCENT_EXCHANGE_LUA_TO_COIN), new String[] { "Số (lua) :" });
                             break;
                     }
                 }
@@ -2171,8 +2171,14 @@ public partial class MenuController
                                 break;
                             case 2:
                                 {
+                                    if (player.controller.adminSelectItemDatas.IsEmpty)
+                                    {
+                                        player.redDialog("Không có món nào");
+                                        return;
+                                    }
                                     if (Move(ThatPlayer, player, player.controller.adminSelectItemDatas))
                                     {
+                                        player.controller.adminSelectItemDatas.Clear();
                                         player.okDialog("Lấy vật phẩm thành công");
                                         ThatPlayer.okDialog($"Người chơi {player.playerData.name} lấy vật phẩm thành công");
                                     }
@@ -2226,8 +2232,14 @@ public partial class MenuController
                                 break;
                             case 2:
                                 {
+                                    if (player.controller.adminSelectItemDatas.IsEmpty)
+                                    {
+                                        player.redDialog("Không có món nào");
+                                        return;
+                                    }
                                     if (Move(player, ThatPlayer, player.controller.adminSelectItemDatas))
                                     {
+                                        player.controller.adminSelectItemDatas.Clear();
                                         player.okDialog("Chuyển vật phẩm thành công");
                                         ThatPlayer.okDialog($"Người chơi {player.playerData.name} chuyển vật phẩm thành công");
                                     }

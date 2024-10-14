@@ -377,6 +377,22 @@ public partial class MenuController
                         }
                     }
                     break;
+                case INPUT_TYPE_EXCHANGE_LUA_TO_COIN:
+                    {
+                        long value = Math.Abs(reader.readlong(0));
+                        if (player.checkLua(value) && value > 0)
+                        {
+                            player.MineLua(value);
+                            long valueCoin = value * GopetManager.PERCENT_EXCHANGE_LUA_TO_COIN;
+                            player.addCoin(valueCoin);
+                            player.okDialog(string.Format(player.Language.ChangeGoldToCoinMessageOK + "(ngoc)", Utilities.FormatNumber(valueCoin)));
+                        }
+                        else
+                        {
+                            player.controller.notEnoughLua();
+                        }
+                    }
+                    break;
                 case INPUT_DIALOG_EXCHANGE_COIN_TO_LUA:
                     {
                         long value = Math.Abs(reader.readlong(0));

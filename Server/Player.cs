@@ -273,9 +273,9 @@ Thread.Sleep(1000);
         m_SpeedMutex.WaitOne();
         try
         {
-            if(s_SpeedStopWatch.IsRunning)
+            if (s_SpeedStopWatch.IsRunning)
             {
-                if(s_SpeedStopWatch.Elapsed > m_SpeedTime * 3)
+                if (s_SpeedStopWatch.Elapsed > m_SpeedTime * 3)
                 {
                     s_SpeedStopWatch.Stop();
                     session.Close();
@@ -307,10 +307,10 @@ Thread.Sleep(1000);
         m_SpeedMutex.WaitOne();
         try
         {
-            if (s_SpeedStopWatch.IsRunning) 
-            { 
+            if (s_SpeedStopWatch.IsRunning)
+            {
                 s_SpeedStopWatch.Stop();
-                if(s_SpeedStopWatch.Elapsed + TimeSpan.FromSeconds(2) < m_SpeedTime)
+                if (s_SpeedStopWatch.Elapsed + TimeSpan.FromSeconds(2) < m_SpeedTime)
                 {
                     //user.ban(UserData.BAN_TIME, "HackSpeed", Utilities.CurrentTimeMillis + (1000 * 60 * 60));
                     //session.Close();
@@ -669,7 +669,7 @@ Thread.Sleep(1000);
     {
         get
         {
-            return DateTime.Now <= new DateTime(2024, 9, 30)  && DateTime.Now >= new DateTime(2024, 9, 26).AddHours(21);
+            return DateTime.Now <= new DateTime(2024, 9, 30) && DateTime.Now >= new DateTime(2024, 9, 26).AddHours(21);
         }
     }
 

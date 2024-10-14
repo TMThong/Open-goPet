@@ -47,7 +47,7 @@ public class TopGold : Top
             {
                 using (var conn = MYSQLManager.create())
                 {
-                    var topDataDynamic = conn.Query("SELECT * FROM `player` WHERE gold > 0 && isAdmin = 0 ORDER BY `player`.`gold` DESC LIMIT 10");
+                    var topDataDynamic = conn.Query("SELECT user_id ,name, avatarPath , gold FROM `player` WHERE gold > 0 && isAdmin = 0 ORDER BY `player`.`gold` DESC LIMIT 10");
                     int index = 1;
                     foreach
                         (dynamic data in topDataDynamic)

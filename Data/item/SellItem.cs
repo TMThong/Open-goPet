@@ -20,7 +20,6 @@ namespace Gopet.Data.GopetItem
 
         public SellItem(int hoursExpire)
         {
-
             expireTime = Utilities.TimeHours(hoursExpire);
         }
 

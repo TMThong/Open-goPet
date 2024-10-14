@@ -467,6 +467,8 @@ namespace Gopet.Battle
 
         public void sendStartFightPlayer()
         {
+            JArrayList<Player> listNoneSend = new();
+            listNoneSend.add(passivePlayer);
             Message message = GameController.messagePetService(GopetCMD.PLAYER_BATTLE);
             message.putInt(Utilities.round(delaTimeTurn - Utilities.CurrentTimeMillis));
             message.putInt((int)GopetManager.TimeNextTurn);
@@ -477,8 +479,7 @@ namespace Gopet.Battle
             writePetPassiveInfo(passivePlayer.getPet(), message, activePlayer);
             message.putbool(false);
             message.cleanup();
-            activePlayer.session.sendMessage(message);
-
+            place.sendMessage(message, listNoneSend);
             message = GameController.messagePetService(GopetCMD.PLAYER_BATTLE);
             message.putInt(Utilities.round(delaTimeTurn - Utilities.CurrentTimeMillis));
             message.putInt((int)GopetManager.TimeNextTurn);
@@ -490,10 +491,6 @@ namespace Gopet.Battle
             message.putbool(false);
             message.cleanup();
             passivePlayer.session.sendMessage(message);
-            JArrayList<Player> listNoneSend = new();
-            listNoneSend.add(activePlayer);
-            listNoneSend.add(passivePlayer);
-            place.sendMessage(message, listNoneSend);
         }
 
         public void sendStartFightMob(Mob mob, Player player)
@@ -803,7 +800,6 @@ namespace Gopet.Battle
                 {
                     activePlayer.controller.delayTimeHealPet = Utilities.CurrentTimeMillis + GopetManager.TIME_DELAY_HEAL_WHEN_MOB_KILL_PET;
                 }
-
                 win(petBattleTexts.ToArray(), coin, exp);
                 activePlayer.controller.setLastTimeKillMob(Utilities.CurrentTimeMillis);
             }
@@ -865,13 +861,16 @@ namespace Gopet.Battle
 
         private void win(Popup[] petBattleTexts, int coin, int exp)
         {
-            activePlayer.session.sendMessage(win(petBattleTexts, coin, exp, activePlayer.user.user_id));
-            sendFastRemove();
+            place?.sendMessage(win(petBattleTexts, coin, exp, activePlayer.user.user_id));
+            if (this.mob?.hp <= 0)
+            {
+                sendFastRemove();
+            }
             activePlayer.controller.sendMyPetInfo();
+            passivePlayer?.controller.sendMyPetInfo();
             if (!petAttackMob)
             {
-                passivePlayer.session.sendMessage(win(petBattleTexts, coin, exp, passivePlayer.user.user_id));
-                passivePlayer.controller.sendMyPetInfo();
+                place?.sendMessage(win(petBattleTexts, coin, exp, passivePlayer.user.user_id));
             }
         }
 

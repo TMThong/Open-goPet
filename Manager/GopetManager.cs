@@ -539,6 +539,8 @@ public class GopetManager
     public const int PRICE_COIN_ARENA_JOURNALISM = 2000;
     public const int PRICE_GOLD_ARENA_JOURNALISM = 500;
     public const int PERCENT_EXCHANGE_GOLD_TO_COIN = 10;
+    public const int PERCENT_EXCHANGE_LUA_TO_COIN = 10500;
+    public const int GOLD_NEED_CHAT_GLOBAL = 200;
     /// <summary>
     /// Cái này là cần bao nhiêu ngọc
     /// </summary>
