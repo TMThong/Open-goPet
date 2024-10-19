@@ -26,12 +26,15 @@ namespace Gopet.Data.map
             mutex.WaitOne();
             try
             {
-                foreach (ArenaPlace place in places)
+                foreach (GopetPlace _Place in places)
                 {
-                    if (place.canAdd(One) && place.players.Count < place.maxPlayer / 2)
+                    if (_Place is ArenaPlace place)
                     {
-                        place.addArena(One, Two);
-                        return;
+                        if (place.canAdd(One) && place.players.Count < place.maxPlayer / 2)
+                        {
+                            place.addArena(One, Two);
+                            return;
+                        }
                     }
                 }
                 ArenaPlace place_L = new ArenaPlace(this, places.Count);

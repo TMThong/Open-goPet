@@ -388,6 +388,7 @@ namespace Gopet.Language
         public string GetPetFreeOK { get; set; } = "Nhận pet {0} thành công vào túi pet để xem";
         public string YouHaveGotPetFreeBefore { get; set; } = "Trước đó bạn đã nhận rồi";
         public string PetLearnDuplicateSkill { get; set; } = "Kỹ năng này học rồi";
+        public string ThisSkillNeedCard { get; set; } = "Kỹ năng này chỉ có thể học thông qua thẻ kỹ năng";
         public string LearnSkillPetOK { get; set; } = "Học kỹ năng thành công";
         public string SkillPetNotFound { get; set; } = "Không có kỹ năng này";
         public string LearnSkillPetLaw { get; set; } = "Pet của bạn phải đạt mốc lvl 3, 5, 10 để học skill 1 2 3 nhé";

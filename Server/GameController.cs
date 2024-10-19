@@ -3191,7 +3191,7 @@ public class GameController
 
     private bool checkGemElementVsPet(sbyte elementItem)
     {
-        Pet pet = player.getPet();
+        /*Pet pet = player.getPet();
         if (pet != null)
         {
             if (!(pet.Template.element == GopetManager.DARK_ELEMENT || pet.Template.element == GopetManager.LIGHT_ELEMENT || pet.Template.element == elementItem))
@@ -3204,7 +3204,7 @@ public class GameController
         {
             player.petNotFollow();
             return false;
-        }
+        }*/
         return true;
     }
 

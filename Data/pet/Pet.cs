@@ -296,7 +296,7 @@ public class Pet : GameObject, IBinaryObject<Pet>
     public void applyInfo(Player player)
     {
         this.atk = (this.getStr() * 30);
-        this.def = (this.getStr() * 20);
+        this.def = (this.getAgi() * 20);
         this.maxHp = getHpViaPrice() + (this.getInt() * 50);
         this.maxMp = getMpViaPrice() + (this.getInt() * 50);
         foreach (var next in equip.ToArray())
@@ -374,7 +374,7 @@ public class Pet : GameObject, IBinaryObject<Pet>
             this.maxMp += ach.Template.Mp;
         }*/
 
-        ClanMember clanMember = player.controller.getClan();
+        /*ClanMember clanMember = player.controller.getClan();
         if (clanMember != null)
         {
             int valueBuff = clanMember.clan.Search(ItemInfo.Type.PERCENT_ALL_INFO).value;
@@ -382,7 +382,7 @@ public class Pet : GameObject, IBinaryObject<Pet>
             this.def += (int)Utilities.GetValueFromPercent(this.def, valueBuff / 100);
             this.maxHp += (int)Utilities.GetValueFromPercent(this.maxHp, valueBuff / 100);
             this.maxMp += (int)Utilities.GetValueFromPercent(this.maxMp, valueBuff / 100);
-        }
+        }*/
         foreach (Item it in otherItems)
         {
             this.atk += it.getAtk();

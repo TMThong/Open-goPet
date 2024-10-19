@@ -310,7 +310,11 @@ public partial class MenuController
                     Pet pet = player.playerData.petSelected;
                     if (index >= 0 && index < petSkills.Length && pet != null)
                     {
-
+                        if (petSkills[index].IsNeedCard)
+                        {
+                            player.redDialog(player.Language.ThisSkillNeedCard);
+                            return;
+                        }
                         foreach (int[] skillInfo in pet.skill)
                         {
                             if (skillInfo[0] == petSkills[index].skillID)

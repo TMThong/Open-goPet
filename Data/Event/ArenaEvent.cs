@@ -24,7 +24,18 @@ namespace Gopet.Data.Event
             get
             {
                 if (IsRunning || IsFighting) return true;
-                return DateTime.Now.Hour == 12 && DateTime.Now.Minute <= 5;
+                return
+                    (
+                    DateTime.Now.Hour == 6 ||
+                    DateTime.Now.Hour == 8 ||
+                    DateTime.Now.Hour == 1 ||
+                    DateTime.Now.Hour == 13 ||
+                    DateTime.Now.Hour == 17 ||
+                    DateTime.Now.Hour == 19 ||
+                    DateTime.Now.Hour == 21 ||
+                    DateTime.Now.Hour == 23
+                    )
+                    && DateTime.Now.Minute <= 5;
             }
         }
 
@@ -43,7 +54,7 @@ namespace Gopet.Data.Event
         private long lastTimeWait = 0;
         private long timeWaitNextTurn = 0;
         private uint showBanner = 0;
-        public const long TIME_WAIT_COST = 60000 * 30;
+        public const long TIME_WAIT_COST = 60000 * 3;
         public const long TIME_WAIT_TURN_COST = 60000 * 3;
         public CopyOnWriteArrayList<int> IdPlayerJoin = new CopyOnWriteArrayList<int>();
 
@@ -76,7 +87,7 @@ namespace Gopet.Data.Event
                     }
                     else if (showBanner % 60 == 0)
                     {
-                        PlayerManager.showBanner((l) => string.Format(l.BannerLanguage[LanguageData.BANNER_SHOW_ARENA_EVENT_BANNER] , timeWaitPlayerJournalism / 60000l));
+                        PlayerManager.showBanner((l) => string.Format(l.BannerLanguage[LanguageData.BANNER_SHOW_ARENA_EVENT_BANNER], timeWaitPlayerJournalism / 60000l));
                     }
                 }
             }
@@ -129,7 +140,6 @@ namespace Gopet.Data.Event
                     }
                 }
             }
-
             var arr = IdPlayerJoin.ToArray().ToList();
             IdPlayerJoin.Clear();
             while (arr.Count > 0)
@@ -154,7 +164,6 @@ namespace Gopet.Data.Event
                     arr.Remove(playerTwo);
                     Player player1 = PlayerManager.get(playerOne);
                     Player player2 = PlayerManager.get(playerTwo);
-
                     if (player1 != null && player2 != null)
                     {
                         ((ArenaMap)MapManager.maps[MapManager.ID_MAP_INSIDE_ARENA]).AddBattle(player1, player2);

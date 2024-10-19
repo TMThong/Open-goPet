@@ -13,6 +13,7 @@ public class PetSkill {
     public sbyte nClass;
     public String name, description;
     public JArrayList<PetSkillLv> skillLv = new JArrayList<PetSkillLv>();
+    public bool IsNeedCard {  get; set; } = false;
 
     public String getDescription(PetSkillLv petSkillLv, Player player) {
         return String.Join("\n", ItemInfo.getName(petSkillLv.skillInfo, player));

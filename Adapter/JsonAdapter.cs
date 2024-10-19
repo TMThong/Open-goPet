@@ -14,8 +14,8 @@ namespace Gopet.Adapter
 
         public static JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings()
         {
-            DefaultValueHandling = DefaultValueHandling.Ignore,
-            NullValueHandling = NullValueHandling.Ignore
+            DefaultValueHandling = DefaultValueHandling.Include,
+            NullValueHandling = NullValueHandling.Include
         };
 
         public override T? Parse(object value)
