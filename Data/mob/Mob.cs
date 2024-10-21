@@ -16,6 +16,8 @@ namespace Gopet.Data.Mob
         private PetBattle petBattle;
         public Mutex Mutex { get; } = new Mutex();
 
+        public DateTime? TimeEndUpdate { get; set; } = null;
+
         public Rectangle bound;
 
         public virtual PetBattle getPetBattle(Player player)

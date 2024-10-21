@@ -508,15 +508,42 @@ public class GopetPlace : Place
         base.update();
         foreach (Mob mob in mobs)
         {
-            if (mob is Boss)
+            goto NEXT;
+        REMOVE_LABEL:
             {
-                Boss b = (Boss)mob;
-                if (b.isTimeOut && !b.HasBattle)
+                this.mobDie(mob);
+                if (mob is Boss b)
                 {
-                    if (DateTime.Now > b.TimeOut)
+                    foreach (var item in b.Battle)
                     {
-                        this.mobDie(mob);
+                        item.Value?.sendFastRemove();
+                        item.Value?.clean();
                     }
+                }
+                else
+                {
+                    mob.getPetBattle(null)?.sendFastRemove();
+                    mob.getPetBattle(null)?.clean();
+                }
+                continue;
+            }
+        NEXT:
+            if (mob is Boss b2)
+            {
+                if (b2.TimeOut < DateTime.Now)
+                {
+                    goto REMOVE_LABEL;
+                }
+            }
+            if (mob.hp <= 0)
+            {
+                if (mob.TimeEndUpdate.HasValue && mob.TimeEndUpdate < DateTime.Now)
+                {
+                    goto REMOVE_LABEL;
+                }
+                else
+                {
+                    mob.TimeEndUpdate = DateTime.Now.AddSeconds(5);
                 }
             }
         }

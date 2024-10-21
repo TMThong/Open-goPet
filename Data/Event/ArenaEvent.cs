@@ -28,7 +28,7 @@ namespace Gopet.Data.Event
                     (
                     DateTime.Now.Hour == 6 ||
                     DateTime.Now.Hour == 8 ||
-                    DateTime.Now.Hour == 1 ||
+                    DateTime.Now.Hour == 11 ||
                     DateTime.Now.Hour == 13 ||
                     DateTime.Now.Hour == 17 ||
                     DateTime.Now.Hour == 19 ||
@@ -54,7 +54,7 @@ namespace Gopet.Data.Event
         private long lastTimeWait = 0;
         private long timeWaitNextTurn = 0;
         private uint showBanner = 0;
-        public const long TIME_WAIT_COST = 60000 * 3;
+        public const long TIME_WAIT_COST = 60000 * 30;
         public const long TIME_WAIT_TURN_COST = 60000 * 3;
         public CopyOnWriteArrayList<int> IdPlayerJoin = new CopyOnWriteArrayList<int>();
 

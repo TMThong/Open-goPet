@@ -174,13 +174,17 @@ namespace Gopet.Data.GopetItem
 
         public ItemTemplate getTemp()
         {
-            return GopetManager.itemTemplate.get(itemTemplateId);
+            return this.Template;
         }
 
         public ItemTemplate Template
         {
             get
             {
+                if (!GopetManager.itemTemplate.ContainsKey(itemTemplateId))
+                {
+                    return GopetManager.itemTemplate[-1];
+                }
                 return GopetManager.itemTemplate.get(itemTemplateId);
             }
         }

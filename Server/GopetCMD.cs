@@ -24,7 +24,7 @@ public class GopetCMD
     public const sbyte CREATE_CHAR = 21;
     public const sbyte REQUEST_PET_IMG = 9;
     public const sbyte SEND_LIST_PET_ZONE = 8;
-    public const sbyte SEND_LIST_MOB_ZONE = 41;
+    public const sbyte SEND_LIST_MOB_ZONE = 22;
     public const sbyte MY_PET_INFO = 40;
     public const sbyte REMOVE_MOB = 42;
     public const sbyte STAR_INFO = 94;

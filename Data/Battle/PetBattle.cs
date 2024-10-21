@@ -770,27 +770,20 @@ namespace Gopet.Battle
                         Boss boss = (Boss)mob;
                         if (boss.getLastHitPlayer() == activePlayer)
                         {
-                            if (Math.Abs(boss.Template.lvl - activePet.lvl) > 20 && boss.Template.typeBoss == 0)
+                            petBattleTexts.AddRange(activePlayer.controller.onReiceiveGift(boss.Template.gift));
+                            place.mobDie(mob);
+                            JArrayList<string> txtInfo = new();
+                            foreach (Popup petBattleText in petBattleTexts)
                             {
-                                activePlayer.okDialog("Không nhận được gì cả do sự chênh lệch cấp độ đã làm quái không rơi món gì cả");
+                                txtInfo.add(petBattleText.getText());
                             }
-                            else
+                            activePlayer.okDialog(Utilities.Format("Chức mừng bạn kích sát %s nhận được :\n%s", boss.Template.getName(activePlayer), string.Join(",", txtInfo)));
+                            activePlayer.controller.getTaskCalculator().onKillBoss(boss);
+                            if (place is ChallengePlace)
                             {
-                                petBattleTexts.AddRange(activePlayer.controller.onReiceiveGift(boss.Template.gift));
-                                place.mobDie(mob);
-                                JArrayList<string> txtInfo = new();
-                                foreach (Popup petBattleText in petBattleTexts)
-                                {
-                                    txtInfo.add(petBattleText.getText());
-                                }
-                                activePlayer.okDialog(Utilities.Format("Chức mừng bạn kích sát %s nhận được :\n%s", boss.Template.getName(activePlayer), string.Join(",", txtInfo)));
-                                activePlayer.controller.getTaskCalculator().onKillBoss(boss);
-                                if (place is ChallengePlace)
-                                {
-                                    //activePlayer.playerData.AccumulatedPoint += 5;
-                                }
-                                place.RemoveBattleByMobId(boss.GetId());
+                                //activePlayer.playerData.AccumulatedPoint += 5;
                             }
+                            place.RemoveBattleByMobId(boss.GetId());
                         }
                     }
                     //HistoryManager.addHistory(new History(activePlayer).setLog(Utilities.Format("Tiếu diệt quái %s", mob.getName(activePlayer))).setObj(mob).setSpceialType(History.KILL_MOB));
