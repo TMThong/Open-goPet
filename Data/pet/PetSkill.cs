@@ -26,7 +26,7 @@ public class PetSkill {
      * @return
      */
     public bool isSkillBuff() {
-        return skillID == 103 || skillID == 109 || skillID == 115 || skillID == 117 || skillID == 126 || skillID == 127;
+        return skillID == 103 || skillID == 109 || skillID == 115 || skillID == 117 || skillID == 127;
     }
 
     public static int GetToxicSkill(GameObject gameObject)

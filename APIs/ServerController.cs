@@ -1,6 +1,7 @@
 ﻿using Gopet.App;
 using Gopet.Data.Event;
 using Gopet.Data.GopetItem;
+using Gopet.Data.item;
 using Gopet.Data.Mob;
 using Gopet.IO;
 using Gopet.Manager;
@@ -213,6 +214,7 @@ namespace Gopet.APIs
                 for (int i = 0; i < count; i++)
                 {
                     Item item = new Item(itemId, 1, MaxOption);
+                    item.SourcesItem.Add(ItemSource.BUFF_BẨN);
                     if (MaxOption)
                     {
                         item.atk = Item.GetMaxOption(item.Template.atkRange);

@@ -1,11 +1,15 @@
 
+using Dapper;
 using Gopet.APIs;
+using Gopet.Data.Collections;
 using Gopet.Data.Event;
 using Gopet.Data.GopetClan;
+using Gopet.Data.GopetItem;
 using Gopet.Manager;
 using Gopet.Server;
 using Gopet.Server.IO;
 using Gopet.Util;
+using Newtonsoft.Json;
 namespace Gopet.App
 {
     public class Main
@@ -47,6 +51,89 @@ namespace Gopet.App
             APIServer = new HttpServer(HTTP_PORT);
             APIServer.Start();
             server = new Gopet.MServer.Server(PORT_SERVER);
+            void ScanData()
+            {
+                int[] keys = new int[] {
+                    132,
+                    133,
+                    134,
+                    135,
+                    141,
+                    154,
+                    131
+
+            };
+                var tattoIds = GopetManager.tattos.Where(x => keys.Any(t => GopetManager.itemTemplate[t].itemOptionValue[0] == x.Key)).Select(m => m.Key);
+                using (var conn = MYSQLManager.create())
+                {
+                    var players = conn.Query<PlayerData>("SELECT * FROM `player`").Where(x => !x.isAdmin);
+                    foreach (var item in players)
+                    {
+                        
+                        void ScanItem()
+                        {
+                            foreach (var item1 in item.items.Select(x => x.Value))
+                            {
+                                foreach (var item2 in item1.Where(x => x.count > 200 && x.itemTemplateId != 181 && x.itemTemplateId != 186 && x.itemTemplateId != 187))
+                                {
+                                    GopetManager.ServerMonitor.LogError($"Item {item2.Template.name} có sll {item2.count} của nhân vật {item.name}");
+                                }
+                            }
+                        }
+
+                        void ScanWings()
+                        {
+                            foreach (var item1 in item.items.Select(x => x.Value))
+                            {
+                                foreach (var item2 in item1.Where(x => x.itemTemplateId >= 154111 && x.itemTemplateId <= 154131).GroupBy(m=> m.itemTemplateId))
+                                {
+                                    GopetManager.ServerMonitor.LogError($"Item {item2.First().Template.name} có sll {item2.Count()} của nhân vật {item.name}");
+                                }
+                            }
+                            if(item.wing != null && item.wing.itemTemplateId >= 154111 && item.wing.itemTemplateId <= 154131)
+                            {
+                                GopetManager.ServerMonitor.LogError($"Item {item.wing.Template.name} có sll {1} của nhân vật {item.name}");
+                            }
+                        }
+                        void ScanPet()
+                        {
+                            foreach (var item1 in item.pets.Concat(new Pet[] { item.petSelected }))
+                            {
+                                if (item1 != null)
+                                {
+                                    int numTatto = item1.tatto.Where(x => tattoIds.Contains(x.tattooTemplateId)).Count();
+                                    if (numTatto > 1)
+                                    {
+                                        GopetManager.ServerMonitor.LogError($"Pet {item1.name} có {numTatto} xăm {JsonConvert.SerializeObject(item1.tatto.Where(x => tattoIds.Contains(x.tattooTemplateId)).Select(m => m.Template.name))} liên quan thẻ xăm của nhân vật {item.name}");
+                                    }
+                                }
+                            }
+                        }
+                        void BuffHKL()
+                        {
+                            if (!item.pets.Concat(new Pet[] { item.petSelected }).Any(x => x != null && x.petIdTemplate == 89))
+                            {
+                                Pet pet = new Pet(89);
+                                pet.Expire = DateTime.Now.AddDays(3);
+                                item.addPet(pet, null);
+                                item.save();
+                            }
+                        }
+
+                        void FixDuplicatePet()
+                        {
+                            var petsDic = item.pets.DistinctBy(x => x.TimeDieZ).ToList();
+                            item.pets = new CopyOnWriteArrayList<Pet>(petsDic);
+                            item.save();
+                        }
+                        //ScanItem();
+                        //ScanPet();
+                        //ScanWings();
+                        //BuffHKL();
+                    }
+                }
+            }
+            //ScanData();
             server.StartServer();
         }
 

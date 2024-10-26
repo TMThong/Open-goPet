@@ -94,6 +94,7 @@ namespace Gopet.Data.Event.Year2024
                                 randomData.NumOfUse++;
                                 Item item = new Item(randomData.ItemId);
                                 item.count = 1;
+                                item.SourcesItem.Add(Data.item.ItemSource.TỪ_SỰ_KIỆN);
                                 player.okDialog("Chúc mừng bạn nhận được " + item.Template.name);
                                 player.addItemToInventory(item);
                                 if (GetType(itemId) == RECIPE_KITE_NORMAL)
@@ -140,6 +141,7 @@ namespace Gopet.Data.Event.Year2024
             }
             int itemID = type == RECIPE_KITE_NORMAL ? ITEM_KITE_PAPER : ITEM_KITE_FABRIC;
             Item item = new Item(itemID);
+            item.SourcesItem.Add(Data.item.ItemSource.TỪ_SỰ_KIỆN);
             item.count = 1;
             player.addItemToNormalInventory(item);
             player.okDialog("Làm diều thành công");

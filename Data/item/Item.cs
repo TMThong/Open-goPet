@@ -44,9 +44,18 @@ namespace Gopet.Data.GopetItem
 
         public ConcurrentDictionary<int, Tuple<int, int, int, int>> EnchantInfo { get; set; } = new ConcurrentDictionary<int, Tuple<int, int, int, int>>();
 
+        public CopyOnWriteArrayList<ItemSource> SourcesItem = new(ItemSource.TỰ_SINH_RA);
+
+        public DateTime TimeCreate { get; set; } = DateTime.Now;
+
+        public Item()
+        {
+
+        }
 
         public Item(int itemTemplateId, int count_ = 0, bool isSkipRandom = false)
         {
+            this.SourcesItem.Clear();
             this.count = count_;
             this.itemTemplateId = itemTemplateId;
             option = getTemp().getOption();

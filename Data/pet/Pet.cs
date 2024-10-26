@@ -65,6 +65,7 @@ public class Pet : GameObject, IBinaryObject<Pet>
 
     public int pointTiemNangLvl = 3;
 
+    public DateTime TimeCreated {  get; set; } = DateTime.Now;
 
     public bool wasSell = false;
 

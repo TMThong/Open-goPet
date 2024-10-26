@@ -171,6 +171,7 @@ namespace Gopet.Data.Map
                         sellPlayer.addCoin(priceReiceived);
                         sellPlayer.playerData.save();
                         HistoryManager.addHistory(new History(sellItem.user_id).setObj(sellItem).setLog("Bán thành công vật phẩm trong ki ốt người mua là " + player.playerData.name));
+                        
                     }
                     else
                     {
@@ -181,6 +182,7 @@ namespace Gopet.Data.Map
                             HistoryManager.addHistory(new History(sellItem.user_id).setObj(sellItem).setLog("Bán thành công vật phẩm trong ki ốt người mua là " + player.playerData.name));
                         }
                     }
+                    HistoryManager.addHistory(new History(player.playerData.user_id).setObj(sellItem).setLog($"Mua thành công {sellItem.getName(player)}"));
                 }
                 else
                 {
@@ -222,25 +224,32 @@ namespace Gopet.Data.Map
                 if (kioskItem.expireTime < Utilities.CurrentTimeMillis)
                 {
                     kioskItems.remove(kioskItem);
-                    Player player = PlayerManager.get(kioskItem.user_id);
-                    if (player != null)
+                    try
                     {
-                        if (kioskItem.pet == null)
+                        Player player = PlayerManager.get(kioskItem.user_id);
+                        if (player != null)
                         {
-                            player.addItemToInventory(kioskItem.ItemSell);
+                            if (kioskItem.pet == null)
+                            {
+                                player.addItemToInventory(kioskItem.ItemSell);
+                            }
+                            else
+                            {
+                                player.playerData.addPet(kioskItem.pet, player);
+                            }
+                            HistoryManager.addHistory(new History(kioskItem.user_id).setObj(kioskItem).setLog("Lưu vật phẩm ki ốt vào cơ sở dữ liệu thành công"));
+                            continue;
                         }
-                        else
+                        using (var conn = MYSQLManager.create())
                         {
-                            player.playerData.addPet(kioskItem.pet, player);
+                            conn.Execute("INSERT INTO `kiosk_recovery`(`kioskType`, `user_id`, `item`) VALUES (@kioskType,@user_id,@jsonData)",
+                                new { kioskType = kioskType, user_id = kioskItem.user_id, jsonData = JsonConvert.SerializeObject(kioskItem) });
+                            HistoryManager.addHistory(new History(kioskItem.user_id).setObj(kioskItem).setLog("Lưu vật phẩm ki ốt vào cơ sở dữ liệu thành công"));
                         }
-                        HistoryManager.addHistory(new History(kioskItem.user_id).setObj(kioskItem).setLog("Lưu vật phẩm ki ốt vào cơ sở dữ liệu thành công"));
-                        continue;
                     }
-                    using(var conn = MYSQLManager.create())
+                    catch (Exception e)
                     {
-                        conn.Execute("INSERT INTO `kiosk_recovery`(`kioskType`, `user_id`, `item`) VALUES (@kioskType,@user_id,@jsonData)",
-                            new { kioskType = kioskType, user_id = kioskItem.user_id, jsonData =  JsonConvert.SerializeObject(kioskItem) });
-                        HistoryManager.addHistory(new History(kioskItem.user_id).setObj(kioskItem).setLog("Lưu vật phẩm ki ốt vào cơ sở dữ liệu thành công"));
+                        e.printStackTrace();
                     }
                 }
             }

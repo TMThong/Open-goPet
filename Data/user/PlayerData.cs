@@ -193,6 +193,10 @@ public class PlayerData
             if (findDupcate.Any())
             {
                 findDupcate.First().count += item.count;
+                foreach (var item1 in item.SourcesItem)
+                {
+                    findDupcate.First().SourcesItem.addIfAbsent(item1);
+                }
                 return;
             }
         }

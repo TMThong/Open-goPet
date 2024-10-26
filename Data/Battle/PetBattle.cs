@@ -752,6 +752,7 @@ namespace Gopet.Battle
                                 if (next.getPercent() > nextPer)
                                 {
                                     Item item = new Item(next.getItemTemplateId());
+                                    item.SourcesItem.Add(Data.item.ItemSource.TỪ_QUÁI);
                                     item.count = next.getCount();
                                     activePlayer.addItemToInventory(item);
                                     PetBattleText petBattleText = new PetBattleText(item.getTemp().getName(activePlayer) + " x" + item.count);

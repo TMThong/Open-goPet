@@ -60,6 +60,10 @@ namespace Gopet.IO
             {
                 Length = hi - 1;
                 sbyte isEncrypted = session.dis.ReadSByte();
+                if (Length > short.MaxValue)
+                {
+                    throw new Exception($"Buffer size too large. Size = {Length}");
+                }
                 byte[] data = new byte[Length];
                 int len = 0;
                 int sbyteRead = 0;

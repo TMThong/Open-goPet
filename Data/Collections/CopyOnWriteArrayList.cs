@@ -20,7 +20,8 @@ namespace Gopet.Data.Collections
             this.values = values;
         }
 
-        public CopyOnWriteArrayList(T[] values)
+
+        public CopyOnWriteArrayList(params T[] values)
         {
             this.values = ImmutableList.CreateRange(values);
         }

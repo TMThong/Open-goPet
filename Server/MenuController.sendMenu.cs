@@ -581,6 +581,7 @@ public partial class MenuController
                     JArrayList<MenuItemInfo> menuItemInfos = new((ADMIN_INFOS));
                     player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, "MENU ADMIN", menuItemInfos);
                     menuItemInfos.Clear();
+                    HistoryManager.addHistory(new History(player).setObj(player.playerData).setLog("Thao tác gửi giao diện ADMIN"));
                 }
                 break;
             case MENU_KIOSK_HAT_SELECT:

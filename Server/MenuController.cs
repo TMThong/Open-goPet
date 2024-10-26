@@ -524,6 +524,7 @@ public partial class MenuController
                 if (!queryItem.Any()) continue;
                 TradeGiftTemplate tradeGift = Utilities.RandomArray(queryItem);
                 var it = new Item(tradeGift.ItemTemplateId, tradeGift.Count);
+                it.SourcesItem.Add(ItemSource.ĐỔI_THỎI);
                 if (keyValuePairs.ContainsKey(tradeGift.ItemTemplateId))
                 {
                     keyValuePairs[tradeGift.ItemTemplateId]++;

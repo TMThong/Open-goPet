@@ -710,6 +710,7 @@ public partial class MenuController
                                 if (shopTemplateItem.isSellItem)
                                 {
                                     Item item = new Item(shopTemplateItem.getItemTempalteId()) { canTrade = !shopTemplateItem.isLock && (shopTemplateItem.itemTemTempleId != 240009 || shopTemplateItem.itemTemTempleId != 240010) };
+                                    item.SourcesItem.Add(ItemSource.MUA_ĐỒ_SHOP_NPC);
                                     item.count = shopTemplateItem.getCount();
                                     if (item.getTemp().expire > 0)
                                     {
@@ -965,6 +966,7 @@ public partial class MenuController
                                     player.controller.subCountItem(itemSelect, optionValue[1], GopetManager.NORMAL_INVENTORY);
                                     Item item = new Item(optionValue[0]);
                                     item.count = 1;
+                                    item.SourcesItem.Add(ItemSource.GHÉP_MẢNH);
                                     player.addItemToInventory(item);
                                     player.okDialog(string.Format(player.Language.ChangeItemOK, item.getTemp().getName(player)));
                                 }

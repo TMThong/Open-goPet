@@ -3,12 +3,16 @@ using Dapper;
 using Gopet.Data.Collections;
 using Gopet.Util;
 using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
+using System.Collections.Concurrent;
+using System.Threading;
 
 public class HistoryManager
 {
 
     public static HistoryManager Instance = new HistoryManager();
-    private CopyOnWriteArrayList<History> historys = new();
+    private ConcurrentQueue<History> historys = new();
+    private AutoResetEvent AutoResetEvent = new AutoResetEvent(false);
     public Thread HistoryThread;
     public HistoryManager()
     {
@@ -24,7 +28,8 @@ public class HistoryManager
 
     public void add(History history)
     {
-        historys.Add(history);
+        historys.Enqueue(history);
+        AutoResetEvent.Set();
     }
 
     public static void addHistory(History history)
@@ -40,27 +45,23 @@ public class HistoryManager
             while (true)
             {
 
-                using(var conn = MYSQLManager.createWebMySqlConnection())
+                using(var conn = MYSQLManager.createLogConnection())
                 {
                     using(var gameMySqlConnection = MYSQLManager.create())
                     {
-                        while (historys.Count > 0)
+                        while (this.historys.TryDequeue(out var history))
                         {
-                            History history = historys.get(0);
-                            historys.remove(history);
-                            conn.Execute("INSERT INTO `history`(`historyId` , `targetId`, `currentTime`, `dateSave`, `log`, `obj`, `charname`) VALUES (NULL, @targetId ,@currentTime,@dateSave,@log,@obj,@charname)", new
+                            conn.Execute("INSERT INTO `history`(`targetId`, `log`, `obj`, `charname`) VALUES (@targetId,@log,@obj,@charname)", new
                             {
                                 targetId = history.user_id,
-                                currentTime = history.currentTime,
-                                dateSave = history.DateTime,
                                 log = history.log,
-                                obj = history.obj,
+                                obj = JsonConvert.SerializeObject(history.obj),
                                 charname = history.charName(gameMySqlConnection)
                             });
                         }
                     }
                 }
-                Thread.Sleep(2000);
+                AutoResetEvent.WaitOne(2000);
             }
         }
         catch (Exception e)

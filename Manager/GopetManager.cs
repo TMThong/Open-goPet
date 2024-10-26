@@ -816,7 +816,7 @@ public class GopetManager
                 petSkill.name = skill.name;
                 petSkill.description = skill.description;
                 petSkill.nClass = skill.nClass;
-                petSkill.IsNeedCard = skill.IsNeedCard;
+                //petSkill.IsNeedCard = skill.IsNeedCard;
                 var listSkillLv = conn.Query(Utilities.Format("SELECT * FROM `skilllv` WHERE skillID = %s ORDER BY lv ASC;", petSkill.skillID));
                 foreach (var item in listSkillLv)
                 {

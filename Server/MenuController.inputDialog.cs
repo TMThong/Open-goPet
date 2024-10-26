@@ -130,6 +130,7 @@ public partial class MenuController
                                             {
                                                 Item itemCopy = new Item(item.itemTemplateId);
                                                 itemCopy.count = count;
+                                                itemCopy.SourcesItem.Add(Gopet.Data.item.ItemSource.COPY_PHI_CHỢ);
                                                 MarketPlace.getKiosk(GopetManager.KIOSK_OTHER).addKioskItem(itemCopy, priceItem, player);
                                                 player.controller.showKiosk(GopetManager.KIOSK_OTHER);
                                                 player.controller.subCountItem(item, count, GopetManager.NORMAL_INVENTORY);
@@ -325,6 +326,7 @@ public partial class MenuController
                                 {
                                     Item item = new Item(itemTemplateId);
                                     item.count = count;
+                                    item.SourcesItem.Add(Gopet.Data.item.ItemSource.BUFF_BẨN);
                                     player.addItemToInventory(item);
                                     player.okDialog(item.getName(player));
                                 }
@@ -336,6 +338,7 @@ public partial class MenuController
                                         {
                                             Item item = new Item(itemTemplateId);
                                             item.count = 1;
+                                            item.SourcesItem.Add(Gopet.Data.item.ItemSource.TỪ_GIFT_CODE);
                                             player.addItemToInventory(item);
 
                                         }

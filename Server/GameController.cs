@@ -3934,6 +3934,7 @@ public class GameController
                         int itemId = giftInfo[1];
                         int count = giftInfo[2];
                         Item item = new Item(itemId);
+                        item.SourcesItem.Add(Gopet.Data.item.ItemSource.TỪ_GIFT_CODE);
                         if (giftInfo.Length >= 4)
                         {
                             item.canTrade = giftInfo[3] == 1;
@@ -3942,7 +3943,7 @@ public class GameController
                         {
                             for (int j = 0; j < count; j++)
                             {
-                                player.addItemToInventory(new Item(itemId));
+                                player.addItemToInventory(new Item(itemId) { SourcesItem = new CopyOnWriteArrayList<Gopet.Data.item.ItemSource>(Gopet.Data.item.ItemSource.TỪ_GIFT_CODE) });
                             }
                             popups.add(new Popup(item.getName(player) + " x" + count));
                         }
@@ -3965,6 +3966,7 @@ public class GameController
                             if (nextBool)
                             {
                                 Item item = new Item(itemId);
+                                item.SourcesItem.Add(Gopet.Data.item.ItemSource.TỪ_GIFT_CODE);
                                 item.count = giftInfo[3];
                                 player.addItemToInventory(item);
                                 popups.add(new Popup(item.getName(player)));
@@ -4027,11 +4029,12 @@ public class GameController
                                 }
                                 if (flag) break;
                                 Item item = new Item(itemId);
+                                item.SourcesItem.Add(Gopet.Data.item.ItemSource.TỪ_GIFT_CODE);
                                 if (!item.getTemp().isStackable)
                                 {
                                     for (int j = 0; j < count; j++)
                                     {
-                                        player.addItemToInventory(new Item(itemId));
+                                        player.addItemToInventory(new Item(itemId) { SourcesItem = new CopyOnWriteArrayList<Gopet.Data.item.ItemSource>(Gopet.Data.item.ItemSource.TỪ_GIFT_CODE) });
                                     }
                                     popups.add(new Popup(item.getName(player) + " x" + count));
                                 }
@@ -4118,6 +4121,7 @@ public class GameController
                             continue;
                         Item item = new Item(itemId);
                         item.count = 1;
+                        item.SourcesItem.Add(Gopet.Data.item.ItemSource.TỪ_GIFT_CODE);
                         if (isInfinity)
                         {
                             player.addItemToInventory(item, GopetManager.SKIN_INVENTORY);
@@ -4335,6 +4339,7 @@ public class GameController
                         }
                         resendPetEquipInfo(item);
                         Item recoveryGem = new Item(itemGem.itemTemplateId);
+                        recoveryGem.SourcesItem.Add(Gopet.Data.item.ItemSource.TỪ_VẬT_PHẨM_KHÁC_SINH_RA);
                         recoveryGem.lvl = itemGem.lvl;
                         recoveryGem.option = itemGem.option;
                         recoveryGem.optionValue = itemGem.optionValue;
@@ -5016,6 +5021,7 @@ public class GameController
     {
         if (player.controller.checkCountItem(itemSell, count) || !itemSell.Template.isStackable)
         {
+            itemSell.SourcesItem.Add(Gopet.Data.item.ItemSource.BÁN_SHOP);
             var inventory = player.playerData.items.Where(p => p.Value.Any(c => c == itemSell));
             if (!inventory.Any())
             {
