@@ -1,4 +1,5 @@
 using GopetHost.Data;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 
 namespace GopetHost
@@ -32,11 +33,20 @@ namespace GopetHost
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseFileServer();
             app.UseRouting();
             app.UseSession();
             app.UseAuthorization();
-
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                ContentTypeProvider = new FileExtensionContentTypeProvider(new Dictionary<string, string>()
+                {
+                    {
+                        ".apk",
+                        "application/vnd.android.package-archive"
+                    }
+                })
+            });
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");

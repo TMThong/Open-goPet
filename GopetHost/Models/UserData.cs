@@ -20,5 +20,7 @@ namespace GopetHost.Models
         public string email { get; set; }
 
         public string phone { get; set; }
+        [NotMapped]
+        public string repassword { get; set; } = string.Empty;
     }
 }
