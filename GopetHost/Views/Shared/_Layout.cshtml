@@ -75,7 +75,7 @@
                     <button class="delete" aria-label="close"></button>
                 </header>
                 <section class="modal-card-body">
-                    <form asp-action="@nameof(GopetHost.Controllers.UserController.Create)" asp-controller="User">
+                    <form class="box" asp-action="@nameof(GopetHost.Controllers.UserController.Create)" asp-controller="User">
                         <div class="field">
                             <label class="label">Tài khoản</label>
                             <div class="control ">
@@ -123,13 +123,13 @@
                 </section>
             </div>
         </div>
-        <div class="message" id="message-box">
+        <div class="message" id="message-box" style="margin: 24px;">
             @if (TempData[TempDataUtil.MESSAGE_TEMP] != null)
             {
                 <article class="message @TempData[TempDataUtil.MESSAGE_TEMP_CLASS_ATT]">
                     <div class="message-header">
                         <p>@TempData[TempDataUtil.MESSAGE_TEMP_TITLE]</p>
-                        <button class="delete closeMessageBox" aria-label="close" data-target="message-box"></button>
+                        <button class="delete" aria-label="close" data-target="message-box" onclick="closeMessage();"></button>
                     </div>
                     <div class="message-body">
                         @TempData[TempDataUtil.MESSAGE_TEMP]
@@ -144,12 +144,17 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer>
+        <hr/>
         <div class="container">
             &copy; 2024 - GopetTae - <a asp-area="" asp-controller="Home" asp-action="Index">Privacy</a>
         </div>
     </footer>
     <script>
+        function closeMessage() {
+            messageBox = document.getElementById("message-box");
+            messageBox.remove();
+        }
         document.addEventListener('DOMContentLoaded', () => {
 
             // Get all "navbar-burger" elements
@@ -200,14 +205,6 @@
 
                 $close.addEventListener('click', () => {
                     closeModal($target);
-                });
-            });
-
-            (document.querySelectorAll('.closeMessageBox') || []).forEach(($close) => {
-                const $target = $close.closest('.message');
-
-                $close.addEventListener('click', () => {
-                    
                 });
             });
 
