@@ -5,7 +5,7 @@ VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gopet", "Gopet.csproj", "{0F996AF0-289B-4A3E-9BFA-B6B0AE056513}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GopetHost", "..\GopetHost\GopetHost.csproj", "{71E4947B-F7D5-4C00-8FED-129876DA8410}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GopetHost", "..\GopetHost\GopetHost.csproj", "{D3A54453-9D13-45D6-A498-2D69C577DA08}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{0F996AF0-289B-4A3E-9BFA-B6B0AE056513}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F996AF0-289B-4A3E-9BFA-B6B0AE056513}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F996AF0-289B-4A3E-9BFA-B6B0AE056513}.Release|Any CPU.Build.0 = Release|Any CPU
-		{71E4947B-F7D5-4C00-8FED-129876DA8410}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{71E4947B-F7D5-4C00-8FED-129876DA8410}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{71E4947B-F7D5-4C00-8FED-129876DA8410}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{71E4947B-F7D5-4C00-8FED-129876DA8410}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3A54453-9D13-45D6-A498-2D69C577DA08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3A54453-9D13-45D6-A498-2D69C577DA08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3A54453-9D13-45D6-A498-2D69C577DA08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3A54453-9D13-45D6-A498-2D69C577DA08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

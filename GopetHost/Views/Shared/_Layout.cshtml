@@ -1,132 +1,154 @@
-﻿<!DOCTYPE html>
-<html>
+﻿@using GopetHost.Ulti
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - GopetHost</title>
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet"> -->
     <link href="https://fonts.googleapis.com/css?family=Questrial&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/GopetHost.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <img class="navbar-item" src="~/Upload/Images/taeLogo.png" />
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-            </a>
-        </div>
+    <header>
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <img class="navbar-item" src="~/Upload/Images/taeLogo.png" />
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
 
-        <div id="navbarBasicExample" class="navbar-menu">
-            <div class="navbar-start">
-                @Html.ActionLink("Trang chủ", nameof(GopetHost.Controllers.HomeController.Index), "Home", new { area = "" }, new { @class = "navbar-item" })
-                <div class="navbar-item">
-                    <div class="buttons">
-                        @Html.ActionLink("Tải game", nameof(GopetHost.Controllers.HomeController.Download), "Home", new { area = "" }, new { @class = "button is-link" })
+            <div id="navbarBasicExample" class="navbar-menu">
+                <div class="navbar-start">
+                    @Html.ActionLink("Trang chủ", nameof(GopetHost.Controllers.HomeController.Index), "Home", new { area = "" }, new { @class = "navbar-item" })
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            @Html.ActionLink("Tải game", nameof(GopetHost.Controllers.HomeController.Download), "Home", new { area = "" }, new { @class = "button is-link" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a class="button is-primary js-modal-trigger" data-target="singupModal">
+                                <strong>Đăng ký</strong>
+                            </a>
+                            <a class="button is-light js-modal-trigger" data-target="loginModal">
+                                Đăng nhập
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="navbar-end">
-                <div class="navbar-item">
+        </nav>
+        <div class="modal" id="loginModal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Đăng nhập vào gopettae</p>
+                    <button class="delete" aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+                </section>
+                <footer class="modal-card-foot">
                     <div class="buttons">
-                        <a class="button is-primary js-modal-trigger" data-target="singupModal">
-                            <strong>Đăng ký</strong>
-                        </a>
-                        <a class="button is-light js-modal-trigger" data-target="loginModal">
-                            Đăng nhập
-                        </a>
+                        <button class="button is-light">Đăng nhập</button>
+                        <button class="button">Huỷ</button>
                     </div>
-                </div>
+                </footer>
             </div>
         </div>
-    </nav>
-    <div class="modal" id="loginModal">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Đăng nhập vào gopettae</p>
-                <button class="delete" aria-label="close"></button>
-            </header>
-            <section class="modal-card-body">
-                 
-            </section>
-            <footer class="modal-card-foot">
-                <div class="buttons">
-                    <button class="button is-light">Đăng nhập</button>
-                    <button class="button">Huỷ</button>
-                </div>
-            </footer>
+        <div class="modal" id="singupModal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Đăng ký tài khoản gopet</p>
+                    <button class="delete" aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+                    <form asp-action="@nameof(GopetHost.Controllers.UserController.Create)" asp-controller="User">
+                        <div class="field">
+                            <label class="label">Tài khoản</label>
+                            <div class="control ">
+                                <input name="username" class="input is-success" type="text" placeholder="Tên tài khoản" value="">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Mật khẩu</label>
+                            <div class="control ">
+                                <input name="password" class="input is-warning" type="password" placeholder="Mật khẩu" value="">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Xác nhận mật khẩu</label>
+                            <div class="control ">
+                                <input name="repassword" class="input is-warning" type="password" placeholder="Nhập lại mật khẩu" value="">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Email</label>
+                            <div class="control ">
+                                <input name="email" class="input is-danger" type="email" placeholder="Thư điện tử" value="hello@gmail.com">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Số điện thoại</label>
+                            <div class="control ">
+                                <input name="phone" class="input is-focused" type="tel" placeholder="Số điện thoại" value="">
+                            </div>
+                        </div>
+
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <button class="button is-link">Đăng ký</button>
+                            </div>
+                            <div class="control">
+                                <button class="button is-link is-light">Huỷ</button>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+            </div>
         </div>
-    </div>
-    <div class="modal" id="singupModal">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Đăng ký tài khoản gopet</p>
-                <button class="delete" aria-label="close"></button>
-            </header>
-            <section class="modal-card-body">
-                <form>
-                    <div class="field">
-                        <label class="label">Tài khoản</label>
-                        <div class="control ">
-                            <input name="username" class="input is-success" type="text" placeholder="Tên tài khoản" value="">
-                        </div>
+        <div class="message" id="message-box">
+            @if (TempData[TempDataUtil.MESSAGE_TEMP] != null)
+            {
+                <article class="message @TempData[TempDataUtil.MESSAGE_TEMP_CLASS_ATT]">
+                    <div class="message-header">
+                        <p>@TempData[TempDataUtil.MESSAGE_TEMP_TITLE]</p>
+                        <button class="delete closeMessageBox" aria-label="close" data-target="message-box"></button>
                     </div>
-
-                    <div class="field">
-                        <label class="label">Mật khẩu</label>
-                        <div class="control ">
-                            <input name="password" class="input is-warning" type="password" placeholder="Mật khẩu" value="">
-                        </div>
+                    <div class="message-body">
+                        @TempData[TempDataUtil.MESSAGE_TEMP]
                     </div>
-
-                    <div class="field">
-                        <label class="label">Xác nhận mật khẩu</label>
-                        <div class="control ">
-                            <input name="repassword" class="input is-warning" type="password" placeholder="Nhập lại mật khẩu" value="">
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label class="label">Email</label>
-                        <div class="control ">
-                            <input name="email" class="input is-danger" type="email" placeholder="Thư điện tử" value="hello@gmail.com">
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label class="label">Số điện thoại</label>
-                        <div class="control ">
-                            <input name="email" class="input is-focused" type="tel" placeholder="Số điện thoại" value="">
-                        </div>
-                    </div>
-
-                    <div class="field is-grouped">
-                        <div class="control">
-                            <button class="button is-link">Đăng ký</button>
-                        </div>
-                        <div class="control">
-                            <button class="button is-link is-light">Huỷ</button>
-                        </div>
-                    </div>
-                </form>
-            </section>
+                </article>
+            }
         </div>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - goPet TAE</p>
-        </footer>
-    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - GopetTae - <a asp-area="" asp-controller="Home" asp-action="Index">Privacy</a>
+        </div>
+    </footer>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
@@ -181,6 +203,14 @@
                 });
             });
 
+            (document.querySelectorAll('.closeMessageBox') || []).forEach(($close) => {
+                const $target = $close.closest('.message');
+
+                $close.addEventListener('click', () => {
+                    
+                });
+            });
+
             // Add a keyboard event to close all modals
             document.addEventListener('keydown', (event) => {
                 if (event.key === "Escape") {
@@ -188,6 +218,10 @@
                 }
             });
         });
+        
     </script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
