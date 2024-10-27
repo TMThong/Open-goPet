@@ -16,6 +16,22 @@ namespace GopetHost
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            this.
+        }
+
+        protected void Application_Error(object sender, EventArgs e)
+        {
+            // An error has occured on a .Net page.
+            var serverError = Server.GetLastError() as HttpException;
+
+            if (serverError != null)
+            {
+                if (serverError.GetHttpCode() == 404)
+                {
+                    Server.ClearError();
+                    Response.Redirect("/Home/ErrorNotFound");
+                }
+            }
         }
     }
 }
