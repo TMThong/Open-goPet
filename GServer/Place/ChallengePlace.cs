@@ -180,9 +180,9 @@ public class ChallengePlace : GopetPlace
             foreach (Player player in players)
             {
                 player.controller.getTaskCalculator().onNextChellengePlace(this.turn);
+                this.add(player);
             }
             placeTime = Utilities.CurrentTimeMillis + TIME_ATTACK;
-            this.sendMob();
             this.sendTimePlace();
             this.showBigTextEff(string.Format("LƯỢT {0}", turn));
         }

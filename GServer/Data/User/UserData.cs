@@ -31,7 +31,7 @@ public class UserData
     {
         using (var conn = MYSQLManager.createWebMySqlConnection())
         {
-            conn.Execute("UPDATE `user` SET `user`.`isBaned` = @isBaned , `user`.`banReason` = @banReason, `user`.`banTime` = @banTime WHERE user_id = @user_id;" , new { isBaned = typeBan , banTime  = timeBan, banReason  = reason, user_id  = user_id });
+            conn.Execute("UPDATE `user` SET `user`.`isBaned` = @isBaned , `user`.`banReason` = @banReason, `user`.`banTime` = @banTime WHERE user_id = @user_id;", new { isBaned = typeBan, banTime = timeBan, banReason = reason, user_id = user_id });
         }
     }
 
@@ -50,11 +50,9 @@ public class UserData
 
     public void mineCoin(int coin, int myCOin)
     {
-
         using (var conn = MYSQLManager.createWebMySqlConnection())
         {
-            conn.Execute(Utilities.Format("INSERT INTO `dongtien`(`username`, `sotientruoc`, `sotienthaydoi`, `sotiensau`, `thoigian`, `noidung`) VALUES ('%s', %s, %s, %s, '%s' , '%s')", username, myCOin, coin, myCOin - coin, Utilities.ToDateString(Utilities.GetCurrentDate()), Utilities.Format("Đổi gold trên game với giá %svnđ", Utilities.FormatNumber(coin))));
-            conn.Execute(Utilities.Format("UPDATE `user` set coin = coin - %s where user_id = %s", coin, this.user_id));
+            conn.Execute("UPDATE `user` set coin = coin - @coin where user_id = @user_id", new { coin = coin, user_id = user_id });
         }
     }
 }

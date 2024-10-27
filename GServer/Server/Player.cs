@@ -395,180 +395,191 @@ Thread.Sleep(1000);
         }
         using (MySqlConnection conn = MYSQLManager.createWebMySqlConnection())
         {
-            UserData userData = conn.QueryFirstOrDefault<UserData>("SELECT * FROM `user` where username = @username && password = @password",
-                new { username = username, password = password });
-
-            if (userData != null)
+            try
             {
-                this.user = userData;
-                if (user.role == UserData.ROLE_NON_ACTIVE)
+                var LockKey = conn.QueryFirstOrDefault("SELECT GET_LOCK(@username, 20) as hasLock;", new { username = "login_lock_" + username });
+                UserData userData = conn.QueryFirstOrDefault<UserData>("SELECT * FROM `user` where username = @username && password = @password",
+                new { username = username, password = password });
+                if (userData != null && LockKey != null)
                 {
-                    redDialog(Language.AccountNonAcitve);
-                    return;
-                }
+                    this.user = userData;
+                    if (user.role == UserData.ROLE_NON_ACTIVE)
+                    {
+                        redDialog(Language.AccountNonAcitve);
+                        return;
+                    }
 
-                switch (user.isBaned)
-                {
-                    case UserData.BAN_INFINITE:
-                        {
-                            this.redDialog(string.Format(Language.AccountBanInfinity, user.banReason));
-                            Thread.Sleep(100);
-                            this.session.Close();
-                            conn.Close();
-                            return;
-                        }
-                    case UserData.BAN_TIME:
-                        {
-                            if (Utilities.CurrentTimeMillis < user.banTime)
+                    switch (user.isBaned)
+                    {
+                        case UserData.BAN_INFINITE:
                             {
-                                long deltaTime = user.banTime - Utilities.CurrentTimeMillis;
-                                int hours = (int)(deltaTime / 1000 / 60 / 60);
-                                int min = (int)((deltaTime - (hours * 1000 * 60 * 60)) / 1000 / 60);
-                                this.redDialog(string.Format(Language.AccountBanTime, user.banReason, hours, min));
+                                this.redDialog(string.Format(Language.AccountBanInfinity, user.banReason));
                                 Thread.Sleep(100);
                                 this.session.Close();
                                 conn.Close();
                                 return;
                             }
-                            else
+                        case UserData.BAN_TIME:
                             {
-                                user.isBaned = UserData.BAN_NONE;
-                                conn.Execute("update user set isBaned = DEFAULT where user_id = @user_id", new { user_id = user.user_id });
-                            }
-                            break;
-                        }
-                }
-                Player player2 = PlayerManager.get(user.user_id);
-                if (player2 != null)
-                {
-                    player2.redDialog(Language.AccountLogingDuplicate);
-                    this.redDialog(Language.AccountLogingDuplicate);
-                    player2.session.Close();
-                    this.session.Close();
-                    return;
-                }
-
-                long timeWait = PlayerManager.GetTimeMillisWaitLogin(user.user_id);
-                if (timeWait > 0)
-                {
-                    this.redDialog(string.Format(Language.WaitLoging, timeWait / 1000));
-                    Thread.Sleep(500);
-                    this.session.Close();
-                    return;
-                }
-                using (MySqlConnection gameconn = MYSQLManager.create())
-                {
-                    playerData = gameconn.QueryFirstOrDefault<PlayerData>("SELECT * FROM `player` where user_id = " + user.user_id);
-                    if (playerData != null)
-                    {
-                        PlayerManager.put(this);
-                        var connList = gameconn.Query<FriendRequest>("SELECT * FROM `request_add_friend` WHERE `request_add_friend`.`targetId` = @userId;", new { userId = user.user_id });
-                        if (connList.Any())
-                        {
-                            foreach (var item in connList)
-                            {
-                                if (!playerData.BlockFriendLists.Contains(item.userId) && !playerData.RequestAddFriends.Contains(item.userId) && !playerData.ListFriends.Contains(item.userId))
+                                if (Utilities.CurrentTimeMillis < user.banTime)
                                 {
-                                    playerData.RequestAddFriends.Add(item.userId);
+                                    long deltaTime = user.banTime - Utilities.CurrentTimeMillis;
+                                    int hours = (int)(deltaTime / 1000 / 60 / 60);
+                                    int min = (int)((deltaTime - (hours * 1000 * 60 * 60)) / 1000 / 60);
+                                    this.redDialog(string.Format(Language.AccountBanTime, user.banReason, hours, min));
+                                    Thread.Sleep(100);
+                                    this.session.Close();
+                                    conn.Close();
+                                    return;
                                 }
-
-                                gameconn.Execute("DELETE FROM `request_add_friend` WHERE `request_add_friend`.`userId` = @userId AND `request_add_friend`.`targetId` = @targetId;", item);
+                                else
+                                {
+                                    user.isBaned = UserData.BAN_NONE;
+                                    conn.Execute("update user set isBaned = DEFAULT where user_id = @user_id", new { user_id = user.user_id });
+                                }
+                                break;
                             }
-                        }
-
-                        var letterList = gameconn.Query<Letter>("SELECT * FROM `letter` WHERE targetId = @targetId;", new { targetId = playerData.user_id });
-                        if (letterList.Any())
-                        {
-                            foreach (var letter in letterList)
-                            {
-                                playerData.addLetter(letter);
-                            }
-                            gameconn.Execute("DELETE FROM `letter` WHERE `letter`.`targetId` = @targetId", new { targetId = playerData.user_id });
-                        }
-
-                        foreach (var item in playerData.TrashItemBackup.Where(t => t.Key.AddDays(3) < DateTime.Now))
-                        {
-                            playerData.TrashItemBackup.Remove(item.Key);
-                        }
                     }
-                    var kioskList = gameconn.Query("SELECT * FROM `kiosk_recovery` where user_id = @user_id", new { user_id = this.user.user_id });
-                    if (kioskList.Any())
+                    Player player2 = PlayerManager.get(user.user_id);
+                    if (player2 != null)
                     {
-                        foreach (var item in kioskList)
-                        {
-                            SellItem sellItem = JsonConvert.DeserializeObject<SellItem>(item.item);
-                            if (sellItem.pet == null)
-                            {
-                                addItemToInventory(sellItem.ItemSell);
-                            }
-                            else
-                            {
-                                playerData.addPet(sellItem.pet, this);
-                            }
-                        }
+                        player2.redDialog(Language.AccountLogingDuplicate);
+                        this.redDialog(Language.AccountLogingDuplicate);
+                        player2.session.Close();
+                        this.session.Close();
+                        return;
                     }
-                    gameconn.Execute("DELETE FROM `kiosk_recovery` where user_id = @user_id", new { user_id = this.user.user_id });
-                    loginOK();
-                    controller.LoadMap();
-                    controller.updateAvatar();
-                    if (playerData != null)
-                    {
-                        controller.updateUserInfo();
-                        showBanner(Language.WarningPlayerWhenLogin);
-                        getPet()?.applyInfo(this);
-                        if (ServerSetting.instance.isOnlyAdminLogin)
-                        {
-                            if (!playerData.isAdmin)
-                            {
-                                redDialog(Language.ServerOnlyForAdmin);
-                                session.Close();
-                                return;
-                            }
-                        }
 
-                        foreach (var taskData in playerData.task)
-                        {
-                            TaskTemplate taskTemp = GopetManager.taskTemplate[taskData.taskTemplateId];
-                            if (!playerData.wasTask.ContainsZ(taskTemp.taskNeed) && taskTemp.type == TaskCalculator.TASK_TYPE_MAIN)
-                            {
-                                playerData.task.remove(taskData);
-                                playerData.tasking.remove(taskData.taskTemplateId);
-                            }
-                        }
-
-                        int goldPlus = 0;
-                        JArrayList<String> listIdRemove = new();
-                        var exhangeGoldData = gameconn.Query("SELECT * FROM `exchange_gold` WHERE `user_id` = @user_id", new { user_id = this.user.user_id });
-                        foreach (var item in exhangeGoldData)
-                        {
-                            String id = item.id;
-                            int g = item.gold;
-                            addGold(g);
-                            listIdRemove.add(id);
-                            goldPlus += g;
-                        }
-                        if (!listIdRemove.isEmpty())
-                        {
-                            foreach (String uuidString in listIdRemove)
-                            {
-                                gameconn.Execute("DELETE FROM `exchange_gold` WHERE `id`  = @id AND `user_id` = @user_id", new { id = uuidString, user_id = this.user.user_id });
-                            }
-                        }
-                        if (goldPlus > 0)
-                        {
-                            okDialog(string.Format(Language.GetGoldByCard, Utilities.FormatNumber(goldPlus)));
-                        }
-                    }
-                    else
+                    long timeWait = PlayerManager.GetTimeMillisWaitLogin(user.user_id);
+                    if (timeWait > 0)
                     {
-                        controller.createChar();
+                        this.redDialog(string.Format(Language.WaitLoging, timeWait / 1000));
+                        Thread.Sleep(500);
+                        this.session.Close();
+                        return;
                     }
-                    controller.getTaskCalculator().update();
+                    using (MySqlConnection gameconn = MYSQLManager.create())
+                    {
+                        playerData = gameconn.QueryFirstOrDefault<PlayerData>("SELECT * FROM `player` where user_id = " + user.user_id);
+                        if (playerData != null)
+                        {
+                            PlayerManager.put(this);
+                            var connList = gameconn.Query<FriendRequest>("SELECT * FROM `request_add_friend` WHERE `request_add_friend`.`targetId` = @userId;", new { userId = user.user_id });
+                            if (connList.Any())
+                            {
+                                foreach (var item in connList)
+                                {
+                                    if (!playerData.BlockFriendLists.Contains(item.userId) && !playerData.RequestAddFriends.Contains(item.userId) && !playerData.ListFriends.Contains(item.userId))
+                                    {
+                                        playerData.RequestAddFriends.Add(item.userId);
+                                    }
+
+                                    gameconn.Execute("DELETE FROM `request_add_friend` WHERE `request_add_friend`.`userId` = @userId AND `request_add_friend`.`targetId` = @targetId;", item);
+                                }
+                            }
+
+                            var letterList = gameconn.Query<Letter>("SELECT * FROM `letter` WHERE targetId = @targetId;", new { targetId = playerData.user_id });
+                            if (letterList.Any())
+                            {
+                                foreach (var letter in letterList)
+                                {
+                                    playerData.addLetter(letter);
+                                }
+                                gameconn.Execute("DELETE FROM `letter` WHERE `letter`.`targetId` = @targetId", new { targetId = playerData.user_id });
+                            }
+
+                            foreach (var item in playerData.TrashItemBackup.Where(t => t.Key.AddDays(3) < DateTime.Now))
+                            {
+                                playerData.TrashItemBackup.Remove(item.Key);
+                            }
+                        }
+                        var kioskList = gameconn.Query("SELECT * FROM `kiosk_recovery` where user_id = @user_id", new { user_id = this.user.user_id });
+                        if (kioskList.Any())
+                        {
+                            foreach (var item in kioskList)
+                            {
+                                SellItem sellItem = JsonConvert.DeserializeObject<SellItem>(item.item);
+                                if (sellItem.pet == null)
+                                {
+                                    addItemToInventory(sellItem.ItemSell);
+                                }
+                                else
+                                {
+                                    playerData.addPet(sellItem.pet, this);
+                                }
+                            }
+                        }
+                        gameconn.Execute("DELETE FROM `kiosk_recovery` where user_id = @user_id", new { user_id = this.user.user_id });
+                        loginOK();
+                        controller.LoadMap();
+                        controller.updateAvatar();
+                        if (playerData != null)
+                        {
+                            controller.updateUserInfo();
+                            showBanner(Language.WarningPlayerWhenLogin);
+                            getPet()?.applyInfo(this);
+                            if (ServerSetting.instance.isOnlyAdminLogin)
+                            {
+                                if (!playerData.isAdmin)
+                                {
+                                    redDialog(Language.ServerOnlyForAdmin);
+                                    session.Close();
+                                    return;
+                                }
+                            }
+
+                            foreach (var taskData in playerData.task)
+                            {
+                                TaskTemplate taskTemp = GopetManager.taskTemplate[taskData.taskTemplateId];
+                                if (!playerData.wasTask.ContainsZ(taskTemp.taskNeed) && taskTemp.type == TaskCalculator.TASK_TYPE_MAIN)
+                                {
+                                    playerData.task.remove(taskData);
+                                    playerData.tasking.remove(taskData.taskTemplateId);
+                                }
+                            }
+
+                            int goldPlus = 0;
+                            JArrayList<String> listIdRemove = new();
+                            var exhangeGoldData = gameconn.Query("SELECT * FROM `exchange_gold` WHERE `user_id` = @user_id", new { user_id = this.user.user_id });
+                            foreach (var item in exhangeGoldData)
+                            {
+                                String id = item.id;
+                                int g = item.gold;
+                                addGold(g);
+                                listIdRemove.add(id);
+                                goldPlus += g;
+                            }
+                            if (!listIdRemove.isEmpty())
+                            {
+                                foreach (String uuidString in listIdRemove)
+                                {
+                                    gameconn.Execute("DELETE FROM `exchange_gold` WHERE `id`  = @id AND `user_id` = @user_id", new { id = uuidString, user_id = this.user.user_id });
+                                }
+                            }
+                            if (goldPlus > 0)
+                            {
+                                okDialog(string.Format(Language.GetGoldByCard, Utilities.FormatNumber(goldPlus)));
+                            }
+                        }
+                        else
+                        {
+                            controller.createChar();
+                        }
+                        controller.getTaskCalculator().update();
+                    }
+                }
+                else
+                {
+                    loginFailed(Language.IncorrectUsePassword);
                 }
             }
-            else
+            catch(Exception e)
             {
-                loginFailed(Language.IncorrectUsePassword);
+                e.printStackTrace();
+            }
+            finally
+            {
+                conn.Execute("DO RELEASE_LOCK(@username);", new { username = "login_lock_" + username });
             }
         }
     }

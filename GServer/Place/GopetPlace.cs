@@ -57,7 +57,7 @@ public class GopetPlace : Place
         }
         player.controller.setLastTimeKillMob(0L);
         sendNewPlayer(player);
-        players.Add(player);
+        players.addIfAbsent(player);
         player.setPlace(this);
         loadInfo(player);
         sendGameObj(player);

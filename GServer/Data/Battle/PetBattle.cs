@@ -1460,19 +1460,11 @@ namespace Gopet.Battle
                 {
                     if (pet != null)
                     {
-                        if (activePet.hp - damagePhandoan <= 0)
-                        {
-                            damagePhandoan = activePet.hp - 1;
-                        }
                         activePet.subHp(damagePhandoan);
                         turnEffects.add(new TurnEffect(TurnEffect.NONE, mob.getMobId(), PetSkill.GetTPhanDonSkill(activePet), -damagePhandoan, 0));
                     }
                     else
                     {
-                        if (mob.hp - damagePhandoan <= 0)
-                        {
-                            damagePhandoan = mob.hp - 1;
-                        }
                         mob.addHp(damagePhandoan, activePlayer);
                         turnEffects.add(new TurnEffect(TurnEffect.NONE, activePlayer.playerData.user_id, PetSkill.GetTPhanDonSkill(mob), -damagePhandoan, 0));
                     }
@@ -1481,10 +1473,6 @@ namespace Gopet.Battle
                 {
                     if (pet != null)
                     {
-                        if (getNonPet().hp - damagePhandoan <= 0)
-                        {
-                            damagePhandoan = getNonPet().hp - 1;
-                        }
                         getNonPet().subHp(damagePhandoan);
                         turnEffects.add(new TurnEffect(TurnEffect.NONE, getFocus(), PetSkill.GetTPhanDonSkill(getNonPet()), -damagePhandoan, 0));
                     }

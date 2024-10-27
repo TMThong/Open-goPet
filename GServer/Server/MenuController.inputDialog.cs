@@ -549,16 +549,16 @@ public partial class MenuController
                     {
                         if (player.checkIsAdmin())
                         {
-                            String name = reader.readString(0);
+                            string name = reader.readString(0);
                             int coin = reader.readInt(1);
                             using (var conn = MYSQLManager.createWebMySqlConnection())
                             {
-
                                 UserData userData = conn.QueryFirstOrDefault<UserData>("SELECT * from user where username = @username", new { coin = conn, username = name });
                                 if (userData != null)
                                 {
                                     userData.mineCoin(-coin, userData.getCoin());
                                     player.okDialog($"Thành công người chơi đó hiện có {Utilities.FormatNumber(userData.getCoin())} vnd");
+                                    HistoryManager.addHistory(new History(player).setLog($"Cộng tiền {coin.ToString("###,###,###")}đ cho nhân vật {name}").setObj(new { Name = name, Coin = coin }));
                                 }
                                 else
                                 {
