@@ -1,4 +1,4 @@
-using GopetHost.Data;
+﻿using GopetHost.Data;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,7 +12,11 @@ namespace GopetHost
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            var AppConnectionStr = builder.Configuration.GetConnectionString("AppConnectionStr");
+#if DEBUG
+            var AppConnectionStr = builder.Configuration.GetConnectionString("AppConnectionStrLocal");
+#elif !DEBUG
+            var AppConnectionStr = builder.Configuration.GetConnectionString("AppConnectionStrLocal");
+#endif
             builder.Services.AddDbContext<AppDatabaseContext>(options => options.UseMySql(AppConnectionStr, ServerVersion.AutoDetect(AppConnectionStr)));
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
@@ -30,7 +34,18 @@ namespace GopetHost
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.Use(async (ctx, next) =>
+            {
+                await next();
 
+                if (ctx.Response.StatusCode == 404)
+                {
+                    string originalPath = ctx.Request.Path.Value;
+                    ctx.Items["originalPath"] = originalPath;
+                    ctx.Request.Path = "/Home/PageNotFound";
+                    await next();
+                }
+            });
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseFileServer();
@@ -47,6 +62,7 @@ namespace GopetHost
                     }
                 })
             });
+            
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");

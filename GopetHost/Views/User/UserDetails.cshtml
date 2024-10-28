@@ -1,0 +1,62 @@
+﻿@using GopetHost.Controllers
+@model GopetHost.Models.UserData
+
+@{
+    ViewData["Title"] = "Thông tin tài khoản";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="box">
+    <div class="field">
+        <label class="label">Tên tài khoản</label>
+        <div class="control">
+            <input class="input is-success" type="text" value="@Model.username" readonly>
+        </div>
+    </div>
+    <div class="field">
+        <label class="label">Tình trạng tài khoản</label>
+        <div class="control">
+            @if (Model.role == 0)
+            {
+                <input class="input is-link" type="text" value="Chưa kích hoạt" readonly>
+                <br />
+                <a asp-action="@nameof(UserController.Active)" asp-controller="User" class="button is-danger is-dark">Kích hoạt ngay</a>
+            }
+            else
+            {
+                <input class="input is-link" type="text" value="Đã kích hoạt" readonly>
+            }
+        </div>
+    </div>
+    <div class="field">
+        <label class="label">Số tiền hiện có</label>
+        <div class="control">
+            @if (Model.coin != 0)
+            {
+                <input class="input is-primary" type="text" value="@Model.coin.ToString("###,###,###") vnđ" readonly>
+            }
+            else
+            {
+                <input class="input is-primary" type="text" value="0 vnđ" readonly>
+            }
+        </div>
+    </div>
+    <div class="field">
+        <label class="label">Email</label>
+        <div class="control">
+            <input class="input is-info" type="email" value="@Model.email" readonly>
+        </div>
+    </div>
+    <div class="field">
+        <label class="label">Số điện thoại</label>
+        <div class="control">
+            <input class="input is-link " type="tel" value="@Model.phone" readonly>
+        </div>
+    </div>
+    <div class="field">
+        <label class="label">Ngày tạo</label>
+        <div class="control">
+            <input class="input is-link " type="datetime" value="@Model.create_date" readonly>
+        </div>
+    </div>
+</div>

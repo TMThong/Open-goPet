@@ -1,4 +1,5 @@
-﻿@using GopetHost.Ulti
+﻿@using GopetHost.Controllers
+@using GopetHost.Ulti
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,20 +35,56 @@
                             @Html.ActionLink("Tải game", nameof(GopetHost.Controllers.HomeController.Download), "Home", new { area = "" }, new { @class = "button is-link" })
                         </div>
                     </div>
+                    @if (Context.IsLoginOK())
+                    {
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link">
+                                Nạp tiền
+                            </a>
+                            <div class="navbar-dropdown">
+                                <a asp-controller="User" asp-action="@nameof(UserController.NapTheCao)" class="navbar-item">
+                                    Nạp thẻ cào
+                                </a>
+                                <a asp-controller="User" asp-action="@nameof(UserController.NapMOMO)" class="navbar-item">
+                                    Nạp MOMO
+                                </a>
+                                <a asp-controller="User" asp-action="@nameof(UserController.NapATM)" class="navbar-item">
+                                    Nạp ATM
+                                </a>
+                            </div>
+                        </div>
+                    }
                 </div>
-
-                <div class="navbar-end">
-                    <div class="navbar-item">
-                        <div class="buttons">
-                            <a class="button is-primary js-modal-trigger" data-target="singupModal">
-                                <strong>Đăng ký</strong>
-                            </a>
-                            <a class="button is-light js-modal-trigger" data-target="loginModal">
-                                Đăng nhập
-                            </a>
+                @if (!Context.IsLoginOK())
+                {
+                    <div class="navbar-end">
+                        <div class="navbar-item">
+                            <div class="buttons">
+                                <a class="button is-primary js-modal-trigger" data-target="singupModal">
+                                    <strong>Đăng ký</strong>
+                                </a>
+                                <a class="button is-light js-modal-trigger" data-target="loginModal">
+                                    Đăng nhập
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
+                else 
+                {
+                    <div class="navbar-end">
+                        <div class="navbar-item">
+                            <div class="buttons">
+                                <a asp-controller="User" asp-action="@nameof(UserController.UserDetails)" class="button is-danger is-light">
+                                    Tài khoản
+                                </a>
+                                <a asp-controller="User" asp-action="@nameof(UserController.LogOut)" class="button is-primary is-light">
+                                    Đăng xuất
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
         </nav>
         <div class="modal" id="loginModal">
@@ -58,13 +95,29 @@
                     <button class="delete" aria-label="close"></button>
                 </header>
                 <section class="modal-card-body">
+                    <form class="box" asp-action="@nameof(GopetHost.Controllers.UserController.Login)" asp-controller="User">
+                        <div class="field">
+                            <label class="label">Tài khoản</label>
+                            <div class="control ">
+                                <input name="username" class="input is-success" type="text" placeholder="Tên tài khoản" value="">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Mật khẩu</label>
+                            <div class="control ">
+                                <input name="password" class="input is-warning" type="password" placeholder="Mật khẩu" value="">
+                            </div>
+                        </div>
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <button class="button is-white">Đăng nhập</button>
+                            </div>
+                            <div class="control">
+                                <button class="button is-link is-light">Huỷ</button>
+                            </div>
+                        </div>
+                    </form>
                 </section>
-                <footer class="modal-card-foot">
-                    <div class="buttons">
-                        <button class="button is-light">Đăng nhập</button>
-                        <button class="button">Huỷ</button>
-                    </div>
-                </footer>
             </div>
         </div>
         <div class="modal" id="singupModal">

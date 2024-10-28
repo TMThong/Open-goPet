@@ -1,5 +1,6 @@
 ﻿using GopetHost.Models;
 using Microsoft.AspNetCore.Mvc;
+using MySql.Data.MySqlClient;
 
 namespace GopetHost.Ulti
 {
@@ -7,12 +8,17 @@ namespace GopetHost.Ulti
     { 
         public static bool IsLoginOK(this ControllerBase controller)
         {
-            return !string.IsNullOrEmpty(controller.HttpContext.Session.GetString(nameof(UserData.username)));
+            return controller.HttpContext.Session.GetInt32(nameof(UserData.user_id)).HasValue;
         }
 
-        public static void SetLoginOK(this ControllerBase controller, string username)
+        public static bool IsLoginOK(this HttpContext context)
         {
-            controller.HttpContext.Session.SetString(nameof(UserData.username), username);
+            return context.Session.GetInt32(nameof(UserData.user_id)).HasValue;
+        }
+
+        public static void SetLoginOK(this ControllerBase controller, UserData user)
+        {
+            controller.HttpContext.Session.SetInt32(nameof(UserData.user_id), user.user_id);
         }
 
         public static void LogOut(this ControllerBase controller)

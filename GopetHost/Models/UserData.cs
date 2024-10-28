@@ -11,7 +11,6 @@ namespace GopetHost.Models
     public class UserData
     {
         [Key]
-        [Required]
         public int user_id { get; set; }
         [Required]
         public string username { get; set; }
@@ -22,5 +21,15 @@ namespace GopetHost.Models
         public string phone { get; set; }
         [NotMapped]
         public string repassword { get; set; } = string.Empty;
+
+        public int role { get; set; }
+
+        public int coin { get; set; }
+
+        public int isBaned { get; set; }
+
+        public DateTime create_date { get; set; }
+
+        
     }
 }
