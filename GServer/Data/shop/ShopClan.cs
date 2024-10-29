@@ -11,7 +11,6 @@ public class ShopClan : ShopTemplate
 
     public ShopClan(Clan clan_) : base(MenuController.SHOP_CLAN)
     {
-
         this.clan = clan_;
         this.refresh();
     }

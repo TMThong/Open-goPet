@@ -1,5 +1,8 @@
-﻿using GopetHost.Ulti;
+﻿using GopetHost.Data;
+using GopetHost.Models;
+using GopetHost.Ulti;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GopetHost.Controllers
 {
@@ -27,6 +30,12 @@ namespace GopetHost.Controllers
             ShowMessage("Không thể dùng chức năng này", "Do bạn chưa đăng nhập nên không thể sử dụng chức năng này!", "is-danger");
             result = RedirectToHome();
             return true;
+        }
+
+        public UserData GetUser(AppDatabaseContext _context)
+        {
+            UserData userData = _context.Users.Where(x => x.user_id == this.HttpContext.Session.GetInt32(nameof(UserData.user_id))).FirstOrDefault();
+            return userData;
         }
     }
 }

@@ -1,0 +1,151 @@
+﻿using GopetHost.Data;
+using GopetHost.Models;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GopetHost.Controllers
+{
+    public class AdminController : HelperController
+    {
+        public AppDatabaseContext _context;
+
+        public AdminController(AppDatabaseContext context)
+        {
+            _context = context;
+        }
+
+        public IActionResult Index()
+        {
+            if (ReturnIfNonAdmin(out IActionResult actionResult))
+            {
+                return actionResult;
+            }
+            return View();
+        }
+
+        public bool ReturnIfNonAdmin(out IActionResult actionResult)
+        {
+            actionResult = null;
+            UserData userData = GetUser(_context);
+            if (userData == null)
+            {
+                actionResult = RedirectToHome();
+                return true;
+            }
+            else if (!userData.IsAdmin)
+            {
+                actionResult = RedirectToHome();
+                return true;
+            }
+            return false;
+        }
+
+        public IActionResult Setting()
+        {
+            if (ReturnIfNonAdmin(out IActionResult actionResult))
+            {
+                return actionResult;
+            }
+            return View(this._context.WebConfigs.ToArray());
+        }
+
+        public IActionResult EditSetting(string Key, string Value)
+        {
+            if (ReturnIfNonAdmin(out IActionResult actionResult))
+            {
+                return actionResult;
+            }
+            var config = _context.WebConfigs.Where(x => x.Key == Key).FirstOrDefault();
+            if (config != null)
+            {
+                config.Value = Value;
+                _context.SaveChanges();
+            }
+            return RedirectToAction(nameof(Setting));
+        }
+
+        public IActionResult AddMomo()
+        {
+            if (ReturnIfNonAdmin(out IActionResult actionResult))
+            {
+                return actionResult;
+            }
+            return View();
+        }
+        public IActionResult AddMomoModel([Bind("BankId,Name,Logo,Token")] BankModel bankModel)
+        {
+            bankModel.Type = BankModel.BankType.MOMO;
+            if (ReturnIfNonAdmin(out IActionResult actionResult))
+            {
+                return actionResult;
+            }
+            if (ModelState.IsValid)
+            {
+                _context.Banks.Add(bankModel);
+                _context.SaveChanges();
+                ShowMessage("Thêm thành công", "Bạn vui lòng chú ý trạng thái tài khoản sau khi thêm nhé.", "is-success");
+            }
+            else
+            {
+                ShowMessage("Không thể thêm", "Do bạn không điền đủ các trường thông tin.", "is-danger");
+                return RedirectToAction(nameof(AddMomo));
+            }
+            return RedirectToAction(nameof(ManagerMomo));
+        }
+
+        public IActionResult RemoveMomoModel(int Id)
+        {
+            if (ReturnIfNonAdmin(out IActionResult actionResult))
+            {
+                return actionResult;
+            }
+            _context.Banks.Remove(_context.Banks.Where(x => x.Id == Id).FirstOrDefault());
+            _context.SaveChanges();
+            return RedirectToAction(nameof(ManagerMomo));
+        }
+
+        public IActionResult ManagerMomo()
+        {
+            if (ReturnIfNonAdmin(out IActionResult actionResult))
+            {
+                return actionResult;
+            }
+            return View(_context.Banks.Where(x => x.Type == BankModel.BankType.MOMO));
+        }
+
+        public IActionResult HistoryMomo()
+        {
+            if (ReturnIfNonAdmin(out IActionResult actionResult))
+            {
+                return actionResult;
+            }
+            return View();
+        }
+
+        public IActionResult AddATM()
+        {
+            if (ReturnIfNonAdmin(out IActionResult actionResult))
+            {
+                return actionResult;
+            }
+            return View();
+        }
+
+        public IActionResult ManagerATM()
+        {
+            if (ReturnIfNonAdmin(out IActionResult actionResult))
+            {
+                return actionResult;
+            }
+            return View(_context.Banks.Where(x => x.Type == BankModel.BankType.BANK));
+        }
+
+        public IActionResult HistoryATM()
+        {
+            if (ReturnIfNonAdmin(out IActionResult actionResult))
+            {
+                return actionResult;
+            }
+            return View();
+        }
+    }
+}

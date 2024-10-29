@@ -19,6 +19,17 @@ namespace GopetHost.Ulti
         public static void SetLoginOK(this ControllerBase controller, UserData user)
         {
             controller.HttpContext.Session.SetInt32(nameof(UserData.user_id), user.user_id);
+            controller.HttpContext.Session.SetInt32(nameof(UserData.role), user.role);
+        }
+
+        public static void SetRole(this ControllerBase controller, UserData user)
+        {
+            controller.HttpContext.Session.SetInt32(nameof(UserData.role), user.role);
+        }
+
+        public static int GetUserRole(this HttpContext context)
+        {
+            return context.Session.GetInt32(nameof(UserData.role)).Value;
         }
 
         public static void LogOut(this ControllerBase controller)

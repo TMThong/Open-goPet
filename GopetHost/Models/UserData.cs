@@ -10,26 +10,36 @@ namespace GopetHost.Models
     [Table("user")]
     public class UserData
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int user_id { get; set; }
+        
         [Required]
         public string username { get; set; }
+        [DataType(DataType.Password)]
         [Required]
         public string password { get; set; }
+        [EmailAddress]
         public string email { get; set; }
-
+        [Phone]
         public string phone { get; set; }
         [NotMapped]
         public string repassword { get; set; } = string.Empty;
-
+        
         public int role { get; set; }
 
         public int coin { get; set; }
-
+        
         public int isBaned { get; set; }
 
-        public DateTime create_date { get; set; }
-
-        
+        public DateTime create_date { get; set; } = DateTime.Now;
+        [NotMapped]
+        public bool IsAdmin
+        {
+            get
+            {
+                return role == 3;
+            }
+        }
     }
 }

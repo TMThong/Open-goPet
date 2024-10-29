@@ -710,6 +710,7 @@ public partial class MenuController
                                 if (shopTemplateItem.isSellItem)
                                 {
                                     Item item = new Item(shopTemplateItem.getItemTempalteId()) { canTrade = !shopTemplateItem.isLock && (shopTemplateItem.itemTemTempleId != 240009 || shopTemplateItem.itemTemTempleId != 240010) };
+                                    HistoryManager.addHistory(new History(player).setLog($"Mua vật phẩm {item.Template.name} với menuId = {menuId} và giá là {price[paymentIndex]}").setObj(new { Item = item, MenuId = menuId, Price = price[paymentIndex] }));
                                     item.SourcesItem.Add(ItemSource.MUA_ĐỒ_SHOP_NPC);
                                     item.count = shopTemplateItem.getCount();
                                     if (item.getTemp().expire > 0)

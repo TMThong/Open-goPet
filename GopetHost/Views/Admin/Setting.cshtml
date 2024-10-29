@@ -1,0 +1,59 @@
+﻿@using GopetHost.Controllers
+@model System.Collections.Generic.IEnumerable<WebConfigModel>
+@{
+    ViewData["Title"] = "Setting";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="box">
+    <table class="table">
+        <thead>
+        <th title="Key">Key</th>
+        <th title="Value">Giá trị</th>
+        <th title="Type">Loại</th>
+        <th title="ValueTest">Giá trị kiểm thử</th>
+        <th title="Comment">Chú thích</th>
+        <th title="Action">Thao tác</th>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <form asp-action="@nameof(AdminController.EditSetting)">
+                <tr>
+                    <td>
+                        <input name="Key" class="input is-danger"
+                               type="text"
+                               placeholder="Key" value="@item.Key" readonly />
+                    </td>
+                    <td>
+                        <input name="Value" class="input is-link"
+                               type="text"
+                               placeholder="Value" value="@item.Value" />
+                    </td>
+                    <td>@item.Type</td>
+                    <td>
+                            @try
+                            {
+                                @item.ObjectAsValue
+                            }
+                            catch (Exception)
+                            {
+                            <p> Lỗi </p>
+                            }
+                    </td>
+                    <td>@item.Comment</td>
+                    <td><button class="button is-success">Lưu</button></td>
+                </tr>
+                </form>
+            }
+        </tbody>
+        <tfoot>
+        <th title="Key">Key</th>
+        <th title="Value">Giá trị</th>
+        <th title="Type">Loại</th>
+        <th title="ValueTest">Giá trị kiểm thử</th>
+        <th title="Comment">Chú thích</th>
+        <th title="Action">Thao tác</th>
+        </tfoot>
+    </table>
+</div>

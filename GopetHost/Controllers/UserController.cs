@@ -95,23 +95,35 @@ namespace GopetHost.Controllers
             return View();
         }
 
-        public async Task<IActionResult> NapATM()
+        public async Task<IActionResult> NapBank()
         {
             if (IfLoginIsNotOK(out IActionResult result))
             {
                 return result;
             }
-            return View();
+            UserData userData = GetUser(_context);
+            if (userData == null) RedirectToHome();
+            string nap = _context.LoadWebConfig(WebConfigModel.NỘI_DUNG_NẠP, "nap");
+            List<BankQRModel> bankQRModels = new List<BankQRModel>();
+            foreach (var item in _context.Banks.ToArray())
+            {
+                BankQRModel bankQRModel = new BankQRModel();
+                bankQRModel.BankModel = item;
+                bankQRModel.NapContent = $"{nap} {userData.username}";
+                switch (item.Type)
+                {
+                    case BankModel.BankType.BANK:
+                        bankQRModel.QRCode = $"https://img.vietqr.io/image/mbbank-{item.BankId}-compact2.jpg?amount=2000&addInfo={bankQRModel.NapContent}&accountName={item.Name}";
+                        break;
+                    case BankModel.BankType.MOMO:
+                        bankQRModel.QRCode = $"https://momosv3.apimienphi.com/api/QRCode?phone={item.BankId}&amount=20000&note={bankQRModel.NapContent}";
+                        break;
+                }
+                bankQRModels.Add(bankQRModel);
+            }
+            return View(bankQRModels.ToArray());
         }
 
-        public async Task<IActionResult> NapMOMO()
-        {
-            if (IfLoginIsNotOK(out IActionResult result))
-            {
-                return result;
-            }
-            return View();
-        }
 
         public async Task<IActionResult> UserDetails()
         {
@@ -130,8 +142,19 @@ namespace GopetHost.Controllers
             {
                 return result;
             }
+            int price = _context.LoadWebConfig(WebConfigModel.ACTIVE_USER_PRICE, 10000);
             UserData userData = _context.Users.Where(x => x.user_id == this.HttpContext.Session.GetInt32(nameof(UserData.user_id))).FirstOrDefault();
             if (userData == null) return RedirectToHome();
+            this.SetRole(userData);
+            if (userData.coin >= price)
+            {
+                userData.coin -= price;
+            }
+            else
+            {
+				this.ShowMessage("Kích hoạt thất bại", $"Do số dư của bạn không đủ. Bạn còn thiếu {(price - userData.coin).ToString("###,###,###")} vnđ", "is-danger is-dark");
+				return RedirectToAction(nameof(UserDetails));
+			}
             userData.role = 1;
             this._context.SaveChanges();
             this.ShowMessage("Kích hoạt thành công", "Bây giờ bạn có thể đăng nhập vào trò chơi và tạo nhân vật", "is-success");

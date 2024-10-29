@@ -1,0 +1,59 @@
+﻿@model System.Collections.Generic.IEnumerable<BankQRModel>
+@{
+    ViewData["Title"] = "Nạp bằng ATM";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="grid">
+    @foreach (var item in Model)
+    {
+        switch (item.BankModel.Type)
+        {
+            case BankModel.BankType.BANK:
+                {
+                    <div class="box cell">
+                        <header>
+                            <h3 class="title is-5">Phiên bản JAR</h3>
+                        </header>
+                        <main>
+                            Phiên bản được dựng lại từ đầu thích hợp chạy trên các giả lập
+                            <span class="tag is-success is-light">MicroEmulator</span>,
+                            <span class="tag is-success is-light">KEmulator</span>,
+                            <span class="tag is-success is-light"> J2MELoader</span>.
+                            Nếu bạn đang dùng thiết bị Android thì khuyến cáo bạn tải bản
+                            <span class="tag is-danger is-light">APK</span>
+                        </main>
+                    </div>
+                }
+                break;
+            case BankModel.BankType.MOMO:
+                {
+                    <div class="box cell" style="text-align: center;">
+                        <header>
+                            <h3 class="title is-5">Nạp tự động Momo</h3>
+                        </header>
+                        <main>
+                            <p>Tên tài khoản: @item.BankModel.Name</p>
+                            <p>Số tài khoản: @item.BankModel.BankId</p>
+                            <p><img width="96px" height="96px" src="@item.BankModel.Logo" /></p>
+                            <p>Nội dung nạp: @item.NapContent</p>
+                            <p><img width="140px" height="140px" src="@item.QRCode" /></p>
+                        </main>
+                    </div>
+                    <div class="box cell" style="text-align: center;">
+                        <header>
+                            <h3 class="title is-5">Nạp tự động Momo</h3>
+                        </header>
+                        <main>
+                            <p>Tên tài khoản: @item.BankModel.Name</p>
+                            <p>Số tài khoản: @item.BankModel.BankId</p>
+                            <p><img width="96px" height="96px" src="@item.BankModel.Logo" /></p>
+                            <p>Nội dung nạp: @item.NapContent</p>
+                            <p><img width="140px" height="140px" src="@item.QRCode" /></p>
+                        </main>
+                    </div>
+                }
+                break;
+        }
+    }
+</div>

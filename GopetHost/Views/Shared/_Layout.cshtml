@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css?family=Questrial&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/GopetHost.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
     <header>
@@ -45,11 +46,8 @@
                                 <a asp-controller="User" asp-action="@nameof(UserController.NapTheCao)" class="navbar-item">
                                     Nạp thẻ cào
                                 </a>
-                                <a asp-controller="User" asp-action="@nameof(UserController.NapMOMO)" class="navbar-item">
-                                    Nạp MOMO
-                                </a>
-                                <a asp-controller="User" asp-action="@nameof(UserController.NapATM)" class="navbar-item">
-                                    Nạp ATM
+                                <a asp-controller="User" asp-action="@nameof(UserController.NapBank)" class="navbar-item">
+                                    Nạp tự động
                                 </a>
                             </div>
                         </div>
@@ -70,11 +68,17 @@
                         </div>
                     </div>
                 }
-                else 
+                else
                 {
                     <div class="navbar-end">
                         <div class="navbar-item">
                             <div class="buttons">
+                                @if (this.Context.GetUserRole() == 3)
+                                {
+                                    <a asp-controller="Admin" asp-action="@nameof(AdminController.Index)" class="button is-success is-light">
+                                        Quản trị
+                                    </a>
+                                }
                                 <a asp-controller="User" asp-action="@nameof(UserController.UserDetails)" class="button is-danger is-light">
                                     Tài khoản
                                 </a>
@@ -198,7 +202,7 @@
     </div>
 
     <footer>
-        <hr/>
+        <hr />
         <div class="container">
             &copy; 2024 - GopetTae - <a asp-area="" asp-controller="Home" asp-action="Index">Privacy</a>
         </div>
@@ -268,7 +272,7 @@
                 }
             });
         });
-        
+
     </script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

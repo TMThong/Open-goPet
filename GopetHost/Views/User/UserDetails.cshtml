@@ -16,15 +16,25 @@
     <div class="field">
         <label class="label">Tình trạng tài khoản</label>
         <div class="control">
-            @if (Model.role == 0)
+            @switch(Model.role)
             {
-                <input class="input is-link" type="text" value="Chưa kích hoạt" readonly>
-                <br />
-                <a asp-action="@nameof(UserController.Active)" asp-controller="User" class="button is-danger is-dark">Kích hoạt ngay</a>
-            }
-            else
-            {
-                <input class="input is-link" type="text" value="Đã kích hoạt" readonly>
+                case 0:
+                    {
+                        <input class="input is-link" type="text" value="Chưa kích hoạt" readonly>
+                        <br />
+                        <a asp-action="@nameof(UserController.Active)" asp-controller="User" class="button is-danger is-dark">Kích hoạt ngay</a>
+                    }
+                    break;
+                case 3:
+                    {
+                        <input class="input is-link" type="text" value="Tài khoản quản trị" readonly>
+                    }
+                    break;
+                default:
+                    {
+                        <input class="input is-link" type="text" value="Đã kích hoạt" readonly>
+                    }
+                    break;
             }
         </div>
     </div>
