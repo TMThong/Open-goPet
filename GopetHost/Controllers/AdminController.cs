@@ -103,6 +103,17 @@ namespace GopetHost.Controllers
             return RedirectToAction(nameof(ManagerMomo));
         }
 
+        public IActionResult RemoveATMModel(int Id)
+        {
+            if (ReturnIfNonAdmin(out IActionResult actionResult))
+            {
+                return actionResult;
+            }
+            _context.Banks.Remove(_context.Banks.Where(x => x.Id == Id).FirstOrDefault());
+            _context.SaveChanges();
+            return RedirectToAction(nameof(ManagerATM));
+        }
+
         public IActionResult ManagerMomo()
         {
             if (ReturnIfNonAdmin(out IActionResult actionResult))
@@ -118,7 +129,7 @@ namespace GopetHost.Controllers
             {
                 return actionResult;
             }
-            return View();
+            return View(_context.MomoTranslations.ToArray());
         }
 
         public IActionResult AddATM()
@@ -128,6 +139,27 @@ namespace GopetHost.Controllers
                 return actionResult;
             }
             return View();
+        }
+
+        public IActionResult AddATMModel([Bind("BankId,Name,Logo,Token,Password")] BankModel bankModel)
+        {
+            bankModel.Type = BankModel.BankType.BANK;
+            if (ReturnIfNonAdmin(out IActionResult actionResult))
+            {
+                return actionResult;
+            }
+            if (ModelState.IsValid)
+            {
+                _context.Banks.Add(bankModel);
+                _context.SaveChanges();
+                ShowMessage("Thêm thành công", "Bạn vui lòng chú ý trạng thái tài khoản sau khi thêm nhé.", "is-success");
+            }
+            else
+            {
+                ShowMessage("Không thể thêm", "Do bạn không điền đủ các trường thông tin.", "is-danger");
+                return RedirectToAction(nameof(AddMomo));
+            }
+            return RedirectToAction(nameof(ManagerATM));
         }
 
         public IActionResult ManagerATM()
@@ -145,7 +177,7 @@ namespace GopetHost.Controllers
             {
                 return actionResult;
             }
-            return View();
+            return View(_context.BankTranslations.ToArray());
         }
     }
 }

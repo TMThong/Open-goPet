@@ -1,8 +1,57 @@
-﻿
+﻿@model System.Collections.Generic.IEnumerable<BankTranslationModel>
 @{
     ViewData["Title"] = "HistoryATM";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>HistoryATM</h1>
-
+<div class="box">
+    <table class="table" id="TableSort">
+        <thead>
+        <th title="TranId">TranId</th>
+        <th title="Username">Tên tài khoản</th>
+        <th title="Amount">Amount</th>
+        <th title="AmountRecevied">Thực nhận</th>
+        <th title="Comment">Nội dung</th>
+        <th title="Time">Thời gian</th>
+        <th title="IsAddCoin">Đã nạp</th>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.TranId
+                    </td>
+                    <td>
+                        @item.UserName
+                    </td>
+                    <td>@item.Amount</td>
+                    <td>@item.AmountReceived</td>
+                    <td>@item.Comment </td>
+                    <td>
+                        @item.CreatedDate
+                    </td>
+                    <td>
+                        @if (item.IsAddCoin)
+                        {
+                            <a class="tag is-success">Đã cộng tiền</a>
+                        }
+                        else
+                        {
+                            <a class="tag is-danger">Chưa cộng</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+        <th title="TranId">TranId</th>
+        <th title="Username">Tên tài khoản</th>
+        <th title="Amount">Amount</th>
+        <th title="AmountRecevied">Thực nhận</th>
+        <th title="Comment">Nội dung</th>
+        <th title="Time">Thời gian</th>
+        <th title="IsAddCoin">Đã nạp</th>
+        </tfoot>
+    </table>
+</div>

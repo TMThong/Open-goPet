@@ -1,6 +1,7 @@
 ﻿using GopetHost.Data;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using System.Text.RegularExpressions;
 
 namespace GopetHost
@@ -30,11 +31,17 @@ namespace GopetHost
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 #if DEBUG
-            var AppConnectionStr = builder.Configuration.GetConnectionString("AppConnectionStrLocal");
+            var AppConnectionStr = builder.Configuration.GetConnectionString("AppConnectionStr");
 #elif !DEBUG
-            var AppConnectionStr = builder.Configuration.GetConnectionString("AppConnectionStrLocal");
+            var AppConnectionStr = builder.Configuration.GetConnectionString("AppConnectionStr");
+            Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo.File("logs/myapp.txt", rollingInterval: RollingInterval.Day).CreateLogger();
+            builder.Host.UseSerilog();
 #endif
-            builder.Services.AddDbContext<AppDatabaseContext>(options => options.UseMySql(AppConnectionStr, ServerVersion.AutoDetect(AppConnectionStr)));
+
+            builder.Services.AddDbContext<AppDatabaseContext>(options => options.UseMySql(AppConnectionStr, ServerVersion.AutoDetect(AppConnectionStr), mySqlOptions =>
+            {
+                mySqlOptions.EnableRetryOnFailure();
+            }));
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
@@ -42,7 +49,7 @@ namespace GopetHost
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
-             
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -81,7 +88,7 @@ namespace GopetHost
                     }
                 })
             });
-            
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");

@@ -4,5 +4,46 @@
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>AddATM</h1>
+<form class="box" asp-action="@nameof(GopetHost.Controllers.AdminController.AddATMModel)" asp-controller="Admin">
+    <div class="field">
+        <label class="label">Số tài khoản</label>
+        <div class="control ">
+            <input name="BankId" class="input is-success" type="text" placeholder="Số tài khoản" value="">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Tên chủ tài khoản</label>
+        <div class="control ">
+            <input name="Name" class="input is-warning" type="text" placeholder="Tên chủ tài khoản" value="">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Mật khẩu</label>
+        <div class="control ">
+            <input name="Password" class="input is-warning" type="password" placeholder="Mật khẩu" value="">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Đường dẫn ảnh Icon Ngân hàng</label>
+        <div class="control ">
+            <input name="Logo" class="input is-warning" type="text" placeholder="Đường dẫn ảnh Icon Ngân hàng" value="">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Token</label>
+        <div class="control ">
+            <input name="Token" class="input is-danger" type="text" placeholder="Token" value="">
+        </div>
+    </div>
+
+    <div class="field is-grouped">
+        <div class="control">
+            <button class="button is-link">Thêm</button>
+        </div>
+    </div>
+</form>
 

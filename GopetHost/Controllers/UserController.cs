@@ -113,7 +113,7 @@ namespace GopetHost.Controllers
                 switch (item.Type)
                 {
                     case BankModel.BankType.BANK:
-                        bankQRModel.QRCode = $"https://img.vietqr.io/image/mbbank-{item.BankId}-compact2.jpg?amount=2000&addInfo={bankQRModel.NapContent}&accountName={item.Name}";
+                        bankQRModel.QRCode = $"https://img.vietqr.io/image/mbbank-{item.BankId}-compact2.jpg?amount=0&addInfo={bankQRModel.NapContent}&accountName={item.Name}";
                         break;
                     case BankModel.BankType.MOMO:
                         bankQRModel.QRCode = $"https://momosv3.apimienphi.com/api/QRCode?phone={item.BankId}&amount=20000&note={bankQRModel.NapContent}";

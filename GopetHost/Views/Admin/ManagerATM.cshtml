@@ -1,8 +1,59 @@
-﻿
+﻿@using GopetHost.Controllers
+
 @{
     ViewData["Title"] = "ManagerATM";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
-
-<h1>ManagerATM</h1>
-
+<div class="box">
+    <table class="table">
+        <thead>
+        <th title="Id">Id</th>
+        <th title="BankId">Số tài khoản</th>
+        <th title="Name">Tên chủ tài khoản</th>
+        <th title="Logo">Icon</th>
+        <th title="Token">Token</th>
+        <th title="Action">Thao tác</th>
+        <th title="Status">Trạng thái</th>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <form asp-controller="Admin" asp-action="@nameof(AdminController.RemoveATMModel)">
+                <tr>
+                    <td>
+                        <input name="Id" class="input is-danger"
+                               type="text"
+                               placeholder="Id" value="@item.Id" readonly />
+                    </td>
+                    <td>
+                            @item.BankId
+                    </td>
+                    <td>@item.Name</td>
+                    <td>
+                        <div class="is-round">
+                            <img width="96" height="96" src="@item.Logo" />
+                        </div>
+                    </td>
+                    <td>@item.Token</td>
+                    <td><button class="button is-danger">Xoá</button></td>
+                    <td>
+                            @if (!string.IsNullOrEmpty(item.Message))
+                            {
+                            <a class="tag @item.MessageAttrs">@item.Message</a>
+                            }
+                    </td>
+                </tr>
+                </form>
+            }
+        </tbody>
+        <tfoot>
+        <th title="Id">Id</th>
+        <th title="BankId">Số tài khoản</th>
+        <th title="Name">Tên chủ tài khoản</th>
+        <th title="Logo">Icon</th>
+        <th title="Token">Token</th>
+        <th title="Action">Thao tác</th>
+        <th title="Status">Trạng thái</th>
+        </tfoot>
+    </table>
+</div>

@@ -13,6 +13,9 @@ namespace GopetHost.Data
 
         public DbSet<BankModel> Banks { get; set; }
 
+        public DbSet<MomoTranslationModel> MomoTranslations { get; set; }
+        public DbSet<BankTranslationModel> BankTranslations { get; set; }
+
 		public T LoadWebConfig<T>(string Key, T defaultValue)
 		{
             var query = WebConfigs.Where(x => x.Key == Key);

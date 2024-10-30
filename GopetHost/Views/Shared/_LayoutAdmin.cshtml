@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/GopetHost.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bulma.css">
 </head>
 <body>
     <header>
@@ -188,6 +189,15 @@
     </script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bulma.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        new DataTable('#TableSort', {
+            info: true,
+            ordering: true,
+            paging: true
+        });
+    </script>
 </body>
 </html>

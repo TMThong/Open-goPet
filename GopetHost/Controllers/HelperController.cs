@@ -37,5 +37,12 @@ namespace GopetHost.Controllers
             UserData userData = _context.Users.Where(x => x.user_id == this.HttpContext.Session.GetInt32(nameof(UserData.user_id))).FirstOrDefault();
             return userData;
         }
+
+
+        public UserData GetUser(AppDatabaseContext _context, string username)
+        {
+            UserData userData = _context.Users.Where(x => x.username == username).FirstOrDefault();
+            return userData;
+        }
     }
 }
