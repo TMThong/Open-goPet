@@ -31,9 +31,9 @@ namespace GopetHost
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 #if DEBUG
-            var AppConnectionStr = builder.Configuration.GetConnectionString("AppConnectionStr");
+            var AppConnectionStr = builder.Configuration.GetConnectionString("AppConnectionStrLocal");
 #elif !DEBUG
-            var AppConnectionStr = builder.Configuration.GetConnectionString("AppConnectionStr");
+            var AppConnectionStr = builder.Configuration.GetConnectionString("AppConnectionStrLocal");
             Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo.File("logs/myapp.txt", rollingInterval: RollingInterval.Day).CreateLogger();
             builder.Host.UseSerilog();
 #endif

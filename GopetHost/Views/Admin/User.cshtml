@@ -1,0 +1,68 @@
+﻿@using GopetHost.Controllers
+@model System.Collections.Generic.IEnumerable<UserData>
+@{
+    ViewData["Title"] = "Tài khoản";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="box">
+    <table class="table" id="TableSort">
+        <thead>
+        <th title="Id">Id</th>
+        <th title="username">Tên tài khoản</th>
+        <th title="password">Mật khẩu</th>
+        <th title="coin">VNĐ</th>
+        <th title="phone">Số điện thoại</th>
+        <th title="email">Email</th>
+        <th title="create_date">Ngày tạo</th>
+        <th title="Action">Thao tác</th>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <form asp-action="@nameof(AdminController.EditUser)">
+                <tr>
+                    <td>
+                        <input name="user_id" class="input is-danger"
+                               type="text"
+                               placeholder="user_id" value="@item.user_id" readonly />
+                    </td>
+                    <td>@item.username</td>
+                    <td>
+                        <input name="password" class="input is-link"
+                               type="text"
+                               placeholder="Password" value="@item.password"  />
+                    </td>
+                    <td>
+                        <input name="coin" class="input is-success"
+                               type="number"
+                               placeholder="coin" value="@item.coin"  />
+                    </td>
+                    <td>
+                        <input name="phone" class="input is-success"
+                               type="text"
+                               placeholder="phone" value="@item.phone"  />
+                    </td>
+                    <td>
+                        <input name="email" class="input is-success"
+                               type="email"
+                               placeholder="email" value="@item.email"  />
+                    </td>
+                    <td>@item.create_date</td>
+                    <td><button class="button is-primary">Lưu</button></td>
+                </tr>
+                </form>
+            }
+        </tbody>
+        <tfoot>
+        <th title="Id">Id</th>
+        <th title="username">Tên tài khoản</th>
+        <th title="password">Mật khẩu</th>
+        <th title="coin">VNĐ</th>
+        <th title="phone">Số điện thoại</th>
+        <th title="email">Email</th>
+        <th title="create_date">Ngày tạo</th>
+        <th title="Action">Thao tác</th>
+        </tfoot>
+    </table>
+</div>

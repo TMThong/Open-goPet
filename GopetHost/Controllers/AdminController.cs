@@ -179,5 +179,32 @@ namespace GopetHost.Controllers
             }
             return View(_context.BankTranslations.ToArray());
         }
+
+        public IActionResult User()
+        {
+            if (ReturnIfNonAdmin(out IActionResult actionResult))
+            {
+                return actionResult;
+            }
+            return View(_context.Users.ToArray());
+        }
+
+        public IActionResult EditUser(int user_id, string password, int coin, string phone, string email)
+        {
+            if (ReturnIfNonAdmin(out IActionResult actionResult))
+            {
+                return actionResult;
+            }
+            UserData userData = _context.Users.Where(x => x.user_id == user_id).FirstOrDefault();
+            if (userData != null)
+            {
+                userData.password = password;
+                userData.coin = coin;
+                userData.phone = phone;
+                userData.email = email;
+                _context.SaveChanges();
+            }
+            return RedirectToAction(nameof(User));
+        }
     }
 }
