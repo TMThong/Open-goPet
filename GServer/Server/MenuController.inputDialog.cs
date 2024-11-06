@@ -165,7 +165,7 @@ public partial class MenuController
                                 {
                                     try
                                     {
-                                        var keyL = MySqlConnection.QuerySingleOrDefault("SELECT GET_LOCK('gift_code_lock_@code', 10) as hasLock;", new { code = code });
+                                        var keyL = MySqlConnection.QuerySingleOrDefault("SELECT GET_LOCK(@code, 10) as hasLock;", new { code = "gift_code_lock_" + code });
                                         if (keyL != null)
                                         {
                                             bool hasLock = keyL.hasLock == 1;
@@ -175,7 +175,7 @@ public partial class MenuController
                                             }
                                             else
                                             {
-                                                GiftCodeData giftCodeData = MySqlConnection.QuerySingleOrDefault<GiftCodeData>(Utilities.Format("SELECT * FROM `gift_code` WHERE `gift_code`.`code` = '%s';", code));
+                                                GiftCodeData giftCodeData = MySqlConnection.QuerySingleOrDefault<GiftCodeData>("SELECT * FROM `gift_code` WHERE `gift_code`.`code` = @code;",  new { code = code});
                                                 if (giftCodeData != null)
                                                 {
                                                     if (clanMember == null && giftCodeData.isClanCode)
@@ -253,7 +253,7 @@ public partial class MenuController
                                     }
                                     finally
                                     {
-                                        MySqlConnection.Execute("DO RELEASE_LOCK('gift_code_lock_@code');", new { code = code });
+                                        MySqlConnection.Execute("DO RELEASE_LOCK(@code);", new { code = "gift_code_lock_" + code });
                                     }
                                 }
                             }

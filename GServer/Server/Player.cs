@@ -16,6 +16,7 @@ using static Gopet.Util.Utilities;
 using Gopet.Data.user;
 using Gopet.Language;
 using System.Diagnostics;
+
 public class Player : IHandleMessage
 {
     public static readonly string[] BANNAME = new string[] { "admin", "test", "banquantri", "gofarm" };

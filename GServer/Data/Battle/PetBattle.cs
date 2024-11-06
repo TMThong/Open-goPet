@@ -723,7 +723,7 @@ namespace Gopet.Battle
                         }
                         exp = genExpWhenMobDie(activePlayer, activePet, mob, mob.getMobLvInfo().exp);
                         exp = Math.Max(0, exp + Utilities.round(Utilities.GetValueFromPercent(exp, activePlayer.playerData.buffExp.getPercent() + perExpPlus)));
-                        int constCoin = genGemWhenMobDie(activePlayer, activePet, mob);
+                        int constCoin = this.mob.getMobLvInfo() != null ? this.mob.getMobLvInfo().coin : 0;
                         coin = (int)(constCoin + Utilities.GetValueFromPercent(constCoin, coinPlus));
                         activePlayer.addCoin(coin);
                         activePet.addExp(exp);
@@ -1614,7 +1614,7 @@ namespace Gopet.Battle
 
         public static int genExpWhenMobDie(Player player, Pet p, Mob mob, int exp)
         {
-            int begin = exp;
+            /*int begin = exp;
             int deltaLvl = p.lvl - mob.getMobLvInfo().lvl;
             if (deltaLvl >= 0)
             {
@@ -1639,7 +1639,9 @@ namespace Gopet.Battle
                 }
             }
             begin = Math.Max(0, (int)Utilities.GetValueFromPercent(begin, 100 - Utilities.nextInt(-10, 10)));
-            return Utilities.round(Utilities.GetValueFromPercent(begin, FieldManager.PERCENT_EXP));
+            return Utilities.round(Utilities.GetValueFromPercent(begin, FieldManager.PERCENT_EXP));*/
+
+            return exp;
         }
 
 

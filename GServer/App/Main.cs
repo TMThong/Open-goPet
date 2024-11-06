@@ -9,6 +9,7 @@ using Gopet.Manager;
 using Gopet.Server;
 using Gopet.Server.IO;
 using Gopet.Util;
+using MongoDB.Bson.Serialization;
 using Newtonsoft.Json;
 namespace Gopet.App
 {
@@ -81,6 +82,17 @@ namespace Gopet.App
                             }
                         }
 
+                        void ScanItem2()
+                        {
+                            foreach (var item1 in item.items.Select(x => x.Value))
+                            {
+                                foreach (var item2 in item1.Where(x => x.SourcesItem.Contains(Data.item.ItemSource.MUA_ĐỒ_SHOP_NPC)))
+                                {
+                                    GopetManager.ServerMonitor.LogError($"Item {item2.Template.name} có sll {item2.count} của nhân vật {item.name}");
+                                }
+                            }
+                        }
+
                         void ScanWings()
                         {
                             foreach (var item1 in item.items.Select(x => x.Value))
@@ -109,6 +121,17 @@ namespace Gopet.App
                                 }
                             }
                         }
+
+                        void ScanPet2()
+                        {
+                            foreach (var item1 in item.pets.Concat(new Pet[] { item.petSelected }))
+                            {
+                                if (item1 != null && item1.petIdTemplate == 3090)
+                                {
+                                    GopetManager.ServerMonitor.LogError($"Pet {item1.name} của nhân vật {item.name}");
+                                }
+                            }
+                        }
                         void BuffHKL()
                         {
                             if (!item.pets.Concat(new Pet[] { item.petSelected }).Any(x => x != null && x.petIdTemplate == 89))
@@ -126,11 +149,22 @@ namespace Gopet.App
                             item.pets = new CopyOnWriteArrayList<Pet>(petsDic);
                             item.save();
                         }
+
+
                         //ScanItem();
                         //ScanPet();
                         //ScanWings();
                         //BuffHKL();
+                        //ScanPet2();
                     }
+                    void ScanLetter()
+                    {
+                        foreach (var item1 in players.SelectMany(x => x.letters).GroupBy(x => x.ShortContent))
+                        {
+                            Console.WriteLine(item1.Key);
+                        }
+                    }
+                    
                 }
             }
             //ScanData();

@@ -37,11 +37,11 @@ public class MarketPlace : GopetPlace
 
     public override void update()
     {
-        base.update(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        base.update(); 
         for (int i = 0; i < kiosks.Length; i++)
         {
             Kiosk kiosk = kiosks[i];
-            kiosk.update();
+            //kiosk.update();
         }
     }
 

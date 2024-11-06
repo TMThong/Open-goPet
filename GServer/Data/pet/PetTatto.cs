@@ -6,6 +6,8 @@ using Newtonsoft.Json;
 public class PetTatto : IBinaryObject<PetTatto>
 {
 
+    public DateTime Time { get; set; } = DateTime.Now;
+
     public int tattooTemplateId;
     public int tattoId;
     public int lvl = 0;

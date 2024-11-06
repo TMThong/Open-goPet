@@ -98,7 +98,7 @@ public partial class MenuController
                                                         break;
                                                 }
                                                 player.controller.subCountItem(itemSelect, enchantWingData.NumItemMaterial, GopetManager.NORMAL_INVENTORY);
-                                                bool IsSucces = Utilities.NextFloatPer() < enchantWingData.Percent;
+                                                bool IsSucces = Utilities.NextFloatPer() < enchantWingData.Percent || player.controller.isBuffEnchent;
                                                 if (IsSucces)
                                                 {
                                                     wingItem.lvl++;

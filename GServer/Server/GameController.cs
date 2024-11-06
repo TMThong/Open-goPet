@@ -1652,8 +1652,6 @@ public class GameController
         {
             player.isPetRecovery = b;
         }
-
-        HistoryManager.addHistory(new History(player).setLog("Bật/Tắt hồi máu cho pet đi theo"));
     }
 
     public void updatePetLvl()
@@ -1724,7 +1722,6 @@ public class GameController
             message.putsbyte(pet.Template.frameNum);
             message.cleanup();
             player.session.sendMessage(message);
-            HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Xem gym pet %s", pet.Template.name)).setObj(pet));
         }
         else
         {
@@ -1832,7 +1829,6 @@ public class GameController
                 {
                     oPlayer.Popup(string.Format(player.Language.OthersPlayerLeakPetInfo, player.playerData.name));
                 }
-                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Xem trang bị pet của người chơi %s", oPlayer.playerData.name)).setObj(oPlayer.playerData));
             }
             else
             {
@@ -3446,10 +3442,10 @@ public class GameController
         Item itemSelect = (Item)objectPerformed.get(OBJKEY_ITEM_UP_SKILL);
         if (itemSelect.count > 0)
         {
-            if (pet.skill[skillIndex][1] < 10)
+            if ((petSkill.skillID < 116 && pet.skill[skillIndex][1] < 10) || (petSkill.skillID >= 116 && pet.skill[skillIndex][1] < 37))
             {
                 subCountItem(itemSelect, 1, GopetManager.NORMAL_INVENTORY);
-                bool succes = GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]] + itemSelect.getTemp().getOptionValue()[0] > Utilities.NextFloatPer();
+                bool succes = (petSkill.skillID >= 116 ? GopetManager.PERCENT_UP_SKILL_SKY[pet.skill[skillIndex][1]] : GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]]) + itemSelect.getTemp().getOptionValue()[0] > Utilities.NextFloatPer();
                 if (succes)
                 {
                     pet.skill[skillIndex][1]++;

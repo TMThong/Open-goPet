@@ -2,6 +2,9 @@
 using Dapper;
 using Gopet.Data.Collections;
 using Gopet.Util;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Driver;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
@@ -44,10 +47,23 @@ public class HistoryManager
         {
             while (true)
             {
-
-                using(var conn = MYSQLManager.createLogConnection())
+                /*
+                using (var client = new MongoClient("mongodb://localhost:27017"))
                 {
-                    using(var gameMySqlConnection = MYSQLManager.create())
+                    var database = client.GetDatabase("logDB"); 
+                    var collection = database.GetCollection<BsonDocument>("logDB");
+                    while (this.historys.TryDequeue(out History history))
+                    {
+                        var json = JsonConvert.SerializeObject(history.Get());
+                        var document = BsonSerializer.Deserialize<BsonDocument>(json);
+                        collection.InsertOne(document);
+                    }
+                }
+                */
+
+                using (var conn = MYSQLManager.createLogConnection())
+                {
+                    using (var gameMySqlConnection = MYSQLManager.create())
                     {
                         while (this.historys.TryDequeue(out var history))
                         {
@@ -60,7 +76,7 @@ public class HistoryManager
                             });
                         }
                     }
-                }
+                } 
                 AutoResetEvent.WaitOne(2000);
             }
         }

@@ -59,7 +59,8 @@ namespace GopetHost.Controllers
                 var queryList = _context.Users.Where(x => x.username == username && x.password == password);
                 if (queryList.Any())
                 {
-                    this.SetLoginOK(queryList.First());
+                    UserData userData = queryList.First();
+                    this.SetLoginOK(userData);
                     ShowMessage("Đăng nhập thành công", "Đăng nhập thành công mời bạn thao tác!!!", "is-success");
                     goto TO_HOME;
                 }

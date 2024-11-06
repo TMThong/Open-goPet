@@ -15,14 +15,14 @@ namespace GopetHost.Models
         public int user_id { get; set; }
         
         [Required]
-        public string username { get; set; }
+        public string? username { get; set; } = string.Empty;
         [DataType(DataType.Password)]
         [Required]
-        public string password { get; set; }
+        public string? password { get; set; } = string.Empty;
         [EmailAddress]
-        public string email { get; set; }
+        public string? email { get; set; } = string.Empty;
         [Phone]
-        public string phone { get; set; }
+        public string? phone { get; set; } = string.Empty;
         [NotMapped]
         public string repassword { get; set; } = string.Empty;
         

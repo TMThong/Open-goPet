@@ -17,14 +17,14 @@ public class History
 
     public History(Player player) {
         currentTime = Utilities.CurrentTimeMillis;
-        DateTime = new DateTime(currentTime);
+        DateTime = DateTime.Now;
         this.player = player;
         setUser_id(player.user.user_id);
     }
 
     public History(int user_id) {
         currentTime = Utilities.CurrentTimeMillis;
-        DateTime = new DateTime(currentTime);
+        DateTime = DateTime.Now;
         setUser_id(user_id);
     }
 
@@ -128,5 +128,35 @@ public class History
 
     public int getSpceialType() {
         return spceialType;
+    }
+
+    public HistoryMongoDB Get()
+    {
+        return new HistoryMongoDB(this);
+    }
+
+    public class HistoryMongoDB
+    {
+        public int UserId { get; set; }
+
+        public string charName { get; set; }
+
+        public object obj { get; set; }
+
+        public string log { get; set; }
+
+        public DateTime Time { get; set; }
+
+        public PlayerData PlayerData { get; set; }
+
+        public HistoryMongoDB(History history)
+        {
+            UserId = history.user_id;
+            PlayerData = history.player?.playerData;
+            charName = PlayerData?.name;
+            obj = history.obj;
+            Time = history.DateTime;
+            log = history.log;
+        }
     }
 }

@@ -20,8 +20,8 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <form asp-action="@nameof(AdminController.EditUser)">
                 <tr>
+                    <form asp-action="@nameof(AdminController.EditUser)">
                     <td>
                         <input name="user_id" class="input is-danger"
                                type="text"
@@ -31,27 +31,27 @@
                     <td>
                         <input name="password" class="input is-link"
                                type="text"
-                               placeholder="Password" value="@item.password"  />
+                               placeholder="Password" value="@item.password" />
                     </td>
                     <td>
                         <input name="coin" class="input is-success"
                                type="number"
-                               placeholder="coin" value="@item.coin"  />
+                               placeholder="coin" value="@item.coin" />
                     </td>
                     <td>
                         <input name="phone" class="input is-success"
                                type="text"
-                               placeholder="phone" value="@item.phone"  />
+                               placeholder="phone" value="@item.phone" />
                     </td>
                     <td>
                         <input name="email" class="input is-success"
                                type="email"
-                               placeholder="email" value="@item.email"  />
+                               placeholder="email" value="@item.email" />
                     </td>
                     <td>@item.create_date</td>
                     <td><button class="button is-primary">Lưu</button></td>
+                    </form>
                 </tr>
-                </form>
             }
         </tbody>
         <tfoot>

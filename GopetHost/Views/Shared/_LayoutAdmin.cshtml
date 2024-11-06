@@ -39,6 +39,10 @@
                         </a>
 
                         <div class="navbar-dropdown">
+                            <a asp-action="@nameof(AdminController.User)" class="navbar-item">
+                                Tài khoản
+                            </a>
+                            <hr />
                             <a asp-action="@nameof(AdminController.Setting)" class="navbar-item">
                                 Cấu hình Web
                             </a>
@@ -50,10 +54,7 @@
                             Nạp tiền
                         </a>
                         <div class="navbar-dropdown">
-                            <a asp-action="@nameof(AdminController.User)" class="navbar-item">
-                                Tài khoản
-                            </a>
-                            <hr />
+
                             <a asp-action="@nameof(AdminController.AddMomo)" class="navbar-item">
                                 Thêm tài khoản Momo
                             </a>

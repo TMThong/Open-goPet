@@ -890,6 +890,7 @@ public partial class MenuController
                                         Pet pet = new Pet(petTemplateId);
                                         player.playerData.addPet(pet, player);
                                         player.okDialog(string.Format(player.Language.MergePartPetOK, pet.getNameWithStar(player)));
+                                        HistoryManager.addHistory(new History(player).setLog($"Gộp mảnh pet nhận được {pet.Template?.name}").setObj(pet));
                                     }
                                     else
                                     {
@@ -910,10 +911,10 @@ public partial class MenuController
                                 PetSkill petSkill = GopetManager.PETSKILL_HASH_MAP.get(skillId);
                                 if (itemSelect.count > 0)
                                 {
-                                    if (pet.skill[skillIndex][1] < 10)
+                                    if ((petSkill.skillID < 116 && pet.skill[skillIndex][1] < 10) || (petSkill.skillID >= 116 && pet.skill[skillIndex][1] < 37))
                                     {
                                         player.controller.objectPerformed.put(OBJKEY_ITEM_UP_SKILL, itemSelect);
-                                        showYNDialog(DIALOG_UP_SKILL, string.Format(player.Language.AskDoYouWantUpgradeSkill, petSkill.getName(player), pet.skill[skillIndex][1] + 1, GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]], itemSelect.getTemp().getOptionValue()[0], GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]] + itemSelect.getTemp().getOptionValue()[0]).Replace("/", "%"), player);
+                                        showYNDialog(DIALOG_UP_SKILL, string.Format(player.Language.AskDoYouWantUpgradeSkill, petSkill.getName(player), pet.skill[skillIndex][1] + 1, petSkill.skillID >= 116 ? GopetManager.PERCENT_UP_SKILL_SKY[pet.skill[skillIndex][1]] :  GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]], itemSelect.getTemp().getOptionValue()[0], petSkill.skillID >= 116 ? GopetManager.PERCENT_UP_SKILL_SKY[pet.skill[skillIndex][1]] : GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]] + itemSelect.getTemp().getOptionValue()[0]).Replace("/", "%"), player);
                                     }
                                     else
                                     {
@@ -968,8 +969,9 @@ public partial class MenuController
                                     Item item = new Item(optionValue[0]);
                                     item.count = 1;
                                     item.SourcesItem.Add(ItemSource.GHÉP_MẢNH);
-                                    player.addItemToInventory(item);
                                     player.okDialog(string.Format(player.Language.ChangeItemOK, item.getTemp().getName(player)));
+                                    HistoryManager.addHistory(new History(player).setLog($"Gộp mảnh item nhận được {item.Template.name}").setObj(item));
+                                    player.addItemToInventory(item);
                                 }
                                 else
                                 {
@@ -995,43 +997,49 @@ public partial class MenuController
                             break;
                         case MENU_SELECT_ITEM_TO_GET_BY_ADMIN:
                             {
-                                Player playerOnline = player.controller.objectPerformed[OBJKEY_PLAYER_GET_ITEM];
-                                if (PlayerManager.players.Contains(playerOnline))
+                                if (player.checkIsAdmin())
                                 {
-                                    player.controller.objectPerformed[OBJKEY_ITEM_ADMIN_GET] = itemSelect;
-                                    if (itemSelect.Template.isStackable)
+                                    Player playerOnline = player.controller.objectPerformed[OBJKEY_PLAYER_GET_ITEM];
+                                    if (PlayerManager.players.Contains(playerOnline))
                                     {
-                                        player.controller.showInputDialog(INPUT_TYPE_COUNT_ADMIN_GET, itemSelect.Template.name, "Số lượng: ");
+                                        player.controller.objectPerformed[OBJKEY_ITEM_ADMIN_GET] = itemSelect;
+                                        if (itemSelect.Template.isStackable)
+                                        {
+                                            player.controller.showInputDialog(INPUT_TYPE_COUNT_ADMIN_GET, itemSelect.Template.name, "Số lượng: ");
+                                        }
+                                        else
+                                        {
+                                            sendMenu(MENU_OPTION_ADMIN_GET_ITEM, player);
+                                        }
                                     }
                                     else
                                     {
-                                        sendMenu(MENU_OPTION_ADMIN_GET_ITEM, player);
+                                        player.redDialog(player.Language.PlayerOffline);
                                     }
-                                }
-                                else
-                                {
-                                    player.redDialog(player.Language.PlayerOffline);
                                 }
                                 break;
                             }
                         case MENU_SELECT_ITEM_TO_GIVE_BY_ADMIN:
                             {
-                                Player playerOnline = player.controller.objectPerformed[OBJKEY_PLAYER_GIVE_ITEM];
-                                if (PlayerManager.players.Contains(playerOnline))
+                                if (player.checkIsAdmin())
                                 {
-                                    player.controller.objectPerformed[OBJKEY_ITEM_ADMIN_GIVE] = itemSelect;
-                                    if (itemSelect.Template.isStackable)
+                                    Player playerOnline = player.controller.objectPerformed[OBJKEY_PLAYER_GIVE_ITEM];
+                                    if (PlayerManager.players.Contains(playerOnline))
                                     {
-                                        player.controller.showInputDialog(INPUT_TYPE_COUNT_ADMIN_GIVE, itemSelect.Template.name, "Số lượng: ");
+                                        player.controller.objectPerformed[OBJKEY_ITEM_ADMIN_GIVE] = itemSelect;
+                                        if (itemSelect.Template.isStackable)
+                                        {
+                                            player.controller.showInputDialog(INPUT_TYPE_COUNT_ADMIN_GIVE, itemSelect.Template.name, "Số lượng: ");
+                                        }
+                                        else
+                                        {
+                                            sendMenu(MENU_OPTION_ADMIN_GIVE_ITEM, player);
+                                        }
                                     }
                                     else
                                     {
-                                        sendMenu(MENU_OPTION_ADMIN_GIVE_ITEM, player);
+                                        player.redDialog(player.Language.PlayerOffline);
                                     }
-                                }
-                                else
-                                {
-                                    player.redDialog(player.Language.PlayerOffline);
                                 }
                                 break;
                             }
@@ -1200,6 +1208,7 @@ public partial class MenuController
                                     Pet pet = new Pet(itemSelect.Template.itemOptionValue[0]);
                                     player.okDialog(pet.getNameWithoutStar(player) + ": " + pet.getDesc(player));
                                     pet = null;
+                                    HistoryManager.addHistory(new History(player).setLog($"Show mảnh pet {pet.Template?.name}").setObj(pet));
                                 }
                                 else
                                 {
@@ -1214,6 +1223,7 @@ public partial class MenuController
                                 {
                                     ItemTemplate itemTemplate = GopetManager.itemTemplate[itemSelect.Template.itemOptionValue[0]];
                                     player.okDialog($"{itemTemplate.getName(player)} {itemTemplate.getDescription(player)} {itemTemplate.getAtk()} {itemTemplate.getDef()} {itemTemplate.getHp()} {itemTemplate.getMp()}");
+                                    HistoryManager.addHistory(new History(player).setLog($"Show mảnh item {itemTemplate.name}").setObj(itemTemplate));
                                 }
                                 else
                                 {
@@ -1401,10 +1411,6 @@ public partial class MenuController
                                     case 0:
                                         if (clan.canAddNewMember())
                                         {
-                                            using (var conn = MYSQLManager.create())
-                                            {
-
-                                            }
                                             MySqlConnection MySqlConnection = MYSQLManager.create();
                                             try
                                             {
@@ -1945,7 +1951,7 @@ public partial class MenuController
                                             using (var conn = MYSQLManager.create())
                                             {
                                                 FriendRequest friendRequest = new FriendRequest(player.user.user_id, friendId, DateTime.Now);
-                                                if (!conn.Query("SELECT `userId`, `targetId`, `time` FROM `request_accept_friend` WHERE userId = @userId, targetId = @targetId", friendRequest).Any())
+                                                if (!conn.Query("SELECT `userId`, `targetId`, `time` FROM `request_accept_friend` WHERE userId = @userId AND targetId = @targetId", friendRequest).Any())
                                                 {
                                                     conn.Execute("INSERT INTO `request_accept_friend`(`userId`, `targetId`, `time`) VALUES (@userId,@targetId,@time)", friendRequest);
                                                 }
