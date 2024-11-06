@@ -4836,6 +4836,7 @@ public class GameController
 
     private void checkBugEquipItem()
     {
+        /*
         int num = 0;
         foreach (Item item in player.playerData.getInventoryOrCreate(GopetManager.EQUIP_PET_INVENTORY))
         {
@@ -4851,6 +4852,7 @@ public class GameController
         {
             player.redDialog(string.Format(player.Language.DuplicateItemRemove, num));
         }
+        */
     }
 
     internal void setLastTimeKillMob(long lastTimeKillMob)
