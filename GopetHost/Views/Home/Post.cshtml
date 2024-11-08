@@ -1,0 +1,30 @@
+﻿@model PostModel
+@{
+    ViewData["Title"] = "Bài đăng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="container">
+    <div>
+        <div class="box content">
+            <a class="post">
+                <h4>@Model.Title</h4>
+                <div class="media">
+                    <div class="media-left">
+                        <p class="image is-32x32 is-rounded">
+                            <img src="~/Upload/Images/48_icon.png">
+                        </p>
+                    </div>
+                    <div class="media-content">
+                        <div class="content">
+                            @Html.Raw(Model.Description)
+                        </div>
+                    </div>
+                    <div class="media-right">
+                        <span class="has-text-grey-light"><i class="fa fa-eye"></i> @Model.Views</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>

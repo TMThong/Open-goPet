@@ -1,0 +1,101 @@
+﻿@model System.Collections.Generic.IEnumerable<TagModel>
+@{
+    ViewData["Title"] = "Thêm bài viết mới";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.5.0/tinymce.min.js" integrity="sha512-KmEMNDKX2KDYPrBMr2MJj/JLgYK271k+P2341E5wvBMgepz1HS3wpc7r65hDXcp4Ul89omtSKIHxdk8VYHd9ug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<form class="box" asp-action="@nameof(GopetHost.Controllers.AdminController.AddPost)" asp-controller="Admin">
+    <div class="field">
+        <label class="label">Tiêu đề</label>
+        <div class="control ">
+            <input name="Title" class="input is-success" type="text" placeholder="Tiêu đề" value="">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Nội dung</label>
+        <div class="control ">
+            <input id="BBEdittor" name="Description" class="input is-warning" type="text" placeholder="Nội dung" value="">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Tên người đăng</label>
+        <div class="control ">
+            <input  name="UserName" class="input is-info" type="text" placeholder="Tên người đăng" value="">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Thẻ</label>
+        <div class="control ">
+            <input id="TagsInput" name="Tags" class="input is-link" type="text" placeholder="Thẻ" value="" readonly>
+             
+            <div class="grid" style="margin: 8px">
+                @foreach (var item in Model)
+                {
+                    <a class="@item.CSSClasses is-medium" data-id="@item.Id">@item.Tag</a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="field is-grouped">
+        <div class="control">
+            <button class="button is-link">Thêm</button>
+        </div>
+    </div>
+</form>
+
+
+
+<script>
+    tinymce.init({
+        selector: '#BBEdittor',
+        plugins: 'bbcode',
+        toolbar: 'bbcode'
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Lấy input và thẻ tag
+        const tagsInput = document.getElementById("TagsInput");
+        const tagButtons = document.querySelectorAll(".tag");
+
+        // Hàm để thêm hoặc xoá thẻ trong input
+        function toggleTagInInput(tagId, tagText) {
+            // Lấy giá trị hiện tại trong input
+            let currentTags = tagsInput.value.split(",").map(tag => tag.trim()).filter(Boolean);
+
+            // Kiểm tra nếu thẻ đã có trong input
+            const tagIndex = currentTags.indexOf(tagText);
+
+            if (tagIndex === -1) {
+                // Nếu thẻ chưa có, thêm vào
+                currentTags.push(tagText);
+            } else {
+                // Nếu thẻ đã có, xoá khỏi danh sách
+                currentTags.splice(tagIndex, 1);
+            }
+
+            // Cập nhật lại giá trị cho input
+            tagsInput.value = currentTags.join(", ");
+        }
+
+        // Thêm sự kiện click cho các thẻ
+        tagButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const tagId = button.getAttribute("data-id");  // Lấy id của thẻ
+                const tagText = button.textContent.trim();    // Lấy tên của thẻ
+
+                // Thêm hoặc xoá thẻ vào/ra input
+                toggleTagInInput(tagId, tagText);
+
+                // Tùy chọn: thêm hoặc xoá class 'is-disabled' để thay đổi kiểu thẻ
+                button.classList.toggle("is-disabled");
+            });
+        });
+    });
+
+</script>

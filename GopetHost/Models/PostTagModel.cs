@@ -9,7 +9,6 @@ namespace GopetHost.Models
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		[Key]
 		public int Id { get; set; }
-		[Column("PostId")]
 		[Required]
 		public int PostId { get; set; }
 		[Required]

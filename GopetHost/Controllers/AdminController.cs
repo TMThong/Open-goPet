@@ -180,6 +180,61 @@ namespace GopetHost.Controllers
             return View(_context.BankTranslations.ToArray());
         }
 
+        public IActionResult AddNewPost()
+        {
+            if (ReturnIfNonAdmin(out IActionResult actionResult))
+            {
+                return actionResult;
+            }
+            return View(_context.Tags.ToArray());
+        }
+
+        public IActionResult AddPost(string Title, string Description, string Username, string Tags)
+        {
+            if (ReturnIfNonAdmin(out IActionResult actionResult))
+            {
+                return actionResult;
+            }
+
+            if (string.IsNullOrEmpty(Tags))
+            {
+                ShowMessage("Thẻ rỗng", "Vui lòng thêm ít nhất 1 thẻ", "is-danger");
+                return RedirectToAction(nameof(AddNewPost));
+            }
+
+            string[] p = Tags.Split(',');
+            if (p.Length > 0)
+            {
+                PostModel model = new PostModel();
+                model.Title = Title;
+                model.Description = Description;
+                model.Username = Username;
+                _context.Posts.Add(model);
+                _context.SaveChanges();
+                foreach (var item in _context.Tags.ToArray().Where(x => p.Any(m => m.Trim() == x.Tag)))
+                {
+                    PostTagModel itemModel = new PostTagModel()
+                    {
+                        PostId = model.Id,
+                        TagId = item.Id,
+                    };
+                    _context.PostTags.Add(itemModel);
+                }
+                _context.SaveChanges();
+            }
+
+            return RedirectToHome();
+        }
+
+        public IActionResult ManagerPost()
+        {
+            if (ReturnIfNonAdmin(out IActionResult actionResult))
+            {
+                return actionResult;
+            }
+            return View(_context.Posts.ToArray());
+        }
+
         public IActionResult User()
         {
             if (ReturnIfNonAdmin(out IActionResult actionResult))

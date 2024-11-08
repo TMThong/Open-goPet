@@ -1,0 +1,40 @@
+﻿@model System.Collections.Generic.IEnumerable<PostModel>
+@{
+    ViewData["Title"] = "ManagerPost";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="box">
+    <table class="table" id="TableSort">
+        <thead>
+        <th title="Id">Id</th>
+        <th title="Title">Tiêu đề</th>
+        <th title="Description">Nội dung</th>
+        <th title="Views">Lượt xem</th>
+        <th title="UserName">Tài khoản</th>
+        <th title="TimeCreate">Ngày đăng</th>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Title</td>
+                    <td>@item.Description</td>
+                    <td>@item.Views</td>
+                    <td>@item.Username</td>
+                    <td>@item.TimeCreate</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+        <th title="Id">Id</th>
+        <th title="Title">Tiêu đề</th>
+        <th title="Description">Nội dung</th>
+        <th title="Views">Lượt xem</th>
+        <th title="UserName">Tài khoản</th>
+        <th title="TimeCreate">Ngày đăng</th>
+        </tfoot>
+    </table>
+</div>
+

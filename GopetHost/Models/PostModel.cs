@@ -23,5 +23,7 @@ namespace GopetHost.Models
 		public string Username { get; set; } = string.Empty;
 		[Required]
 		public bool IsPin { get; set; } = false;
+		[Required]
+		public DateTime TimeCreate { get; set; } = DateTime.Now;
 	}
 }
