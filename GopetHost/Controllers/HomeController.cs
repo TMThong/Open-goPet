@@ -1,4 +1,5 @@
-﻿using GopetHost.Models;
+﻿using GopetHost.Data;
+using GopetHost.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,15 +8,40 @@ namespace GopetHost.Controllers
     public class HomeController : HelperController
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly AppDatabaseContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, AppDatabaseContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index([FromQuery] int Page = 0, [FromQuery] int? TagId = null)
         {
-            return View();
+            Page = Math.Max(Page, 0);
+            int numpage = _context.LoadWebConfig<int>(WebConfigModel.SỐ_TRANG_MÀ_DIỄN_ĐÀN_HIỂN_THỊ, 0);
+            IndexHomeBagModel model = new IndexHomeBagModel();
+            model.CurrentPage = Page;
+            model.MaxPage = this._context.Posts.Count() / numpage;
+            model.Tags = _context.Tags.ToArray();
+            model.TagId = TagId;
+            if (TagId.HasValue)
+            {
+                model.MaxPage = this._context.Posts.Where(x => x.Tags.Any(x => x.TagId == TagId.Value)).Count() / numpage;
+            }
+            if (model.MaxPage < Page)
+            {
+                return Index(0);
+            }
+            if (TagId.HasValue)
+            {
+                model.Posts = this._context.Posts.Where(x => x.Tags.Any(x => x.TagId == TagId.Value)).Skip(model.CurrentPage * numpage).ToArray();
+            }
+            else
+            {
+                model.Posts = this._context.Posts.Skip(model.CurrentPage * numpage).ToArray();
+            }
+            return View(model);
         }
 
         public IActionResult Download()

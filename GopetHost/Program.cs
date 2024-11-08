@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace GopetHost
@@ -10,22 +11,6 @@ namespace GopetHost
     {
         public static void Main(string[] args)
         {
-
-            string input = "3rsadfg 234 sgf nap admin sdafasdfasdf"; // Ví dụ đầu vào
-            string pattern = @"\bnap\b\s+(?<username>[a-zA-Z0-9_]+)\b"; // Biểu thức chính quy
-
-            Match match = Regex.Match(input, pattern);
-
-            if (match.Success)
-            {
-                Console.WriteLine("Tìm thấy 'nap' và tên người dùng: " + match.Groups["username"].Value);
-            }
-            else
-            {
-                Console.WriteLine("Không tìm thấy 'nap' hoặc tên người dùng.");
-            }
-
-
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -33,8 +18,8 @@ namespace GopetHost
 #if DEBUG
             var AppConnectionStr = builder.Configuration.GetConnectionString("AppConnectionStrLocal");
 #elif !DEBUG
-            var AppConnectionStr = builder.Configuration.GetConnectionString("AppConnectionStrLocal");
-            Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo.File("logs/myapp.txt", rollingInterval: RollingInterval.Day).CreateLogger();
+            var AppConnectionStr = builder.Configuration.GetConnectionString("AppConnectionStr");
+            Log.Logger = new LoggerConfiguration().MinimumLevel.Error().WriteTo.File("logs/myapp.txt", rollingInterval: RollingInterval.Day).CreateLogger();
             builder.Host.UseSerilog();
 #endif
 

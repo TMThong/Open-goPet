@@ -8,16 +8,25 @@ using Microsoft.EntityFrameworkCore;
 using GopetHost.Data;
 using GopetHost.Models;
 using GopetHost.Ulti;
+using Newtonsoft.Json;
+using System.Security.Cryptography;
+using System.Text;
+using Newtonsoft.Json.Linq;
 
 namespace GopetHost.Controllers
 {
     public class UserController : HelperController
     {
-        private readonly AppDatabaseContext _context;
+        private static readonly int[] PRICE_GUEST = new int[] { 10000, 20000, 30000, 50000, 100000, 200000, 300000, 500000, 1000000 };
+        private static readonly string[] CARD_ID = new string[] { "VIETTEL", "VINAPHONE", "MOBIFONE", "VNMB", "ZING", "GARENA2", "GATE", "VCOIN" };
 
-        public UserController(AppDatabaseContext context)
+        private readonly AppDatabaseContext _context;
+        private readonly ILogger<UserController> _logger;
+
+        public UserController(AppDatabaseContext context, ILogger<UserController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -87,13 +96,98 @@ namespace GopetHost.Controllers
             return RedirectToHome();
         }
 
-        public async Task<IActionResult> NapTheCao()
+        public async Task<IActionResult> NapThe()
         {
             if (IfLoginIsNotOK(out IActionResult result))
             {
                 return result;
             }
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GachThe(string card_type_id, int price_guest, string pin, string seri)
+        {
+            if (IfLoginIsNotOK(out IActionResult result))
+            {
+                return result;
+            }
+            UserData userData = this.GetUser(_context);
+            if (userData != null)
+            {
+                if (price_guest > 0)
+                {
+                    if (PRICE_GUEST.Contains(price_guest))
+                    {
+                        if (string.IsNullOrEmpty(card_type_id) || string.IsNullOrEmpty(pin) || string.IsNullOrEmpty(seri))
+                        {
+                            ShowMessage("Nạp thẻ thất bại", $"Nguyên nhân do không ghi đủ các thông tin mà biểu mẫu yêu cầu!", "is-danger");
+                        }
+                        else if (CARD_ID.Contains(card_type_id))
+                        {
+                            string partnerId = _context.LoadWebConfig(WebConfigModel.MÃ_ĐỐI_TÁC, string.Empty);
+                            string partnerKey = _context.LoadWebConfig(WebConfigModel.KEY_ĐỐI_TÁC, string.Empty);
+                            if (string.IsNullOrEmpty(partnerId) || string.IsNullOrEmpty(partnerKey))
+                            {
+                                ShowMessage("Lỗi", "Không thể nạp thẻ với đối tác. Vui lòng liên hệ admin", "is-danger");
+                            }
+                            else
+                            {
+                                Guid guid = Guid.NewGuid();
+                                JObject json = await ChargeCardAsync(card_type_id, price_guest.ToString(), seri, pin, guid.ToString(), partnerId, partnerKey);
+                                if (json != null)
+                                {
+                                    if (json.ContainsKey("status"))
+                                    {
+                                        int status = int.Parse(json["status"].ToString());
+                                        switch (status)
+                                        {
+                                            case 99:
+                                                CardModel cardModel = new CardModel()
+                                                {
+                                                    UUID = guid.ToString(),
+                                                    UserName = userData.username,
+                                                    MenhGia = price_guest,
+                                                    TienGachThe = 0,
+                                                    ThucNhan = 0,
+                                                    Pin = pin,
+                                                    Seri = seri,
+                                                    CardId = card_type_id
+                                                };
+                                                _context.Cards.Add(cardModel);
+                                                _context.SaveChanges();
+                                                return RedirectToAction(nameof(LichSuNapThe));
+                                            case 3:
+                                                ShowMessage("Nạp thẻ thất bại", $"Thẻ này đã tồn tại trên hệ thống!", "is-danger");
+                                                break;
+                                            default:
+                                                ShowMessage("Nạp thẻ thất bại", $"!", "is-danger");
+                                                break;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    ShowMessage("Nạp thẻ thất bại", $"!", "is-danger");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            ShowMessage("Nạp thẻ thất bại", $"Nguyên nhân do loại thẻ bạn chọn không nằm trong hệ thống!", "is-danger");
+                        }
+                    }
+                    else
+                    {
+                        ShowMessage("Nạp thẻ thất bại", $"Nguyên nhân do mệnh giá {price_guest.ToString("###,###,###")} không tồn tại", "is-danger");
+                    }
+                }
+                else
+                {
+                    ShowMessage("Nạp thẻ thất bại", $"Nguyên nhân do mệnh giá nạp là số âm ;)", "is-link");
+                }
+            }
+            return RedirectToAction(nameof(NapThe));
         }
 
         public async Task<IActionResult> NapBank()
@@ -153,13 +247,139 @@ namespace GopetHost.Controllers
             }
             else
             {
-				this.ShowMessage("Kích hoạt thất bại", $"Do số dư của bạn không đủ. Bạn còn thiếu {(price - userData.coin).ToString("###,###,###")} vnđ", "is-danger is-dark");
-				return RedirectToAction(nameof(UserDetails));
-			}
+                this.ShowMessage("Kích hoạt thất bại", $"Do số dư của bạn không đủ. Bạn còn thiếu {(price - userData.coin).ToString("###,###,###")} vnđ", "is-danger is-dark");
+                return RedirectToAction(nameof(UserDetails));
+            }
             userData.role = 1;
             this._context.SaveChanges();
             this.ShowMessage("Kích hoạt thành công", "Bây giờ bạn có thể đăng nhập vào trò chơi và tạo nhân vật", "is-success");
             return RedirectToAction(nameof(UserDetails));
+        }
+        [HttpGet]
+        public IActionResult CallBackNapthe(
+            [FromQuery] int status,
+            [FromQuery] string code, 
+            [FromQuery] string serial, 
+            [FromQuery] int trans_id,
+            [FromQuery] string telco, 
+            [FromQuery] string callback_sign, 
+            [FromQuery] string request_id, 
+            [FromQuery] string message, 
+            [FromQuery] int amount, 
+            [FromQuery] int card_value)
+        {
+            int percentField = _context.LoadWebConfig(WebConfigModel.TỈ_LỆ_NẠP, 100);
+            float percent = (float)percentField / 100f;
+            string partnerId = _context.LoadWebConfig(WebConfigModel.MÃ_ĐỐI_TÁC, string.Empty);
+            string partnerKey = _context.LoadWebConfig(WebConfigModel.KEY_ĐỐI_TÁC, string.Empty);
+            var sign = partnerKey + code + serial;
+            var mysign = ComputeMd5Hash(sign);
+            if (mysign == callback_sign)
+            {
+                CardModel card = _context.Cards.Where(x => x.UUID == request_id && x.Status == CardModel.CardStatus.Proccessing).FirstOrDefault();
+                if (card != null)
+                {
+                    card.TimeUpdate = DateTime.Now;
+                    card.TienGachThe = amount;
+                    int roundCoin = (int)(amount * percent);
+                    card.ThucNhan = roundCoin;
+                    card.MenhGia = card_value;
+                    switch (status)
+                    {
+                        case 1:
+                            {
+                                card.Status = CardModel.CardStatus.Success;
+                                card.Note = "Đúng mệnh giá";
+                            }
+                            break;
+                        case 2:
+                            {
+                                card.Status = CardModel.CardStatus.Success;
+                                card.Note = "Sai mệnh giá";
+                            }
+                            break;
+                        default:
+                            card.Status = CardModel.CardStatus.Fail;
+                            card.Note = message;
+                            break;
+                    }
+                    if (card.Status == CardModel.CardStatus.Success)
+                    {
+                        UserData userData = _context.Users.Where(x => x.username == card.UserName).FirstOrDefault();
+                        if (userData != null)
+                        {
+                            userData.coin += card.ThucNhan;
+                        }
+                    }
+                }
+            }
+            
+            _context.SaveChanges();
+            _logger.LogError($"{nameof(CallBackNapthe)} [FromQuery] int status ={status},\r\n            [FromQuery] string code={code}, \r\n            [FromQuery] string serial={serial}, \r\n            [FromQuery] int trans_id ={trans_id},\r\n            [FromQuery] string telco={telco}, \r\n            [FromQuery] string callback_sign={callback_sign}, mySign ={mysign}, \r\n            [FromQuery] string request_id ={request_id}, \r\n            [FromQuery] string message={message}, \r\n            [FromQuery] int amount={amount}, \r\n            [FromQuery] int card_value={card_value}");
+            return Json(new { IsSucces = true });
+        }
+
+
+        public async Task<JObject> ChargeCardAsync(string loaithe, string menhgia, string seri, string pin, string request_id, string partnerIdCard, string partnerKeyCard)
+        {
+            var POSTGET = new Dictionary<string, string>
+             {
+            { "request_id", request_id },
+            { "code", pin },
+            { "partner_id", partnerIdCard },
+            { "serial", seri },
+            { "telco", loaithe },
+            { "command", "charging" }
+             };
+            var sortedPostGet = new SortedDictionary<string, string>(POSTGET);
+            var sign = partnerKeyCard + pin + seri;
+            var mysign = ComputeMd5Hash(sign);
+            sortedPostGet.Add("amount", menhgia);
+            sortedPostGet.Add("sign", mysign);
+            var data = new FormUrlEncodedContent(sortedPostGet);
+
+            using (var client = new HttpClient())
+            {
+                try
+                {
+                    var url = "https://thesieure.com/chargingws/v2";
+                    var response = await client.PostAsync(url, data);
+                    var result = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(result);
+                    return (JObject)JsonConvert.DeserializeObject(result);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    _logger.LogError(ex, "Lỗi ở hàm call thesieure");
+                    return null;
+                }
+            }
+        }
+
+        private string ComputeMd5Hash(string input)
+        {
+            using (var md5 = MD5.Create())
+            {
+                var hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
+                var sb = new StringBuilder();
+                foreach (var b in hashBytes)
+                {
+                    sb.Append(b.ToString("x2"));
+                }
+                return sb.ToString();
+            }
+        }
+
+        public IActionResult LichSuNapThe()
+        {
+            if (IfLoginIsNotOK(out IActionResult result))
+            {
+                return result;
+            }
+            UserData userData = GetUser(_context);
+            if (userData == null) RedirectToHome();
+            return View(_context.Cards.Where(x => x.UserName == userData.username));
         }
     }
 }

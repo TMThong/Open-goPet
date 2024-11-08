@@ -1,0 +1,70 @@
+﻿@model System.Collections.Generic.IEnumerable<CardModel>
+@{
+    ViewData["Title"] = "Lịch sử nạp thẻ cào";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="box">
+    <table class="table" id="TableSort">
+        <thead>
+        <th title="Id">Id</th>
+        <th title="UUID">UUID</th>
+        <th title="username">Tên tài khoản</th>
+        <th title="CardId">Loại thẻ</th>
+        <th title="MenhGia">Mệnh giá</th>
+        <th title="TienGachThe">Tiền gạch thẻ</th>
+        <th title="ThucNhan">Thực nhận</th>
+        <th title="Pin">Pin</th>
+        <th title="Seri">Seri</th>
+        <th title="TimeCreate">Ngày tạo</th>
+        <th title="TimeUpdate">Ngày cập nhật</th>
+        <th title="Trạng thái">Trạng thái</th>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.Id
+                    </td>
+                    <td>@item.UUID</td>
+                    <td>@item.UserName</td>
+                    <td>@item.CardId</td>
+                    <td>@item.MenhGia</td>
+                    <td>@item.TienGachThe</td>
+                    <td>@item.ThucNhan</td>
+                    <td>@item.Pin</td>
+                    <td>@item.Seri</td>
+                    <td>@item.TimeCreate</td>
+                    <td>@item.TimeUpdate</td>
+                    @switch (item.Status)
+                    {
+                        case CardModel.CardStatus.Success:
+                            <td class="is-success">@item.Note</td>
+                            break;
+                        case CardModel.CardStatus.Fail:
+                            <td class="is-danger">@item.Note</td>
+                            break;
+                        case CardModel.CardStatus.Proccessing:
+                            <td class="is-link">@item.Note</td>
+                            break;
+                    }
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+        <th title="Id">Id</th>
+        <th title="UUID">UUID</th>
+        <th title="username">Tên tài khoản</th>
+        <th title="CardId">Loại thẻ</th>
+        <th title="MenhGia">Mệnh giá</th>
+        <th title="TienGachThe">Tiền gạch thẻ</th>
+        <th title="ThucNhan">Thực nhận</th>
+        <th title="Pin">Pin</th>
+        <th title="Seri">Seri</th>
+        <th title="TimeCreate">Ngày tạo</th>
+        <th title="TimeUpdate">Ngày cập nhật</th>
+        <th title="Trạng thái">Trạng thái</th>
+        </tfoot>
+    </table>
+</div>
+

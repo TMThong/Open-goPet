@@ -206,5 +206,14 @@ namespace GopetHost.Controllers
             }
             return RedirectToAction(nameof(User));
         }
+
+        public IActionResult HistoryCard()
+        {
+            if (ReturnIfNonAdmin(out IActionResult actionResult))
+            {
+                return actionResult;
+            }
+            return View(_context.Cards.ToArray());
+        }
     }
 }

@@ -2,7 +2,7 @@
 @using GopetHost.Ulti
 <!DOCTYPE html>
 
-<html>
+<html lang="vi">
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
@@ -83,11 +83,7 @@
 
                             <hr />
 
-                            <a asp-action="Setting" class="navbar-item">
-                                Quản lý nạp thẻ cào
-                            </a>
-
-                            <a asp-action="Setting" class="navbar-item">
+                            <a asp-action="@nameof(AdminController.HistoryCard)" class="navbar-item">
                                 Lịch sử nạp thẻ
                             </a>
 

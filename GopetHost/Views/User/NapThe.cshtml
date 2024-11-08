@@ -1,0 +1,64 @@
+﻿
+@{
+    ViewData["Title"] = "Nạp thẻ cào";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<form class="box" asp-action="@nameof(GopetHost.Controllers.UserController.GachThe)" asp-controller="User">
+    <div class="field">
+        <label class="label">Loại thẻ</label>
+        <div class="control select is-info">
+            <select id="card_type_id" name="card_type_id" class="form-control ">
+                <option value="">Chọn nhà mạng</option>
+                <option value="VIETTEL">VIETTEL</option>
+                <option value="VINAPHONE">VINAPHONE</option>
+                <option value="MOBIFONE">MOBIFONE</option>
+                <option value="VNMB">Vietnammobile</option>
+                <option value="ZING">Zing</option>
+                <option value="GARENA2">Garena</option>
+                <option value="GATE">GATE</option>
+                <option value="VCOIN">Vcoin</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Mệnh giá thẻ cào</label>
+        <div class="control select is-link">
+            <select id="price_guest" name="price_guest" class="form-control ">
+                <option value="">Chọn mệnh giá</option>
+                <option value="10000">10,000đ</option>
+                <option value="20000">20,000đ</option>
+                <option value="30000">30,000đ</option>
+                <option value="50000">50,000đ</option>
+                <option value="100000">100,000đ</option>
+                <option value="200000">200,000đ</option>
+                <option value="300000">300,000đ</option>
+                <option value="500000">500,000đ</option>
+                <option value="1000000">1,000,000đ</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Mã thẻ</label>
+        <div class="control ">
+            <input name="pin" class="input is-warning" type="text" placeholder="Mã thẻ" value="">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Seri</label>
+        <div class="control ">
+            <input name="seri" class="input is-danger" type="text" placeholder="Seri" value="">
+        </div>
+    </div>
+
+    <div class="field is-grouped">
+        <div class="control">
+            <button class="button is-link">Nạp</button>
+        </div>
+    </div>
+</form>
+

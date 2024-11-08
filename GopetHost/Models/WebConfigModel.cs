@@ -9,6 +9,9 @@ namespace GopetHost.Models
 		public const string ACTIVE_USER_PRICE = "active.user.price";
 		public const string TỈ_LỆ_NẠP = "napthe.ti.le";
 		public const string NỘI_DUNG_NẠP = "noidung.nap.tien";
+		public const string MÃ_ĐỐI_TÁC = "partner.id.card";
+		public const string KEY_ĐỐI_TÁC = "partner.key.card";
+		public const string SỐ_TRANG_MÀ_DIỄN_ĐÀN_HIỂN_THỊ = "num.page.show";
 
 
 		[Key]
