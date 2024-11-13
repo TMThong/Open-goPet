@@ -914,7 +914,7 @@ public partial class MenuController
                                     if ((petSkill.skillID < 116 && pet.skill[skillIndex][1] < 10) || (petSkill.skillID >= 116 && pet.skill[skillIndex][1] < 37))
                                     {
                                         player.controller.objectPerformed.put(OBJKEY_ITEM_UP_SKILL, itemSelect);
-                                        showYNDialog(DIALOG_UP_SKILL, string.Format(player.Language.AskDoYouWantUpgradeSkill, petSkill.getName(player), pet.skill[skillIndex][1] + 1, petSkill.skillID >= 116 ? GopetManager.PERCENT_UP_SKILL_SKY[pet.skill[skillIndex][1]] :  GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]], itemSelect.getTemp().getOptionValue()[0], petSkill.skillID >= 116 ? GopetManager.PERCENT_UP_SKILL_SKY[pet.skill[skillIndex][1]] : GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]] + itemSelect.getTemp().getOptionValue()[0]).Replace("/", "%"), player);
+                                        showYNDialog(DIALOG_UP_SKILL, string.Format(player.Language.AskDoYouWantUpgradeSkill, petSkill.getName(player), pet.skill[skillIndex][1] + 1, petSkill.skillID >= 116 ? GopetManager.PERCENT_UP_SKILL_SKY[pet.skill[skillIndex][1]] : GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]], itemSelect.getTemp().getOptionValue()[0], petSkill.skillID >= 116 ? GopetManager.PERCENT_UP_SKILL_SKY[pet.skill[skillIndex][1]] : GopetManager.PERCENT_UP_SKILL[pet.skill[skillIndex][1]] + itemSelect.getTemp().getOptionValue()[0]).Replace("/", "%"), player);
                                     }
                                     else
                                     {
@@ -1596,6 +1596,19 @@ public partial class MenuController
                         case ADMIN_INDEX_FAST_UP_ITEM:
                             player.controller.showInputRevertDialog(INPUT_TYPE_FAST_UP_ITEM, "Đập đồ nhanh", "Id vật phẩm", "Cấp từng món", "Lần tiến hoá", "Số lượng VP", "Max dòng chỉ số", "Cấp cuối");
                             break;
+                        case ADMIN_INDEX_VIEW_CUR_PET_HIDDEN_STAT:
+                            {
+                                if (player.playerData.petSelected != null)
+                                {
+                                    player.playerData.petSelected.applyInfo(player);
+                                    player.okDialog($"Những kích ẩn bao gồm: {string.Join(",", player.playerData.petSelected.TakeAllHiddenStat().Select(x => x.Comment))}");
+                                }
+                                else
+                                {
+                                    player.petNotFollow();
+                                }
+                            }
+                            return;
                     }
                 }
                 break;

@@ -643,6 +643,7 @@ public class GopetManager
    };
 
     public static BossTemplate[] HourDailyBoss;
+    public static HiddenStatItemTemplate[] HiddentStatItemTemplates;
     static GopetManager()
     {
         SqlMapper.AddTypeHandler(new JsonAdapter<int[]>());
@@ -669,6 +670,7 @@ public class GopetManager
         SqlMapper.AddTypeHandler(new JsonAdapter<Dictionary<int, DateTime>>());
         SqlMapper.AddTypeHandler(new JsonAdapter<Waypoint[]>());
         SqlMapper.AddTypeHandler(new JsonAdapter<PetSkillInfo[]>());
+        SqlMapper.AddTypeHandler(new JsonAdapter<ItemInfo[]>());
         SqlMapper.AddTypeHandler(new JsonAdapter<Dictionary<DateTime, Item>>());
         SqlMapper.AddTypeHandler(new VersionAdapter());
         shopTemplate.put(MenuController.SHOP_ARMOUR, new ShopTemplate(MenuController.SHOP_ARMOUR));
@@ -937,6 +939,7 @@ public class GopetManager
                 ClanSkillViaId[template.id] = template;
                 template.clanSkillLvlTemplates = conn.Query<ClanSkillLvlTemplate>("SELECT * FROM `clan_skill_lvl` WHERE skillId = @skillId ORDER BY `clan_skill_lvl`.`lvl` ASC", new { skillId = template.id }).ToArray();
             }
+            HiddentStatItemTemplates = conn.Query<HiddenStatItemTemplate>("SELECT * FROM `hidden_stat`").ToArray();
         }
         using (var connWeb = MYSQLManager.createWebMySqlConnection())
         {

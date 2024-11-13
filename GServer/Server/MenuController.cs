@@ -154,6 +154,7 @@ public partial class MenuController
         new AdminItemInfo("Khoá vật phẩm", "Khoá vật phẩm của người chơi", "items/4000766.png"),
         new AdminItemInfo("Mở khoá vật phẩm", "Mở khoá vật phẩm của người chơi", "items/4000766.png"),
         new AdminItemInfo("Đập đồ nhanh", "Dùng để đập đồ nhanh và nó sẽ tự động tiến cấp", "items/4000766.png"),
+        new AdminItemInfo("Test kích ẩn", "Xem pet đang theo có kích ẩn gì", "items/4000766.png"),
     };
     public const int ADMIN_INDEX_SET_PET_INFO = 0;
     public const int ADMIN_INDEX_TELE_TO_PLAYER = 1;
@@ -186,6 +187,7 @@ public partial class MenuController
     public const int ADMIN_INDEX_LOCK_ITEM_PLAYER = 28;
     public const int ADMIN_INDEX_UNLOCK_ITEM_PLAYER = 29;
     public const int ADMIN_INDEX_FAST_UP_ITEM = 30;
+    public const int ADMIN_INDEX_VIEW_CUR_PET_HIDDEN_STAT = 31;
 
     /**
      * Danh sách nhận pet miễn phí

@@ -12,7 +12,6 @@ namespace Gopet.Battle
 {
     public class PetBattle
     {
-
         private bool petAttackMob = true;
         private Pet activePet, passivePet;
         private Mob mob;
@@ -44,6 +43,8 @@ namespace Gopet.Battle
             addWingBuff(activePlayer, activeBattleInfo, passiveBattleInfo);
             addWingBuff(passivePlayer, passiveBattleInfo, activeBattleInfo);
             if (place == null) throw new ArgumentNullException(nameof(place));
+            ApplyHiddenStat(activePet, activeBattleInfo);
+            ApplyHiddenStat(passivePet, passiveBattleInfo);
         }
 
         public PetBattle(Mob mob, GopetPlace place, Player activePlayer)
@@ -61,6 +62,38 @@ namespace Gopet.Battle
             timeCheckplayer = Utilities.CurrentTimeMillis + 7000L;
             addWingBuff(activePlayer, activeBattleInfo, passiveBattleInfo);
             if (place == null) throw new ArgumentNullException(nameof(place));
+            ApplyHiddenStat(activePet, activeBattleInfo);
+        }
+
+        private void ApplyHiddenStat(Pet pet, PetBattleInfo petBattleInfo)
+        {
+            foreach (var item in pet.TakeAllHiddenStat())
+            {
+                foreach (var itemInfo in item.Data)
+                {
+                    switch (itemInfo.id)
+                    {
+                        case ItemInfo.Type.KÍCH_ẨN_PHẢN_ĐÒN:
+                            petBattleInfo.addBuff(new Buff(new ItemInfo[]
+                            {
+                                new ItemInfo(ItemInfo.Type.PHANDOAN_4_TURN, itemInfo.value)
+                            }, 9999999));
+                            break;
+                        case ItemInfo.Type.KÍCH_ẨN_HÚT_MÁU:
+                            petBattleInfo.addBuff(new Buff(new ItemInfo[]
+                            {
+                                new ItemInfo(ItemInfo.Type.RECOVERY_HP_IN_4_TURN, itemInfo.value)
+                            }, 9999999));
+                            break;
+                        case ItemInfo.Type.KÍCH_ẨN_ĐỊNH_THÂN:
+                            petBattleInfo.addBuff(new Buff(new ItemInfo[]
+                            {
+                                new ItemInfo(ItemInfo.Type.TỈ_LỆ_ĐỊNH_THÂN_KHI_ĐÁNH_TRÚNG, itemInfo.value)
+                            }, 9999999));
+                            break;
+                    }
+                }
+            }
         }
 
 
@@ -282,6 +315,11 @@ namespace Gopet.Battle
                         getNonPet().subHp(damge.getDamge());
                     }
                     addRecovery(damge, isMiss, activePet, player, turnEffects);
+                    int percent = ItemInfo.getValueById(activeBattleInfo.getBuff(), ItemInfo.Type.TỈ_LỆ_ĐỊNH_THÂN_KHI_ĐÁNH_TRÚNG);
+                    if (percent > 0)
+                    {
+                        getNonUserPetBattleInfo().addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.STUN, percent) }, 2));
+                    }
                 }
                 else
                 {
@@ -1022,6 +1060,11 @@ namespace Gopet.Battle
                                     nonPet.subHp(damageInfo.getDamge());
                                     nonPet.subHp(damageInfo.getTrueDamge());
                                 }
+                                int percent = ItemInfo.getValueById(activeBattleInfo.getBuff(), ItemInfo.Type.TỈ_LỆ_ĐỊNH_THÂN_KHI_ĐÁNH_TRÚNG);
+                                if (percent > 0)
+                                {
+                                    nonPetBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.STUN, percent) }, 2));
+                                }
                             }
                             else
                             {
@@ -1039,11 +1082,13 @@ namespace Gopet.Battle
                             if (hasWinner())
                             {
                                 win();
-                            }/*
+                            }
+                            /*
                             if (petAttackMob)
                             {
                                 Thread.Sleep(GopetManager.DELAY_TURN_PET_BATTLE);
-                            }*/
+                            }
+                            */
                         }
                         else
                         {
@@ -1422,9 +1467,6 @@ namespace Gopet.Battle
                         {
                             petBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.DEF, (int)Utilities.GetValueFromPercent(this.ActiveObject.getDef(), i.getPercent())) }, 3));
                         }
-                        break;
-                    case ItemInfo.Type.STUN:
-                        nonBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 2));
                         break;
                     case ItemInfo.Type.PER_STUN_1_TURN:
                         nonBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 2));

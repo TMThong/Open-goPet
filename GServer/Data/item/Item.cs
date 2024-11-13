@@ -204,6 +204,7 @@ namespace Gopet.Data.GopetItem
         public string getDescription(Player player)
         {
             ItemTemplate itemTemplate = getTemp();
+            var strs = GopetManager.HiddentStatItemTemplates.Where(x => x.IdWeapon == itemTemplateId || x.IdHat == itemTemplateId || x.IdGlove == itemTemplateId || x.IdArmour == itemTemplateId || x.IdShoe == itemTemplateId).Select(x => x.Comment);
             switch (itemTemplate.getType())
             {
                 case GopetManager.SKIN_ITEM:
@@ -276,9 +277,9 @@ namespace Gopet.Data.GopetItem
 
             if (expire > 0)
             {
-                return getTemp().getDescription(player) + "(" + player.Language.ExpireDescrption + Utilities.GetFormatNumber(expire) + " )";
+                return getTemp().getDescription(player) + "(" + player.Language.ExpireDescrption + Utilities.GetFormatNumber(expire) + " ) " + string.Join(",", strs);
             }
-            return getTemp().getDescription(player);
+            return getTemp().getDescription(player) + string.Join(",", strs);
         }
 
         public int getDef()
@@ -392,6 +393,7 @@ namespace Gopet.Data.GopetItem
 
         public string getEquipName(Player player)
         {
+            var strs = GopetManager.HiddentStatItemTemplates.Where(x => x.IdWeapon == itemTemplateId || x.IdHat == itemTemplateId || x.IdGlove == itemTemplateId || x.IdArmour == itemTemplateId || x.IdShoe == itemTemplateId).Select(x => x.Comment);
             JArrayList<string> infoStrings = new();
             if (getAtk() > 0)
             {
@@ -460,7 +462,7 @@ namespace Gopet.Data.GopetItem
                     }
                 }
             }
-            return getName(player) + "  " + getTemp().getDescription(player) + " " + Utilities.Format("up: %s ", lvl) + string.Join(" ", infoStrings) + (gemInfo == null ? "" : " " + gemInfo.getElementIcon());
+            return getName(player) + "  " + getTemp().getDescription(player) + " " + Utilities.Format("up: %s ", lvl) + string.Join(" ", infoStrings.Concat(strs)) + (gemInfo == null ? "" : " " + gemInfo.getElementIcon()) ;
         }
 
         public void updateGemOption()

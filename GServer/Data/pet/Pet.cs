@@ -2,6 +2,7 @@
 using Gopet.Data.Collections;
 using Gopet.Data.GopetClan;
 using Gopet.Data.GopetItem;
+using Gopet.Data.item;
 using Gopet.Data.user;
 using Gopet.Util;
 using Newtonsoft.Json;
@@ -65,9 +66,12 @@ public class Pet : GameObject, IBinaryObject<Pet>
 
     public int pointTiemNangLvl = 3;
 
-    public DateTime TimeCreated {  get; set; } = DateTime.Now;
+    public DateTime TimeCreated { get; set; } = DateTime.Now;
 
     public bool wasSell = false;
+
+    public CopyOnWriteArrayList<int> HiddenStats = new CopyOnWriteArrayList<int>();
+
 
     protected Pet()
     {
@@ -300,6 +304,7 @@ public class Pet : GameObject, IBinaryObject<Pet>
         this.def = (this.getAgi() * 20);
         this.maxHp = getHpViaPrice() + (this.getInt() * 50);
         this.maxMp = getMpViaPrice() + (this.getInt() * 50);
+        IDictionary<int, int> ItemEquipType = new Dictionary<int, int>();
         foreach (var next in equip.ToArray())
         {
             Item it = player.controller.selectItemEquipByItemId(next);
@@ -323,7 +328,7 @@ public class Pet : GameObject, IBinaryObject<Pet>
                 player.Popup(Utilities.Format("Pet của bạn đã tự tháo trang bị %s do pet cảm thấy khó chịu vì không đủ chỉ số", it.getTemp().getName(player)));
                 continue;
             }
-
+            ItemEquipType[it.Template.type] = it.itemTemplateId;
             this.atk += it.getAtk();
             this.def += it.getDef();
             this.maxHp += it.getHp();
@@ -415,11 +420,20 @@ public class Pet : GameObject, IBinaryObject<Pet>
                 }
             }
         }
+        this.HiddenStats.Clear();
+        this.HiddenStats.AddRange(GopetManager.HiddentStatItemTemplates.Where(x =>
+        (!x.IdWeapon.HasValue || (ItemEquipType.ContainsKey(GopetManager.PET_EQUIP_WEAPON) && ItemEquipType[GopetManager.PET_EQUIP_WEAPON] == x.IdWeapon)) &&
+        (!x.IdHat.HasValue || (ItemEquipType.ContainsKey(GopetManager.PET_EQUIP_HAT) && ItemEquipType[GopetManager.PET_EQUIP_HAT] == x.IdHat)) &&
+        (!x.IdArmour.HasValue || (ItemEquipType.ContainsKey(GopetManager.PET_EQUIP_ARMOUR) && ItemEquipType[GopetManager.PET_EQUIP_ARMOUR] == x.IdArmour)) &&
+        (!x.IdShoe.HasValue || (ItemEquipType.ContainsKey(GopetManager.PET_EQUIP_SHOE) && ItemEquipType[GopetManager.PET_EQUIP_SHOE] == x.IdShoe)) &&
+        (!x.IdGlove.HasValue || (ItemEquipType.ContainsKey(GopetManager.PET_EQUIP_GLOVE) && ItemEquipType[GopetManager.PET_EQUIP_GLOVE] == x.IdGlove))
+        ).Select(m => m.Id));
+
         player.controller.checkExpire();
         player.controller.sendMyPetInfo();
     }
 
-
+    public HiddenStatItemTemplate[] TakeAllHiddenStat() => GopetManager.HiddentStatItemTemplates.Where(x => this.HiddenStats.Contains(x.Id)).ToArray();
 
     public int getSkillIndex(int skillId)
     {
