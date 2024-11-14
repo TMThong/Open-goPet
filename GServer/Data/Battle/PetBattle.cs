@@ -26,6 +26,7 @@ namespace Gopet.Battle
         private int userInvitePK = -1;
         private long timeCheckplayer = 0;
         private Mutex mutex = new Mutex();
+        private DateTime MobAttackTime = DateTime.Now;
         public PetBattle(GopetPlace place, Player passivePlayer, Player activePlayer)
         {
             this.place = place;
@@ -345,16 +346,22 @@ namespace Gopet.Battle
             message.putsbyte(GopetCMD.PET_BATTLE);
             message.putInt(activePlayer.user.user_id);
             message.putInt(mainTurnData.petId);
-            message.putInt(Utilities.round(delaTimeTurn - Utilities.CurrentTimeMillis));
+            if (!petAttackMob)
+            {
+                message.putInt(Utilities.round(delaTimeTurn - Utilities.CurrentTimeMillis));
+            }
+            else
+            {
+                message.putInt((int)(DateTime.Now - MobAttackTime).TotalSeconds);
+            }
             message.putInt((int)GopetManager.TimeNextTurn);
             message.putsbyte(mainTurnData.type);
             if (mainTurnData.type == TurnEffect.TYPE_EFFECT_WAIT)
             {
-                // old version            
+                // old version      
                 message.putInt(0);
                 message.putUTF("");
                 // old version
-
                 message.putInt(mainTurnData.mp);
             }
             message.putInt(turnDatas.Count);
@@ -668,7 +675,11 @@ namespace Gopet.Battle
                 }
                 if (isPetAttackMob())
                 {
-                    if (getUserTurnId() == mob.getMobId())
+                    if (this.MobAttackTime < DateTime.Now && petAttackMob && getUserTurnId() == mob.getMobId())
+                    {
+                        nextTurn();
+                    }
+                    else if (getUserTurnId() == mob.getMobId() && this.MobAttackTime < DateTime.Now)
                     {
                         mobAttack();
                     }
@@ -677,6 +688,7 @@ namespace Gopet.Battle
                 {
                     win();
                 }
+
             }
             finally
             {
@@ -1288,7 +1300,7 @@ namespace Gopet.Battle
                 }
                 sendPetAttack(turnEffects, TurnEffect.createNormalAttack(activePet.mp, 0, getUserTurnId()));
             }
-            nextTurn();
+            this.MobAttackTime = DateTime.Now.AddSeconds(5);
             if (hasWinner())
             {
                 win();
