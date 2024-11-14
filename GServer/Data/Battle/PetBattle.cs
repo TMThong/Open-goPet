@@ -7,6 +7,9 @@ using Gopet.Util;
 using Gopet.Manager;
 using SixLabors.ImageSharp;
 using System.Numerics;
+using System.Collections.Concurrent;
+using Gopet.Data.Battle;
+using System;
 
 namespace Gopet.Battle
 {
@@ -27,6 +30,8 @@ namespace Gopet.Battle
         private long timeCheckplayer = 0;
         private Mutex mutex = new Mutex();
         private DateTime MobAttackTime = DateTime.Now;
+        private bool IsMobFighted = false;
+        private ConcurrentQueue<BattleAction> actions = new ConcurrentQueue<BattleAction>();
         public PetBattle(GopetPlace place, Player passivePlayer, Player activePlayer)
         {
             this.place = place;
@@ -120,19 +125,9 @@ namespace Gopet.Battle
             this.userInvitePK = userInvitePK;
         }
 
-        public bool isIsPK()
-        {
-            return isPK;
-        }
-
         public void setIsPK(bool isPK)
         {
             this.isPK = isPK;
-        }
-
-        public int getPrice()
-        {
-            return price;
         }
 
         public void setPrice(int price)
@@ -162,13 +157,6 @@ namespace Gopet.Battle
             }
         }
 
-
-
-        public bool isIsActiveTurn()
-        {
-            return isActiveTurn;
-        }
-
         public void setIsActiveTurn(bool isActiveTurn)
         {
             this.isActiveTurn = isActiveTurn;
@@ -184,88 +172,65 @@ namespace Gopet.Battle
             this.petAttackMob = petAttackMob;
         }
 
-        public Pet getActivePet()
-        {
-            return activePet;
-        }
-
         public void setActivePet(Pet activePet)
         {
             this.activePet = activePet;
         }
 
-        public Pet getPassivePet()
-        {
-            return passivePet;
-        }
-
-        public void setPassivePet(Pet passivePet)
-        {
-            this.passivePet = passivePet;
-        }
-
-        public Mob getMob()
-        {
-            return mob;
-        }
-
-        public void setMob(Mob mob)
-        {
-            this.mob = mob;
-        }
-
-        public GopetPlace getPlace()
-        {
-            return place;
-        }
-
-        public void setPlace(GopetPlace place)
-        {
-            this.place = place;
-        }
-
-        public Player getPassivePlayer()
-        {
-            return passivePlayer;
-        }
-
-        public void setPassivePlayer(Player passivePlayer)
-        {
-            this.passivePlayer = passivePlayer;
-        }
-
-        public Player getActivePlayer()
-        {
-            return activePlayer;
-        }
-
-        public void setActivePlayer(Player activePlayer)
-        {
-            this.activePlayer = activePlayer;
-        }
-
         public void onMessage(Message message, Player player)
         {
-            mutex.WaitOne();
-            try
+            if (petAttackMob)
             {
+                if (this.actions.Count > 100)
+                {
+                    return;
+                }
                 sbyte subId = message.readsbyte();
                 switch (subId)
                 {
                     case GopetCMD.PetBattle_ATTACK:
-                        petAttack(player);
+                        this.actions.Enqueue(new BattleAction()
+                        {
+                            Player = player,
+                            IsNormalAttack = true,
+                        });
                         break;
                     case GopetCMD.PET_BATTLE_USE_SKILL:
-                        useSkill(player, message.reader().readInt());
+                        this.actions.Enqueue(new BattleAction()
+                        {
+                            Player = player,
+                            IsNormalAttack = false,
+                            SkillId = message.readInt(),
+                        });
                         break;
                     case GopetCMD.PET_BATTLE_USE_ITEM:
                         MenuController.sendMenu(MenuController.MENU_SELECT_ITEM_SUPPORT_PET, player);
                         break;
                 }
             }
-            finally
+            else
             {
-                mutex.ReleaseMutex();
+                mutex.WaitOne();
+                try
+                {
+                    sbyte subId = message.readsbyte();
+                    switch (subId)
+                    {
+                        case GopetCMD.PetBattle_ATTACK:
+                            petAttack(player);
+                            break;
+                        case GopetCMD.PET_BATTLE_USE_SKILL:
+                            useSkill(player, message.reader().readInt());
+                            break;
+                        case GopetCMD.PET_BATTLE_USE_ITEM:
+                            MenuController.sendMenu(MenuController.MENU_SELECT_ITEM_SUPPORT_PET, player);
+                            break;
+                    }
+                }
+                finally
+                {
+                    mutex.ReleaseMutex();
+                }
             }
         }
 
@@ -326,7 +291,6 @@ namespace Gopet.Battle
                 {
                     turnEffects.add(new TurnEffect(TurnEffect.SKILL_MISS, getFocus(), TurnEffect.SKILL_MISS, 0, 0));
                 }
-
                 sendPetAttack(turnEffects, TurnEffect.createNormalAttack(activePet.mp, 0, getUserTurnId()));
                 nextTurn();
                 if (hasWinner())
@@ -675,13 +639,30 @@ namespace Gopet.Battle
                 }
                 if (isPetAttackMob())
                 {
-                    if (this.MobAttackTime < DateTime.Now && petAttackMob && getUserTurnId() == mob.getMobId())
+                    if (this.MobAttackTime < DateTime.Now && petAttackMob && getUserTurnId() == mob.getMobId() && IsMobFighted)
                     {
                         nextTurn();
                     }
-                    else if (getUserTurnId() == mob.getMobId() && this.MobAttackTime < DateTime.Now)
+                    else if (getUserTurnId() == mob.getMobId() && this.MobAttackTime < DateTime.Now && !IsMobFighted)
                     {
                         mobAttack();
+                    }
+                    else if (mob.getMobId() != getUserTurnId())
+                    {
+                        if (this.actions.Count > 0)
+                        {
+                            if (this.actions.TryDequeue(out BattleAction result))
+                            {
+                                if (result.IsNormalAttack)
+                                {
+                                    petAttack(result.Player);
+                                }
+                                else
+                                {
+                                    useSkill(result.Player, result.SkillId);
+                                }
+                            }
+                        }
                     }
                 }
                 if (hasWinner())
@@ -713,6 +694,7 @@ namespace Gopet.Battle
 
         private void nextTurn()
         {
+            IsMobFighted = false;
             setIsActiveTurn(!isActiveTurn);
             setDelaTimeTurn(Utilities.CurrentTimeMillis + GopetManager.TimeNextTurn);
             updateDamageToxic();
@@ -875,9 +857,7 @@ namespace Gopet.Battle
                     {
                         exp_sub_winner = Utilities.round(Utilities.GetValueFromPercent(expCurrentLvl, 3f));
                     }
-
                     nonPet.subExpPK(exp_sub);
-
                     win(petBattleTexts.ToArray(), price, 0);
                     winner.addCoin(Utilities.round(Utilities.GetValueFromPercent(coinPK, 50f)));
                     nonWinner.mineCoin(coinPK);
@@ -1298,9 +1278,10 @@ namespace Gopet.Battle
                 {
                     turnEffects.add(new TurnEffect(TurnEffect.SKILL_MISS, getFocus(), TurnEffect.SKILL_MISS, 0, 0));
                 }
+                this.MobAttackTime = DateTime.Now.AddSeconds(4);
+                this.IsMobFighted = true;
                 sendPetAttack(turnEffects, TurnEffect.createNormalAttack(activePet.mp, 0, getUserTurnId()));
             }
-            this.MobAttackTime = DateTime.Now.AddSeconds(5);
             if (hasWinner())
             {
                 win();
