@@ -1232,7 +1232,6 @@ namespace Gopet.Battle
                 JArrayList<TurnEffect> turnEffects = new();
                 bool isMiss = randMiss(getNonUserPetBattleInfo());
                 int sum = mob.getAtk();
-
                 if (!isMiss)
                 {
                     bool crit = mob.IsCrit;
@@ -1240,7 +1239,6 @@ namespace Gopet.Battle
                     {
                         sum *= 2;
                     }
-
                     foreach (ItemInfo itemInfo in passiveBattleInfo.getBuff())
                     {
                         switch (itemInfo.id)
@@ -1251,8 +1249,6 @@ namespace Gopet.Battle
 
                         }
                     }
-
-                    
                     Pet pet = getNonPet();
                     int buffDef = ItemInfo.getValueById(getNonUserPetBattleInfo().getBuff(), ItemInfo.Type.DEF);
                     bool flag = true;
@@ -1265,18 +1261,14 @@ namespace Gopet.Battle
                     }
                     if (flag)
                     {
-                        GopetManager.ServerMonitor.LogDebug($"SUM={sum},DEF={pet.getDef()},BUFFDEF={buffDef}");
                         sum = Math.Max(sum - (pet.getDef() + buffDef), 1);
-                        GopetManager.ServerMonitor.LogError($"SUM={sum},DEF={pet.getDef()},BUFFDEF={buffDef}");
                     }
                     if (!(mob is Boss))
                     {
                         if (ItemInfo.getValueById(activeBattleInfo.getBuff(), ItemInfo.Type.PHANDOAN_4_TURN) > 0)
                         {
                             float damagePer = ItemInfo.getValueById(activeBattleInfo.getBuff(), ItemInfo.Type.PHANDOAN_4_TURN) / 100f;
-                            GopetManager.ServerMonitor.LogError($"Tỉ lệ damge = {damagePer}");
                             int valueDg = Utilities.round(Utilities.GetValueFromPercent(sum, damagePer));
-                            GopetManager.ServerMonitor.LogError($"Phản đòn damge = {valueDg}");
                             passiveBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.DAMAGE_PHANDOAN, valueDg) }, 1));
                         }
                     }
