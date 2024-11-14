@@ -187,7 +187,9 @@ namespace Gopet.APIs
             for (int i = 0; i < 1; i++)
             {
                 Mob mob = gopetPlace.mobs[i];
-                gopetPlace.mobs[i] = new Boss(bossId, mob.getMobLocation());
+                Boss boss = new Boss(bossId, mob.getMobLocation());
+                boss.TimeOut = DateTime.Now.AddMinutes(15);
+                gopetPlace.mobs[i] = boss;
                 gopetPlace.mobs[i].SetId(mob.GetId());
             }
             return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
