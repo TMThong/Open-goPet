@@ -518,6 +518,7 @@ public partial class MenuController
          * FOR TESTER
          * for (int i = 0; i < 50000; i++)
          */
+        for (int i = 0; i < 10000; i++)
         {
             DateTime breakTime = DateTime.Now.AddMilliseconds(20);
             while (breakTime > DateTime.Now)
