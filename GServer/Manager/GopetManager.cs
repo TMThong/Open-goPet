@@ -189,6 +189,7 @@ public class GopetManager
     /// Danh hiệu sẽ tự vào nhân vật
     /// </summary>
     public const int ITEM_NATIVE_TITLE = 26;
+    public const int ITEM_THẺ_KỸ_NĂNG = 27;
     public const int GIFT_GOLD = 0;
     public const int GIFT_COIN = 1;
     public const int GIFT_ITEM = 2;

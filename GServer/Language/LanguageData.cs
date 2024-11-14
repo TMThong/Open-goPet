@@ -26,7 +26,7 @@ namespace Gopet.Language
         public Dictionary<int, string> SkillNameLanguage { get; set; } = new Dictionary<int, string>();
         public Dictionary<int, string> SkillDescLanguage { get; set; } = new Dictionary<int, string>();
         public Dictionary<int, string> BossNameLanguage { get; set; } = new Dictionary<int, string>();
-        public Dictionary<int, string> BannerLanguage { get; set; } = new Dictionary<int, string>() 
+        public Dictionary<int, string> BannerLanguage { get; set; } = new Dictionary<int, string>()
         {
             [BANNER_SHOW_ARENA_EVENT_BANNER] = "Các người chơi nhanh chóng đến đấu trường báo danh tham gia lôi đài còn {0} phút nữa bắt đầu rồi!!! ",
             [BANNER_SHOW_BOSS_SUMMON] = "Boss {0} đã xuất hiện tại {1} khu {2} nhanh tay lên nào!!!!",
@@ -514,5 +514,6 @@ namespace Gopet.Language
         public string SellTrashItemOK { get; set; } = "Bán {0} thành công và nhận được {1} ";
         public string USE_ITEM_UP_COIN_OK { get; set; } = "Sử dụng {0} thành công và thời gian hết tác dụng là {1}";
         public string IncorrectCoinValueWhenExchangeLua { get; set; } = "Số (ngoc) sai. Dư {0} (ngoc) nên không đổi được!";
+        public string UseSkillCardOK { get; set; } = "Sử dụng thẻ kỹ năng cho thú cưng thành công. Nhận được kỹ năng {0} (light)";
     }
 }

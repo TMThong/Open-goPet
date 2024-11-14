@@ -863,6 +863,18 @@ public partial class MenuController
                     }
                 }
                 break;
+            case MENU_SELECT_SLOT_USE_SKILL_CARD:
+                {
+                    JArrayList<Option> options = new JArrayList<Option>()
+                    {
+                        new Option(0, "Ô 1"),
+                        new Option(1, "Ô 2"),
+                        new Option(2, "Ô 3"),
+                        new Option(3, "Huỷ"),
+                    };
+                    player.controller.sendListOption(menuId, "Chọn ô kỹ năng để học kỹ năng", "", options);
+                }
+                break;
             case MENU_SELECT_ALL_PET_MERGE:
                 if (!player.playerData.IsMergeServer && player.controller.MergePlayerData != null)
                 {

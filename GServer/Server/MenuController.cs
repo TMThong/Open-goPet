@@ -122,6 +122,10 @@ public partial class MenuController
     public const int MENU_OPTION_ADMIN_GET_ITEM = 1072;
     public const int MENU_LOCK_ITEM_PLAYER = 1073;
     public const int MENU_UNLOCK_ITEM_PLAYER = 1074;
+    /// <summary>
+    /// Menu chọn ô để sử dụng thẻ kỹ năng
+    /// </summary>
+    public const int MENU_SELECT_SLOT_USE_SKILL_CARD = 1075;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -424,6 +428,11 @@ public partial class MenuController
     public const int OBJKEY_ITEM_ADMIN_GIVE_COUNT = 57;
     public const int OBJKEY_PLAYER_LOCK_ITEM = 58;
     public const int OBJKEY_PLAYER_UNLOCK_ITEM = 59;
+    /// <summary>
+    /// Id mẫu thử của thẻ kỹ năng khi ấn sử dụng
+    /// dùng khi menu chọn ô được gọi
+    /// </summary>
+    public const int OBJKEY_ITEM_SKILL_CARD_USE = 60;
     public const int DIALOG_CONFIRM_REMOVE_ITEM_EQUIP = 0;
     public const int DIALOG_CONFIRM_BUY_KIOSK_ITEM = 1;
     public const int DIALOG_ENCHANT = 3;
@@ -518,7 +527,6 @@ public partial class MenuController
          * FOR TESTER
          * for (int i = 0; i < 50000; i++)
          */
-        for (int i = 0; i < 10000; i++)
         {
             DateTime breakTime = DateTime.Now.AddMilliseconds(20);
             while (breakTime > DateTime.Now)

@@ -1250,6 +1250,38 @@ public partial class MenuController
                             player.controller.onReiceiveGift(new int[][] { new int[] { GopetManager.GIFT_TITLE, optionValue[0], 0, optionValue[1], optionValue[2], optionValue[3], optionValue[4], optionValue[5] } });
                             player.okDialog(player.Language.UseOK);
                             break;
+                        case GopetManager.ITEM_THẺ_KỸ_NĂNG:
+                            {
+                                Pet pet = player.playerData.petSelected;
+                                if (pet != null)
+                                {
+                                    if (pet.skillPoint > 0)
+                                    {
+                                        int skillid = Utilities.RandomArray(itemSelect.Template.itemOptionValue);
+                                        if (player.controller.TryUseCardSkill(skillid, -1, out var curPet))
+                                        {
+                                            player.okDialog(player.Language.UseSkillCardOK, GopetManager.PETSKILL_HASH_MAP[skillid].name);
+                                        }
+                                        else
+                                        {
+                                            player.fastAction();
+                                            return;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        player.controller.objectPerformed[OBJKEY_ITEM_SKILL_CARD_USE] = itemSelect.Template.itemId;
+                                        sendMenu(MENU_SELECT_SLOT_USE_SKILL_CARD, player);
+                                        return;
+                                    }
+                                }
+                                else
+                                {
+                                    player.petNotFollow();
+                                    return;
+                                }
+                            }
+                            break;
                         /*VUI LÒNG CHÚ Ý HÀM TRỪ VP CUỐI HÀNG*/
                         default:
                             {
@@ -2273,6 +2305,39 @@ public partial class MenuController
                                 break;
                         }
                     }
+                }
+                break;
+            case MENU_SELECT_SLOT_USE_SKILL_CARD:
+                {
+                    if (player.controller.objectPerformed.ContainsKey(OBJKEY_ITEM_SKILL_CARD_USE))
+                    {
+                        switch (index)
+                        {
+                            case 3: return;
+                            default:
+                                {
+                                    if (index >= 0 && index < 3)
+                                    {
+                                        Item item = player.controller.selectItemsbytemp(player.controller.objectPerformed[OBJKEY_ITEM_SKILL_CARD_USE], GopetManager.NORMAL_INVENTORY);
+                                        if (item != null && GameController.checkCount(item, 1))
+                                        {
+                                            int skillId = Utilities.RandomArray(item.optionValue);
+                                            if (player.controller.TryUseCardSkill(skillId, index, out var pet))
+                                            {
+                                                player.controller.subCountItem(item, 1, GopetManager.NORMAL_INVENTORY);
+                                                player.okDialog(player.Language.UseSkillCardOK, GopetManager.PETSKILL_HASH_MAP[skillId].name);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        player.redDialog(player.Language.BugWarning);
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                    else player.fastAction();
                 }
                 break;
             default:

@@ -1278,7 +1278,7 @@ namespace Gopet.Battle
                 {
                     turnEffects.add(new TurnEffect(TurnEffect.SKILL_MISS, getFocus(), TurnEffect.SKILL_MISS, 0, 0));
                 }
-                this.MobAttackTime = DateTime.Now.AddSeconds(4);
+                this.MobAttackTime = DateTime.Now.AddSeconds(2);
                 this.IsMobFighted = true;
                 sendPetAttack(turnEffects, TurnEffect.createNormalAttack(activePet.mp, 0, getUserTurnId()));
             }
