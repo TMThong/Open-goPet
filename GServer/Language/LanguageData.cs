@@ -391,7 +391,7 @@ namespace Gopet.Language
         public string ThisSkillNeedCard { get; set; } = "Kỹ năng này chỉ có thể học thông qua thẻ kỹ năng";
         public string LearnSkillPetOK { get; set; } = "Học kỹ năng thành công";
         public string SkillPetNotFound { get; set; } = "Không có kỹ năng này";
-        public string LearnSkillPetLaw { get; set; } = "Pet của bạn phải đạt mốc lvl 3, 5, 10 để học skill 1 2 3 nhé";
+        public string LearnSkillPetLaw { get; set; } = "Pet của bạn phải đạt mốc lvl 3, 5, 10 để học kỹ năng 1 2 3 nhé\n Hoặc do kỹ năng này bạn đã học rồi";
         public string DeleteGymOK { get; set; } = "Tẩy thành công";
         public string ThisIndicatorHasBeenErased { get; set; } = "Chỉ số này đã xóa hết rồi";
         public string YourPetIsDie { get; set; } = "Pet của bạn đang bị thương!!!";
@@ -515,5 +515,6 @@ namespace Gopet.Language
         public string USE_ITEM_UP_COIN_OK { get; set; } = "Sử dụng {0} thành công và thời gian hết tác dụng là {1}";
         public string IncorrectCoinValueWhenExchangeLua { get; set; } = "Số (ngoc) sai. Dư {0} (ngoc) nên không đổi được!";
         public string UseSkillCardOK { get; set; } = "Sử dụng thẻ kỹ năng cho thú cưng thành công. Nhận được kỹ năng {0} (light)";
+        public string IncorrectPetUseSkillCard { get; set; } = "Thú cưng của bạn không thể sử dụng thẻ kỹ năng";
     }
 }

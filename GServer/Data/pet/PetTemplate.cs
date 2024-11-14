@@ -1,5 +1,6 @@
-
+﻿
 using Gopet.Util;
+using Newtonsoft.Json;
 using System.Diagnostics;
 
 public class PetTemplate
@@ -39,5 +40,24 @@ public class PetTemplate
     public string getName(Player player)
     {
         return player.Language.PetNameLanguage[this.petId];
+    }
+    /// <summary>
+    /// Là pet thiên đình
+    /// </summary>
+    [JsonIgnore]
+    public bool IsSky
+    {
+        get
+        {
+            switch (nclass)
+            {
+                case GopetManager.Angel:
+                case GopetManager.Demon:
+                case GopetManager.Archer:
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
 }

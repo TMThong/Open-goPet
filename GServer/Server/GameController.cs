@@ -5058,11 +5058,16 @@ public class GameController
         }
     }
 
-    public bool TryUseCardSkill(int skillId, int indexSlot = 1, out Pet myPet)
+    public bool TryUseCardSkill(int skillId, int indexSlot, out Pet myPet)
     {
         myPet = player.playerData.petSelected;
         if (myPet != null)
         {
+            if (myPet.skill.Any(x => x[0] == skillId))
+            {
+                return false;
+            }
+
             if (indexSlot < 0 && myPet.skill.Length < 3)
             {
                 if (myPet.skillPoint > 0)
@@ -5071,14 +5076,9 @@ public class GameController
                     myPet.addSkill(skillId, 1);
                     return true;
                 }
-                else
-                {
-                    player.redDialog(player.Language.LearnSkillPetLaw);
-                    return false;
-                }
             }
 
-            if (indexSlot >= 0 && indexSlot < 3)
+            if (indexSlot >= 0 && indexSlot < 3 && indexSlot < myPet.skill.Length)
             {
                 myPet.skill[indexSlot][0] = skillId;
                 myPet.skill[indexSlot][1] = 1;

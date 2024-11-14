@@ -1255,16 +1255,35 @@ public partial class MenuController
                                 Pet pet = player.playerData.petSelected;
                                 if (pet != null)
                                 {
+                                    if (!pet.Template.IsSky)
+                                    {
+                                        player.redDialog(player.Language.IncorrectPetUseSkillCard);
+                                        return;
+                                    }
                                     if (pet.skillPoint > 0)
                                     {
-                                        int skillid = Utilities.RandomArray(itemSelect.Template.itemOptionValue);
+                                        int[] skillCanLearn = itemSelect.Template.itemOptionValue.Where(x => !pet.skill.Select(m => m[0]).Contains(x)).ToArray();
+                                        if (skillCanLearn.Length <= 0)
+                                        {
+                                            player.redDialog(player.Language.IncorrectPetUseSkillCard);
+                                            return;
+                                        }
+                                        int skillid = Utilities.RandomArray(skillCanLearn);
                                         if (player.controller.TryUseCardSkill(skillid, -1, out var curPet))
                                         {
                                             player.okDialog(player.Language.UseSkillCardOK, GopetManager.PETSKILL_HASH_MAP[skillid].name);
+                                            HistoryManager.addHistory(new History(player).
+                                                    setLog($"Dùng thẻ skill {itemSelect.Template.name} học được kỹ năng {GopetManager.PETSKILL_HASH_MAP[skillid].name}").
+                                                    setObj(new
+                                                    {
+                                                        ItemCard = itemSelect,
+                                                        skillId = skillid,
+                                                        Pet = pet
+                                                    }));
                                         }
                                         else
                                         {
-                                            player.fastAction();
+                                            player.redDialog(player.Language.LearnSkillPetLaw);
                                             return;
                                         }
                                     }
@@ -2309,6 +2328,12 @@ public partial class MenuController
                 break;
             case MENU_SELECT_SLOT_USE_SKILL_CARD:
                 {
+                    Pet p = player.getPet();
+                    if (p == null || !player.playerData.petSelected.Template.IsSky)
+                    {
+                        player.redDialog(player.Language.IncorrectPetUseSkillCard);
+                        return;
+                    }
                     if (player.controller.objectPerformed.ContainsKey(OBJKEY_ITEM_SKILL_CARD_USE))
                     {
                         switch (index)
@@ -2321,11 +2346,29 @@ public partial class MenuController
                                         Item item = player.controller.selectItemsbytemp(player.controller.objectPerformed[OBJKEY_ITEM_SKILL_CARD_USE], GopetManager.NORMAL_INVENTORY);
                                         if (item != null && GameController.checkCount(item, 1))
                                         {
-                                            int skillId = Utilities.RandomArray(item.optionValue);
+                                            int[] skillCanLearn = item.Template.itemOptionValue.Where(x => !p.skill.Select(m => m[0]).Contains(x)).ToArray();
+                                            if (skillCanLearn.Length <= 0)
+                                            {
+                                                player.redDialog(player.Language.IncorrectPetUseSkillCard);
+                                                return;
+                                            }
+                                            int skillId = Utilities.RandomArray(skillCanLearn);
                                             if (player.controller.TryUseCardSkill(skillId, index, out var pet))
                                             {
                                                 player.controller.subCountItem(item, 1, GopetManager.NORMAL_INVENTORY);
                                                 player.okDialog(player.Language.UseSkillCardOK, GopetManager.PETSKILL_HASH_MAP[skillId].name);
+                                                HistoryManager.addHistory(new History(player).
+                                                    setLog($"Dùng thẻ skill {item.Template.name} học được kỹ năng {GopetManager.PETSKILL_HASH_MAP[skillId].name}").
+                                                    setObj(new
+                                                    {
+                                                        ItemCard = item,
+                                                        skillId = skillId,
+                                                        Pet = pet
+                                                    }));
+                                            }
+                                            else
+                                            {
+                                                player.redDialog(player.Language.LearnSkillPetLaw);
                                             }
                                         }
                                     }
