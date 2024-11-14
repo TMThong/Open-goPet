@@ -172,6 +172,7 @@ public class ChallengePlace : GopetPlace
                     int[] XY = MOB_XY[i];
                     MobLocation mobLocation = new MobLocation(this.map.mapID, XY[0], XY[1]);
                     Boss b = new Boss(GopetManager.ID_BOSS_CHALLENGE[indexBoss], mobLocation);
+                    b.TimeOut = DateTime.Now.AddMilliseconds(TIME_ATTACK);
                     b.setMobId(-(i + 1));
                     this.addNewMob(b);
                 }
