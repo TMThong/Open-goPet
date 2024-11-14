@@ -1486,6 +1486,9 @@ namespace Gopet.Battle
                     case ItemInfo.Type.PHANDOAN_4_TURN:
                         petBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 3));
                         break;
+                    case ItemInfo.Type.TỈ_LỆ_ĐỊNH_THÂN_KHI_ĐÁNH_TRÚNG:
+                        petBattleInfo.addBuff(new Buff(new ItemInfo[] { i }, 2));
+                        break;
                 }
             }
         }
