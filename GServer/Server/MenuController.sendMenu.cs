@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Gopet.Data.top;
 using Gopet.Data.dialog;
 using Gopet.Data.Clan;
+using Gopet.Data.Event.Year2024;
 
 public partial class MenuController
 {
@@ -897,6 +898,17 @@ public partial class MenuController
                     player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.YourPet, petItemInfos);
                 }
                 return;
+            case MENU_OPTION_USE_FLOWER:
+                {
+                    JArrayList<Option> options = new JArrayList<Option>()
+                    {
+                        new Option(0, $"Tặng {Utilities.FormatNumber(TeacherDay2024.Data[0].Item1)} (vang) và {TeacherDay2024.Data[0].Item2} boá hoa"),
+                        new Option(1, $"Tặng {Utilities.FormatNumber(TeacherDay2024.Data[1].Item1)} (ngoc) và {TeacherDay2024.Data[1].Item2} boá hoa"),
+                        new Option(2, "Huỷ"),
+                    };
+                    player.controller.sendListOption(menuId, "Chọn phương thức tặng hoa", "", options);
+                }
+                break;
         }
     }
 }

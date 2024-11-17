@@ -18,9 +18,29 @@ namespace Gopet.Data.Event.Year2024
     {
         public static readonly TeacherDay2024 Instance = new TeacherDay2024();
 
+        public static readonly Tuple<int, int>[] Data = new Tuple<int, int>[]
+        {
+            new Tuple<int, int>(20000, 30),
+            new Tuple<int, int>(500, 30)
+        };
+
+        public const int BOÁ_HOA = 240018;
+
+        public override int[] ItemsOfEvent
+        {
+            get => new int[] { BOÁ_HOA };
+        }
         protected TeacherDay2024()
         {
             this.Name = "Sự kiện ngày nhà giáo Việt Nam";
+        }
+
+        public override void UseItem(int itemId, Player player)
+        {
+            if (itemId == BOÁ_HOA)
+            {
+                player.redDialog(player.Language.PleaseGoToNPCToUseFlower);
+            }
         }
 
         public override void Init()

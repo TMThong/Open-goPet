@@ -456,6 +456,10 @@ public partial class MenuController
                 }
                 break;
             case OP_TẶNG_HOA_NPC:
+                if (TeacherDay2024.Instance.Condition)
+                {
+                    sendMenu(MENU_OPTION_USE_FLOWER, player);
+                }
                 break;
             case OP_XEM_TOP_FLOWER_GOLD:
                 showTop(TeacherDay2024.TopFlowerGold.Instance, player);
