@@ -17,6 +17,7 @@ using Gopet.Data.Event;
 using Gopet.Data.user;
 using Gopet.Manager;
 using Gopet.Data.Clan;
+using Gopet.Data.Event.Year2024;
 
 public partial class MenuController
 {
@@ -2381,6 +2382,36 @@ public partial class MenuController
                         }
                     }
                     else player.fastAction();
+                }
+                break;
+            case MENU_OPTION_USE_FLOWER:
+                {
+                    if (TeacherDay2024.Instance.Condition)
+                    {
+                        if (index >= 0 && index < 2)
+                        {
+                            Item itemFlower = player.controller.selectItemsbytemp(TeacherDay2024.BOÁ_HOA, GopetManager.NORMAL_INVENTORY);
+                            if (checkMoney((sbyte)index, TeacherDay2024.Data[index].Item1, player) && player.controller.checkCountItem(itemFlower, TeacherDay2024.Data[index].Item2))
+                            {
+                                player.controller.subCountItem(itemFlower, TeacherDay2024.Data[index].Item2, GopetManager.NORMAL_INVENTORY);
+                                addMoney((sbyte)index, -TeacherDay2024.Data[index].Item1, player);
+                                switch (index)
+                                {
+                                    case 0:
+                                        player.playerData.NumGiveFlowerGold += 10;
+                                        break;
+                                    case 1:
+                                        player.playerData.NumGiveFlowerGem += 10;
+                                        break;
+                                }
+                                player.okDialog(player.Language.UseFlowerOK);
+                            }
+                            else
+                            {
+                                player.redDialog(player.Language.NotEnoughMaterial);
+                            }
+                        }
+                    }
                 }
                 break;
             default:
