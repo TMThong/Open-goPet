@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace Gopet.Data.Map
 {
@@ -6,6 +6,10 @@ namespace Gopet.Data.Map
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     public class NpcTemplate
     {
+        #region CONST
+        public const int TRẦN_CHÂN = -1;
+        #endregion
+
         public int npcId;
         public sbyte type;
         public string name;

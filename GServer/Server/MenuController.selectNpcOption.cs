@@ -455,6 +455,14 @@ public partial class MenuController
                     player.redDialog("Ở server cũ bạn không có nhân vật hoặc đã nhận đồ gộp rồi");
                 }
                 break;
+            case OP_TẶNG_HOA_NPC:
+                break;
+            case OP_XEM_TOP_FLOWER_GOLD:
+                showTop(TeacherDay2024.TopFlowerGold.Instance, player);
+                return;
+            case OP_XEM_TOP_FLOWER_GEM:
+                showTop(TeacherDay2024.TopFlowerGem.Instance, player);
+                return;
             default:
                 player.redDialog(player.Language.FeatureIsNotFound);
                 break;

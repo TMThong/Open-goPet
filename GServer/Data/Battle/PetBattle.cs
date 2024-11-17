@@ -1282,6 +1282,10 @@ namespace Gopet.Battle
                 this.IsMobFighted = true;
                 sendPetAttack(turnEffects, TurnEffect.createNormalAttack(activePet.mp, 0, getUserTurnId()));
             }
+            else
+            {
+                this.IsMobFighted = true;
+            }
             if (hasWinner())
             {
                 win();

@@ -516,5 +516,8 @@ namespace Gopet.Language
         public string IncorrectCoinValueWhenExchangeLua { get; set; } = "Số (ngoc) sai. Dư {0} (ngoc) nên không đổi được!";
         public string UseSkillCardOK { get; set; } = "Sử dụng thẻ kỹ năng cho thú cưng thành công. Nhận được kỹ năng {0} (light)";
         public string IncorrectPetUseSkillCard { get; set; } = "Thú cưng của bạn không thể sử dụng thẻ kỹ năng";
+        public string GiveFlowerToNPC { get; set; } = "Tặng hoa";
+        public string ViewTopFlowerGold { get; set; } = "TOP Tặng Vàng, Dâng Hoa";
+        public string ViewTopFlowerGem { get; set; } = "TOP Dâng Ngọc, Tặng Hoa";
     }
 }

@@ -1,4 +1,4 @@
-
+﻿
 using Dapper;
 using Gopet.Data.Collections;
 using Gopet.Data.GopetItem;
@@ -77,6 +77,17 @@ public class PlayerData
     public DateTime TimeDropCoin { get; set; } = DateTime.Now;
 
     public bool IsMergeServer { get; set; } = false;
+    /// <summary>
+    /// Trường thuộc sự kiện 20/11 2024
+    /// Trường này để ghi lại số lượng hoa tặng dùng vàng
+    /// </summary>
+    public int NumGiveFlowerGold { get; set; } = 0;
+    /// <summary>
+    /// Trường thuộc sự kiện 20/11 2024
+    /// Trường này để ghi lại số lượng hoa tặng dùng ngọc
+    /// </summary>
+    public int NumGiveFlowerGem { get; set; } = 0;
+
 
     public PlayerData()
     {

@@ -327,6 +327,21 @@ public partial class MenuController
     public const int OP_SHOW_TOP_CHALLENGE = 80;
     public const int OP_MENU_MERGE_SERVER = 81;
     /// <summary>
+    /// Sự kiện 20/11 2024
+    /// Tuỳ chọn để hiển thị menu tặng hoa cho NPC
+    /// </summary>
+    public const int OP_TẶNG_HOA_NPC = 82;
+    /// <summary>
+    /// Sự kiện 20/11 2024
+    /// Tuỳ chọn để hiển thị top người chơi tặng hoa + gold
+    /// </summary>
+    public const int OP_XEM_TOP_FLOWER_GOLD = 83;
+    /// <summary>
+    /// Sự kiện 20/11 2024
+    /// Tuỳ chọn để hiển thị top người chơi tặng hoa + gem
+    /// </summary>
+    public const int OP_XEM_TOP_FLOWER_GEM = 84;
+    /// <summary>
     /// Option Custom
     /// Trao đổi thưởng bằng 
     /// </summary>
@@ -707,7 +722,7 @@ public partial class MenuController
         {
             MenuItemInfo menuItemInfo = new MenuItemInfo(myInfoTop.title, myInfoTop.desc, myInfoTop.imgPath, false);
             menuItemInfos.add(menuItemInfo);
-            menuItemInfos.add(new MenuItemInfo("----------TOP----------", "", "npcs/lixi.png", false));
+            menuItemInfos.add(new MenuItemInfo("----------TOP----------", "", top.HrImagePath, false));
         }
 
         foreach (TopData data in top.datas)

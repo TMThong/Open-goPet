@@ -13,6 +13,8 @@ namespace Gopet.Data.Event
         public virtual bool Condition { get; set; }
         public virtual bool NeedRemove { get; set; }
 
+        public bool IsInitOK { get; set; } = false;
+
         public virtual int[] ItemsOfEvent { get; set; } = new int[0];
 
         protected EventBase() { }
@@ -42,6 +44,15 @@ namespace Gopet.Data.Event
         }
 
         public virtual void NpcOption(Player player, int optionId)
+        {
+
+        }
+
+        /// <summary>
+        /// Khởi tạo sự kiện
+        /// </summary>
+
+        public virtual void Init()
         {
 
         }

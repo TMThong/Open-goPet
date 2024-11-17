@@ -37,4 +37,6 @@ public class Top
     {
         return datas;
     }
+
+    public virtual string HrImagePath { get; set; } = "npcs/lixi.png";
 }

@@ -21,6 +21,7 @@ namespace Gopet.Manager
             //_events.Add(Summer2024Event.Instance);
             _events.Add(BannerEvent.Instance);
             _events.Add(Winter2024Event.Instance);
+            _events.Add(TeacherDay2024.Instance);
         }
 
         public static void AddEvent(EventBase eventBase)
@@ -55,6 +56,12 @@ namespace Gopet.Manager
             {
                 foreach (var item in _events.ToArray())
                 {
+                    if (!item.IsInitOK)
+                    {
+                        item.Init();
+                        item.IsInitOK = true;
+                        continue;
+                    }
                     if (item.Condition)
                     {
                         try
