@@ -520,5 +520,6 @@ namespace Gopet.Language
         public string ViewTopFlowerGold { get; set; } = "TOP Tặng Vàng, Dâng Hoa";
         public string ViewTopFlowerGem { get; set; } = "TOP Dâng Ngọc, Tặng Hoa";
         public string PleaseGoToNPCToUseFlower { get; set; } = "Để dùng boá hoa bạn vui lòng đến gặp NPC Tran Chan để tặng!";
+        public string UseFlowerOK { get; set; } = "Tặng hoa thành công! Nhận được 10 điểm tích luỹ";
     }
 }
