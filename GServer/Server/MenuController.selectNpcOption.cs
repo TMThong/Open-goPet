@@ -467,6 +467,9 @@ public partial class MenuController
             case OP_XEM_TOP_FLOWER_GEM:
                 showTop(TeacherDay2024.TopFlowerGem.Instance, player);
                 return;
+            case OP_NHẬN_QUÀ_MỐC:
+                TeacherDay2024.Instance.ReceiveMilistoneGift(player);
+                break;
             default:
                 player.redDialog(player.Language.FeatureIsNotFound);
                 break;

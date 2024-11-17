@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Gopet.Data.GopetItem;
 using Gopet.Data.Map;
 using Gopet.Language;
 using Gopet.Util;
@@ -20,8 +21,16 @@ namespace Gopet.Data.Event.Year2024
 
         public static readonly Tuple<int, int>[] Data = new Tuple<int, int>[]
         {
-            new Tuple<int, int>(20000, 30),
-            new Tuple<int, int>(500, 30)
+            new Tuple<int, int>(500, 30),
+            new Tuple<int, int>(20000, 30)
+        };
+
+        public static readonly Tuple<int, int, int>[] GiftMilistones = new Tuple<int, int, int>[]
+        {
+            new Tuple<int, int,int>(5000, 132,2),
+            new Tuple<int, int,int>(10000, 140,2),
+            new Tuple<int, int,int>(50000, 141,2),
+            new Tuple<int, int,int>(100000, 142,2),
         };
 
         public const int BOÁ_HOA = 240018;
@@ -53,13 +62,37 @@ namespace Gopet.Data.Event.Year2024
                     item1.Value.NpcOptionLanguage[MenuController.OP_TẶNG_HOA_NPC] = item1.Value.GiveFlowerToNPC;
                     item1.Value.NpcOptionLanguage[MenuController.OP_XEM_TOP_FLOWER_GOLD] = item1.Value.ViewTopFlowerGold;
                     item1.Value.NpcOptionLanguage[MenuController.OP_XEM_TOP_FLOWER_GEM] = item1.Value.ViewTopFlowerGem;
+                    item1.Value.NpcOptionLanguage[MenuController.OP_NHẬN_QUÀ_MỐC] = item1.Value.GetMilistoneGiftTeacherEvent;
                 }
                 BXHManager.listTop.Add(TopFlowerGold.Instance);
                 BXHManager.listTop.Add(TopFlowerGem.Instance);
                 NpcTemplate npcTemplate = GopetManager.npcTemplate[NpcTemplate.TRẦN_CHÂN];
-                npcTemplate.optionId = npcTemplate.optionId.Concat(new int[] { MenuController.OP_TẶNG_HOA_NPC, MenuController.OP_XEM_TOP_FLOWER_GOLD, MenuController.OP_XEM_TOP_FLOWER_GEM }).ToArray();
-                npcTemplate.optionName = npcTemplate.optionName.Concat(new string[] { languageData.GiveFlowerToNPC, languageData.ViewTopFlowerGold, languageData.ViewTopFlowerGem }).ToArray();
+                npcTemplate.optionId = npcTemplate.optionId.Concat(new int[] { MenuController.OP_TẶNG_HOA_NPC, MenuController.OP_XEM_TOP_FLOWER_GOLD, MenuController.OP_XEM_TOP_FLOWER_GEM, MenuController.OP_NHẬN_QUÀ_MỐC }).ToArray();
+                npcTemplate.optionName = npcTemplate.optionName.Concat(new string[] { languageData.GiveFlowerToNPC, languageData.ViewTopFlowerGold, languageData.ViewTopFlowerGem, languageData.GetMilistoneGiftTeacherEvent }).ToArray();
             }
+        }
+
+
+        public void ReceiveMilistoneGift(Player player)
+        {
+            if (Condition)
+            {
+                int point = Math.Max(player.playerData.NumGiveFlowerGold, player.playerData.NumGiveFlowerGem);
+                if (player.playerData.IndexMilistoneTeacherEvent < GiftMilistones.Length)
+                {
+                    Tuple<int, int, int> milistone = GiftMilistones[player.playerData.IndexMilistoneTeacherEvent];
+                    if (point >= milistone.Item1)
+                    {
+                        Item item = new Item(milistone.Item2, milistone.Item3);
+                        player.addItemToInventory(item);
+                        player.okDialog(player.Language.GetMilistoneGiftTeacherEventOK, item.getName(player));
+                        player.playerData.IndexMilistoneTeacherEvent++;
+                    }
+                    else player.redDialog(player.Language.GetMilistoneGiftTeacherEventErorr, Utilities.FormatNumber(point), Utilities.FormatNumber(milistone.Item1));
+                }
+                else player.redDialog(player.Language.InvalidFlowerMilestone);
+            }
+            else player.redDialog(player.Language.EventHadFinished);
         }
 
 

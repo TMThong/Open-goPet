@@ -343,6 +343,11 @@ public partial class MenuController
     /// </summary>
     public const int OP_XEM_TOP_FLOWER_GEM = 84;
     /// <summary>
+    /// Sự kiện 20/11 2024
+    /// Tuỳ chọn để nhận quà mốc sự kiện nhà giáo
+    /// </summary>
+    public const int OP_NHẬN_QUÀ_MỐC = 85;
+    /// <summary>
     /// Option Custom
     /// Trao đổi thưởng bằng 
     /// </summary>

@@ -49,7 +49,10 @@ namespace Gopet.MServer
                 try
                 {
                     TcpClient client = _listener.AcceptTcpClient();
-                    ThreadPool.QueueUserWorkItem(setupClient, client);
+                    Thread thread = new Thread(() => setupClient(client));
+                    thread.IsBackground = true;
+                    thread.Name = "Setup session thread";
+                    thread.Start();
                 }
                 catch (Exception e)
                 {

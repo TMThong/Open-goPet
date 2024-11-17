@@ -344,6 +344,7 @@ Thread.Sleep(1000);
                 controller.unfollowPet(playerData.petSelected);
                 playerData.petSelected = null;
                 Popup(Language.PetExpire);
+                return;
             }
         }
 
@@ -352,7 +353,7 @@ Thread.Sleep(1000);
             playerData.petSelected.petDieByPK = false;
         }
 
-        if (isPetRecovery && petHpRecovery < Utilities.CurrentTimeMillis && !playerData.petSelected.petDieByPK && Utilities.CurrentTimeMillis > controller.delayTimeHealPet && Utilities.CurrentTimeMillis > playerData.petSelected.TimeDieZ)
+        if (isPetRecovery && this.controller.getPetBattle() == null && petHpRecovery < Utilities.CurrentTimeMillis && !playerData.petSelected.petDieByPK && Utilities.CurrentTimeMillis > controller.delayTimeHealPet && Utilities.CurrentTimeMillis > playerData.petSelected.TimeDieZ)
         {
             playerData.petSelected.addHpPet((int)Utilities.GetValueFromPercent(20f, playerData.petSelected.maxHp));
             playerData.petSelected.addMp((int)Utilities.GetValueFromPercent(20f, playerData.petSelected.maxMp));

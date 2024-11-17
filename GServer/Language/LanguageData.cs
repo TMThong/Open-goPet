@@ -521,5 +521,11 @@ namespace Gopet.Language
         public string ViewTopFlowerGem { get; set; } = "TOP Dâng Ngọc, Tặng Hoa";
         public string PleaseGoToNPCToUseFlower { get; set; } = "Để dùng boá hoa bạn vui lòng đến gặp NPC Tran Chan để tặng!";
         public string UseFlowerOK { get; set; } = "Tặng hoa thành công! Nhận được 10 điểm tích luỹ";
+        public string FlowerMilestone { get; set; } = "Nhận mốc tặng hoa";
+        public string InvalidFlowerMilestone { get; set; } = "Bạn đã nhận cột mốc cuối rồi";
+        public string EventHadFinished { get; set; } = "Sự kiện đã kết thúc rồi!";
+        public string GetMilistoneGiftTeacherEventErorr { get; set; } = "Bạn hiện có {0} điểm và cột mốc cần {1} điểm. Lưu ý điểm {0} dựa trên số điểm sự kiện cao nhất giữa dâng ngọc tặng hoa và tặng vàng dâng hoa!!!";
+        public string GetMilistoneGiftTeacherEventOK { get; set; } = "Nhận quà mốc thành công! Bạn nhận được {0}";
+        public string GetMilistoneGiftTeacherEvent { get; set; } = "Nhận quà mốc";
     }
 }

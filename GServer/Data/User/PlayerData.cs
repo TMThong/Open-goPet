@@ -87,6 +87,11 @@ public class PlayerData
     /// Trường này để ghi lại số lượng hoa tặng dùng ngọc
     /// </summary>
     public int NumGiveFlowerGem { get; set; } = 0;
+    /// <summary>
+    /// Trường thuộc sự kiện 20/11 2024
+    /// rường này để ghi lại chỉ mục của cột mốc quà sự kiện
+    /// </summary>
+    public byte IndexMilistoneTeacherEvent { get; set; } = 0;
 
 
     public PlayerData()
@@ -160,7 +165,10 @@ public class PlayerData
                             ClanTasked = @ClanTasked,
                             TimeDropCoin = @TimeDropCoin,
                             lua = @lua,
-                            IsMergeServer = @IsMergeServer
+                            IsMergeServer = @IsMergeServer,
+                            NumGiveFlowerGold = @NumGiveFlowerGold,
+                            NumGiveFlowerGem = @NumGiveFlowerGem,
+                            IndexMilistoneTeacherEvent = @IndexMilistoneTeacherEvent
                             WHERE ID = @ID", playerData);
     }
 
