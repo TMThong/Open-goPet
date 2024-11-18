@@ -48,7 +48,7 @@ public partial class MenuController
                     player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.SellYourItemMenuTitle, menuItemInfos);
                 }
                 break;
-
+            case MENU_FUSION_MENU_PET:
             case MENU_SELECT_PET_TO_DEF_LEAGUE:
             case MENU_KIOSK_PET_SELECT:
             case MENU_PET_INVENTORY:
@@ -957,6 +957,17 @@ public partial class MenuController
                             player.controller.sendListOption(menuId, player.Language.FusionTitle, "", options);
                         }
                     }
+                }
+                break;
+            case MENU_FUSION_PET_OPTION:
+                {
+                    JArrayList<Option> options = new JArrayList<Option>()
+                    {
+                        new Option(0, player.Language.SelectMainFusionPet),
+                        new Option(1, player.Language.SelectDeputyFusionPet),
+                        new Option(2, player.Language.FusionTitle),
+                    };
+                    player.controller.sendListOption(menuId, player.Language.FusionTitle, "", options);
                 }
                 break;
         }
