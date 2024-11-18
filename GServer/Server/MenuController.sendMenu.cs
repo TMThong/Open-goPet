@@ -933,12 +933,25 @@ public partial class MenuController
                 break;
             case MENU_FUSION_EQUIP_OPTION_COMFIRM:
                 {
-                    JArrayList<Option> options = new JArrayList<Option>()
+                    if (player.controller.objectPerformed.ContainsKeyZ(OBJKEY_MAIN_ITEM_ID_FUSION, OBJKEY_DEPUTY_ITEM_ID_FUSION))
                     {
-                        new Option(0, player.Language.SelectMainFusionItem),
-                        new Option(1, player.Language.SelectDeputyFusionItem)
-                    };
-                    player.controller.sendListOption(menuId, player.Language.FusionTitle, "", options);
+                        Item itemMain = player.controller.selectItemByItemId(player.controller.objectPerformed[OBJKEY_MAIN_ITEM_ID_FUSION], GopetManager.EQUIP_PET_INVENTORY);
+                        Item itemDeputy = player.controller.selectItemByItemId(player.controller.objectPerformed[OBJKEY_DEPUTY_ITEM_ID_FUSION], GopetManager.EQUIP_PET_INVENTORY);
+                        if (itemDeputy == null || itemMain == null)
+                        {
+                            player.redDialog(player.Language.ItemNotFound);
+                            return;
+                        }
+                        if (itemMain.NumFusion < GopetManager.FusionGOLD.Length)
+                        {
+                            JArrayList<Option> options = new JArrayList<Option>()
+                            {
+                                new Option(0, string.Format(player.Language.FusionEquipByGOLD, Utilities.FormatNumber(GopetManager.FusionData[GopetManager.MONEY_TYPE_GOLD][itemMain.NumFusion].Item1), GopetManager.FusionData[GopetManager.MONEY_TYPE_GOLD][itemMain.NumFusion].Item2, itemMain.NumFusion + 1)),
+                                new Option(1, string.Format(player.Language.FusionEquipByGEM, Utilities.FormatNumber(GopetManager.FusionData[GopetManager.MONEY_TYPE_COIN][itemMain.NumFusion].Item1), GopetManager.FusionData[GopetManager.MONEY_TYPE_COIN][itemMain.NumFusion].Item2, itemMain.NumFusion + 1)),
+                            };
+                            player.controller.sendListOption(menuId, player.Language.FusionTitle, "", options);
+                        }
+                    }
                 }
                 break;
         }
