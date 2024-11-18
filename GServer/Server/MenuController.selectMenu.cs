@@ -2437,7 +2437,55 @@ public partial class MenuController
                 {
                     switch (index)
                     {
-                         
+                        case 0:
+                            {
+                                if (player.controller.objectPerformed.ContainsKeyZ(OBJKEY_CURRENT_ITEM_ID_FUSION, OBJKEY_CURRENT_ITEM_TEMP_ID_FUSION))
+                                {
+                                    Item item = player.controller.selectItemByItemId(player.controller.objectPerformed[OBJKEY_CURRENT_ITEM_ID_FUSION], GopetManager.EQUIP_PET_INVENTORY);
+                                    if (item != null)
+                                    {
+                                        if (item.lvl >= 10)
+                                        {
+                                            player.controller.objectPerformed[OBJKEY_MAIN_ITEM_ID_FUSION] = item.itemId;
+                                            player.okDialog(player.Language.SelectMainFusionItemOK);
+                                        }
+                                        else player.redDialog(player.Language.SelectMainFusionItemFail);
+                                    }
+                                    else player.redDialog(player.Language.ItemNotFound);
+                                }
+                            }
+                            break;
+                        case 1:
+                            {
+                                if (player.controller.objectPerformed.ContainsKeyZ(OBJKEY_CURRENT_ITEM_ID_FUSION, OBJKEY_CURRENT_ITEM_TEMP_ID_FUSION))
+                                {
+                                    Item item = player.controller.selectItemByItemId(player.controller.objectPerformed[OBJKEY_CURRENT_ITEM_ID_FUSION], GopetManager.EQUIP_PET_INVENTORY);
+                                    if (item != null)
+                                    {
+                                        player.controller.objectPerformed[OBJKEY_DEPUTY_ITEM_ID_FUSION] = item.itemId;
+                                        player.okDialog(player.Language.SelectDeputyFusionItemOK);
+                                    }
+                                    else player.redDialog(player.Language.ItemNotFound);
+                                }
+                            }
+                            break;
+                        case 2:
+                            {
+                                if (player.controller.objectPerformed.ContainsKeyZ(OBJKEY_MAIN_ITEM_ID_FUSION, OBJKEY_DEPUTY_ITEM_ID_FUSION))
+                                {
+                                    Item itemMain = player.controller.selectItemByItemId(player.controller.objectPerformed[OBJKEY_MAIN_ITEM_ID_FUSION], GopetManager.EQUIP_PET_INVENTORY);
+                                    Item itemDeputy = player.controller.selectItemByItemId(player.controller.objectPerformed[OBJKEY_DEPUTY_ITEM_ID_FUSION], GopetManager.EQUIP_PET_INVENTORY);
+                                    if (itemDeputy == null || itemMain == null)
+                                    {
+                                        player.redDialog(player.Language.ItemNotFound);
+                                        return;
+                                    }
+
+
+                                }
+                                else player.redDialog(player.Language.FusionFailByNotEnoughtItem);
+                            }
+                            break;
                     }
                 }
                 break;
