@@ -182,37 +182,12 @@ namespace Gopet.Data.GopetItem
             return iconPath;
         }
 
-        public sbyte getGender()
-        {
-            return gender;
-        }
-
-        public long getExpire()
-        {
-            return expire;
-        }
-
-
-
-        public bool isCanTrade()
-        {
-            return canTrade;
-        }
 
         public sbyte getNClass()
         {
             return petNClass;
         }
 
-        public int getIconId()
-        {
-            return iconId;
-        }
-
-        public sbyte getElement()
-        {
-            return element;
-        }
         /// <summary>
         /// Là trang bị
         /// </summary>
