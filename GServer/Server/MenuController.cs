@@ -127,6 +127,10 @@ public partial class MenuController
     /// </summary>
     public const int MENU_SELECT_SLOT_USE_SKILL_CARD = 1075;
     public const int MENU_OPTION_USE_FLOWER = 1076;
+    public const int MENU_OPTION_SHOW_FUSION_MENU = 1077;
+    public const int MENU_FUSION_MENU_EQUIP = 1078;
+    public const int MENU_FUSION_MENU_PET = 1079;
+    public const int MENU_FUSION_EQUIP_OPTION = 1080;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -458,6 +462,8 @@ public partial class MenuController
     /// dùng khi menu chọn ô được gọi
     /// </summary>
     public const int OBJKEY_ITEM_SKILL_CARD_USE = 60;
+    public const int OBJKEY_CURRENT_ITEM_ID_FUSION = 61;
+    public const int OBJKEY_CURRENT_ITEM_TEMP_ID_FUSION = 62;
     public const int DIALOG_CONFIRM_REMOVE_ITEM_EQUIP = 0;
     public const int DIALOG_CONFIRM_BUY_KIOSK_ITEM = 1;
     public const int DIALOG_ENCHANT = 3;
@@ -1047,6 +1053,12 @@ public partial class MenuController
     {
         switch (menuId)
         {
+            case MENU_FUSION_MENU_EQUIP:
+                if (player.controller.objectPerformed.ContainsKey(OBJKEY_CURRENT_ITEM_TEMP_ID_FUSION))
+                {
+                    return new CopyOnWriteArrayList<Item>(player.playerData.getInventoryOrCreate(GopetManager.EQUIP_PET_INVENTORY).Where(x => x.Template.CanFusion && x.Template.itemId == player.controller.objectPerformed[OBJKEY_CURRENT_ITEM_TEMP_ID_FUSION]));
+                }
+                return new CopyOnWriteArrayList<Item>(player.playerData.getInventoryOrCreate(GopetManager.EQUIP_PET_INVENTORY).Where(x => x.Template.CanFusion));
             case MENU_UNLOCK_ITEM_PLAYER:
             case MENU_LOCK_ITEM_PLAYER:
                 {
