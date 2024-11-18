@@ -536,7 +536,9 @@ namespace Gopet.Language
         public string FusionOK { get; set; } = "Dung hợp thành công";
         public string FusionFailByNotEnoughtItem { get; set; } = "Không thể dung hợp do bạn chưa chọn trang bị chính hoặc phụ muốn dung hợp";
         public string SelectMainFusionItem { get; set; } = "Chọn làm trang bị dung hợp chính";
+        public string SelectMainFusionPet { get; set; } = "Chọn làm thú cưng dung hợp chính";
         public string SelectDeputyFusionItem { get; set; } = "Chọn làm trang bị dung hợp phụ";
+        public string SelectDeputyFusionPet { get; set; } = "Chọn làm thú cưng dung hợp phụ";
         public string SelectMainFusionItemOK { get; set; } = "Chọn làm trang bị dung hợp chính thành công";
         public string SelectDeputyFusionItemOK { get; set; } = "Chọn làm trang bị dung hợp phụ thành công";
         public string SelectMainFusionItemFail { get; set; } = "Để chọn trang bị chính dung hợp cần là trang bị cấp 10";
