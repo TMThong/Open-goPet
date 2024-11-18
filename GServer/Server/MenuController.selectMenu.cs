@@ -2480,8 +2480,10 @@ public partial class MenuController
                                         player.redDialog(player.Language.ItemNotFound);
                                         return;
                                     }
-
-
+                                    if (itemMain.NumFusion < 16)
+                                    {
+                                        sendMenu(MENU_FUSION_EQUIP_OPTION_COMFIRM, player);
+                                    }
                                 }
                                 else player.redDialog(player.Language.FusionFailByNotEnoughtItem);
                             }
