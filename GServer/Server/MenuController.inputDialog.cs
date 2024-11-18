@@ -75,7 +75,7 @@ public partial class MenuController
 
                             if (item != null)
                             {
-                                if (!item.getTemp().isCanTrade() || !item.canTrade)
+                                if (!item.Template.canTrade || !item.canTrade)
                                 {
                                     player.redDialog(player.Language.ItemCanNotTrade);
                                     return;
