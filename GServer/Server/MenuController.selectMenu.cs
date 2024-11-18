@@ -716,7 +716,7 @@ public partial class MenuController
                                     item.count = shopTemplateItem.getCount();
                                     if (item.getTemp().expire > 0)
                                     {
-                                        item.expire = Utilities.CurrentTimeMillis + item.getTemp().getExpire();
+                                        item.expire = Utilities.CurrentTimeMillis + item.Template.expire;
                                     }
                                     player.addItemToInventory(item);
                                     player.okDialog(string.Format(player.Language.YouBuyItemOK, item.getTemp().getName(player)));
