@@ -348,6 +348,10 @@ public partial class MenuController
     /// </summary>
     public const int OP_NHẬN_QUÀ_MỐC = 85;
     /// <summary>
+    /// Tuỳ chọn để hiện thị chức năng dung hợp
+    /// </summary>
+    public const int OP_DUNG_HỢP = 86;
+    /// <summary>
     /// Option Custom
     /// Trao đổi thưởng bằng 
     /// </summary>
