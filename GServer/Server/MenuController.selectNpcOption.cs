@@ -470,6 +470,9 @@ public partial class MenuController
             case OP_NHẬN_QUÀ_MỐC:
                 TeacherDay2024.Instance.ReceiveMilistoneGift(player);
                 break;
+            case OP_DUNG_HỢP:
+                sendMenu(MENU_OPTION_SHOW_FUSION_MENU, player);
+                break;
             default:
                 player.redDialog(player.Language.FeatureIsNotFound);
                 break;
