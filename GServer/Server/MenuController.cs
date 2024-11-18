@@ -133,6 +133,7 @@ public partial class MenuController
     public const int MENU_FUSION_EQUIP_OPTION = 1080;
     public const int MENU_FUSION_EQUIP_OPTION_COMFIRM = 1081;
     public const int MENU_FUSION_PET_OPTION = 1082;
+    public const int MENU_FUSION_PET_OPTION_COMFIRM = 1083;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -464,10 +465,30 @@ public partial class MenuController
     /// dùng khi menu chọn ô được gọi
     /// </summary>
     public const int OBJKEY_ITEM_SKILL_CARD_USE = 60;
+    /// <summary>
+    /// Khoá để lưu vật phẩm đang chọn hiện tại
+    /// </summary>
     public const int OBJKEY_CURRENT_ITEM_ID_FUSION = 61;
+    /// <summary>
+    /// Khoá để lưu vật phẩm đang chọn hiện tại
+    /// </summary>
     public const int OBJKEY_CURRENT_ITEM_TEMP_ID_FUSION = 62;
+    /// <summary>
+    /// Khoá để lưu vật phẩm dung hợp chính
+    /// </summary>
     public const int OBJKEY_MAIN_ITEM_ID_FUSION = 63;
+    /// <summary>
+    /// Khoá để lưu vật phẩm dung hợp phụ
+    /// </summary>
     public const int OBJKEY_DEPUTY_ITEM_ID_FUSION = 64;
+    /// <summary>
+    /// Khoá để lưu thú cưng dung hợp chính
+    /// </summary>
+    public const int OBJKEY_MAIN_PET_ID_FUSION = 65;
+    /// <summary>
+    /// Khoá để lưu thú cưng dung hợp phụ
+    /// </summary>
+    public const int OBJKEY_DEPUTY_PET_ID_FUSION = 66;
     public const int DIALOG_CONFIRM_REMOVE_ITEM_EQUIP = 0;
     public const int DIALOG_CONFIRM_BUY_KIOSK_ITEM = 1;
     public const int DIALOG_ENCHANT = 3;
