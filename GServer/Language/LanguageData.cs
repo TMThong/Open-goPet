@@ -527,5 +527,10 @@ namespace Gopet.Language
         public string GetMilistoneGiftTeacherEventErorr { get; set; } = "Bạn hiện có {0} điểm và cột mốc cần {1} điểm. Lưu ý điểm {0} dựa trên số điểm sự kiện cao nhất giữa dâng ngọc tặng hoa và tặng vàng dâng hoa!!!";
         public string GetMilistoneGiftTeacherEventOK { get; set; } = "Nhận quà mốc {1} thành công! Bạn nhận được {0}";
         public string GetMilistoneGiftTeacherEvent { get; set; } = "Nhận quà mốc";
+        public string FusionEquip { get; set; } = "Dung hợp trang bị";
+        public string FusionPet { get; set; } = "Dung hợp thú cưng";
+        public string FusionTitle { get; set; } = "Dung hợp";
+        public string SelectMainFusionItem { get; set; } = "Chọn làm vũ khí dung hợp chính";
+        public string SelectDeuputyFusionItem { get; set; } = "Chọn làm vũ khí dung hợp phụ";
     }
 }
