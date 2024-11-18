@@ -528,6 +528,8 @@ namespace Gopet.Language
         public string GetMilistoneGiftTeacherEventOK { get; set; } = "Nhận quà mốc {1} thành công! Bạn nhận được {0}";
         public string GetMilistoneGiftTeacherEvent { get; set; } = "Nhận quà mốc";
         public string FusionEquip { get; set; } = "Dung hợp trang bị";
+        public string FusionEquipByGOLD { get; set; } = "Dung hợp trang bị lên dung hợp {2} bằng {0} (vang) có {1} tỉ lệ % thành công";
+        public string FusionEquipByGEM { get; set; } = "Dung hợp trang bị lên dung hợp {2} bằng {0} (ngoc) có {1} tỉ lệ % thành công";
         public string FusionPet { get; set; } = "Dung hợp thú cưng";
         public string FusionTitle { get; set; } = "Dung hợp";
         public string FusionFailByNotEnoughtItem { get; set; } = "Không thể dung hợp do bạn chưa chọn trang bị chính hoặc phụ muốn dung hợp";
