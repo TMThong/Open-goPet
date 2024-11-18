@@ -44,7 +44,7 @@ namespace Gopet.Data.Collections
             }
             set
             {
-                set(index, value);
+                Set(index, value);
             }
         }
         public void Add(T item)
@@ -195,12 +195,12 @@ namespace Gopet.Data.Collections
             return new CopyOnWriteArrayList<T>(this.values.ToArray());
         }
 
-        public int indexOf(T data)
+        public int IndexOf(T data)
         {
             return this.values.IndexOf(data);
         }
 
-        public void set(int indexSlot, T data)
+        public void Set(int indexSlot, T data)
         {
             mutex.WaitOne();
             try
