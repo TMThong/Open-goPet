@@ -307,7 +307,7 @@ namespace Gopet.Data.GopetItem
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
             int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2);
-            return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_DEF)));
+            return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_DEF) + (5 * NumFusion)));
         }
 
         public int getAtk()
@@ -319,7 +319,7 @@ namespace Gopet.Data.GopetItem
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
             int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2);
-            return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_ATK)));
+            return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_ATK) + (10 * NumFusion)));
         }
 
 
@@ -332,7 +332,7 @@ namespace Gopet.Data.GopetItem
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
             int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2);
-            return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_HP)));
+            return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_HP) + (30 * NumFusion)));
         }
 
 
@@ -345,7 +345,7 @@ namespace Gopet.Data.GopetItem
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
             int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2);
-            return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_MP)));
+            return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_MP) + (5 * NumFusion)));
         }
         /// <summary>
         /// Tìm kiếm vật phẩm tuần tự theo loai5
