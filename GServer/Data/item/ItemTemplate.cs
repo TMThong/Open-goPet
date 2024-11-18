@@ -1,39 +1,123 @@
 
 using Gopet.Util;
+using Newtonsoft.Json;
+using System.Numerics;
 
 namespace Gopet.Data.GopetItem
 {
+    /// <summary>
+    /// Mẫu thử vật phẩm
+    /// </summary>
     public class ItemTemplate
     {
         public int itemId { get; private set; }
+        /// <summary>
+        /// Tên
+        /// </summary>
         public string name { get; private set; }
+        /// <summary>
+        /// Mô tả
+        /// </summary>
         public string description { get; private set; }
+        /// <summary>
+        /// Yêu cầu sức mạnh
+        /// </summary>
         public int requireStr { get; private set; }
+        /// <summary>
+        /// Yêu cầu nhanh nhẹn
+        /// </summary>
         public int requireAgi { get; private set; }
+        /// <summary>
+        /// Yêu cầu thông minh
+        /// </summary>
         public int requireInt { get; private set; }
+        /// <summary>
+        /// Loại
+        /// </summary>
         public int type { get; private set; }
-
+        /// <summary>
+        /// Option của item dùng cho các vật phẩm đặc biệt
+        /// </summary>
         public int[] itemOption { get; private set; } = new int[0];
-
+        /// <summary>
+        /// Giá trị option dùng cho cánh, skin v.v
+        /// </summary>
         public int[] itemOptionValue { get; private set; } = new int[0];
-
+        /// <summary>
+        /// Khoảng random chỉ số healt point
+        /// </summary>
         public int[] hpRange { get; private set; }
-
+        /// <summary>
+        /// Khoảng random chỉ số mana point
+        /// </summary>
         public int[] mpRange { get; private set; }
+        /// <summary>
+        /// Khoảng random chỉ số tấn công
+        /// </summary>
         public int[] atkRange { get; private set; }
-
+        /// <summary>
+        /// Khoảng random chỉ số phòng thủ
+        /// </summary>
         public int[] defRange { get; private set; }
+        /// <summary>
+        /// Là gộp
+        /// </summary>
         public bool isStackable { get; private set; }
+        /// <summary>
+        /// Đường dẫn khung hình cho các item skin, wing v.v
+        /// </summary>
         public string frameImgPath { get; private set; }
+        /// <summary>
+        /// Đường dẫn icon
+        /// </summary>
         public string iconPath { get; private set; }
+        /// <summary>
+        /// Giới tính
+        /// </summary>
         public sbyte gender { get; private set; }
+        /// <summary>
+        /// Hạn sử dụng
+        /// </summary>
         public long expire { get; private set; }
+        /// <summary>
+        /// Là của thiên đình
+        /// </summary>
         public bool isOnSky { get; private set; }
+        /// <summary>
+        /// Có thể bán
+        /// </summary>
         public bool canTrade { get; private set; }
+        /// <summary>
+        /// Phái thú cưng
+        /// </summary>
         public sbyte petNClass { get; private set; }
+        /// <summary>
+        /// Đường dẫn icon nhưng cast theo id
+        /// Dùng trong hiển thị ngọc nguyên tố
+        /// </summary>
         public int iconId { get; private set; }
+        /// <summary>
+        /// Giá sàn
+        /// </summary>
         public int price { get; private set; }
+        /// <summary>
+        /// Hệ
+        /// </summary>
         public sbyte element { get; private set; }
+        /// <summary>
+        /// Có thể dung hợp
+        /// </summary>
+        public bool CanFusion
+        {
+            get
+            {
+                if (GopetManager.tierItemHashMap.ContainsKey(itemId) && IsEquip)
+                {
+                    return GopetManager.tierItemHashMap[itemId] == 1;
+                }
+                return false;
+            }
+        }
 
         public void setIconId(int iconId)
         {
@@ -129,7 +213,27 @@ namespace Gopet.Data.GopetItem
         {
             return element;
         }
-
+        /// <summary>
+        /// Là trang bị
+        /// </summary>
+        [JsonIgnore]
+        public bool IsEquip
+        {
+            get
+            {
+                switch (type)
+                {
+                    case GopetManager.PET_EQUIP_ARMOUR:
+                    case GopetManager.PET_EQUIP_GLOVE:
+                    case GopetManager.PET_EQUIP_SHOE:
+                    case GopetManager.PET_EQUIP_WEAPON:
+                    case GopetManager.PET_EQUIP_HAT:
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        }
 
 
         public string getNameViaType(Player player)

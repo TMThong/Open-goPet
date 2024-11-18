@@ -1018,6 +1018,11 @@ public class GopetManager
         {
             Language[VI_CODE].BossNameLanguage[item.Key] = item.Value.name;
         }
+
+        foreach (var item in itemTemplates.Where(x => x.CanFusion))
+        {
+            ServerMonitor.LogWarning($"Vật phẩm {item.name} có thể dung hợp");
+        }
         //SaveJsonFile(Language["vi"], "/lang/vi.json");
     }
 

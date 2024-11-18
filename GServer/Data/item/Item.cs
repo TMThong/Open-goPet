@@ -36,17 +36,33 @@ namespace Gopet.Data.GopetItem
         public int mp;
 
         public float[] gemOptionValue = null;
-
+        /// <summary>
+        /// Dữ liệu về ngọc
+        /// </summary>
         public ItemGem gemInfo = null;
-
+        /// <summary>
+        /// Đã treo chợ
+        /// </summary>
         public bool wasSell = false;
+        /// <summary>
+        /// Có thể treo chợ
+        /// </summary>
         public bool canTrade { get; set; } = true;
 
         public ConcurrentDictionary<int, Tuple<int, int, int, int>> EnchantInfo { get; set; } = new ConcurrentDictionary<int, Tuple<int, int, int, int>>();
-
+        /// <summary>
+        /// Nguồn gốc của vật phẩm
+        /// </summary>
         public CopyOnWriteArrayList<ItemSource> SourcesItem = new(ItemSource.TỰ_SINH_RA);
-
+        /// <summary>
+        /// Ngày vật phẩm sinh ra
+        /// </summary>
         public DateTime TimeCreate { get; set; } = DateTime.Now;
+
+        /// <summary>
+        /// Số lần dung hợp
+        /// </summary>
+        public byte NumFusion { get; set; } = 0;
 
         public Item()
         {
@@ -185,7 +201,7 @@ namespace Gopet.Data.GopetItem
         {
             return this.Template;
         }
-
+        [JsonIgnore]
         public ItemTemplate Template
         {
             get
@@ -331,7 +347,13 @@ namespace Gopet.Data.GopetItem
             int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2);
             return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_MP)));
         }
-
+        /// <summary>
+        /// Tìm kiếm vật phẩm tuần tự theo loai5
+        /// </summary>
+        /// <param name="type">Loại</param>
+        /// <param name="listNeedSearchItems">Danh sách cần duyệt</param>
+        /// <param name="filter">Bộ lọc</param>
+        /// <returns>Danh sách các vật phẩm cùng loại</returns>
 
         public static CopyOnWriteArrayList<Item> search(int type, CopyOnWriteArrayList<Item> listNeedSearchItems, Func<Item, bool> filter = null)
         {

@@ -529,7 +529,6 @@ public partial class MenuController
     }
 
 
-
     static void Trade(sbyte type, Player player)
     {
         var price = GopetManager.TradeGiftPrice[type];
