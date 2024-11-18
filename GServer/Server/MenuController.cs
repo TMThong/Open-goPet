@@ -464,6 +464,8 @@ public partial class MenuController
     public const int OBJKEY_ITEM_SKILL_CARD_USE = 60;
     public const int OBJKEY_CURRENT_ITEM_ID_FUSION = 61;
     public const int OBJKEY_CURRENT_ITEM_TEMP_ID_FUSION = 62;
+    public const int OBJKEY_MAIN_ITEM_ID_FUSION = 63;
+    public const int OBJKEY_DEPUTY_ITEM_ID_FUSION = 64;
     public const int DIALOG_CONFIRM_REMOVE_ITEM_EQUIP = 0;
     public const int DIALOG_CONFIRM_BUY_KIOSK_ITEM = 1;
     public const int DIALOG_ENCHANT = 3;
