@@ -2548,9 +2548,26 @@ public partial class MenuController
                     }
                 }
                 break;
+            case MENU_FUSION_PET_OPTION:
+                {
+                    if (player.controller.objectPerformed.ContainsKey(OBJKEY_CURRENT_SELECT_PET_ID_FUSION))
+                    {
+                        Pet pet = player.playerData.pets.BinarySearch((int)player.controller.objectPerformed[OBJKEY_CURRENT_SELECT_PET_ID_FUSION]);
+                        if (pet == null)
+                        {
+                            return;
+                        }
+                        switch (index)
+                        {
+                            case 0:
+                                break;
+                        }
+                    }
+                }
+                break;
             default:
                 {
-                    player.redDialog(string.Format(player.Language.CannotFindMenu, menuId));
+                    player.redDialog(player.Language.CannotFindMenu, menuId);
                     Thread.Sleep(1000);
                 }
                 break;
