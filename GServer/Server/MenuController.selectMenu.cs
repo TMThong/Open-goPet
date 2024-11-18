@@ -2514,6 +2514,7 @@ public partial class MenuController
                                 if (checkMoney((sbyte)index, Fusion.Item1, player))
                                 {
                                     addMoney((sbyte)index, -Fusion.Item1, player);
+                                    player.playerData.getInventoryOrCreate(GopetManager.EQUIP_PET_INVENTORY).remove(itemDeputy);
                                     bool IsSuccess = Utilities.NextFloatPer() > Fusion.Item2 || player.controller.isBuffEnchent;
                                     if (IsSuccess)
                                     {
