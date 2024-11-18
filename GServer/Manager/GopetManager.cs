@@ -701,6 +701,14 @@ public class GopetManager
         FusionGOLD,
         FusionCOIN
     };
+    /// <summary>
+    /// Giá dung hợp thú cưng
+    /// </summary>
+    public static readonly int[] FusionPetPrice = new int[]
+    {
+        25000,
+        500000
+    };
 
     static GopetManager()
     {
