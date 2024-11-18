@@ -530,7 +530,11 @@ namespace Gopet.Language
         public string FusionEquip { get; set; } = "Dung hợp trang bị";
         public string FusionPet { get; set; } = "Dung hợp thú cưng";
         public string FusionTitle { get; set; } = "Dung hợp";
-        public string SelectMainFusionItem { get; set; } = "Chọn làm vũ khí dung hợp chính";
-        public string SelectDeuputyFusionItem { get; set; } = "Chọn làm vũ khí dung hợp phụ";
+        public string FusionFailByNotEnoughtItem { get; set; } = "Không thể dung hợp do bạn chưa chọn trang bị chính hoặc phụ muốn dung hợp";
+        public string SelectMainFusionItem { get; set; } = "Chọn làm trang bị dung hợp chính";
+        public string SelectDeputyFusionItem { get; set; } = "Chọn làm trang bị dung hợp phụ";
+        public string SelectMainFusionItemOK { get; set; } = "Chọn làm trang bị dung hợp chính thành công";
+        public string SelectDeputyFusionItemOK { get; set; } = "Chọn làm trang bị dung hợp phụ thành công";
+        public string SelectMainFusionItemFail { get; set; } = "Để chọn trang bị chính dung hợp cần là trang bị cấp 10";
     }
 }
