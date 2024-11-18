@@ -80,15 +80,19 @@ namespace Gopet.Data.Event.Year2024
                 int point = Math.Max(player.playerData.NumGiveFlowerGold, player.playerData.NumGiveFlowerGem);
                 if (player.playerData.IndexMilistoneTeacherEvent < GiftMilistones.Length)
                 {
-                    Tuple<int, int, int> milistone = GiftMilistones[player.playerData.IndexMilistoneTeacherEvent];
-                    if (point >= milistone.Item1)
+                    for (int i = GiftMilistones.Length - 1; i >= 0; i--)
                     {
-                        Item item = new Item(milistone.Item2, milistone.Item3);
-                        player.addItemToInventory(item);
-                        player.okDialog(player.Language.GetMilistoneGiftTeacherEventOK, item.getName(player));
-                        player.playerData.IndexMilistoneTeacherEvent++;
+                        Tuple<int, int, int> milistone = GiftMilistones[i];
+                        if (point >= milistone.Item1)
+                        {
+                            Item item = new Item(milistone.Item2, milistone.Item3);
+                            player.addItemToInventory(item);
+                            player.okDialog(player.Language.GetMilistoneGiftTeacherEventOK, item.getName(player), i + 1);
+                            player.playerData.IndexMilistoneTeacherEvent = 100;
+                            return;
+                        }
                     }
-                    else player.redDialog(player.Language.GetMilistoneGiftTeacherEventErorr, Utilities.FormatNumber(point), Utilities.FormatNumber(milistone.Item1));
+                    player.redDialog(player.Language.GetMilistoneGiftTeacherEventErorr, Utilities.FormatNumber(point), Utilities.FormatNumber(GiftMilistones.First().Item1));
                 }
                 else player.redDialog(player.Language.InvalidFlowerMilestone);
             }
