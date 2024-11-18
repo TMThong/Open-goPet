@@ -119,11 +119,6 @@ namespace Gopet.Data.Collections
             return ToString();
         }
 
-        public bool isEmpty()
-        {
-            return this.values.IsEmpty;
-        }
-
         public void remove(T item)
         {
             this.Remove(item);
