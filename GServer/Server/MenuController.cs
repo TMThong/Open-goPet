@@ -852,17 +852,14 @@ public partial class MenuController
                 {
                     return player.controller.checkGoldBar((int)value);
                 }
-
             case GopetManager.MONEY_TYPE_BLOOD_GEM:
                 {
                     return player.controller.checkBloodGem((int)value);
                 }
-
             case GopetManager.MONEY_TYPE_CRYSTAL_ITEM:
                 {
                     return player.controller.checkCrystal((int)value);
                 }
-
             case GopetManager.MONEY_TYPE_FUND_CLAN:
                 {
                     ClanMember clanMember = player.controller.getClan();
@@ -930,7 +927,6 @@ public partial class MenuController
                     }
                 }
                 break;
-
             case GopetManager.WING_INVENTORY:
                 {
                     Item it = player.playerData.wing;
@@ -1027,10 +1023,8 @@ public partial class MenuController
                 return new sbyte[] { InputReader.FIELD_STRING };
             case INPUT_DIALOG_ADMIN_LOCK_USER:
                 return new sbyte[] { InputReader.FIELD_STRING, InputReader.FIELD_SBYTE, InputReader.FIELD_INT, InputReader.FIELD_STRING };
-
             case INPUT_TYPE_NAME_TO_BUFF_COIN:
                 return new sbyte[] { InputReader.FIELD_STRING, InputReader.FIELD_INT };
-
             case INPUT_TYPE_FAST_UP_ITEM:
                 return new sbyte[] { InputReader.FIELD_INT, InputReader.FIELD_INT, InputReader.FIELD_INT, InputReader.FIELD_INT, InputReader.FIELD_INT, InputReader.FIELD_INT };
         }
@@ -1127,7 +1121,6 @@ public partial class MenuController
             case MENU_SELECT_ITEM_TO_GIVE_BY_ADMIN:
             case MENU_SELECT_ALL_ITEM_MERGE:
                 return false;
-
             default:
                 return true;
         }
