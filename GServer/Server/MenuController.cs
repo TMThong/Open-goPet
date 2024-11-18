@@ -489,6 +489,10 @@ public partial class MenuController
     /// Khoá để lưu thú cưng dung hợp phụ
     /// </summary>
     public const int OBJKEY_DEPUTY_PET_ID_FUSION = 66;
+    /// <summary>
+    /// Khoá để lưu thú cưng dung hợp đang được chọn hiện tại
+    /// </summary>
+    public const int OBJKEY_CURRENT_SELECT_PET_ID_FUSION = 67;
     public const int DIALOG_CONFIRM_REMOVE_ITEM_EQUIP = 0;
     public const int DIALOG_CONFIRM_BUY_KIOSK_ITEM = 1;
     public const int DIALOG_ENCHANT = 3;
