@@ -145,7 +145,7 @@ namespace Gopet.Data.Event.Year2024
                     datas.Clear();
                     using (var conn = MYSQLManager.create())
                     {
-                        var topDataDynamic = conn.Query("SELECT user_id, name,avatarPath,NumGiveFlowerGold  FROM `player` WHERE  isAdmin = 0 ORDER BY `player`.`AccumulatedPoint` DESC LIMIT 50");
+                        var topDataDynamic = conn.Query("SELECT user_id, name,avatarPath,NumGiveFlowerGold  FROM `player` WHERE  isAdmin = 0 ORDER BY `player`.`NumGiveFlowerGold` DESC LIMIT 50");
                         int index = 1;
                         foreach
                             (dynamic data in topDataDynamic)
@@ -215,7 +215,7 @@ namespace Gopet.Data.Event.Year2024
                     datas.Clear();
                     using (var conn = MYSQLManager.create())
                     {
-                        var topDataDynamic = conn.Query("SELECT user_id, name,avatarPath,NumGiveFlowerGem  FROM `player` WHERE  isAdmin = 0 ORDER BY `player`.`AccumulatedPoint` DESC LIMIT 50");
+                        var topDataDynamic = conn.Query("SELECT user_id, name,avatarPath,NumGiveFlowerGem  FROM `player` WHERE  isAdmin = 0 ORDER BY `player`.`NumGiveFlowerGem` DESC LIMIT 50");
                         int index = 1;
                         foreach
                             (dynamic data in topDataDynamic)
