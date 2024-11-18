@@ -645,6 +645,63 @@ public class GopetManager
 
     public static BossTemplate[] HourDailyBoss;
     public static HiddenStatItemTemplate[] HiddentStatItemTemplates;
+    /// <summary>
+    /// Dữ liệu dung hợp bằng vàng
+    /// </summary>
+    public static readonly Tuple<int, float>[] FusionGOLD = new Tuple<int, float>[] 
+    { 
+        new Tuple<int, float>(20000, 90),
+        new Tuple<int, float>(20000, 90),
+        new Tuple<int, float>(20000, 90),
+        new Tuple<int, float>(20000, 90),
+
+        new Tuple<int, float>(50000, 60),
+        new Tuple<int, float>(50000, 60),
+        new Tuple<int, float>(50000, 60),
+        new Tuple<int, float>(50000, 60),
+
+        new Tuple<int, float>(100000, 40),
+        new Tuple<int, float>(100000, 40),
+        new Tuple<int, float>(100000, 40),
+        new Tuple<int, float>(100000, 40),
+
+        new Tuple<int, float>(200000, 20),
+        new Tuple<int, float>(200000, 20),
+        new Tuple<int, float>(200000, 20),
+        new Tuple<int, float>(200000, 20)
+    };
+    /// <summary>
+    /// Dữ liệu dung hợp bằng ngọc
+    /// </summary>
+    public static readonly Tuple<int, float>[] FusionCOIN = new Tuple<int, float>[]
+    {
+        new Tuple<int, float>(500000, 90),
+        new Tuple<int, float>(500000, 90),
+        new Tuple<int, float>(500000, 90),
+        new Tuple<int, float>(500000, 90),
+
+        new Tuple<int, float>(1000000, 60),
+        new Tuple<int, float>(1000000, 60),
+        new Tuple<int, float>(1000000, 60),
+        new Tuple<int, float>(1000000, 60),
+
+        new Tuple<int, float>(2000000, 40),
+        new Tuple<int, float>(2000000, 40),
+        new Tuple<int, float>(2000000, 40),
+        new Tuple<int, float>(2000000, 40),
+
+        new Tuple<int, float>(5000000, 20),
+        new Tuple<int, float>(5000000, 20),
+        new Tuple<int, float>(5000000, 20),
+        new Tuple<int, float>(5000000, 20)
+    };
+
+    public static readonly Tuple<int, float>[][] FusionData = new Tuple<int, float>[][]
+    {
+        FusionGOLD,
+        FusionCOIN
+    };
+
     static GopetManager()
     {
         SqlMapper.AddTypeHandler(new JsonAdapter<int[]>());
