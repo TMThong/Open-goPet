@@ -1374,6 +1374,7 @@ public partial class MenuController
                     }
                 }
                 break;
+            case MENU_FUSION_MENU_PET:
             case MENU_KIOSK_PET_SELECT:
                 {
                     if (index >= 0 && index < player.playerData.pets.Count)
@@ -1384,9 +1385,21 @@ public partial class MenuController
                             player.redDialog(player.Language.YouCannotSellPetTry);
                             return;
                         }
-                        player.controller.objectPerformed.put(OBJKEY_SELECT_SELL_ITEM, pet);
-                        player.controller.objectPerformed.put(OBJKEY_MENU_OF_KIOSK, menuId);
-                        player.controller.showInputDialog(INPUT_DIALOG_KIOSK, player.Language.Pricing, new String[] { "  " }, new sbyte[] { 0 });
+                        switch (menuId)
+                        {
+                            case MENU_KIOSK_PET_SELECT:
+                                {
+                                    player.controller.objectPerformed.put(OBJKEY_SELECT_SELL_ITEM, pet);
+                                    player.controller.objectPerformed.put(OBJKEY_MENU_OF_KIOSK, menuId);
+                                    player.controller.showInputDialog(INPUT_DIALOG_KIOSK, player.Language.Pricing, new String[] { "  " }, new sbyte[] { 0 });
+                                }
+                                break;
+                            case MENU_FUSION_MENU_PET:
+                                {
+                                    sendMenu(MENU_FUSION_PET_OPTION, player);
+                                }
+                                break;
+                        }
                     }
                 }
                 break;
