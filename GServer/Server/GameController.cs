@@ -4169,7 +4169,7 @@ public class GameController
         foreach (Item item in items)
         {
             m.putInt(item.itemId);
-            m.putInt(item.getTemp().getIconId());
+            m.putInt(item.Template.iconId);
             m.putUTF(item.getEquipName(player));
             m.putInt(item.lvl);
         }
@@ -4250,7 +4250,7 @@ public class GameController
                 {
                     player.playerData.getInventoryOrCreate(GopetManager.GEM_INVENTORY).remove(gem);
                     ItemGem itemGem = new ItemGem();
-                    itemGem.element = (gem.getTemp().getElement());
+                    itemGem.element = gem.Template.element;
                     itemGem.itemTemplateId = (gem.itemTemplateId);
                     itemGem.lvl = (gem.lvl);
                     itemGem.option = (gem.option);
