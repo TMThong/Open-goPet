@@ -1085,7 +1085,6 @@ public partial class MenuController
                                 player.redDialog("Vật phẩm này trong hàng chờ rồi!");
                                 return;
                             }
-
                             player.controller.mergeData.Items.Add(itemSelect);
                             player.okDialog("Thêm thành công");
                             break;
@@ -1105,6 +1104,12 @@ public partial class MenuController
                                     itemSelect.canTrade = false;
                                     player.okDialog("Khoá thành công");
                                 }
+                            }
+                            break;
+                        case MENU_FUSION_MENU_EQUIP:
+                            {
+                                player.controller.objectPerformed[OBJKEY_CURRENT_ITEM_ID_FUSION] = itemSelect.itemId;
+                                player.controller.objectPerformed[OBJKEY_CURRENT_ITEM_TEMP_ID_FUSION] = itemSelect.Template.itemId;
                             }
                             break;
                     }
@@ -2411,6 +2416,28 @@ public partial class MenuController
                                 player.redDialog(player.Language.NotEnoughMaterial);
                             }
                         }
+                    }
+                }
+                break;
+            case MENU_OPTION_SHOW_FUSION_MENU:
+                {
+                    switch (index)
+                    {
+                        case 0:
+                            player.controller.objectPerformed.Clear();
+                            sendMenu(MENU_FUSION_MENU_EQUIP, player);
+                            break;
+                        case 1:
+                            sendMenu(MENU_FUSION_MENU_PET, player);
+                            break;
+                    }
+                }
+                break;
+            case MENU_FUSION_EQUIP_OPTION:
+                {
+                    switch (index)
+                    {
+                         
                     }
                 }
                 break;
