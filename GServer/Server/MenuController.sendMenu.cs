@@ -924,8 +924,8 @@ public partial class MenuController
                 {
                     JArrayList<Option> options = new JArrayList<Option>()
                     {
-                        new Option(0, player.Language.FusionEquip),
-                        new Option(1, player.Language.FusionPet),
+                        new Option(0, player.Language.SelectMainFusionItem),
+                        new Option(1, player.Language.SelectDeputyFusionItem),
                         new Option(2, player.Language.FusionTitle),
                     };
                     player.controller.sendListOption(menuId, player.Language.FusionTitle, "", options);
