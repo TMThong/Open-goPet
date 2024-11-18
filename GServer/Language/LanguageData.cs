@@ -532,6 +532,8 @@ namespace Gopet.Language
         public string FusionEquipByGEM { get; set; } = "Dung hợp trang bị lên dung hợp {2} bằng {0} (ngoc) có {1} tỉ lệ % thành công";
         public string FusionPet { get; set; } = "Dung hợp thú cưng";
         public string FusionTitle { get; set; } = "Dung hợp";
+        public string FusionFail { get; set; } = "Dung hợp thất bại";
+        public string FusionOK { get; set; } = "Dung hợp thành công";
         public string FusionFailByNotEnoughtItem { get; set; } = "Không thể dung hợp do bạn chưa chọn trang bị chính hoặc phụ muốn dung hợp";
         public string SelectMainFusionItem { get; set; } = "Chọn làm trang bị dung hợp chính";
         public string SelectDeputyFusionItem { get; set; } = "Chọn làm trang bị dung hợp phụ";
