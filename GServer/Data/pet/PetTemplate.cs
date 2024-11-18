@@ -21,6 +21,7 @@ public class PetTemplate
     public sbyte frameNum { get; private set; }
     public short vY { get; private set; }
 
+    public int FusionScore { get; private set; } = 0;
 
     public String getDesc()
     {
