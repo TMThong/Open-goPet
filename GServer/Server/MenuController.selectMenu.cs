@@ -2506,6 +2506,12 @@ public partial class MenuController
                             player.redDialog(player.Language.ItemNotFound);
                             return;
                         }
+                        if (itemDeputy == itemMain)
+                        {
+                            player.redDialog(player.Language.DuplicateItem);
+                            return;
+                        }
+
                         if (itemMain.NumFusion < GopetManager.FusionGOLD.Length)
                         {
                             if (index >= 0 && index < 2)
@@ -2515,7 +2521,7 @@ public partial class MenuController
                                 {
                                     addMoney((sbyte)index, -Fusion.Item1, player);
                                     player.playerData.getInventoryOrCreate(GopetManager.EQUIP_PET_INVENTORY).remove(itemDeputy);
-                                    bool IsSuccess = Utilities.NextFloatPer() > Fusion.Item2 || player.controller.isBuffEnchent;
+                                    bool IsSuccess = Utilities.NextFloatPer() < Fusion.Item2 || player.controller.isBuffEnchent;
                                     if (IsSuccess)
                                     {
                                         itemMain.NumFusion++;
