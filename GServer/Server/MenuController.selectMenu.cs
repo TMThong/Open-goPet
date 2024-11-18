@@ -815,6 +815,7 @@ public partial class MenuController
                     }
                 }
                 break;
+            case MENU_FUSION_MENU_EQUIP:
             case MENU_UNLOCK_ITEM_PLAYER:
             case MENU_LOCK_ITEM_PLAYER:
             case MENU_SELECT_ALL_ITEM_MERGE:
@@ -1110,6 +1111,7 @@ public partial class MenuController
                             {
                                 player.controller.objectPerformed[OBJKEY_CURRENT_ITEM_ID_FUSION] = itemSelect.itemId;
                                 player.controller.objectPerformed[OBJKEY_CURRENT_ITEM_TEMP_ID_FUSION] = itemSelect.Template.itemId;
+                                sendMenu(MENU_FUSION_EQUIP_OPTION, player);
                             }
                             break;
                     }
@@ -2447,6 +2449,7 @@ public partial class MenuController
                                         if (item.lvl >= 10)
                                         {
                                             player.controller.objectPerformed[OBJKEY_MAIN_ITEM_ID_FUSION] = item.itemId;
+                                            sendMenu(MENU_FUSION_MENU_EQUIP, player);
                                             player.okDialog(player.Language.SelectMainFusionItemOK);
                                         }
                                         else player.redDialog(player.Language.SelectMainFusionItemFail);
@@ -2463,6 +2466,7 @@ public partial class MenuController
                                     if (item != null)
                                     {
                                         player.controller.objectPerformed[OBJKEY_DEPUTY_ITEM_ID_FUSION] = item.itemId;
+                                        sendMenu(MENU_FUSION_MENU_EQUIP, player);
                                         player.okDialog(player.Language.SelectDeputyFusionItemOK);
                                     }
                                     else player.redDialog(player.Language.ItemNotFound);
