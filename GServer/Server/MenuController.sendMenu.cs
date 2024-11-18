@@ -942,6 +942,11 @@ public partial class MenuController
                             player.redDialog(player.Language.ItemNotFound);
                             return;
                         }
+                        if (itemDeputy == itemMain)
+                        {
+                            player.redDialog(player.Language.DuplicateItem);
+                            return;
+                        }
                         if (itemMain.NumFusion < GopetManager.FusionGOLD.Length)
                         {
                             JArrayList<Option> options = new JArrayList<Option>()
