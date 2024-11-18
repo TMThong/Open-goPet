@@ -526,6 +526,7 @@ public partial class MenuController
             case MENU_SKIN_INVENTORY:
                 showInventory(player, GopetManager.SKIN_INVENTORY, menuId, player.Language.SkinInventory);
                 break;
+            case MENU_FUSION_MENU_EQUIP:
             case MENU_UNLOCK_ITEM_PLAYER:
             case MENU_LOCK_ITEM_PLAYER:
             case MENU_SELECT_ALL_ITEM_MERGE:
@@ -907,6 +908,27 @@ public partial class MenuController
                         new Option(2, "Huỷ"),
                     };
                     player.controller.sendListOption(menuId, "Chọn phương thức tặng hoa", "", options);
+                }
+                break;
+            case MENU_OPTION_SHOW_FUSION_MENU:
+                {
+                    JArrayList<Option> options = new JArrayList<Option>()
+                    {
+                        new Option(0, player.Language.FusionEquip),
+                        new Option(1, player.Language.FusionPet),
+                    };
+                    player.controller.sendListOption(menuId, player.Language.FusionTitle, "", options);
+                }
+                break;
+            case MENU_FUSION_EQUIP_OPTION:
+                {
+                    JArrayList<Option> options = new JArrayList<Option>()
+                    {
+                        new Option(0, player.Language.FusionEquip),
+                        new Option(1, player.Language.FusionPet),
+                        new Option(2, player.Language.FusionTitle),
+                    };
+                    player.controller.sendListOption(menuId, player.Language.FusionTitle, "", options);
                 }
                 break;
         }
