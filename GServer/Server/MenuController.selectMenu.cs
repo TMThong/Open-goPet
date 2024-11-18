@@ -2495,6 +2495,39 @@ public partial class MenuController
                     }
                 }
                 break;
+            case MENU_FUSION_EQUIP_OPTION_COMFIRM:
+                {
+                    if (player.controller.objectPerformed.ContainsKeyZ(OBJKEY_MAIN_ITEM_ID_FUSION, OBJKEY_DEPUTY_ITEM_ID_FUSION))
+                    {
+                        Item itemMain = player.controller.selectItemByItemId(player.controller.objectPerformed[OBJKEY_MAIN_ITEM_ID_FUSION], GopetManager.EQUIP_PET_INVENTORY);
+                        Item itemDeputy = player.controller.selectItemByItemId(player.controller.objectPerformed[OBJKEY_DEPUTY_ITEM_ID_FUSION], GopetManager.EQUIP_PET_INVENTORY);
+                        if (itemDeputy == null || itemMain == null)
+                        {
+                            player.redDialog(player.Language.ItemNotFound);
+                            return;
+                        }
+                        if (itemMain.NumFusion < GopetManager.FusionGOLD.Length)
+                        {
+                            if (index >= 0 && index < 2)
+                            {
+                                Tuple<int, float> Fusion = GopetManager.FusionData[index][itemMain.NumFusion];
+                                if (checkMoney((sbyte)index, Fusion.Item1, player))
+                                {
+                                    addMoney((sbyte)index, -Fusion.Item1, player);
+                                    bool IsSuccess = Utilities.NextFloatPer() > Fusion.Item2 || player.controller.isBuffEnchent;
+                                    if (IsSuccess)
+                                    {
+                                        itemMain.NumFusion++;
+                                        player.okDialog(player.Language.FusionOK);
+                                    }
+                                    else player.redDialog(player.Language.FusionFail);
+                                }
+                                else player.redDialog(player.Language.NotEnoughMaterial);
+                            }
+                        }
+                    }
+                }
+                break;
             default:
                 {
                     player.redDialog(string.Format(player.Language.CannotFindMenu, menuId));
