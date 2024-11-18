@@ -5,7 +5,11 @@ VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gopet", "Gopet.csproj", "{0F996AF0-289B-4A3E-9BFA-B6B0AE056513}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GopetHost", "..\GopetHost\GopetHost.csproj", "{D3A54453-9D13-45D6-A498-2D69C577DA08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GopetHost", "..\GopetHost\GopetHost.csproj", "{D3A54453-9D13-45D6-A498-2D69C577DA08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PingServer", "..\PingServer\PingServer.csproj", "{F3B379D9-A759-4A77-95DE-EBB73FAA84B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestExpression", "..\TestExpression\TestExpression.csproj", "{A3DFE89D-4825-4A48-BAE7-88BB1D1CD4B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{D3A54453-9D13-45D6-A498-2D69C577DA08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3A54453-9D13-45D6-A498-2D69C577DA08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3A54453-9D13-45D6-A498-2D69C577DA08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3B379D9-A759-4A77-95DE-EBB73FAA84B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3B379D9-A759-4A77-95DE-EBB73FAA84B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3B379D9-A759-4A77-95DE-EBB73FAA84B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3B379D9-A759-4A77-95DE-EBB73FAA84B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3DFE89D-4825-4A48-BAE7-88BB1D1CD4B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3DFE89D-4825-4A48-BAE7-88BB1D1CD4B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3DFE89D-4825-4A48-BAE7-88BB1D1CD4B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3DFE89D-4825-4A48-BAE7-88BB1D1CD4B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
