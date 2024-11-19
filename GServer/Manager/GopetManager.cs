@@ -468,6 +468,8 @@ public class GopetManager
     /// Lúa
     /// </summary>
     public const sbyte MONEY_TYPE_LUA = 8;
+    public const sbyte MONEY_TYPE_FLOWER_GOLD = 9;
+    public const sbyte MONEY_TYPE_FLOWER_COIN = 10;
     public const int DAILY_STAR = 20;
     public const int STAR_JOIN_CHALLENGE = 2;
     public const int ITEM_OP_HP = 7;
