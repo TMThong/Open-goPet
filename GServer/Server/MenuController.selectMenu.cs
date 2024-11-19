@@ -2550,18 +2550,23 @@ public partial class MenuController
                 break;
             case MENU_FUSION_PET_OPTION:
                 {
-                    if (player.controller.objectPerformed.ContainsKey(OBJKEY_CURRENT_SELECT_PET_ID_FUSION))
+                    switch (index)
                     {
-                        Pet pet = player.playerData.pets.BinarySearch((int)player.controller.objectPerformed[OBJKEY_CURRENT_SELECT_PET_ID_FUSION]);
-                        if (pet == null)
-                        {
-                            return;
-                        }
-                        switch (index)
-                        {
-                            case 0:
-                                break;
-                        }
+                        case 0:
+                            {
+
+                            }
+                            break;
+                        case 1:
+                            {
+
+                            }
+                            break;
+                        case 2:
+                            {
+                                sendMenu(MENU_FUSION_PET_OPTION_COMFIRM, player);
+                            }
+                            break;
                     }
                 }
                 break;
