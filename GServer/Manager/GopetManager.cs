@@ -387,7 +387,7 @@ public class GopetManager
     /**
      * Id các map được dịch chuyển
      */
-    public static readonly int[] TeleMapId = new int[] { 11, 19, 24, 22, 27, 26, 28 };
+    public static readonly int[] TeleMapId = new int[] { 11, 19, 21, 22, 24, 22, 27, 26, 28 };
     //public static int[] TeleMapId = new int[] { 11, 19, 24, 22 };
     /**
      * Giá nâng kỹ năng theo từng giai đoạn
@@ -650,8 +650,8 @@ public class GopetManager
     /// <summary>
     /// Dữ liệu dung hợp bằng vàng
     /// </summary>
-    public static readonly Tuple<int, float>[] FusionGOLD = new Tuple<int, float>[] 
-    { 
+    public static readonly Tuple<int, float>[] FusionGOLD = new Tuple<int, float>[]
+    {
         new Tuple<int, float>(20000, 90),
         new Tuple<int, float>(20000, 90),
         new Tuple<int, float>(20000, 90),
