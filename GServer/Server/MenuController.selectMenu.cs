@@ -2550,16 +2550,26 @@ public partial class MenuController
                 break;
             case MENU_FUSION_PET_OPTION:
                 {
+                    if (index < 0 || index > player.playerData.pets.Count)
+                    {
+                        return;
+                    }
+                    Pet pet = player.playerData.pets[index];
+                    if (pet == null) return;
                     switch (index)
                     {
                         case 0:
                             {
-
+                                player.controller.objectPerformed[OBJKEY_MAIN_PET_ID_FUSION] = pet.petId;
+                                sendMenu(MENU_FUSION_MENU_PET, player);
+                                player.okDialog(player.Language.SelectMainFusionPetOK);
                             }
                             break;
                         case 1:
                             {
-
+                                player.controller.objectPerformed[OBJKEY_DEPUTY_PET_ID_FUSION] = pet.petId;
+                                sendMenu(MENU_FUSION_MENU_PET, player);
+                                player.okDialog(player.Language.SelectDeputyFusionPetOK);
                             }
                             break;
                         case 2:
