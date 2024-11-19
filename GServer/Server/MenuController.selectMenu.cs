@@ -2570,6 +2570,34 @@ public partial class MenuController
                     }
                 }
                 break;
+            case MENU_FUSION_PET_OPTION_COMFIRM:
+                {
+                    if (index >= 0 && index < 2)
+                    {
+                        if (player.controller.objectPerformed.ContainsKeyZ(OBJKEY_MAIN_PET_ID_FUSION, OBJKEY_DEPUTY_PET_ID_FUSION))
+                        {
+                            Pet petMain = player.playerData.pets.BinarySearch((int)player.controller.objectPerformed[OBJKEY_MAIN_PET_ID_FUSION]);
+                            Pet petDeputy = player.playerData.pets.BinarySearch((int)player.controller.objectPerformed[OBJKEY_DEPUTY_PET_ID_FUSION]);
+                            if (petMain == null || petDeputy == null)
+                            {
+                                player.redDialog(player.Language.CouldNotFoundPet);
+                                return;
+                            }
+                            if (petMain == petDeputy)
+                            {
+                                player.redDialog(player.Language.DuplicatePet);
+                                return;
+                            }
+                            if (checkMoney((sbyte)index, GopetManager.FusionPetPrice[index], player))
+                            {
+                                addMoney((sbyte)index, -GopetManager.FusionPetPrice[index], player);
+                            }
+                            else player.redDialog(player.Language.NotEnoughMaterial);
+                        }
+                        else player.redDialog(player.Language.NotEnoughMaterial);
+                    }
+                }
+                break;
             default:
                 {
                     player.redDialog(player.Language.CannotFindMenu, menuId);
