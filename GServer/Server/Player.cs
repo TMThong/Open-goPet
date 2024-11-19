@@ -465,6 +465,10 @@ Thread.Sleep(1000);
                         playerData = gameconn.QueryFirstOrDefault<PlayerData>("SELECT * FROM `player` where user_id = " + user.user_id);
                         if (playerData != null)
                         {
+                            if (playerData.FlowerGold == -1)
+                                playerData.FlowerGold = Math.Max(0, playerData.NumGiveFlowerGold);
+                            if (playerData.FlowerCoin == -1)
+                                playerData.FlowerCoin = Math.Max(0, playerData.NumGiveFlowerGem);
                             PlayerManager.put(this);
                             var connList = gameconn.Query<FriendRequest>("SELECT * FROM `request_add_friend` WHERE `request_add_friend`.`targetId` = @userId;", new { userId = user.user_id });
                             if (connList.Any())
@@ -575,7 +579,7 @@ Thread.Sleep(1000);
                     loginFailed(Language.IncorrectUsePassword);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 e.printStackTrace();
             }
