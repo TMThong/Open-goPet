@@ -914,9 +914,9 @@ public partial class MenuController
             case GopetManager.MONEY_TYPE_LUA:
                 return player.checkLua(value);
             case GopetManager.MONEY_TYPE_FLOWER_GOLD:
-                return player.playerData.NumGiveFlowerGold >= value;
+                return player.playerData.FlowerGold >= value;
             case GopetManager.MONEY_TYPE_FLOWER_COIN:
-                return player.playerData.NumGiveFlowerGem >= value;
+                return player.playerData.FlowerCoin >= value;
         }
         return false;
     }
@@ -950,10 +950,10 @@ public partial class MenuController
                 player.AddLua(value);
                 break;
             case GopetManager.MONEY_TYPE_FLOWER_GOLD:
-                player.playerData.NumGiveFlowerGold += value;
+                player.playerData.FlowerGold += value;
                 break;
             case GopetManager.MONEY_TYPE_FLOWER_COIN:
-                player.playerData.NumGiveFlowerGem += value;
+                player.playerData.FlowerCoin += value;
                 break;
         }
     }
