@@ -548,5 +548,6 @@ namespace Gopet.Language
 
         public string CouldNotFoundPet { get; set; } = "Không thể tìm thấy thú cưng";
         public string DuplicatePet { get; set; } = "Thú cưng bị trùng";
+        public string FusionPetOK { get; set; } = "Thú cưng được dung hợp thành công nhận {0} điểm";
     }
 }
