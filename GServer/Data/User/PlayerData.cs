@@ -93,7 +93,8 @@ public class PlayerData
     /// </summary>
     public byte IndexMilistoneTeacherEvent { get; set; } = 0;
 
-
+    public int FlowerGold { get; set; } = -1;
+    public int FlowerCoin { get; set; } = -1;
     public PlayerData()
     {
         x = 24 * 4;
@@ -168,7 +169,9 @@ public class PlayerData
                             IsMergeServer = @IsMergeServer,
                             NumGiveFlowerGold = @NumGiveFlowerGold,
                             NumGiveFlowerGem = @NumGiveFlowerGem,
-                            IndexMilistoneTeacherEvent = @IndexMilistoneTeacherEvent
+                            IndexMilistoneTeacherEvent = @IndexMilistoneTeacherEvent,
+                            FlowerGold = @FlowerGold,
+                            FlowerCoin = @FlowerCoin
                             WHERE ID = @ID", playerData);
     }
 
