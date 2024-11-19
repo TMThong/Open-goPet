@@ -307,7 +307,8 @@ namespace Gopet.Data.GopetItem
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
             int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2);
-            return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_DEF) + (5 * NumFusion)));
+            info += Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_DEF)));
+            return GetFusionValue(info, NumFusion, 5f);
         }
 
         public int getAtk()
@@ -319,7 +320,8 @@ namespace Gopet.Data.GopetItem
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
             int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2);
-            return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_ATK) + (10 * NumFusion)));
+            info += Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_ATK)));
+            return GetFusionValue(info, NumFusion, 10f);
         }
 
 
@@ -332,7 +334,8 @@ namespace Gopet.Data.GopetItem
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
             int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2);
-            return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_HP) + (30 * NumFusion)));
+            info += Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_HP)));
+            return GetFusionValue(info, NumFusion, 30f);
         }
 
 
@@ -345,8 +348,19 @@ namespace Gopet.Data.GopetItem
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
             int info = value + (int)((value * 4 + 50f) / 100 * 5 / 2);
-            return info + Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_MP) + (5 * NumFusion)));
+            info += Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_MP)));
+            return GetFusionValue(info, NumFusion, 5f);
         }
+
+        public static int GetFusionValue(int value, int fusion, float Percent)
+        {
+            for (int i = 0; i < fusion; i++)
+            {
+                value += Utilities.round(Utilities.GetValueFromPercent(value, Percent));
+            }
+            return value;
+        }
+
         /// <summary>
         /// Tìm kiếm vật phẩm tuần tự theo loai5
         /// </summary>
@@ -484,7 +498,7 @@ namespace Gopet.Data.GopetItem
                     }
                 }
             }
-            return getName(player) + "  " + getTemp().getDescription(player) + " " + Utilities.Format("up: %s ", lvl) + string.Join(" ", infoStrings.Concat(strs)) + (gemInfo == null ? "" : " " + gemInfo.getElementIcon()) ;
+            return getName(player) + "  " + getTemp().getDescription(player) + " " + Utilities.Format("up: %s ", lvl) + string.Join(" ", infoStrings.Concat(strs)) + (gemInfo == null ? "" : " " + gemInfo.getElementIcon());
         }
 
         public void updateGemOption()
