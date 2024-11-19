@@ -858,6 +858,10 @@ public partial class MenuController
                 str += player.Language.GetMoneyTextCrystalItem; break;
             case GopetManager.MONEY_TYPE_LUA:
                 str += " (lua)"; break;
+            case GopetManager.MONEY_TYPE_FLOWER_GOLD:
+                str += " điểm hoa vàng"; break;
+            case GopetManager.MONEY_TYPE_FLOWER_COIN:
+                str += " điểm hoa ngọc"; break;
         }
         return str;
     }
@@ -909,6 +913,10 @@ public partial class MenuController
                 }
             case GopetManager.MONEY_TYPE_LUA:
                 return player.checkLua(value);
+            case GopetManager.MONEY_TYPE_FLOWER_GOLD:
+                return player.playerData.NumGiveFlowerGold >= value;
+            case GopetManager.MONEY_TYPE_FLOWER_COIN:
+                return player.playerData.NumGiveFlowerGem >= value;
         }
         return false;
     }
@@ -940,6 +948,12 @@ public partial class MenuController
                 break;
             case GopetManager.MONEY_TYPE_LUA:
                 player.AddLua(value);
+                break;
+            case GopetManager.MONEY_TYPE_FLOWER_GOLD:
+                player.playerData.NumGiveFlowerGold += value;
+                break;
+            case GopetManager.MONEY_TYPE_FLOWER_COIN:
+                player.playerData.NumGiveFlowerGem += value;
                 break;
         }
     }
