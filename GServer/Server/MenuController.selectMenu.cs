@@ -2588,9 +2588,12 @@ public partial class MenuController
                                 player.redDialog(player.Language.DuplicatePet);
                                 return;
                             }
-                            if (checkMoney((sbyte)index, GopetManager.FusionPetPrice[index], player))
+                            if (checkMoney((sbyte)index, GopetManager.FusionPetPrice[index], player) && player.playerData.pets.Contains(petDeputy))
                             {
                                 addMoney((sbyte)index, -GopetManager.FusionPetPrice[index], player);
+                                player.playerData.pets.Remove(petDeputy);
+                                petMain.tiemnang_point += petDeputy.Template.FusionScore;
+                                player.okDialog(player.Language.FusionPetOK, petDeputy.Template.FusionScore);
                             }
                             else player.redDialog(player.Language.NotEnoughMaterial);
                         }
