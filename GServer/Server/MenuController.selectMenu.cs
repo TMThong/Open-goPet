@@ -2419,9 +2419,11 @@ public partial class MenuController
                                 {
                                     case 0:
                                         player.playerData.NumGiveFlowerGold += 10;
+                                        player.playerData.FlowerGold += 10;
                                         break;
                                     case 1:
                                         player.playerData.NumGiveFlowerGem += 10;
+                                        player.playerData.FlowerCoin += 10;
                                         break;
                                 }
                                 player.okDialog(player.Language.UseFlowerOK);
