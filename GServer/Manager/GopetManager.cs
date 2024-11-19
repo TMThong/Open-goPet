@@ -710,6 +710,9 @@ public class GopetManager
         500000
     };
 
+
+    public const int GIÁ_NGỌC_NÂNG_GYM = 1000;
+
     static GopetManager()
     {
         SqlMapper.AddTypeHandler(new JsonAdapter<int[]>());
