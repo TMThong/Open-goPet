@@ -970,6 +970,16 @@ public partial class MenuController
                     player.controller.sendListOption(menuId, player.Language.FusionTitle, "", options);
                 }
                 break;
+            case MENU_FUSION_PET_OPTION_COMFIRM:
+                {
+                    JArrayList<Option> options = new JArrayList<Option>()
+                    {
+                        new Option(0, string.Format(player.Language.FusionPetGold, Utilities.FormatNumber(GopetManager.FusionPetPrice[0]))),
+                        new Option(1, string.Format(player.Language.FusionPetGem, Utilities.FormatNumber(GopetManager.FusionPetPrice[1]))),
+                    };
+                    player.controller.sendListOption(menuId, player.Language.FusionTitle, "", options);
+                }
+                break;
         }
     }
 }
