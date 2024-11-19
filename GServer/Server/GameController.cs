@@ -1713,8 +1713,8 @@ public class GameController
             message.putsbyte(pet.tiemnang_point);
             for (int i = 0; i < 3; i++)
             {
-                message.putInt(0);
-                message.putInt(0);
+                message.putInt(10 + i);
+                message.putInt(20 + i);
                 message.putsbyte(0);
                 message.putUTF("");
                 message.putsbyte(1);
