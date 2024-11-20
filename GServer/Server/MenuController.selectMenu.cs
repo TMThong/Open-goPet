@@ -52,10 +52,10 @@ public partial class MenuController
                                 if (p != null)
                                 {
                                     player.playerData.petSelected = null;
-                                    player.playerData.pets.Add(p);
+                                    player.playerData.addPet(p, player);
                                     player.controller.unfollowPet(p);
                                     player.okDialog(player.Language.ManipulateOK);
-                                    HistoryManager.addHistory(new History(player).setLog("Tháo pet"));
+                                    HistoryManager.addHistory(new History(player).setLog("Tháo pet").setObj(p));
                                 }
                                 else
                                 {
@@ -1396,6 +1396,7 @@ public partial class MenuController
                                 break;
                             case MENU_FUSION_MENU_PET:
                                 {
+                                    player.controller.objectPerformed[OBJKEY_CURRENT_SELECT_PET_ID_FUSION] = index;
                                     sendMenu(MENU_FUSION_PET_OPTION, player);
                                 }
                                 break;
@@ -2552,11 +2553,16 @@ public partial class MenuController
                 break;
             case MENU_FUSION_PET_OPTION:
                 {
-                    if (index < 0 || index > player.playerData.pets.Count)
+                    if (!player.controller.objectPerformed.ContainsKey(OBJKEY_CURRENT_SELECT_PET_ID_FUSION))
                     {
                         return;
                     }
-                    Pet pet = player.playerData.pets[index];
+                    int indexPet = player.controller.objectPerformed[OBJKEY_CURRENT_SELECT_PET_ID_FUSION];
+                    if (indexPet < 0 || indexPet > player.playerData.pets.Count)
+                    {
+                        return;
+                    }
+                    Pet pet = player.playerData.pets[indexPet];
                     if (pet == null) return;
                     switch (index)
                     {
