@@ -1667,9 +1667,9 @@ namespace Gopet.Battle
                 }
             }
             begin = Math.Max(0, (int)Utilities.GetValueFromPercent(begin, 100 - Utilities.nextInt(-10, 10)));
-            return Utilities.round(Utilities.GetValueFromPercent(begin, FieldManager.PERCENT_EXP));*/
+           */
 
-            return exp;
+            return Utilities.round(Utilities.GetValueFromPercent(exp, FieldManager.PERCENT_EXP));
         }
 
 
