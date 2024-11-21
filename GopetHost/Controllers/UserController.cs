@@ -69,6 +69,14 @@ namespace GopetHost.Controllers
                 if (queryList.Any())
                 {
                     UserData userData = queryList.First();
+                    var tongnap = this._context.BankTranslations.Where(m => m.UserName == username).Sum(x => x.AmountReceived) 
+                        + this._context.MomoTranslations.Where(m => m.Username == username).Sum(x => x.AmountReceived)
+                        + this._context.Cards.Where(m => m.ThucNhan > 0 && m.UserName == username).Sum(t => t.ThucNhan);
+                    if (tongnap > userData.tongnap)
+                    {
+                        userData.tongnap = tongnap;
+                        this._context.SaveChanges();
+                    }
                     this.SetLoginOK(userData);
                     ShowMessage("Đăng nhập thành công", "Đăng nhập thành công mời bạn thao tác!!!", "is-success");
                     goto TO_HOME;
