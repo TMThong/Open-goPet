@@ -27,7 +27,7 @@ namespace Gopet.Data.Event.Year2024
 
         public static readonly Tuple<int, int, int>[] GiftMilistones = new Tuple<int, int, int>[]
         {
-            new Tuple<int, int,int>(5000, 132,2),
+            new Tuple<int, int,int>(5000, 134,2),
             new Tuple<int, int,int>(10000, 140,2),
             new Tuple<int, int,int>(50000, 141,2),
             new Tuple<int, int,int>(100000, 142,2),
