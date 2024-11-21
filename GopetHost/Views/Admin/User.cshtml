@@ -5,7 +5,29 @@
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<div class="box">
+<style>
+    /* Ẩn các phần tử có class hiddenElement */
+    .hiddenElement {
+        display: none;
+    }
+</style>
+
+<button class="button is-danger is-light" onclick="showElements()">Hiển thị phần tử</button>
+
+<script>
+    // Hàm hiển thị tất cả các phần tử có class hiddenElement khi nhấn nút
+    function showElements() {
+        // Lấy tất cả các phần tử có class 'hiddenElement'
+        var elements = document.querySelectorAll('.hiddenElement');
+
+        // Duyệt qua từng phần tử và thay đổi display thành 'block'
+        elements.forEach(function (element) {
+            element.style.display = 'block';
+        });
+    }
+</script>
+
+<div class="box hiddenElement">
     <table class="table" id="TableSort">
         <thead>
         <th title="Id">Id</th>
@@ -15,6 +37,7 @@
         <th title="phone">Số điện thoại</th>
         <th title="email">Email</th>
         <th title="create_date">Ngày tạo</th>
+        <th title="tongnap">Tổng nạp</th>
         <th title="Action">Thao tác</th>
         </thead>
         <tbody>
@@ -49,6 +72,7 @@
                                placeholder="email" value="@item.email" />
                     </td>
                     <td>@item.create_date</td>
+                    <td>@item.tongnap.ToString("###,###,###")</td>
                     <td><button class="button is-primary">Lưu</button></td>
                     </form>
                 </tr>
@@ -62,6 +86,7 @@
         <th title="phone">Số điện thoại</th>
         <th title="email">Email</th>
         <th title="create_date">Ngày tạo</th>
+        <th title="tongnap">Tổng nạp</th>
         <th title="Action">Thao tác</th>
         </tfoot>
     </table>
