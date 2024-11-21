@@ -3376,15 +3376,15 @@ public class GameController
                             int gym_up_level = 0;
                             if (petActive.star + petPassive.star >= 10)
                             {
-                                gym_up_level += 5;
+                                gym_up_level += 50;
                             }
                             else if (petActive.star + petPassive.star >= 8)
                             {
-                                gym_up_level += 4;
+                                gym_up_level += 40;
                             }
                             else
                             {
-                                gym_up_level += 3;
+                                gym_up_level += 30;
                             }
                             gym_add += Utilities.round((petActive.lvl + petPassive.lvl) / 2);
                             Pet oldPet = petActive;
