@@ -41,5 +41,7 @@ namespace GopetHost.Models
                 return role == 3;
             }
         }
+
+        public int tongnap { get; set; } = 0;
     }
 }
