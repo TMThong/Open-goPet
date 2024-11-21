@@ -25,7 +25,7 @@ public class ChallengePlace : GopetPlace
         new int[]{95, 323},
         new int[]{35, 181},
         new int[]{79, 59},
-        new int[]{347, 377},
+        new int[]{347, 347},
         new int[]{333, 261},
         new int[]{200, 161},
         new int[]{301, 97},
