@@ -426,8 +426,8 @@ public class Pet : GameObject, IBinaryObject<Pet>
         (!x.IdHat.HasValue || (ItemEquipType.ContainsKey(GopetManager.PET_EQUIP_HAT) && ItemEquipType[GopetManager.PET_EQUIP_HAT] == x.IdHat)) &&
         (!x.IdArmour.HasValue || (ItemEquipType.ContainsKey(GopetManager.PET_EQUIP_ARMOUR) && ItemEquipType[GopetManager.PET_EQUIP_ARMOUR] == x.IdArmour)) &&
         (!x.IdShoe.HasValue || (ItemEquipType.ContainsKey(GopetManager.PET_EQUIP_SHOE) && ItemEquipType[GopetManager.PET_EQUIP_SHOE] == x.IdShoe)) &&
-        (!x.IdGlove.HasValue || (ItemEquipType.ContainsKey(GopetManager.PET_EQUIP_GLOVE) && ItemEquipType[GopetManager.PET_EQUIP_GLOVE] == x.IdGlove))
-        ).Select(m => m.Id));
+        (!x.IdGlove.HasValue || (ItemEquipType.ContainsKey(GopetManager.PET_EQUIP_GLOVE) && ItemEquipType[GopetManager.PET_EQUIP_GLOVE] == x.IdGlove)))
+        .Select(m => m.Id));
 
         player.controller.checkExpire();
         player.controller.sendMyPetInfo();
