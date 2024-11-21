@@ -21,20 +21,20 @@ public class ChallengePlace : GopetPlace
     public static readonly int[][] MOB_XY = new int[][]{
         new int[]{240, 161},
         new int[]{341, 97},
-        new int[]{393, 229},
+        new int[]{300, 229},
         new int[]{95, 323},
         new int[]{35, 181},
         new int[]{79, 59},
         new int[]{347, 377},
-        new int[]{402, 261},
+        new int[]{333, 261},
         new int[]{200, 161},
         new int[]{301, 97},
-        new int[]{353, 229},
+        new int[]{339, 229},
         new int[]{135, 323},
         new int[]{55, 181},
         new int[]{119, 59},
         new int[]{347, 347},
-        new int[]{302, 261},
+        new int[]{302, 255},
         new int[]{12, 90}
     };
     public static readonly Dictionary<int, int> MOB_LVL = new Dictionary<int, int>()
