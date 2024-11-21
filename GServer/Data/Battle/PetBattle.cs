@@ -281,8 +281,8 @@ namespace Gopet.Battle
                         getNonPet().subHp(damge.getDamge());
                     }
                     addRecovery(damge, isMiss, activePet, player, turnEffects);
-                    int percent = ItemInfo.getValueById(activeBattleInfo.getBuff(), ItemInfo.Type.TỈ_LỆ_ĐỊNH_THÂN_KHI_ĐÁNH_TRÚNG);
-                    if (percent > 0)
+                    int percent = ItemInfo.getValueById(activeBattleInfo.getBuff(), ItemInfo.Type.TỈ_LỆ_ĐỊNH_THÂN_KHI_ĐÁNH_TRÚNG) / 100;
+                    if (percent > Utilities.NextFloatPer())
                     {
                         getNonUserPetBattleInfo().addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.STUN, percent) }, 2));
                     }
@@ -1052,10 +1052,10 @@ namespace Gopet.Battle
                                     nonPet.subHp(damageInfo.getDamge());
                                     nonPet.subHp(damageInfo.getTrueDamge());
                                 }
-                                int percent = ItemInfo.getValueById(activeBattleInfo.getBuff(), ItemInfo.Type.TỈ_LỆ_ĐỊNH_THÂN_KHI_ĐÁNH_TRÚNG);
-                                if (percent > 0)
+                                int percent = ItemInfo.getValueById(activeBattleInfo.getBuff(), ItemInfo.Type.TỈ_LỆ_ĐỊNH_THÂN_KHI_ĐÁNH_TRÚNG) / 100;
+                                if (percent > Utilities.NextFloatPer())
                                 {
-                                    nonPetBattleInfo.addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.STUN, percent) }, 2));
+                                    getNonUserPetBattleInfo().addBuff(new Buff(new ItemInfo[] { new ItemInfo(ItemInfo.Type.STUN, percent) }, 2));
                                 }
                             }
                             else
