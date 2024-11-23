@@ -4,6 +4,9 @@ using Gopet.IO;
 using Gopet.Language;
 using Gopet.Util;
 using MySqlX.XDevAPI;
+using System.Collections.Concurrent;
+using System.Net;
+using System.Net.Sockets;
 using System.Numerics;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -14,6 +17,7 @@ public class PlayerManager
     public static ConcurrentHashMap<int, Player> player_ID = new ConcurrentHashMap<int, Player>();
     public static ConcurrentHashMap<String, Player> player_name = new ConcurrentHashMap<String, Player>();
     public static ConcurrentHashMap<int, long> waitLogin = new ConcurrentHashMap<int, long>();
+    private static ConcurrentDictionary<string, Tuple<int, DateTime>> WaitLogin = new ConcurrentDictionary<string, Tuple<int, DateTime>>();
 
     public static Player get(String ID)
     {

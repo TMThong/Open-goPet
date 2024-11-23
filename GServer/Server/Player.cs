@@ -16,6 +16,7 @@ using static Gopet.Util.Utilities;
 using Gopet.Data.user;
 using Gopet.Language;
 using System.Diagnostics;
+using System.Collections.Concurrent;
 
 public class Player : IHandleMessage
 {
@@ -170,12 +171,11 @@ Thread.Sleep(1000);
             okDialog(ServerSetting.instance.messageWhenLogin);
             return;
         }
-        /*
         if (true)
         {
             redDialog("Chức năng này bị khóa. Để đăng ký tài khoản vui lòng vào trang web\n gopettae.com vào mục diễn đàn.");
             return;
-        }*/
+        }
         if (CheckString(username, "^[a-z0-9]+$"))
         {
             if (username.Length >= 6 && password.Length >= 6 && username.Length < 25 && password.Length < 60)
@@ -375,9 +375,10 @@ Thread.Sleep(1000);
         redDialog(string.Format(text, obj));
     }
 
+    
+
     public virtual void login(String username, String password, String version)
     {
-
         if (this.user != null)
         {
             return;
@@ -577,6 +578,8 @@ Thread.Sleep(1000);
                 else
                 {
                     loginFailed(Language.IncorrectUsePassword);
+                    Thread.Sleep(1000);
+                    this.session.Close();
                 }
             }
             catch (Exception e)

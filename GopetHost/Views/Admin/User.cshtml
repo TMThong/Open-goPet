@@ -72,6 +72,48 @@
     </div>
     <button class="modal-close is-large" aria-label="close"></button>
 </div>
+
+
+<div id="modal-edit-coin" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <div class="box">
+            <h4 class="title is-4">Chỉnh sửa thông tin tài khoản</h4>
+            <form id="edit-user-form">
+                <div class="field">
+                    <label class="label">Tên tài khoản</label>
+                    <div class="control">
+                        <input class="input" type="text" id="edit-username" placeholder="Tên tài khoản" readonly>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Mật khẩu</label>
+                    <div class="control">
+                        <input class="input" type="text" id="edit-password" placeholder="Mật khẩu">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Email</label>
+                    <div class="control">
+                        <input class="input" type="email" id="edit-email" placeholder="Email">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Số điện thoại</label>
+                    <div class="control">
+                        <input class="input" type="text" id="edit-phone" placeholder="Số điện thoại">
+                    </div>
+                </div>
+                <div class="field">
+                    <button type="submit" class="button is-success">Cập nhật</button>
+                    <button type="button" class="button is-danger" id="modal-close">Đóng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+
 <script>
     var table = new DataTable('#myTable', {
         ajax: {
@@ -91,7 +133,8 @@
             {
                 data: 'action',
                 render: function (data, type, row) {
-                    return '<button  class="button is-danger js-modal-trigger" data-target="modal-edit-user" data-id="' + data + '">Sửa</button>';
+                    return '<button  class="button is-danger js-modal-trigger" data-target="modal-edit-user" data-id="' + data + '">Sửa</button>' +
+                        '<button  class="button is-link js-modal-coin" data-target="modal-edit-coin" data-id="' + data + '">Cộng tiền</button>';
                 }
             }
         ],
@@ -134,6 +177,29 @@
             }
         });
     });
+
+
+    $('#myTable').on('click', '.js-modal-coin', function () {
+        var userId = $(this).data('id');
+
+        // Gửi yêu cầu AJAX để lấy thông tin người dùng từ server
+        $.ajax({
+            url: 'GetUser?id=' + userId,  // Đảm bảo URL này là đúng
+            type: 'GET',
+            success: function (response) {
+                // Điền thông tin vào modal
+                $('#edit-username').val(response.username);
+                $('#edit-password').val(response.password);
+                $('#edit-email').val(response.email);
+                $('#edit-phone').val(response.phone);
+                $('#modal-edit-coin').addClass('is-active');
+            },
+            error: function (error) {
+                console.log('Có lỗi xảy ra', error);
+            }
+        });
+    });
+
 
     // Đóng modal khi nhấn nút đóng
     $('#modal-close').on('click', function () {
