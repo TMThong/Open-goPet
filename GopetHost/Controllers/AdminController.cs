@@ -274,13 +274,40 @@ namespace GopetHost.Controllers
             return View(_context.Cards.ToArray());
         }
         [HttpGet]
-        public IActionResult GetUserPage([FromQuery] IDictionary<string, string> search, int start, int length, int? draw)
+        public IActionResult GetUser(int id)
+        {
+            if (this.IsLoginOK())
+            {
+                return Json(this._context.Users.Where(x => x.user_id == id).FirstOrDefault());
+            }
+            return Ok();
+        }
+        [HttpPost]
+        public IActionResult UpdateUser(UserData userData)
+        {
+            if (this.IsLoginOK())
+            {
+                var userTake = this._context.Users.Where(x => x.username == userData.username).FirstOrDefault();
+                if (userTake != null)
+                {
+                    userTake.password = userData.password;
+                    userTake.phone = userData.phone;
+                    userTake.email = userData.email;
+                    _context.SaveChanges();
+                    return Ok();
+                }
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        public IActionResult GetUserPage(IDictionary<string, string> search, int start, int length, int? draw)
         {
             if (this.IsLoginOK())
             {
                 string searchValue = search.ContainsKey("value") ? search["value"] : null;
                 var listUser = _context.Users.Where(x => searchValue == null || x.username.Contains(searchValue));
-                var user = listUser.Skip(start).Take(length); 
+                var user = listUser.Skip(start).Take(length);
                 var datas = new List<object>();
 
                 foreach (var item in user)
