@@ -17,6 +17,18 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bulma.css">
 </head>
 <body>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bulma.js"></script>
+
+    <script>
+        new DataTable('#TableSort', {
+            info: true,
+            ordering: true,
+            paging: true
+        });
+    </script>
     <header>
         <nav class="navbar" role="navigation" aria-label="main navigation">
             <a class="navbar-brand" href="/">
@@ -195,17 +207,7 @@
         });
 
     </script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bulma.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
-    <script>
-        new DataTable('#TableSort', {
-            info: true,
-            ordering: true,
-            paging: true
-        });
-    </script>
+    
 </body>
 </html>
