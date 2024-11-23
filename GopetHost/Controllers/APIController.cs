@@ -78,8 +78,18 @@ namespace GopetHost.Controllers
                                 {
                                     int roundCoin = (int)(momoTranslationModel.Amount * percent);
                                     userData.coin += roundCoin;
+                                    userData.tongnap += roundCoin;
                                     momoTranslationModel.AmountReceived = roundCoin;
                                     momoTranslationModel.IsAddCoin = true;
+                                    _context.DongTiens.Add(new DongTienModel()
+                                    {
+                                        Value = roundCoin,
+                                        UserName = userData.username,
+                                        NameSetDongTien = "Hệ thống Momo",
+                                        ValueBefore = userData.coin - roundCoin,
+                                        ValueAfter = userData.coin + roundCoin,
+                                        Content = "Hệ thống Momo duyệt nạp"
+                                    });
                                 }
                             }
                         }
@@ -135,8 +145,18 @@ namespace GopetHost.Controllers
                                 {
                                     int roundCoin = (int)(bankTranslationModel.Amount * percent);
                                     userData.coin += roundCoin;
+                                    userData.tongnap += roundCoin;
                                     bankTranslationModel.AmountReceived = roundCoin;
                                     bankTranslationModel.IsAddCoin = true;
+                                    _context.DongTiens.Add(new DongTienModel()
+                                    {
+                                        Value = roundCoin,
+                                        UserName = userData.username,
+                                        NameSetDongTien = "Hệ thống ATM",
+                                        ValueBefore = userData.coin - roundCoin,
+                                        ValueAfter = userData.coin + roundCoin,
+                                        Content = "Hệ thống ATM duyệt nạp"
+                                    });
                                 }
                             }
                         }
