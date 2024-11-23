@@ -317,6 +317,16 @@ namespace GopetHost.Controllers
                         if (userData != null)
                         {
                             userData.coin += card.ThucNhan;
+                            userData.tongnap += card.ThucNhan;
+                            _context.DongTiens.Add(new DongTienModel()
+                            {
+                                Value = roundCoin,
+                                UserName = userData.username,
+                                NameSetDongTien = "Hệ thống gạch thẻ",
+                                ValueBefore = userData.coin - roundCoin,
+                                ValueAfter = userData.coin + roundCoin,
+                                Content = "Hệ thống gạch thẻ duyệt nạp"
+                            });
                         }
                     }
                 }
