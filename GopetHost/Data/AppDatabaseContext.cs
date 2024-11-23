@@ -24,6 +24,9 @@ namespace GopetHost.Data
 
         public DbSet<PostTagModel> PostTags { get; set; }
 
+        public DbSet<DongTienModel> DongTiens { get; set; }
+
+
 		public T LoadWebConfig<T>(string Key, T defaultValue)
 		{
             var query = WebConfigs.Where(x => x.Key == Key);
