@@ -12,7 +12,10 @@ namespace GopetHost
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            builder.WebHost.ConfigureKestrel(options => 
+            {
+                options.Limits.MaxRequestLineSize = 16384;
+            });
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 #if DEBUG
