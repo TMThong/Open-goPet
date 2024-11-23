@@ -1,6 +1,9 @@
 ﻿using GopetHost.Data;
 using GopetHost.Models;
+using GopetHost.Ulti;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using System;
 
 namespace GopetHost.Controllers
 {
@@ -269,6 +272,54 @@ namespace GopetHost.Controllers
                 return actionResult;
             }
             return View(_context.Cards.ToArray());
+        }
+        [HttpGet]
+        public IActionResult GetUserPage([FromQuery] IDictionary<string, string> search, int start, int length, int? draw)
+        {
+            if (this.IsLoginOK())
+            {
+                string searchValue = search.ContainsKey("value") ? search["value"] : null;
+                var listUser = _context.Users.Where(x => searchValue == null || x.username.Contains(searchValue));
+                var user = listUser.Skip(start).Take(length); 
+                var datas = new List<object>();
+
+                foreach (var item in user)
+                {
+                    datas.Add(new
+                    {
+                        id = item.user_id,
+                        username = item.username,
+                        password = item.password,
+                        coin = item.coin,
+                        phone = item.phone,
+                        email = item.email,
+                        create_date = item.create_date,
+                        tongnap = item.tongnap,
+                        action = item.user_id
+                    });
+                }
+
+                return Json(
+                    new
+                    {
+                        data = datas,
+                        total = length,
+                        draw = draw,
+                        recordsTotal = 10,
+                        recordsFiltered = listUser.Count()
+                    });
+            }
+            return Json(
+                new
+                {
+                    data = new object[] {
+                        new { id = 1, username = "1", password = "1", coin = "1", phone = "1", email = "1", create_date = "1", tongnap = "1", action = "1", }
+                    },
+                    total = length,
+                    draw = draw,
+                    recordsTotal = 10,
+                    recordsFiltered = 1100
+                });
         }
     }
 }
