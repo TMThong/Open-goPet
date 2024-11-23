@@ -5,30 +5,8 @@
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<style>
-    /* Ẩn các phần tử có class hiddenElement */
-    .hiddenElement {
-        display: none;
-    }
-</style>
-
-<button class="button is-danger is-light" onclick="showElements()">Hiển thị phần tử</button>
-
-<script>
-    // Hàm hiển thị tất cả các phần tử có class hiddenElement khi nhấn nút
-    function showElements() {
-        // Lấy tất cả các phần tử có class 'hiddenElement'
-        var elements = document.querySelectorAll('.hiddenElement');
-
-        // Duyệt qua từng phần tử và thay đổi display thành 'block'
-        elements.forEach(function (element) {
-            element.style.display = 'block';
-        });
-    }
-</script>
-
-<div class="box hiddenElement">
-    <table class="table" id="TableSort">
+<div class="box">
+    <table class="table" id="myTable">
         <thead>
         <th title="Id">Id</th>
         <th title="username">Tên tài khoản</th>
@@ -40,44 +18,6 @@
         <th title="tongnap">Tổng nạp</th>
         <th title="Action">Thao tác</th>
         </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <form asp-action="@nameof(AdminController.EditUser)">
-                    <td>
-                        <input name="user_id" class="input is-danger"
-                               type="text"
-                               placeholder="user_id" value="@item.user_id" readonly />
-                    </td>
-                    <td>@item.username</td>
-                    <td>
-                        <input name="password" class="input is-link"
-                               type="text"
-                               placeholder="Password" value="@item.password" />
-                    </td>
-                    <td>
-                        <input name="coin" class="input is-success"
-                               type="number"
-                               placeholder="coin" value="@item.coin" />
-                    </td>
-                    <td>
-                        <input name="phone" class="input is-success"
-                               type="text"
-                               placeholder="phone" value="@item.phone" />
-                    </td>
-                    <td>
-                        <input name="email" class="input is-success"
-                               type="email"
-                               placeholder="email" value="@item.email" />
-                    </td>
-                    <td>@item.create_date</td>
-                    <td>@item.tongnap.ToString("###,###,###")</td>
-                    <td><button class="button is-primary">Lưu</button></td>
-                    </form>
-                </tr>
-            }
-        </tbody>
         <tfoot>
         <th title="Id">Id</th>
         <th title="username">Tên tài khoản</th>
@@ -91,3 +31,36 @@
         </tfoot>
     </table>
 </div>
+
+<script>
+    new DataTable('#myTable', {
+        ajax: 'GetUserPage',
+        columns: [
+            { data: 'id' },
+            { data: 'username' },
+            { data: 'password' },
+            { data: 'coin' },
+            { data: 'phone' },
+            { data: 'email' },
+            { data: 'create_date' },
+            { data: 'tongnap' },
+            { data: 'action' }
+        ],
+        processing: true,
+        serverSide: true,
+        language: {
+            processing: "Đang tải dữ liệu...",
+            search: "Tìm kiếm:",
+            lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
+            info: "Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ mục",
+            infoEmpty: "Không có dữ liệu",
+            infoFiltered: "(lọc từ _MAX_ mục)",
+            paginate: {
+                first: "Đầu tiên",
+                last: "Cuối cùng",
+                next: "Tiếp theo",
+                previous: "Trước"
+            }
+        }
+    });
+</script>
