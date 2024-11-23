@@ -8,7 +8,7 @@
 <div class="box">
     <table class="table" id="myTable">
         <thead>
-        <th title="Id">Id</th>
+        <th title="id">Id</th>
         <th title="username">Tên tài khoản</th>
         <th title="password">Mật khẩu</th>
         <th title="coin">VNĐ</th>
@@ -19,7 +19,7 @@
         <th title="Action">Thao tác</th>
         </thead>
         <tfoot>
-        <th title="Id">Id</th>
+        <th title="id">Id</th>
         <th title="username">Tên tài khoản</th>
         <th title="password">Mật khẩu</th>
         <th title="coin">VNĐ</th>
@@ -29,12 +29,56 @@
         <th title="tongnap">Tổng nạp</th>
         <th title="Action">Thao tác</th>
         </tfoot>
+
     </table>
 </div>
-
+<!-- Modal Edit User -->
+<div id="modal-edit-user" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <div class="box">
+            <h4 class="title is-4">Chỉnh sửa thông tin tài khoản</h4>
+            <form id="edit-user-form">
+                <div class="field">
+                    <label class="label">Tên tài khoản</label>
+                    <div class="control">
+                        <input class="input" type="text" id="edit-username" placeholder="Tên tài khoản" readonly>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Mật khẩu</label>
+                    <div class="control">
+                        <input class="input" type="text" id="edit-password" placeholder="Mật khẩu">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Email</label>
+                    <div class="control">
+                        <input class="input" type="email" id="edit-email" placeholder="Email">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Số điện thoại</label>
+                    <div class="control">
+                        <input class="input" type="text" id="edit-phone" placeholder="Số điện thoại">
+                    </div>
+                </div>
+                <div class="field">
+                    <button type="submit" class="button is-success">Cập nhật</button>
+                    <button type="button" class="button is-danger" id="modal-close">Đóng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
 <script>
-    new DataTable('#myTable', {
-        ajax: 'GetUserPage',
+    var table = new DataTable('#myTable', {
+        ajax: {
+            url: 'GetUserPage',
+            type: 'POST'
+        },
+
         columns: [
             { data: 'id' },
             { data: 'username' },
@@ -44,7 +88,12 @@
             { data: 'email' },
             { data: 'create_date' },
             { data: 'tongnap' },
-            { data: 'action' }
+            {
+                data: 'action',
+                render: function (data, type, row) {
+                    return '<button  class="button is-danger js-modal-trigger" data-target="modal-edit-user" data-id="' + data + '">Sửa</button>';
+                }
+            }
         ],
         processing: true,
         serverSide: true,
@@ -62,5 +111,58 @@
                 previous: "Trước"
             }
         }
+    });
+
+    // Mở Modal và lấy dữ liệu người dùng từ API
+    $('#myTable').on('click', '.js-modal-trigger', function () {
+        var userId = $(this).data('id');
+
+        // Gửi yêu cầu AJAX để lấy thông tin người dùng từ server
+        $.ajax({
+            url: 'GetUser?id=' + userId,  // Đảm bảo URL này là đúng
+            type: 'GET',
+            success: function (response) {
+                // Điền thông tin vào modal
+                $('#edit-username').val(response.username);
+                $('#edit-password').val(response.password);
+                $('#edit-email').val(response.email);
+                $('#edit-phone').val(response.phone);
+                $('#modal-edit-user').addClass('is-active');
+            },
+            error: function (error) {
+                console.log('Có lỗi xảy ra', error);
+            }
+        });
+    });
+
+    // Đóng modal khi nhấn nút đóng
+    $('#modal-close').on('click', function () {
+        $('#modal-edit-user').removeClass('is-active');
+    });
+
+    // Xử lý khi submit form (cập nhật thông tin người dùng)
+    $('#edit-user-form').on('submit', function (event) {
+        event.preventDefault();
+
+        var updatedUser = {
+            username: $('#edit-username').val(),
+            password: $('#edit-password').val(),
+            email: $('#edit-email').val(),
+            phone: $('#edit-phone').val()
+        };
+
+        // Gửi dữ liệu qua AJAX (cập nhật thông tin)
+        $.ajax({
+            url: 'UpdateUser',  // Cập nhật URL phù hợp với route cập nhật của bạn
+            type: 'POST',
+            data: updatedUser,
+            success: function (response) {
+                table.ajax.reload(); // Tải lại bảng
+                $('#modal-edit-user').removeClass('is-active'); // Đóng modal
+            },
+            error: function (error) {
+                console.log('Có lỗi xảy ra', error);
+            }
+        });
     });
 </script>
