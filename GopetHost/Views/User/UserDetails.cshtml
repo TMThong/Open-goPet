@@ -1,5 +1,5 @@
 ﻿@using GopetHost.Controllers
-@model GopetHost.Models.UserData
+@model GopetHost.Models.UserDetailModel
 
 @{
     ViewData["Title"] = "Thông tin tài khoản";
@@ -10,13 +10,13 @@
     <div class="field">
         <label class="label">Tên tài khoản</label>
         <div class="control">
-            <input class="input is-success" type="text" value="@Model.username" readonly>
+            <input class="input is-success" type="text" value="@Model.User.username" readonly>
         </div>
     </div>
     <div class="field">
         <label class="label">Tình trạng tài khoản</label>
         <div class="control">
-            @switch(Model.role)
+            @switch(Model.User.role)
             {
                 case 0:
                     {
@@ -41,9 +41,9 @@
     <div class="field">
         <label class="label">Số tiền hiện có</label>
         <div class="control">
-            @if (Model.coin != 0)
+            @if (Model.User.coin != 0)
             {
-                <input class="input is-primary" type="text" value="@Model.coin.ToString("###,###,###") vnđ" readonly>
+                <input class="input is-primary" type="text" value="@Model.User.coin.ToString("###,###,###") vnđ" readonly>
             }
             else
             {
@@ -54,26 +54,66 @@
     <div class="field">
         <label class="label">Email</label>
         <div class="control">
-            <input class="input is-info" type="email" value="@Model.email" readonly>
+            <input class="input is-info" type="email" value="@Model.User.email" readonly>
         </div>
     </div>
     <div class="field">
         <label class="label">Số điện thoại</label>
         <div class="control">
-            <input class="input is-link " type="tel" value="@Model.phone" readonly>
+            <input class="input is-link " type="tel" value="@Model.User.phone" readonly>
         </div>
     </div>
     <div class="field">
         <label class="label">Ngày tạo</label>
         <div class="control">
-            <input class="input is-link " type="datetime" value="@Model.create_date" readonly>
+            <input class="input is-link " type="datetime" value="@Model.User.create_date" readonly>
         </div>
     </div>
 
     <div class="field">
         <label class="label">Tổng nạp</label>
         <div class="control">
-            <input class="input is-danger " type="datetime" value="@Model.tongnap.ToString("###,###,###")" readonly>
+            <input class="input is-danger " type="datetime" value="@Model.User.tongnap.ToString("###,###,###")" readonly>
         </div>
     </div>
+</div>
+
+<div class="box">
+    <table class="table display nowrap" id="TableSort" style="width: 100%;">
+        <thead>
+        <th title="Id">Id</th>
+        <th title="Value">Giá trị chệnh lệch</th>
+        <th title="UserName">Người dùng</th>
+        <th title="NameSetDongTien">Ai là người thao tác</th>
+        <th title="TimeCreate">Ngày giao động</th>
+        <th title="ValueBefore">Giá trị trước cộng tiền</th>
+        <th title="ValueAfter">Giá trị sau cộng tiền</th>
+        <th title="Content">Nội dung thay đổi</th>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.DongTiens)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Value</td>
+                    <td>@item.UserName</td>
+                    <td>@item.NameSetDongTien</td>
+                    <td>@item.TimeCreate</td>
+                    <td>@item.ValueBefore</td>
+                    <td>@item.ValueAfter</td>
+                    <td>@item.Content</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+        <th title="Id">Id</th>
+        <th title="Value">Giá trị chệnh lệch</th>
+        <th title="UserName">Người dùng</th>
+        <th title="NameSetDongTien">Ai là người thao tác</th>
+        <th title="TimeCreate">Ngày giao động</th>
+        <th title="ValueBefore">Giá trị trước cộng tiền</th>
+        <th title="ValueAfter">Giá trị sau cộng tiền</th>
+        <th title="Content">Nội dung thay đổi</th>
+        </tfoot>
+    </table>
 </div>

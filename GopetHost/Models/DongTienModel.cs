@@ -16,7 +16,7 @@ namespace GopetHost.Models
         public int Value { get; set; } = 0;
 
         /// <summary>
-        /// Người người
+        /// Người dùng
         /// </summary>
         [Required]
         public string UserName { get; set; } = string.Empty;

@@ -236,7 +236,7 @@ namespace GopetHost.Controllers
             }
             UserData userData = _context.Users.Where(x => x.user_id == this.HttpContext.Session.GetInt32(nameof(UserData.user_id))).FirstOrDefault();
             if (userData == null) return RedirectToHome();
-            return View(userData);
+            return View(new UserDetailModel(userData, _context.DongTiens.Where(x => x.UserName == userData.username).OrderByDescending(m => m.TimeCreate).ToArray()));
         }
 
         public async Task<IActionResult> Active()

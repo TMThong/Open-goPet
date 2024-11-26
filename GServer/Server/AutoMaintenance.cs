@@ -27,7 +27,7 @@ public class AutoMaintenance
             maintenanceTime = maintenanceTime.AddDays(1);
         }
 
-        Console.WriteLine($"Thời gian bảo trì định kỳ: {maintenanceTime}");
+        GopetManager.ServerMonitor.LogWarning($"Thời gian bảo trì định kỳ: {maintenanceTime}");
 
         int delayMilliseconds = (int)(maintenanceTime - currentTime).TotalMilliseconds;
         timer.Change(delayMilliseconds, Timeout.Infinite);

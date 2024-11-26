@@ -1,0 +1,45 @@
+﻿@model System.Collections.Generic.IEnumerable<DongTienModel>
+@{
+    ViewData["Title"] = "Dòng tiền";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="box">
+    <table class="table display nowrap" id="TableSort">
+        <thead>
+        <th title="Id">Id</th>
+        <th title="Value">Giá trị chệnh lệch</th>
+        <th title="UserName">Người dùng</th>
+        <th title="NameSetDongTien">Ai là người thao tác</th>
+        <th title="TimeCreate">Ngày giao động</th>
+        <th title="ValueBefore">Giá trị trước cộng tiền</th>
+        <th title="ValueAfter">Giá trị sau cộng tiền</th>
+        <th title="Content">Nội dung thay đổi</th>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Value</td>
+                    <td>@item.UserName</td>
+                    <td>@item.NameSetDongTien</td>
+                    <td>@item.TimeCreate</td>
+                    <td>@item.ValueBefore</td>
+                    <td>@item.ValueAfter</td>
+                    <td>@item.Content</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+        <th title="Id">Id</th>
+        <th title="Value">Giá trị chệnh lệch</th>
+        <th title="UserName">Người dùng</th>
+        <th title="NameSetDongTien">Ai là người thao tác</th>
+        <th title="TimeCreate">Ngày giao động</th>
+        <th title="ValueBefore">Giá trị trước cộng tiền</th>
+        <th title="ValueAfter">Giá trị sau cộng tiền</th>
+        <th title="Content">Nội dung thay đổi</th>
+        </tfoot>
+    </table>
+</div>

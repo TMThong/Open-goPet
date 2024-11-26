@@ -348,5 +348,58 @@ namespace GopetHost.Controllers
                     recordsFiltered = 1100
                 });
         }
+        [HttpPost]
+        public IActionResult UpdateCoin(string username, int coin)
+        {
+            if (this.IsLoginOK() && coin != 0)
+            {
+                UserData userLogin = this.GetUser(_context);
+                UserData user = this._context.Users.Where(x => x.username == username).FirstOrDefault();
+                if (user != null && userLogin != null)
+                {
+                    user.coin += coin;
+                    user.tongnap += coin;
+                    if (coin > 0)
+                    {
+                        this._context.DongTiens.Add(new DongTienModel()
+                        {
+                            Content = $"{userLogin.username} cộng {coin.ToString("###,###,###")} vnđ cho người dùng {username}",
+                            NameSetDongTien = userLogin.username,
+                            Value = coin,
+                            ValueBefore = user.coin - coin,
+                            ValueAfter = user.coin,
+                            UserName = user.username,
+                            TimeCreate = DateTime.Now,
+                        });
+                    }
+                    else
+                    {
+                        this._context.DongTiens.Add(new DongTienModel()
+                        {
+                            Content = $"{userLogin.username} trừ {coin.ToString("###,###,###")} vnđ cho người dùng {username}",
+                            NameSetDongTien = userLogin.username,
+                            Value = coin,
+                            ValueBefore = user.coin - coin,
+                            ValueAfter = user.coin,
+                            UserName = user.username,
+                            TimeCreate = DateTime.Now,
+                        });
+                    }
+                    this._context.SaveChanges();
+                    return Ok();
+                }
+            }
+            return NotFound();
+        }
+
+
+        public IActionResult DongTien()
+        {
+            if (this.IsLoginOK())
+            {
+                return View(_context.DongTiens);
+            }
+            return NotFound();
+        }
     }
 }

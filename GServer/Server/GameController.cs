@@ -2334,6 +2334,11 @@ public class GameController
             case MenuController.SHOP_WEAPON:
             case MenuController.SHOP_HAT:
             case MenuController.SHOP_FOOD:
+                if (shopId == MenuController.SHOP_FOOD && player.getPlace()?.map.mapTemplate.mapId == 19)
+                {
+                    MenuController.sendMenu(MenuController.SHOP_SKIN, player);
+                    return;
+                }
                 MenuController.sendMenu(shopId, player);
                 break;
             default:
@@ -3294,6 +3299,7 @@ public class GameController
                                 itemEuipActive.atk = (Utilities.round(Utilities.GetValueFromPercent(itemEuipActive.getAtk() + itemEuipPassive.getAtk(), GopetManager.PERCENT_ITEM_TIER_INFO)));
                                 itemEuipActive.def = (Utilities.round(Utilities.GetValueFromPercent(itemEuipActive.getDef() + itemEuipPassive.getDef(), GopetManager.PERCENT_ITEM_TIER_INFO)));
                                 itemEuipActive.lvl = 0;
+                                itemEuipActive.NumFusion = 0;
                                 itemEuipActive.itemTemplateId = tierItem.itemTemplateIdTier2;
                                 resendPetEquipInfo(itemEuipActive);
                                 Pet p = player.getPet();

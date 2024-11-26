@@ -6,7 +6,7 @@
 }
 
 <div class="box">
-    <table class="table" id="myTable">
+    <table class="table display nowrap" id="myTable">
         <thead>
         <th title="id">Id</th>
         <th title="username">Tên tài khoản</th>
@@ -79,34 +79,22 @@
     <div class="modal-content">
         <div class="box">
             <h4 class="title is-4">Chỉnh sửa thông tin tài khoản</h4>
-            <form id="edit-user-form">
+            <form id="edit-user-coin">
                 <div class="field">
                     <label class="label">Tên tài khoản</label>
                     <div class="control">
-                        <input class="input" type="text" id="edit-username" placeholder="Tên tài khoản" readonly>
+                        <input class="input" type="text" id="edit-username2" placeholder="Tên tài khoản" readonly>
                     </div>
                 </div>
                 <div class="field">
-                    <label class="label">Mật khẩu</label>
+                    <label class="label">Số tiền cần cộng</label>
                     <div class="control">
-                        <input class="input" type="text" id="edit-password" placeholder="Mật khẩu">
+                        <input class="input" type="number" id="edit-coin" placeholder="Số tiền">
                     </div>
                 </div>
                 <div class="field">
-                    <label class="label">Email</label>
-                    <div class="control">
-                        <input class="input" type="email" id="edit-email" placeholder="Email">
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">Số điện thoại</label>
-                    <div class="control">
-                        <input class="input" type="text" id="edit-phone" placeholder="Số điện thoại">
-                    </div>
-                </div>
-                <div class="field">
-                    <button type="submit" class="button is-success">Cập nhật</button>
-                    <button type="button" class="button is-danger" id="modal-close">Đóng</button>
+                    <button type="submit" class="button is-success">Thao tác</button>
+                    <button type="button" class="button is-danger" id="modal-close2">Đóng</button>
                 </div>
             </form>
         </div>
@@ -140,6 +128,7 @@
         ],
         processing: true,
         serverSide: true,
+        responsive: true,
         language: {
             processing: "Đang tải dữ liệu...",
             search: "Tìm kiếm:",
@@ -188,10 +177,8 @@
             type: 'GET',
             success: function (response) {
                 // Điền thông tin vào modal
-                $('#edit-username').val(response.username);
-                $('#edit-password').val(response.password);
-                $('#edit-email').val(response.email);
-                $('#edit-phone').val(response.phone);
+                $('#edit-username2').val(response.username);
+                //$('#edit-coin').val(response.coin);
                 $('#modal-edit-coin').addClass('is-active');
             },
             error: function (error) {
@@ -205,8 +192,29 @@
     $('#modal-close').on('click', function () {
         $('#modal-edit-user').removeClass('is-active');
     });
+    $('#modal-close2').on('click', function () {
+        $('#modal-edit-coin').removeClass('is-active');
+    });
+    $('#edit-user-coin').on('submit', function (event) {
+        event.preventDefault();
+        var updatedUser = {
+            username: $('#edit-username2').val(),
+            coin: $('#edit-coin').val()
+        };
 
-    // Xử lý khi submit form (cập nhật thông tin người dùng)
+        $.ajax({
+            url: 'UpdateCoin',  // Cập nhật URL phù hợp với route cập nhật của bạn
+            type: 'POST',
+            data: updatedUser,
+            success: function (response) {
+                table.ajax.reload(); // Tải lại bảng
+                $('#modal-edit-coin').removeClass('is-active'); // Đóng modal
+            },
+            error: function (error) {
+                console.log('Có lỗi xảy ra', error);
+            }
+        });
+    });
     $('#edit-user-form').on('submit', function (event) {
         event.preventDefault();
 

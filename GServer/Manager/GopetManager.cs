@@ -1088,6 +1088,7 @@ public class GopetManager
         {
             Language[VI_CODE].BossNameLanguage[item.Key] = item.Value.name;
         }
+        new AutoMaintenance().Start(5, 0);
         //SaveJsonFile(Language["vi"], "/lang/vi.json");
     }
 
