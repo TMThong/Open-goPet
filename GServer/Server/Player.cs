@@ -689,7 +689,7 @@ Thread.Sleep(1000);
     {
         get
         {
-            return DateTime.Now <= new DateTime(2024, 9, 30) && DateTime.Now >= new DateTime(2024, 9, 26).AddHours(21);
+            return DateTime.Now <= new DateTime(2024, 12, 1);
         }
     }
 

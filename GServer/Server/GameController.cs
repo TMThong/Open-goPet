@@ -5064,6 +5064,26 @@ public class GameController
         }
     }
 
+    public void noelDaily()
+    {
+        DateTime dateTime = DateTime.Now;
+        DateTime timeDaily = player.playerData.DailyNoelTime;
+        if (dateTime.Day != timeDaily.Day || dateTime.Month != timeDaily.Month || dateTime.Year != timeDaily.Year)
+        {
+            var dayofWeek = dateTime.DayOfWeek;
+            JArrayList<Popup> popups = player.controller.onReiceiveGift(GopetManager.NOEL_DAILYS[dayofWeek].Item1);
+            JArrayList<String> textInfo = new();
+            foreach (Popup popup in popups)
+            {
+                textInfo.add(popup.getText());
+            }
+            player.okDialog(string.Format(player.Language.GetGiftCodeOK, String.Join(",", textInfo)));
+            player.playerData.DailyNoelTime = dateTime;
+            HistoryManager.addHistory(new History(player).setLog($"Nhận quà điểm danh ngày {dateTime}").setObj(new { DayOfWeek = dayofWeek }));
+        }
+        else player.redDialog(player.Language.DailyNoelFail);
+    }
+
     public bool TryUseCardSkill(int skillId, int indexSlot, out Pet myPet)
     {
         myPet = player.playerData.petSelected;

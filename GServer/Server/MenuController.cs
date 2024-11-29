@@ -358,6 +358,7 @@ public partial class MenuController
     /// Tuỳ chọn để hiện thị chức năng dung hợp
     /// </summary>
     public const int OP_DUNG_HỢP = 86;
+    public const int OP_ĐIỂM_DANH = 87;
     /// <summary>
     /// Option Custom
     /// Trao đổi thưởng bằng 

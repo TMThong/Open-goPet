@@ -553,5 +553,6 @@ namespace Gopet.Language
         public string FusionPetOK { get; set; } = "Thú cưng được dung hợp thành công nhận {0} điểm";
         public string NotEnoughtFlowerGold { get; set; } = "Không đủ điểm hoa vàng";
         public string NotEnoughtFlowerGem { get; set; } = "Không đủ điểm hoa ngọc";
+        public string DailyNoelFail { get; set; } = "Đã điểm danh hôm nay rồi";
     }
 }
