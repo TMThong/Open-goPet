@@ -34,6 +34,7 @@
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 		<PackageReference Include="MongoDB.Driver" Version="3.0.0" />
 		<PackageReference Include="MySql.Data" Version="8.3.0" />
+		<PackageReference Include="MySqlBackup.NET" Version="2.3.8" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="SixLaborsCaptcha.Core" Version="0.2.2" />
 		<PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
@@ -51,8 +52,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="backup_sql\readme.txt">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 		<None Update="Language\en.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="my.cnf">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
 	<PropertyGroup>

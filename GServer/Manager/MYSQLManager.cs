@@ -44,4 +44,23 @@ public class MYSQLManager
         conn.Open();
         return conn;
     }
+
+    public static void Backup(MySqlConnection conn, string filePath)
+    {
+        using (var cmd = new MySqlCommand())
+        {
+            cmd.Connection = conn;
+            using (var backup = new MySqlBackup(cmd))
+            {
+                FileInfo f = new FileInfo(filePath);
+                f.Directory.Create();
+                using (var stream = f.Open(FileMode.OpenOrCreate))
+                {
+                    backup.ExportToStream(stream);
+                    stream.Flush();
+                    stream.Close();
+                }
+            }
+        }
+    }
 }

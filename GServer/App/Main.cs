@@ -6,6 +6,7 @@ using Gopet.Data.Event;
 using Gopet.Data.GopetClan;
 using Gopet.Data.GopetItem;
 using Gopet.Manager;
+using Gopet.Runtime;
 using Gopet.Server;
 using Gopet.Server.IO;
 using Gopet.Util;
@@ -190,6 +191,7 @@ namespace Gopet.App
         public static void initRuntime()
         {
             RuntimeServer.instance.runtimes.add(new AutoSave());
+            RuntimeServer.instance.runtimes.add(new DBBackup());
             RuntimeServer.instance.runtimes.add(Maintenance.gI());
         }
 
