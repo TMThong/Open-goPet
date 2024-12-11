@@ -30,7 +30,7 @@ namespace Gopet.Manager
                         {
                             if (!item.IsAlive)
                             {
-                                GopetManager.ServerMonitor.LogWarning("REMOVE THREAD: " + item.Name);
+                                //GopetManager.ServerMonitor.LogWarning("REMOVE THREAD: " + item.Name);
                                 RemoveThread(item);
                             }
                         }

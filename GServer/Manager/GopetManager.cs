@@ -715,15 +715,15 @@ public class GopetManager
 
     public const int GIÁ_NGỌC_NÂNG_GYM = 1000;
 
-    public static readonly Dictionary<DayOfWeek, Tuple<int[][]>> NOEL_DAILYS = new Dictionary<DayOfWeek, Tuple<int[][]>>
+    public static readonly Tuple<int[][]>[] NOEL_DAILYS = new Tuple<int[][]>[]
     {
-        [DayOfWeek.Monday] = new Tuple<int[][]>(new int[][] { new int[] { GIFT_ITEM, 198, 1, 0 } }), // Thứ hai
-        [DayOfWeek.Tuesday] = new Tuple<int[][]>(new int[][] { new int[] { GIFT_ITEM, 199, 2, 0 } }), // Thứ ba
-        [DayOfWeek.Wednesday] = new Tuple<int[][]>(new int[][] { new int[] { GIFT_ITEM, 200, 1, 0 }, new int[] { GIFT_ITEM, 184, 4, 0 } }), // Thứ tư
-        [DayOfWeek.Thursday] = new Tuple<int[][]>(new int[][] { new int[] { GIFT_ITEM, 200, 2, 0 }, new int[] { GIFT_ITEM, 185, 1, 0 } }), // Thứ năm
-        [DayOfWeek.Friday] = new Tuple<int[][]>(new int[][] { new int[] { GIFT_ITEM, 180, 4, 0 }, new int[] { GIFT_ITEM, 185, 2, 0 } }), // Thứ sáu
-        [DayOfWeek.Saturday] = new Tuple<int[][]>(new int[][] { new int[] { GIFT_ITEM, 180, 5, 0 }, new int[] { GIFT_ITEM, 121, 3, 0 } }), // Thứ bảy
-        [DayOfWeek.Sunday] = new Tuple<int[][]>(new int[][] { new int[] { GIFT_ITEM, 122, 1, 0 }, new int[] { GIFT_SKIN, 1000012, 0, 0, 0, 7 } }), // Chủ nhật
+        new Tuple<int[][]>(new int[][] { new int[] { GIFT_ITEM, 198, 1, 0 } }),
+        new Tuple<int[][]>(new int[][] { new int[] { GIFT_ITEM, 199, 2, 0 } }),
+        new Tuple<int[][]>(new int[][] { new int[] { GIFT_ITEM, 200, 1, 0 }, new int[] { GIFT_ITEM, 184, 4, 0 } }),
+        new Tuple<int[][]>(new int[][] { new int[] { GIFT_ITEM, 200, 2, 0 }, new int[] { GIFT_ITEM, 185, 1, 0 } }),
+        new Tuple<int[][]>(new int[][] { new int[] { GIFT_ITEM, 180, 4, 0 }, new int[] { GIFT_ITEM, 185, 2, 0 } }),
+        new Tuple<int[][]>(new int[][] { new int[] { GIFT_ITEM, 180, 5, 0 }, new int[] { GIFT_ITEM, 121, 3, 0 } }),
+        new Tuple<int[][]>(new int[][] { new int[] { GIFT_ITEM, 122, 1, 0 }, new int[] { GIFT_SKIN, 1000012, 0, 0, 0, 7 } }),
     };
 
     static GopetManager()

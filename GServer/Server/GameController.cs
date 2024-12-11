@@ -19,6 +19,7 @@ using Gopet.Data.dialog;
 using Gopet.Data.Clan;
 using Gopet.Data.user;
 using static System.Net.Mime.MediaTypeNames;
+using System.Numerics;
 
 [NonController]
 public class GameController
@@ -1192,6 +1193,25 @@ public class GameController
                 break;
             case GopetCMD.CHAT_GLOBAL:
                 sendGlobalChat(message.readUTF());
+                break;
+            case GopetCMD.AUTO_ATTACK_SUPPORT:
+                {
+                    if (this.getPetBattle() == null)
+                    {
+                        GopetPlace gopetPlace = this.player.getPlace();
+                        if (gopetPlace != null)
+                        {
+                            foreach (var item in gopetPlace.mobs.Where(x => x.getPetBattle(player) == null))
+                            {
+                                gopetPlace.startFightMob(item.getMobId(), player);
+                                if (this.getPetBattle() != null)
+                                {
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
                 break;
         }
     }
@@ -5070,16 +5090,21 @@ public class GameController
         DateTime timeDaily = player.playerData.DailyNoelTime;
         if (dateTime.Day != timeDaily.Day || dateTime.Month != timeDaily.Month || dateTime.Year != timeDaily.Year)
         {
-            var dayofWeek = dateTime.DayOfWeek;
-            JArrayList<Popup> popups = player.controller.onReiceiveGift(GopetManager.NOEL_DAILYS[dayofWeek].Item1);
-            JArrayList<String> textInfo = new();
-            foreach (Popup popup in popups)
+            var index = player.playerData.DailyNoelIndex;
+            if (index < GopetManager.NOEL_DAILYS.Length)
             {
-                textInfo.add(popup.getText());
+                JArrayList<Popup> popups = player.controller.onReiceiveGift(GopetManager.NOEL_DAILYS[index].Item1);
+                JArrayList<String> textInfo = new();
+                foreach (Popup popup in popups)
+                {
+                    textInfo.add(popup.getText());
+                }
+                player.okDialog(string.Format(player.Language.GetGiftCodeOK, String.Join(",", textInfo)));
+                player.playerData.DailyNoelTime = dateTime;
+                player.playerData.DailyNoelIndex++;
+                HistoryManager.addHistory(new History(player).setLog($"Nhận quà điểm danh ngày {dateTime}").setObj(new { Index = index }));
             }
-            player.okDialog(string.Format(player.Language.GetGiftCodeOK, String.Join(",", textInfo)));
-            player.playerData.DailyNoelTime = dateTime;
-            HistoryManager.addHistory(new History(player).setLog($"Nhận quà điểm danh ngày {dateTime}").setObj(new { DayOfWeek = dayofWeek }));
+            else player.redDialog(player.Language.DailyNoelMax, GopetManager.NOEL_DAILYS.Length);
         }
         else player.redDialog(player.Language.DailyNoelFail);
     }

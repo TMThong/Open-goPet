@@ -9,7 +9,6 @@ using Gopet.Manager;
 using Gopet.Server;
 using Gopet.Server.IO;
 using Gopet.Util;
-using MongoDB.Bson.Serialization;
 using Newtonsoft.Json;
 namespace Gopet.App
 {
@@ -151,11 +150,28 @@ namespace Gopet.App
                         }
 
 
+                        void ScanBuffItem()
+                        {
+                            foreach (var item1 in item.items.SelectMany(x => x.Value.Where(k => k.TimeCreate > new DateTime(2024, 12, 9) && k.SourcesItem.Contains(Data.item.ItemSource.BUFF_BẨN)).Select(m => m)))
+                            {
+                                GopetManager.ServerMonitor.LogWarning($"{item.name} có {item1.Template.name} x{item1.count} được buff");
+                            }
+                        }
+                        void ScanItemById(string UUID)
+                        {
+                            foreach (var item1 in item.items.SelectMany(x => x.Value.Where(k => k.itemUID == UUID).Select(m => m)))
+                            {
+                                GopetManager.ServerMonitor.LogWarning($"{item.name} có {item1.Template.name}");
+                            }
+                        }
+
                         //ScanItem();
                         //ScanPet();
                         //ScanWings();
                         //BuffHKL();
                         //ScanPet2();
+                        //ScanBuffItem();
+                        ScanItemById("bc8fb3e0-bc56-4b72-8c33-ad10a904b576");
                     }
                     void ScanLetter()
                     {

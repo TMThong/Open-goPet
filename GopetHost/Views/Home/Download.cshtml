@@ -1,4 +1,4 @@
-﻿
+﻿@model DownloadUrlModel
 @{
     ViewData["Title"] = "Tải game";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -20,7 +20,7 @@
         </main>
         <br />
         <footer>
-            <a class="button is-white" href="~/Upload/Game/JAR/goPet141.jar">Tải về</a>
+            <a class="button is-white" href="@Model.UrlJAR">Tải về</a>
             
         </footer>
     </div>
@@ -34,7 +34,7 @@
         </main>
         <br />
         <footer>
-            <a class="button is-warning" href="~/Upload/Game/APK/goPet141.apk">Tải về</a>
+            <a class="button is-warning" href="@Model.UrlAPK">Tải về</a>
         </footer>
     </div>
     <div class="container box cell">
@@ -49,7 +49,7 @@
         </main>
         <br />
         <footer>
-            <a class="is-info is-light" href="https://testflight.apple.com/join/MuN4kNyw">Truy cập TestFlight</a>
+            <a class="is-info is-light" href="@Model.UrliOS">Truy cập TestFlight</a>
         </footer>
     </div>
     <div class="container box cell">

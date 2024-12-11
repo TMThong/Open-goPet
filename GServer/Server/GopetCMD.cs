@@ -190,4 +190,7 @@ public class GopetCMD
     public const sbyte ADMIN_GET_ITEM = 6;
     public const sbyte ADMIN_GIVE_ITEM = 7;
     public const sbyte CHAT_GLOBAL = 10;
+
+
+    public const sbyte AUTO_ATTACK_SUPPORT = 22;
 }

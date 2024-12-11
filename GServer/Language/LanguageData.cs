@@ -554,5 +554,6 @@ namespace Gopet.Language
         public string NotEnoughtFlowerGold { get; set; } = "Không đủ điểm hoa vàng";
         public string NotEnoughtFlowerGem { get; set; } = "Không đủ điểm hoa ngọc";
         public string DailyNoelFail { get; set; } = "Đã điểm danh hôm nay rồi";
+        public string DailyNoelMax { get; set; } = "Đã điểm danh hết {0} ngày rồi";
     }
 }

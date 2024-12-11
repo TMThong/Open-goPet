@@ -12,6 +12,10 @@ namespace GopetHost.Models
 		public const string MÃ_ĐỐI_TÁC = "partner.id.card";
 		public const string KEY_ĐỐI_TÁC = "partner.key.card";
 		public const string SỐ_TRANG_MÀ_DIỄN_ĐÀN_HIỂN_THỊ = "num.page.show";
+		public const string URL_FILE_JAR = "file.jar";
+		public const string URL_FILE_IOS = "file.ios";
+		public const string URL_FILE_APK = "file.apk";
+
 
 
 		[Key]

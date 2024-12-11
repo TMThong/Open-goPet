@@ -1,11 +1,10 @@
-namespace Gopet.IO
+﻿namespace Gopet.IO
 {
     public class MsgReader
     {
 
         protected Session session;
         private long idleTime = 0L;
-
         public MsgReader(Session session)
         {
             this.session = session;
@@ -30,6 +29,7 @@ namespace Gopet.IO
                 }
                 catch (Exception var5)
                 {
+                    session.Close();
 #if DEBUG
                     //throw var5;
 #endif
@@ -59,6 +59,10 @@ namespace Gopet.IO
             else
             {
                 Length = hi - 1;
+                if (Length > 1000)
+                {
+                    throw new IOException("Dữ liệu quá lớn");
+                }
                 sbyte isEncrypted = session.dis.ReadSByte();
                 byte[] data = new byte[Length];
                 int len = 0;

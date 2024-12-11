@@ -57,7 +57,12 @@ namespace GopetHost.Controllers
 
         public IActionResult Download()
         {
-            return View();
+            return View(new DownloadUrlModel()
+            {
+                UrlAPK = _context.LoadWebConfig(WebConfigModel.URL_FILE_APK, string.Empty),
+                UrliOS = _context.LoadWebConfig(WebConfigModel.URL_FILE_IOS, string.Empty),
+                UrlJAR = _context.LoadWebConfig(WebConfigModel.URL_FILE_JAR, string.Empty)
+            });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -96,6 +96,7 @@ public class PlayerData
     public int FlowerGold { get; set; } = -1;
     public int FlowerCoin { get; set; } = -1;
     public DateTime DailyNoelTime { get; set; } = DateTime.MinValue;
+    public byte DailyNoelIndex { get; set; } = 0;
     public PlayerData()
     {
         x = 24 * 4;
@@ -173,7 +174,8 @@ public class PlayerData
                             IndexMilistoneTeacherEvent = @IndexMilistoneTeacherEvent,
                             FlowerGold = @FlowerGold,
                             FlowerCoin = @FlowerCoin,
-                            DailyNoelTime = @DailyNoelTime
+                            DailyNoelTime = @DailyNoelTime,
+                            DailyNoelIndex = @DailyNoelIndex
                             WHERE ID = @ID", playerData);
     }
 
