@@ -12,6 +12,8 @@ namespace Gopet.Data.Mob
         public int agi { get; private set; }
         public int _int { get; private set; }
         public int exp { get; private set; }
+        public int hp { get; private set; }
+        public int atk { get; private set; }
         public int[] HourSummon { get; private set; }
         public int[] BossMapSummon { get; private set; }
 

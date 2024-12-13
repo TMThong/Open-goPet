@@ -99,6 +99,8 @@ namespace Gopet.Data.Mob
                 this.exp = this.bossTemplate.exp;
                 this._int = this.bossTemplate._int;
                 this.str = this.bossTemplate.str;
+                this.hp = this.bossTemplate.hp;
+                this.atk = this.bossTemplate.atk;
             }
 
 

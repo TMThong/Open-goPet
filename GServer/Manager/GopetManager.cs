@@ -1155,7 +1155,7 @@ public class GopetManager
             if (marketData != null)
             {
                 MarketPlace.setKiosks(JsonConvert.DeserializeObject<Kiosk[]>(marketData.Data));
-                conn.Execute("DELETE FROM `market` WHERE (UNIX_TIMESTAMP(TimeSave) * 1000) + 1000 * 60 * 60 * 24 * 31 < @TimeReigonNeedDetele",
+                conn.Execute("DELETE FROM `market` WHERE (UNIX_TIMESTAMP(TimeSave) * 1000) + 1000 * 60 * 60 * 24 * 7 < @TimeReigonNeedDetele",
                   new { TimeReigonNeedDetele = marketData.milliseconds });
             }
         }

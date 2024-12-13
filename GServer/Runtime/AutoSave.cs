@@ -58,7 +58,7 @@ public class AutoSave : IRuntime
         if (lastTimeSaveMarket < DateTime.Now)
         {
             GopetManager.saveMarket();
-            lastTimeSaveMarket = DateTime.Now.AddMinutes(2);
+            lastTimeSaveMarket = DateTime.Now.AddMinutes(30);
         }
     }
 }

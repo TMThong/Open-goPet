@@ -41,7 +41,7 @@ public class MarketPlace : GopetPlace
         for (int i = 0; i < kiosks.Length; i++)
         {
             Kiosk kiosk = kiosks[i];
-            //kiosk.update();
+            kiosk.update();
         }
     }
 

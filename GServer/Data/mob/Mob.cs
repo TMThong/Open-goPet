@@ -127,7 +127,7 @@ namespace Gopet.Data.Mob
                 mobLvInfo = GopetManager.MOBLVLINFO_HASH_MAP.get(Utilities.nextInt(mobLvlMap.getLvlFrom(), mobLvlMap.getLvlTo()));
             }
             this.lvl = mobLvInfo.lvl;
-            hp = getHpViaPrice();
+            hp = mobLvInfo.hp;
             maxHp = getHpViaPrice();
             mp = getMpViaPrice();
             maxMp = getMpViaPrice();
@@ -176,6 +176,15 @@ namespace Gopet.Data.Mob
         public override int getStr()
         {
             return this.mobLvInfo.str;
+        }
+
+        public override int getAtk()
+        {
+            if (this.mobLvInfo.atk.HasValue)
+            {
+                return this.mobLvInfo.atk.Value;
+            }
+            return base.getAtk();
         }
     }
 }
