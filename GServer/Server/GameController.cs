@@ -4048,6 +4048,30 @@ public class GameController
                                         popups.add(new Popup(string.Format(player.Language.GiftAccumulatedPoint, count)));
                                         flag = true;
                                         break;
+                                    case -127:
+                                        itemId = Utilities.RandomArray(GopetManager.ID_ITEM_SILVER2);
+                                        break;
+                                    case -128:
+                                        itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PART_PET_TIER_THREE);
+                                        break;
+                                    case -129:
+                                        itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PART_PET_AO_ANH);
+                                        break;
+                                    case -130:
+                                        itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PART_WING_TIER_1);
+                                        break;
+                                    case -131:
+                                        itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PART_WING_TIER_2);
+                                        break;
+                                    case -132:
+                                        itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PART_WING_TIER_3);
+                                        break;
+                                    case -133:
+                                        itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PART_HAI_TAC);
+                                        break;
+                                    case -134:
+                                        itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PART_TINH_VAN);
+                                        break;
                                 }
                                 if (flag) break;
                                 Item item = new Item(itemId);

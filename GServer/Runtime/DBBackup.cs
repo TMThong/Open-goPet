@@ -26,7 +26,7 @@ namespace Gopet.Runtime
                 {
                     MYSQLManager.Backup(webConn, Path.Combine(Directory.GetCurrentDirectory() + "/backup_sql", $"web{now.Day}-{now.Month}-{now.Year}_{now.Hour}-{now.Minute}.sql"));
                 }
-                _lastBackup = DateTime.Now.AddMinutes(30);
+                _lastBackup = DateTime.Now.AddMinutes(300);
             }
         }
     }

@@ -113,7 +113,7 @@ public class Player : IHandleMessage
                             break;
                         }
                         Refcode = ms.reader().readUTF();
-                        if (ApplicationVersion >= GopetManager.VERSION_137)
+                        if (ApplicationVersion >= GopetManager.VERSION_142)
                         {
                             session.setClientOK(true);
                         }
