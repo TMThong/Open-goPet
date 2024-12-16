@@ -561,13 +561,15 @@ public class GopetManager
     public static readonly int[] ID_ITEM_SILVER = new int[] { 392, 395, 398, 401, 405, 408, 411, 414, 417 };
     public static readonly int[] ID_ITEM_SILVER2 = new int[] { 31, 34, 37, 40, 44, 47, 50, 53, 56 };
     public static readonly int[] ID_ITEM_PET_TIER_ONE = new int[] { 726, 728, 730, 732, 734, 738 };
-    public static readonly int[] ID_ITEM_PET_TIER_TOW = new int[] { 740, 742, 744, 746, 748, 750, 756, 760, 762, 764, 766 };
+    public static readonly int[] ID_ITEM_PET_TIER_TWO = new int[] { 740, 742, 744, 746, 748, 750, 756, 760, 762, 764, 766 };
     public static readonly int[] ID_ITEM_PART_PET_TIER_THREE = new int[] { 851, 852, 849, 850, 845, 846, 835, 802, 803 };
+    public static readonly int[] ID_ITEM_PART_PET_TIER_FOUR = new int[] { 819, 1005, 1006, 820, 1001, 1002, 821, 1003, 1004 };
     public static readonly int[] ID_ITEM_PART_WING_TIER_1 = new int[] { 506, 507, 508, 509, 510 };
     public static readonly int[] ID_ITEM_PART_WING_TIER_2 = new int[] { 511, 512, 513, 514, 515 };
     public static readonly int[] ID_ITEM_PART_WING_TIER_3 = new int[] { 5155, 5156, 5157, 5158, 5159 };
     public static readonly int[] ID_ITEM_PART_HAI_TAC = new int[] { 420, 423, 427, 431, 433 };
     public static readonly int[] ID_ITEM_PART_TINH_VAN = new int[] { 435, 438, 442, 446, 448 };
+    public static readonly int[] ID_ITEM_PART_HOANG_KIM = new int[] { 450, 452, 454, 456, 458, 460, 462, 464, 466, 468, 470, 472, 474, 476, 478 };
     public static int[] ID_ITEM_PART_PET_AO_ANH;
     public static readonly Version VERSION_132 = Version.Parse("1.3.2");
     public static readonly Version VERSION_133 = Version.Parse("1.3.3");
