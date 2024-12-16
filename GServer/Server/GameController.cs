@@ -4041,7 +4041,7 @@ public class GameController
                                         itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PET_TIER_ONE);
                                         break;
                                     case -125:
-                                        itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PET_TIER_TOW);
+                                        itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PET_TIER_TWO);
                                         break;
                                     case -126:
                                         player.playerData.AccumulatedPoint += count;
@@ -4071,6 +4071,12 @@ public class GameController
                                         break;
                                     case -134:
                                         itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PART_TINH_VAN);
+                                        break;
+                                    case -135:
+                                        itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PART_HOANG_KIM);
+                                        break;
+                                    case -136:
+                                        itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PART_PET_TIER_FOUR);
                                         break;
                                 }
                                 if (flag) break;
