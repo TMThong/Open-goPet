@@ -126,8 +126,7 @@ public partial class MenuController
                 Trade(TradeGiftTemplate.TYPE_LUA, player);
                 break;
             case OP_SHOP_ENERGY:
-                if (player.getPlace()?.map.mapTemplate.mapId == 19) showShop(SHOP_SKIN, player);
-                else showShop(SHOP_ENERGY, player);
+                showShop(SHOP_ENERGY, player);
                 break;
 
             case OP_MERGE_PART_PET:
