@@ -144,38 +144,16 @@ namespace Gopet.IO
                 currentIp = null;
                 currentPort = -1;
                 isSocketConnected = false;
-                if (sender != null)
-                {
-                    sender.stop();
-                }
-
-                if (dos != null)
-                {
-                    dos.Close();
-                    dos = null;
-                }
-
-                if (dis != null)
-                {
-                    dis.Close();
-                    dis = null;
-                }
-
-                if (sc != null)
-                {
-                    sc.Close();
-                    sc = null;
-                    socketCount--;
-                }
-
+                sender?.stop();
+                dos?.Close();
+                dos = null;
+                dis?.Close();
+                dis = null;
+                sc?.Close();
+                sc = null;
                 sendsbyteCount = 0;
                 recvsbyteCount = 0;
-
-                if (messageHandler != null)
-                {
-                    messageHandler.onDisconnected();
-                }
-
+                messageHandler?.onDisconnected();
             }
             catch (Exception var2)
             {
