@@ -58,9 +58,6 @@
 		<None Update="Language\en.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-		<None Update="my.cnf">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
 	</ItemGroup>
 	<PropertyGroup>
 		<ServerGarbageCollection>true</ServerGarbageCollection>
