@@ -59,7 +59,7 @@
             else
             {
                 Length = hi - 1;
-                if (Length > 1000)
+                if (Length > 10000)
                 {
                     throw new IOException("Dữ liệu quá lớn");
                 }
