@@ -4055,7 +4055,7 @@ public class GameController
                                         itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PART_PET_TIER_THREE);
                                         break;
                                     case -129:
-                                        itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PART_PET_AO_ANH);
+                                        itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PET_TIER_ONE);
                                         break;
                                     case -130:
                                         itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PART_WING_TIER_1);

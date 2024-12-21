@@ -64,13 +64,19 @@ namespace Gopet.App
                     131
 
             };
+                int[] itemError = new int[] {
+                   832,
+                   837,
+                   840,
+                   843
+                };
                 var tattoIds = GopetManager.tattos.Where(x => keys.Any(t => GopetManager.itemTemplate[t].itemOptionValue[0] == x.Key)).Select(m => m.Key);
                 using (var conn = MYSQLManager.create())
                 {
                     var players = conn.Query<PlayerData>("SELECT * FROM `player`").Where(x => !x.isAdmin);
                     foreach (var item in players)
                     {
-                        
+
                         void ScanItem()
                         {
                             foreach (var item1 in item.items.Select(x => x.Value))
@@ -97,12 +103,12 @@ namespace Gopet.App
                         {
                             foreach (var item1 in item.items.Select(x => x.Value))
                             {
-                                foreach (var item2 in item1.Where(x => x.itemTemplateId >= 154111 && x.itemTemplateId <= 154131).GroupBy(m=> m.itemTemplateId))
+                                foreach (var item2 in item1.Where(x => x.itemTemplateId >= 154111 && x.itemTemplateId <= 154131).GroupBy(m => m.itemTemplateId))
                                 {
                                     GopetManager.ServerMonitor.LogError($"Item {item2.First().Template.name} có sll {item2.Count()} của nhân vật {item.name}");
                                 }
                             }
-                            if(item.wing != null && item.wing.itemTemplateId >= 154111 && item.wing.itemTemplateId <= 154131)
+                            if (item.wing != null && item.wing.itemTemplateId >= 154111 && item.wing.itemTemplateId <= 154131)
                             {
                                 GopetManager.ServerMonitor.LogError($"Item {item.wing.Template.name} có sll {1} của nhân vật {item.name}");
                             }
@@ -166,13 +172,27 @@ namespace Gopet.App
                             }
                         }
 
+                        void ScanItemId()
+                        {
+                            foreach (var item1 in item.items.Select(x => x.Value))
+                            {
+                                foreach (var item2 in item1.Where(x => itemError.Contains(x.itemTemplateId)))
+                                {
+                                    GopetManager.ServerMonitor.LogError($"Item {item2.Template.name} có sll {item2.count} của nhân vật {item.name}");
+                                    item2.itemTemplateId = GopetManager.ID_ITEM_PART_WING_TIER_1[0];
+                                }
+                            }
+                            item.save();
+                        }
+
                         //ScanItem();
                         //ScanPet();
                         //ScanWings();
                         //BuffHKL();
                         //ScanPet2();
                         //ScanBuffItem();
-                        ScanItemById("bc8fb3e0-bc56-4b72-8c33-ad10a904b576");
+                        //ScanItemById("bc8fb3e0-bc56-4b72-8c33-ad10a904b576");
+                        ScanItemId();
                     }
                     void ScanLetter()
                     {
@@ -181,7 +201,7 @@ namespace Gopet.App
                             Console.WriteLine(item1.Key);
                         }
                     }
-                    
+
                 }
             }
             //ScanData();

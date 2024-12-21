@@ -1112,6 +1112,7 @@ public class GopetManager
         }
         new AutoMaintenance().Start(5, 0);
         ID_ITEM_PART_PET_AO_ANH = petTier.Values.Select(x => itemTemplates.Where(item => item.type == ITEM_PART_PET && item.itemOption.Length > 0 && item.itemOption[0] == 4 && item.itemOptionValue[0] == x.petTemplateIdNeed).Select(m => m.itemId).FirstOrDefault()).ToArray();
+        //File.WriteAllText(Directory.GetCurrentDirectory() + "/pet.json", JsonConvert.SerializeObject(ID_ITEM_PART_PET_AO_ANH.Select(x => new { id = x, name = GopetManager.itemTemplate[x].name })));
         //SaveJsonFile(Language["vi"], "/lang/vi.json");
     }
 
