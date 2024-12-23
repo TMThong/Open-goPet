@@ -770,7 +770,7 @@ public partial class MenuController
                     break;
                 case INPUT_TYPE_COUNT_USE_BÓ_HOA:
                     {
-                        int count = Math.Abs(reader.readInt(0));
+                        int count = Math.Min(Math.Abs(reader.readInt(0)), 100000);
                         player.controller.objectPerformed[OBJKEY_COUNT_USE_BÓ_HOA] = count;
                         player.okDialog(player.Language.SetCountUseBoHoa, count);
                     }

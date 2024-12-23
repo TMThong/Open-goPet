@@ -12,6 +12,10 @@ using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using OtpNet;
+using Net.Codecrete.QrCodeGenerator;
+using static Net.Codecrete.QrCodeGenerator.QrCode;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace GopetHost.Controllers
 {
@@ -69,7 +73,7 @@ namespace GopetHost.Controllers
                 if (queryList.Any())
                 {
                     UserData userData = queryList.First();
-                    var tongnap = this._context.BankTranslations.Where(m => m.UserName == username).Sum(x => x.AmountReceived) 
+                    var tongnap = this._context.BankTranslations.Where(m => m.UserName == username).Sum(x => x.AmountReceived)
                         + this._context.MomoTranslations.Where(m => m.Username == username).Sum(x => x.AmountReceived)
                         + this._context.Cards.Where(m => m.ThucNhan > 0 && m.UserName == username).Sum(t => t.ThucNhan);
                     if (tongnap > userData.tongnap)
@@ -266,14 +270,14 @@ namespace GopetHost.Controllers
         [HttpGet]
         public IActionResult CallBackNapthe(
             [FromQuery] int status,
-            [FromQuery] string code, 
-            [FromQuery] string serial, 
+            [FromQuery] string code,
+            [FromQuery] string serial,
             [FromQuery] int trans_id,
-            [FromQuery] string telco, 
-            [FromQuery] string callback_sign, 
-            [FromQuery] string request_id, 
-            [FromQuery] string message, 
-            [FromQuery] int amount, 
+            [FromQuery] string telco,
+            [FromQuery] string callback_sign,
+            [FromQuery] string request_id,
+            [FromQuery] string message,
+            [FromQuery] int amount,
             [FromQuery] int card_value)
         {
             int percentField = _context.LoadWebConfig(WebConfigModel.TỈ_LỆ_NẠP, 100);
@@ -331,7 +335,7 @@ namespace GopetHost.Controllers
                     }
                 }
             }
-            
+
             _context.SaveChanges();
             _logger.LogError($"{nameof(CallBackNapthe)} [FromQuery] int status ={status},\r\n            [FromQuery] string code={code}, \r\n            [FromQuery] string serial={serial}, \r\n            [FromQuery] int trans_id ={trans_id},\r\n            [FromQuery] string telco={telco}, \r\n            [FromQuery] string callback_sign={callback_sign}, mySign ={mysign}, \r\n            [FromQuery] string request_id ={request_id}, \r\n            [FromQuery] string message={message}, \r\n            [FromQuery] int amount={amount}, \r\n            [FromQuery] int card_value={card_value}");
             return Json(new { IsSucces = true });
@@ -398,6 +402,115 @@ namespace GopetHost.Controllers
             UserData userData = GetUser(_context);
             if (userData == null) RedirectToHome();
             return View(_context.Cards.Where(x => x.UserName == userData.username));
+        }
+
+        public IActionResult Enable2FA()
+        {
+            if (IfLoginIsNotOK(out IActionResult result))
+            {
+                return result;
+            }
+            UserData userData = GetUser(_context);
+            if (userData == null) RedirectToHome();
+            if (userData.secretKey != null)
+            {
+                ShowMessage("Lỗi", "Tài khoản của bạn đã kích hoạt 2FA rồi", "is-danger");
+                return RedirectToHome();
+            }
+            if (this.GetSecretKey() == null)
+            {
+                this.SetSecretKey(Base32Encoding.ToString(KeyGeneration.GenerateRandomKey(20)));
+            }
+            return View(this.GetSecretKey() as object);
+        }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public IActionResult Enable2FAWithOTP(string secretKey, string verificationCode)
+        {
+            if (IfLoginIsNotOK(out IActionResult result))
+            {
+                return result;
+            }
+            UserData userData = GetUser(_context);
+            if (userData == null || string.IsNullOrEmpty(secretKey) || string.IsNullOrEmpty(verificationCode)) RedirectToHome();
+            if (userData.secretKey != null)
+            {
+                ShowMessage("Lỗi", "Tài khoản của bạn đã kích hoạt 2FA rồi", "is-danger");
+                return RedirectToHome();
+            }
+            var totp = new Totp(Base32Encoding.ToBytes(secretKey));
+            if (totp.VerifyTotp(verificationCode, out var timeStep, new VerificationWindow(5, 5)))
+            {
+                userData.secretKey = secretKey;
+                _context.SaveChanges();
+                ShowMessage("Thành công", "Kích hoạt 2FA thành công", "is-success");
+                return RedirectToAction(nameof(UserDetails));
+            }
+            ShowMessage("Lỗi", "Mã xác thực không chính xác hoặc quá hạn", "is-danger");
+            return RedirectToAction(nameof(Enable2FA));
+        }
+
+        [HttpGet]
+        public IActionResult QRCode2FA(string secretKey)
+        {
+            if (string.IsNullOrEmpty(secretKey))
+            {
+                return BadRequest();
+            }
+            UserData userData = GetUser(_context);
+            if (userData == null) BadRequest();
+            var uriString = new OtpUri(OtpType.Totp, secretKey, userData.username, "goPet").ToString();
+            var qrCode = QrCode.EncodeText(uriString, Ecc.Medium);
+            byte[] svg = Encoding.UTF8.GetBytes(qrCode.ToSvgString(1));
+            return new FileContentResult(svg, "image/svg+xml; charset=utf-8");
+        }
+
+        public IActionResult Disable2FA()
+        {
+            if (IfLoginIsNotOK(out IActionResult result))
+            {
+                return result;
+            }
+            UserData userData = GetUser(_context);
+            if (userData == null) RedirectToHome();
+            if (userData.secretKey == null)
+            {
+                ShowMessage("Lỗi", "Tài khoản của bạn chưa kích hoạt 2FA", "is-danger");
+                return RedirectToHome();
+            }
+            return View();
+        }
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public IActionResult Disable2FAWithOTP(string verificationCode)
+        {
+            if (string.IsNullOrEmpty(verificationCode) || verificationCode?.Length != 6)
+            {
+                ShowMessage("Lỗi", "Mã OTP phải đủ 6 số", "is-danger");
+                return RedirectToAction(nameof(Disable2FA));
+            }
+            if (IfLoginIsNotOK(out IActionResult result))
+            {
+                return result;
+            }
+            UserData userData = GetUser(_context);
+            if (userData == null) RedirectToHome();
+            if (userData.secretKey == null)
+            {
+                ShowMessage("Lỗi", "Tài khoản của bạn chưa kích hoạt 2FA", "is-danger");
+                return RedirectToAction(nameof(Disable2FA));
+            }
+            var totp = new Totp(Base32Encoding.ToBytes(userData.secretKey));
+            if (totp.VerifyTotp(verificationCode, out var timeStep, new VerificationWindow(5, 5)))
+            {
+                userData.secretKey = null;
+                _context.SaveChanges();
+                ShowMessage("Thành công", "Tắt 2FA thành công", "is-success");
+                return RedirectToAction(nameof(UserDetails));
+            }
+            ShowMessage("Lỗi", "Mã xác thực không chính xác hoặc quá hạn", "is-danger");
+            return RedirectToAction(nameof(Disable2FA));
         }
     }
 }

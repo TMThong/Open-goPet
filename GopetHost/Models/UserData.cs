@@ -43,5 +43,8 @@ namespace GopetHost.Models
         }
 
         public int tongnap { get; set; } = 0;
+
+
+        public string? secretKey { get; set; } = null;
     }
 }

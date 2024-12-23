@@ -556,7 +556,7 @@ namespace Gopet.Language
         public string DailyNoelFail { get; set; } = "Đã điểm danh hôm nay rồi";
         public string DailyNoelMax { get; set; } = "Đã điểm danh hết {0} ngày rồi";
 
-        public string CountUseFlower { get; set; } = "Số lượng bó hoá";
-        public string SetCountUseBoHoa { get; set; } = "Đặt số lượng sử dụng bó hoa thành công: {0}";
+        public string CountUseFlower { get; set; } = "Số lượng";
+        public string SetCountUseBoHoa { get; set; } = "Đặt số lượng thao tác thành công: {0}";
     }
 }

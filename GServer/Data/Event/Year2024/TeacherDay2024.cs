@@ -19,10 +19,10 @@ namespace Gopet.Data.Event.Year2024
     {
         public static readonly TeacherDay2024 Instance = new TeacherDay2024();
 
-        public static readonly Tuple<int, int>[] Data = new Tuple<int, int>[]
+        public static readonly Tuple<long, int>[] Data = new Tuple<long, int>[]
         {
-            new Tuple<int, int>(500, 30),
-            new Tuple<int, int>(20000, 30)
+            new Tuple<long, int>(500, 30),
+            new Tuple<long, int>(20000, 30)
         };
 
         public static readonly Tuple<int, int, int>[] GiftMilistones = new Tuple<int, int, int>[]

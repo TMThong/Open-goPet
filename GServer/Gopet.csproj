@@ -36,6 +36,7 @@
 		<PackageReference Include="MySqlBackup.NET" Version="2.3.8" />
 		<PackageReference Include="MySqlConnector" Version="2.4.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Otp.NET" Version="1.4.0" />
 		<PackageReference Include="SixLaborsCaptcha.Core" Version="0.2.2" />
 		<PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
 		<PackageReference Include="StringLibrary" Version="1.0.0" />

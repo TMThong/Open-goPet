@@ -18,6 +18,7 @@ public class UserData
     public const sbyte BAN_TIME = 1;
     public const sbyte BAN_INFINITE = 2;
     public const sbyte ROLE_NON_ACTIVE = 0;
+    public string? secretKey { get; set; } = null;
 
     public void ban(sbyte typeBan, String reason, long timeBan)
     {

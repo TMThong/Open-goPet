@@ -1,0 +1,45 @@
+﻿@using GopetHost.Controllers
+@model System.String
+@{
+    ViewData["Title"] = "Bật 2FA";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container">
+    <h1 class="title">Kích hoạt Xác thực Hai Yếu Tố (2FA)</h1>
+    <h2 class="subtitle">Để bảo mật tài khoản của bạn, vui lòng quét mã QR bằng ứng dụng xác thực của bạn.</h2>
+
+    <div class="box">
+        <form asp-action="@nameof(UserController.Enable2FAWithOTP)" asp-controller="User" method="POST"> 
+
+            <div class="columns is-centered">
+                <div class="column is-half">
+                    <h3 class="title is-4">Quét Mã QR</h3>
+                    <p>Quét mã QR dưới đây bằng ứng dụng Google Authenticator hoặc ứng dụng xác thực khác để nhận mã xác minh.</p>
+                    <figure class="image is-256x256">
+                        <img src="/User/QRCode2FA?secretKey=@Model" alt="QR Code for 2FA">
+                    </figure>
+
+                    <hr>
+
+                    <p class="mt-4">Bạn có thể sao chép mã bí mật nếu bạn không thể quét mã QR.</p>
+                    <pre class="has-background-light p-2">@Model</pre>
+
+                    <div class="field">
+                        <label class="label">Nhập mã xác minh</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Nhập mã xác minh" name="verificationCode" id="verificationCode" />
+                            <input class="input" type="hidden" id="secretKey" name="secretKey" value="@Model" />
+                        </div>
+                    </div>
+
+                    <div class="control">
+                        <button class="button is-primary" >Kích hoạt 2FA</button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

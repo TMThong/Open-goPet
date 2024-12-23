@@ -911,7 +911,7 @@ public partial class MenuController
                         new Option(0, $"Tặng {Utilities.FormatNumber(TeacherDay2024.Data[0].Item1 * num) } (vang) và {Utilities.FormatNumber(TeacherDay2024.Data[0].Item2 * num)} boá hoa"),
                         new Option(1, $"Tặng {Utilities.FormatNumber(TeacherDay2024.Data[1].Item1  * num)} (ngoc) và {Utilities.FormatNumber(TeacherDay2024.Data[1].Item2 * num)} boá hoa"),
                         new Option(2, "Huỷ"),
-                        new Option(3, "Nhập số lượng.(Số lượng hoa cần thao tác)"),
+                        new Option(3, "Nhập số lượng.(Số lần tặng hoa)"),
                     };
                     player.controller.sendListOption(menuId, "Chọn phương thức tặng hoa", "", options);
                 }

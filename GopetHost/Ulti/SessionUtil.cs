@@ -5,7 +5,7 @@ using MySql.Data.MySqlClient;
 namespace GopetHost.Ulti
 {
     public static class SessionUtil
-    { 
+    {
         public static bool IsLoginOK(this ControllerBase controller)
         {
             return controller.HttpContext.Session.GetInt32(nameof(UserData.user_id)).HasValue;
@@ -40,6 +40,21 @@ namespace GopetHost.Ulti
         public static void CleanSession(this ControllerBase controller)
         {
             controller.HttpContext.Session.Clear();
+        }
+
+        public static void SetSecretKey(this ControllerBase controller, string secretKey)
+        {
+            controller.HttpContext.Session.SetString("secretKey", secretKey);
+        }
+
+        public static string GetSecretKey(this ControllerBase controller)
+        {
+            return controller.HttpContext.Session.GetString("secretKey");
+        }
+
+        public static string GetSecretKey(this HttpContext context)
+        {
+            return context.Session.GetString("secretKey");
         }
     }
 }

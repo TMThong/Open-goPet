@@ -1984,12 +1984,12 @@ public class GameController
         return checkCount(GopetManager.CRYSTAL_ID, count, GopetManager.MONEY_INVENTORY);
     }
 
-    public bool checkCount(int tempId, int count, sbyte inventory)
+    public bool checkCount(int tempId, long count, sbyte inventory)
     {
         Item itemSelect = selectItemsbytemp(tempId, inventory);
         return checkCountItem(itemSelect, count);
     }
-    public bool checkCountItem(Item itemSelect, int count)
+    public bool checkCountItem(Item itemSelect, long count)
     {
         if (itemSelect != null)
         {

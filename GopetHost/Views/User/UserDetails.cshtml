@@ -16,7 +16,7 @@
     <div class="field">
         <label class="label">Tình trạng tài khoản</label>
         <div class="control">
-            @switch(Model.User.role)
+            @switch (Model.User.role)
             {
                 case 0:
                     {
@@ -74,6 +74,31 @@
         <label class="label">Tổng nạp</label>
         <div class="control">
             <input class="input is-danger " type="datetime" value="@Model.User.tongnap.ToString("###,###,###")" readonly>
+        </div>
+    </div>
+
+    <div class="field">
+        @if (Model.User.secretKey == null)
+        {
+            <label class="label">
+                Xác minh 2 bước: Chưa bật
+            </label>
+        }
+        else
+        {
+            <label class="label">
+                Xác minh 2 bước: Đã bật
+            </label>
+        }
+        <div class="control">
+            @if (Model.User.secretKey == null)
+            {
+                <a asp-action="@nameof(UserController.Enable2FA)" asp-controller="User" class="button is-primary is-dark">Bật 2FA</a>
+            }
+            else
+            {
+                <a asp-action="@nameof(UserController.Disable2FA)" asp-controller="User" class="button is-danger is-dark">Tắt 2FA</a>
+            }
         </div>
     </div>
 </div>

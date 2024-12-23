@@ -924,7 +924,7 @@ public partial class MenuController
         return false;
     }
 
-    public static void addMoney(sbyte typeMoney, int value, Player player)
+    public static void addMoney(sbyte typeMoney, long value, Player player)
     {
         switch (typeMoney)
         {
@@ -933,13 +933,13 @@ public partial class MenuController
             case GopetManager.MONEY_TYPE_GOLD:
                 player.addGold(value); break;
             case GopetManager.MONEY_TYPE_SILVER_BAR:
-                player.controller.addSilverBar(value); break;
+                player.controller.addSilverBar((int)value); break;
             case GopetManager.MONEY_TYPE_GOLD_BAR:
-                player.controller.addGoldBar(value); break;
+                player.controller.addGoldBar((int)value); break;
             case GopetManager.MONEY_TYPE_BLOOD_GEM:
-                player.controller.addBloodGem(value); break;
+                player.controller.addBloodGem((int)value); break;
             case GopetManager.MONEY_TYPE_CRYSTAL_ITEM:
-                player.controller.addGoldBar(value); break;
+                player.controller.addGoldBar((int)value); break;
             case GopetManager.MONEY_TYPE_FUND_CLAN:
                 {
                     ClanMember clanMember = player.controller.getClan();
@@ -953,10 +953,10 @@ public partial class MenuController
                 player.AddLua(value);
                 break;
             case GopetManager.MONEY_TYPE_FLOWER_GOLD:
-                player.playerData.FlowerGold += value;
+                player.playerData.FlowerGold += (int)value;
                 break;
             case GopetManager.MONEY_TYPE_FLOWER_COIN:
-                player.playerData.FlowerCoin += value;
+                player.playerData.FlowerCoin += (int)value;
                 break;
         }
     }
