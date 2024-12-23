@@ -2,7 +2,7 @@ using Dapper;
 using Gopet.Data.Collections;
 using Gopet.Data.GopetItem;
 using Gopet.Util;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using Newtonsoft.Json;
 
 namespace Gopet.Data.Map

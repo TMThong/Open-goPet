@@ -5,7 +5,7 @@ using Gopet.Data.Dialog;
 using Gopet.Data.GopetClan;
 using Gopet.Data.GopetItem;
 using Gopet.Util;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -737,10 +737,7 @@ public partial class MenuController
                                             }
                                             catch (MySqlException e)
                                             {
-                                                if (e.Code == 1062)
-                                                {
-                                                    player.redDialog(player.Language.CreateClanDuplicateError);
-                                                }
+                                                player.redDialog(player.Language.CreateClanDuplicateError);
                                                 e.printStackTrace();
                                             }
                                             catch (Exception e)
@@ -769,6 +766,13 @@ public partial class MenuController
                                 player.redDialog(player.Language.HaveSpecialChar);
                             }
                         }
+                    }
+                    break;
+                case INPUT_TYPE_COUNT_USE_BÓ_HOA:
+                    {
+                        int count = Math.Abs(reader.readInt(0));
+                        player.controller.objectPerformed[OBJKEY_COUNT_USE_BÓ_HOA] = count;
+                        player.okDialog(player.Language.SetCountUseBoHoa, count);
                     }
                     break;
             }

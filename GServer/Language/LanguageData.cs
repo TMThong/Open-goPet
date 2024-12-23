@@ -520,7 +520,7 @@ namespace Gopet.Language
         public string ViewTopFlowerGold { get; set; } = "TOP Tặng Vàng, Dâng Hoa";
         public string ViewTopFlowerGem { get; set; } = "TOP Dâng Ngọc, Tặng Hoa";
         public string PleaseGoToNPCToUseFlower { get; set; } = "Để dùng boá hoa bạn vui lòng đến gặp NPC Tran Chan để tặng!";
-        public string UseFlowerOK { get; set; } = "Tặng hoa thành công! Nhận được 10 điểm tích luỹ";
+        public string UseFlowerOK { get; set; } = "Tặng hoa thành công! Nhận được {0} điểm tích luỹ";
         public string FlowerMilestone { get; set; } = "Nhận mốc tặng hoa";
         public string InvalidFlowerMilestone { get; set; } = "Bạn đã nhận cột mốc rồi";
         public string EventHadFinished { get; set; } = "Sự kiện đã kết thúc rồi!";
@@ -555,5 +555,8 @@ namespace Gopet.Language
         public string NotEnoughtFlowerGem { get; set; } = "Không đủ điểm hoa ngọc";
         public string DailyNoelFail { get; set; } = "Đã điểm danh hôm nay rồi";
         public string DailyNoelMax { get; set; } = "Đã điểm danh hết {0} ngày rồi";
+
+        public string CountUseFlower { get; set; } = "Số lượng bó hoá";
+        public string SetCountUseBoHoa { get; set; } = "Đặt số lượng sử dụng bó hoa thành công: {0}";
     }
 }

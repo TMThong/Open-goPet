@@ -2,7 +2,7 @@
 using Dapper;
 using Gopet.Data.User;
 using Gopet.Util;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 
 public class History 
 {

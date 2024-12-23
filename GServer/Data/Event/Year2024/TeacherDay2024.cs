@@ -104,7 +104,7 @@ namespace Gopet.Data.Event.Year2024
         {
             get
             {
-                return DateTime.Now > new DateTime(2024, 11, 17, 0, 0, 0) && DateTime.Now < new DateTime(2024, 12, 22);
+                return DateTime.Now > new DateTime(2024, 11, 17, 0, 0, 0) && DateTime.Now < new DateTime(2024, 12, 24);
             }
         }
 

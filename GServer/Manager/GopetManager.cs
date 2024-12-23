@@ -7,7 +7,7 @@ using Gopet.Data.Map;
 using Gopet.Data.Mob;
 using Gopet.Data.User;
 using Gopet.Util;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using Mysqlx.Expr;
 using Newtonsoft.Json;
 using Gopet.Data.Dialog;

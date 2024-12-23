@@ -5,7 +5,7 @@ using Gopet.Util;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
 using System.Threading;

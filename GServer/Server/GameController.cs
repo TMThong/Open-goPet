@@ -9,7 +9,7 @@ using Gopet.Data.Map;
 using Gopet.Data.User;
 using Gopet.IO;
 using Gopet.Util;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using static MenuController;
 using Microsoft.AspNetCore.Mvc;
 using Dapper;

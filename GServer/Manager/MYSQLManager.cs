@@ -1,7 +1,7 @@
 
 
 using Gopet.Data.User;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using System.Configuration;
 
 public class MYSQLManager
@@ -47,10 +47,11 @@ public class MYSQLManager
 
     public static void Backup(MySqlConnection conn, string filePath)
     {
-        using (var cmd = new MySqlCommand())
+        /*
+        using (var cmd = new MySql.Data.MySqlClient.MySqlCommand())
         {
             cmd.Connection = conn;
-            using (var backup = new MySqlBackup(cmd))
+            using (var backup = new MySql.Data.MySqlClient.MySqlBackup(cmd))
             {
                 FileInfo f = new FileInfo(filePath);
                 f.Directory.Create();
@@ -61,6 +62,6 @@ public class MYSQLManager
                     stream.Close();
                 }
             }
-        }
+        }*/
     }
 }

@@ -8,7 +8,7 @@ using Gopet.Data.Map;
 using Gopet.Data.User;
 using Gopet.IO;
 using Gopet.Util;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using Gopet.Data.item;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
@@ -494,6 +494,7 @@ public partial class MenuController
     /// Khoá để lưu thú cưng dung hợp đang được chọn hiện tại
     /// </summary>
     public const int OBJKEY_CURRENT_SELECT_PET_ID_FUSION = 67;
+    public const int OBJKEY_COUNT_USE_BÓ_HOA = 68;
     public const int DIALOG_CONFIRM_REMOVE_ITEM_EQUIP = 0;
     public const int DIALOG_CONFIRM_BUY_KIOSK_ITEM = 1;
     public const int DIALOG_ENCHANT = 3;
@@ -544,6 +545,7 @@ public partial class MenuController
     public const int INPUT_TYPE_COUNT_ADMIN_GET = 30;
     public const int INPUT_TYPE_FAST_UP_ITEM = 31;
     public const int INPUT_TYPE_EXCHANGE_LUA_TO_COIN = 32;
+    public const int INPUT_TYPE_COUNT_USE_BÓ_HOA = 33;
     public const int IMGDIALOG_CAPTCHA = 0;
     #endregion
     public static JArrayList<MenuItemInfo> getPetFreeLst(Player player)
@@ -1041,6 +1043,7 @@ public partial class MenuController
                 return new sbyte[] { InputReader.FIELD_LONG };
             case INPUT_DIALOG_ADMIN_GET_HISTORY:
                 return new sbyte[] { InputReader.FIELD_STRING, InputReader.FIELD_STRING, InputReader.FIELD_STRING };
+            case INPUT_TYPE_COUNT_USE_BÓ_HOA:
             case INPUT_TYPE_COUNT_ADMIN_GIVE:
             case INPUT_TYPE_COUNT_ADMIN_GET:
             case INPUT_COUNT_OF_ITEM_TRASH_WANT_SELL:

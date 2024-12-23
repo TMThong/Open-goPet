@@ -9,7 +9,7 @@ using Gopet.Data.Map;
 using Gopet.Data.User;
 using Gopet.IO;
 using Gopet.Util;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using Gopet.Data.item;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
@@ -901,11 +901,17 @@ public partial class MenuController
                 return;
             case MENU_OPTION_USE_FLOWER:
                 {
+                    int num = 1;
+                    if (player.controller.objectPerformed.ContainsKey(OBJKEY_COUNT_USE_BÓ_HOA))
+                    {
+                        num = Math.Max(1, player.controller.objectPerformed[OBJKEY_COUNT_USE_BÓ_HOA]);
+                    }
                     JArrayList<Option> options = new JArrayList<Option>()
                     {
-                        new Option(0, $"Tặng {Utilities.FormatNumber(TeacherDay2024.Data[0].Item1)} (vang) và {TeacherDay2024.Data[0].Item2} boá hoa"),
-                        new Option(1, $"Tặng {Utilities.FormatNumber(TeacherDay2024.Data[1].Item1)} (ngoc) và {TeacherDay2024.Data[1].Item2} boá hoa"),
+                        new Option(0, $"Tặng {Utilities.FormatNumber(TeacherDay2024.Data[0].Item1 * num) } (vang) và {Utilities.FormatNumber(TeacherDay2024.Data[0].Item2 * num)} boá hoa"),
+                        new Option(1, $"Tặng {Utilities.FormatNumber(TeacherDay2024.Data[1].Item1  * num)} (ngoc) và {Utilities.FormatNumber(TeacherDay2024.Data[1].Item2 * num)} boá hoa"),
                         new Option(2, "Huỷ"),
+                        new Option(3, "Nhập số lượng.(Số lượng hoa cần thao tác)"),
                     };
                     player.controller.sendListOption(menuId, "Chọn phương thức tặng hoa", "", options);
                 }

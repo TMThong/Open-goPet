@@ -8,7 +8,7 @@ using Gopet.Data.Map;
 using Gopet.Data.User;
 using Gopet.IO;
 using Gopet.Util;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using Gopet.Data.item;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
@@ -2407,32 +2407,41 @@ public partial class MenuController
                 break;
             case MENU_OPTION_USE_FLOWER:
                 {
+                    int num = 1;
+                    if (player.controller.objectPerformed.ContainsKey(OBJKEY_COUNT_USE_BÓ_HOA))
+                    {
+                        num = Math.Max(1, player.controller.objectPerformed[OBJKEY_COUNT_USE_BÓ_HOA]);
+                    }
                     if (TeacherDay2024.Instance.Condition)
                     {
                         if (index >= 0 && index < 2)
                         {
                             Item itemFlower = player.controller.selectItemsbytemp(TeacherDay2024.BOÁ_HOA, GopetManager.NORMAL_INVENTORY);
-                            if (checkMoney((sbyte)index, TeacherDay2024.Data[index].Item1, player) && player.controller.checkCountItem(itemFlower, TeacherDay2024.Data[index].Item2))
+                            if (checkMoney((sbyte)index, TeacherDay2024.Data[index].Item1 * num, player) && player.controller.checkCountItem(itemFlower, TeacherDay2024.Data[index].Item2 * num))
                             {
-                                player.controller.subCountItem(itemFlower, TeacherDay2024.Data[index].Item2, GopetManager.NORMAL_INVENTORY);
-                                addMoney((sbyte)index, -TeacherDay2024.Data[index].Item1, player);
+                                player.controller.subCountItem(itemFlower, TeacherDay2024.Data[index].Item2 * num, GopetManager.NORMAL_INVENTORY);
+                                addMoney((sbyte)index, -(TeacherDay2024.Data[index].Item1 * num), player);
                                 switch (index)
                                 {
                                     case 0:
-                                        player.playerData.NumGiveFlowerGold += 10;
-                                        player.playerData.FlowerGold += 10;
+                                        player.playerData.NumGiveFlowerGold += 10 * num;
+                                        player.playerData.FlowerGold += 10 * num;
                                         break;
                                     case 1:
-                                        player.playerData.NumGiveFlowerGem += 10;
-                                        player.playerData.FlowerCoin += 10;
+                                        player.playerData.NumGiveFlowerGem += 10 * num;
+                                        player.playerData.FlowerCoin += 10 * num;
                                         break;
                                 }
-                                player.okDialog(player.Language.UseFlowerOK);
+                                player.okDialog(player.Language.UseFlowerOK, 10 * num);
                             }
                             else
                             {
                                 player.redDialog(player.Language.NotEnoughMaterial);
                             }
+                        }
+                        else if (index == 3)
+                        {
+                            player.controller.showInputDialog(INPUT_TYPE_COUNT_USE_BÓ_HOA, player.Language.CountUseFlower, player.Language.Count);
                         }
                     }
                 }
