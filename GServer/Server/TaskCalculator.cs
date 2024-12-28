@@ -191,6 +191,9 @@ public class TaskCalculator
                 case REQUEST_WAIT_NEW_TASK:
                     taskText.Add(player.Language.TASK_REQUEST_WAIT_NEW_TASK);
                     break;
+                case REQUEST_HIẾN_TẾ_THÚ_CƯNG:
+                    taskText.Add(string.Format(player.Language.TASK_REQUEST_SACRIFICE_PET, taskI[2], task[i], taskI[1]));
+                    break;
             }
         }
         return "\n  ---- " + player.Language.Request + " ----\n" + String.Join("\n", taskText);
@@ -331,6 +334,15 @@ public class TaskCalculator
                     case REQUEST_NUM_OF_FUND_CLAN:
                         taskData.task[i]++;
                         break;
+                    case REQUEST_HIẾN_TẾ_THÚ_CƯNG:
+                        {
+                            int lvl = (int)dObjects[0];
+                            if (taskData.taskInfo[i][2] >= lvl)
+                            {
+                                taskData.task[i]++;
+                            }
+                        }
+                        break;
                 }
             }
         }
@@ -342,6 +354,11 @@ public class TaskCalculator
         {
             this.onTaskUpdate(taskData, taskRequestType, dObjects);
         }
+    }
+
+    public void OnSacrifice(int petLvl)
+    {
+        this.onAllTaskUpdate(REQUEST_HIẾN_TẾ_THÚ_CƯNG, petLvl);
     }
 
 
@@ -402,10 +419,7 @@ public class TaskCalculator
         {
             return;
         }
-
-        {
-            this.onAllTaskUpdate(REQUEST_UP_SKILL_PET, skillLv);
-        }
+        this.onAllTaskUpdate(REQUEST_UP_SKILL_PET, skillLv);
     }
 
     public void onBuyRandomWeapon()
@@ -470,7 +484,7 @@ public class TaskCalculator
         }
         getTaskDatas().remove(taskData);
         player.playerData.tasking.remove(taskData.taskTemplateId);
-        switch(taskData.getTemplate().type)
+        switch (taskData.getTemplate().type)
         {
             case TASK_TYPE_CLAN:
                 player.playerData.ClanTasked.Add(taskData.taskTemplateId);
