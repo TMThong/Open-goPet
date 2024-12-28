@@ -356,6 +356,8 @@ public class TaskCalculator
         }
     }
 
+    public bool TryCheckPetSacrifice(Pet pet) => getTaskDatas().Any(m => m.taskInfo.Any(t => t[0] == REQUEST_HIẾN_TẾ_THÚ_CƯNG && t[2] <= pet.lvl));
+
     public void OnSacrifice(int petLvl)
     {
         this.onAllTaskUpdate(REQUEST_HIẾN_TẾ_THÚ_CƯNG, petLvl);
