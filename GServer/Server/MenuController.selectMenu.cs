@@ -1403,7 +1403,14 @@ public partial class MenuController
                                 break;
                             case MENU_PET_SACRIFICE:
                                 {
-
+                                    if (player.controller.getTaskCalculator().TryCheckPetSacrifice(pet))
+                                    {
+                                        player.playerData.pets.remove(pet);
+                                        player.controller.getTaskCalculator().OnSacrifice(pet.lvl);
+                                        player.okDialog(player.Language.PetSacrificeOK);
+                                        HistoryManager.addHistory(new History(player).setLog($"Hiến tặng thú cưng {pet.getNameWithStar(player)}").setObj(pet));
+                                    }
+                                    else player.redDialog(player.Language.PetSacrificeFail);
                                 }
                                 break;
                         }
