@@ -1374,6 +1374,7 @@ public partial class MenuController
                     }
                 }
                 break;
+            case MENU_PET_SACRIFICE:
             case MENU_FUSION_MENU_PET:
             case MENU_KIOSK_PET_SELECT:
                 {
@@ -1398,6 +1399,11 @@ public partial class MenuController
                                 {
                                     player.controller.objectPerformed[OBJKEY_CURRENT_SELECT_PET_ID_FUSION] = index;
                                     sendMenu(MENU_FUSION_PET_OPTION, player);
+                                }
+                                break;
+                            case MENU_PET_SACRIFICE:
+                                {
+
                                 }
                                 break;
                         }
