@@ -360,6 +360,7 @@ public partial class MenuController
     public const int OP_DUNG_HỢP = 86;
     public const int OP_ĐIỂM_DANH = 87;
     public const int OP_HƯỚNG_DẪN_LÊN_THIÊN_ĐÌNH = 88;
+    public const int OP_HIẾN_TẶNG_THÚ_CƯNG = 89;
     /// <summary>
     /// Option Custom
     /// Trao đổi thưởng bằng 
