@@ -359,6 +359,7 @@ public partial class MenuController
     /// </summary>
     public const int OP_DUNG_HỢP = 86;
     public const int OP_ĐIỂM_DANH = 87;
+    public const int OP_HƯỚNG_DẪN_LÊN_THIÊN_ĐÌNH = 88;
     /// <summary>
     /// Option Custom
     /// Trao đổi thưởng bằng 
@@ -546,6 +547,7 @@ public partial class MenuController
     public const int INPUT_TYPE_FAST_UP_ITEM = 31;
     public const int INPUT_TYPE_EXCHANGE_LUA_TO_COIN = 32;
     public const int INPUT_TYPE_COUNT_USE_BÓ_HOA = 33;
+    public const int INPUT_OTP_2FA = 34;
     public const int IMGDIALOG_CAPTCHA = 0;
     #endregion
     public static JArrayList<MenuItemInfo> getPetFreeLst(Player player)
@@ -1051,6 +1053,7 @@ public partial class MenuController
             case INPUT_DIALOG_CHALLENGE_INVITE:
             case INPUT_DIALOG_KIOSK:
                 return new sbyte[] { InputReader.FIELD_INT };
+            case INPUT_OTP_2FA:
             case INPUT_TYPE_NAME_BUFF_ENCHANT_TATTOO:
             case INPUT_TYPE_NAME_PET_WHEN_BUY_PET:
             case INPUT_TYPE_NAME_TO_BUFF_ENCHANT:

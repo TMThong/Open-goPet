@@ -39,6 +39,7 @@ public class Player : IHandleMessage
     public const long TIME_PET_RECOVERY = 1000l * 3;
     public bool isPetRecovery = false;
     public int skillId_learn = -1;
+    public bool IsLogin2FAOK = false;
     /// <summary>
     /// Có bang hội
     /// </summary>
@@ -375,7 +376,10 @@ Thread.Sleep(1000);
         redDialog(string.Format(text, obj));
     }
 
-    
+    public void show2FADialog()
+    {
+        controller.showInputDialog(MenuController.INPUT_OTP_2FA, Language.TwoFALoginTitle, " OTP: ");
+    }
 
     public virtual void login(String username, String password, String version)
     {
@@ -411,7 +415,6 @@ Thread.Sleep(1000);
                         redDialog(Language.AccountNonAcitve);
                         return;
                     }
-
                     switch (user.isBaned)
                     {
                         case UserData.BAN_INFINITE:
@@ -442,6 +445,11 @@ Thread.Sleep(1000);
                                 }
                                 break;
                             }
+                    }
+                    if (user.secretKey != null && !IsLogin2FAOK)
+                    {
+                        show2FADialog();
+                        return;
                     }
                     Player player2 = PlayerManager.get(user.user_id);
                     if (player2 != null)

@@ -476,6 +476,9 @@ public partial class MenuController
             case OP_ĐIỂM_DANH:
                 player.controller.noelDaily();
                 break;
+            case OP_HƯỚNG_DẪN_LÊN_THIÊN_ĐÌNH:
+
+                break;
             default:
                 player.redDialog(player.Language.FeatureIsNotFound);
                 break;

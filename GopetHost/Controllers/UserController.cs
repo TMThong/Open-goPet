@@ -82,6 +82,7 @@ namespace GopetHost.Controllers
                         this._context.SaveChanges();
                     }
                     this.SetLoginOK(userData);
+                    SessionUtil.SetHasLogin2FAOK(this.HttpContext, userData);
                     ShowMessage("Đăng nhập thành công", "Đăng nhập thành công mời bạn thao tác!!!", "is-success");
                     goto TO_HOME;
                 }
@@ -460,8 +461,8 @@ namespace GopetHost.Controllers
             }
             UserData userData = GetUser(_context);
             if (userData == null) BadRequest();
-            var uriString = new OtpUri(OtpType.Totp, secretKey, userData.username, "goPet").ToString();
-            var qrCode = QrCode.EncodeText(uriString, Ecc.Medium);
+            var uriString = new OtpUri(OtpType.Totp, secretKey, userData.username, "goPet");
+            var qrCode = QrCode.EncodeText(uriString.ToString(), Ecc.Medium);
             byte[] svg = Encoding.UTF8.GetBytes(qrCode.ToSvgString(1));
             return new FileContentResult(svg, "image/svg+xml; charset=utf-8");
         }
@@ -511,6 +512,57 @@ namespace GopetHost.Controllers
             }
             ShowMessage("Lỗi", "Mã xác thực không chính xác hoặc quá hạn", "is-danger");
             return RedirectToAction(nameof(Disable2FA));
+        }
+
+        public IActionResult TwoFALogin()
+        {
+            if (IfLoginIsNotOK(out IActionResult result, out bool IsNeed2FA))
+            {
+                if (!IsNeed2FA)
+                {
+                    return result;
+                }
+            }
+            UserData userData = GetUser(_context);
+            if (userData == null) RedirectToHome();
+            if (userData.secretKey == null)
+            {
+                ShowMessage("Lỗi", "Tài khoản của bạn chưa kích hoạt 2FA", "is-danger");
+                return RedirectToHome();
+            }
+            return View();
+        }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public IActionResult TwoFALoginWithOtp(string verificationCode)
+        {
+            if (string.IsNullOrEmpty(verificationCode) || verificationCode?.Length != 6)
+            {
+                ShowMessage("Lỗi", "Mã OTP phải đủ 6 số", "is-danger");
+                return RedirectToAction(nameof(Disable2FA));
+            }
+            bool isNeed2FA = false;
+            IfLoginIsNotOK(out IActionResult result, out isNeed2FA);
+            if (!isNeed2FA)
+            {
+                return RedirectToHome();
+            }
+            UserData userData = GetUser(_context);
+            if (userData == null) RedirectToHome();
+            if (userData.secretKey == null)
+            {
+                ShowMessage("Lỗi", "Tài khoản của bạn chưa kích hoạt 2FA", "is-danger");
+                return RedirectToAction(nameof(UserDetails));
+            }
+            var totp = new Totp(Base32Encoding.ToBytes(userData.secretKey));
+            if (totp.VerifyTotp(verificationCode, out var timeStep, new VerificationWindow(5, 5)))
+            {
+                SessionUtil.SetLogin2FAOK(this.HttpContext, userData);
+                return RedirectToHome();
+            }
+            ShowMessage("Lỗi", "Mã xác thực không chính xác hoặc quá hạn", "is-danger");
+            return RedirectToAction(nameof(TwoFALogin));
         }
     }
 }

@@ -22,9 +22,21 @@ namespace GopetHost.Controllers
 
         public bool IfLoginIsNotOK(out IActionResult result)
         {
+            return IfLoginIsNotOK(out result, out _);
+        }
+
+        public bool IfLoginIsNotOK(out IActionResult result, out bool isNeed2FA)
+        {
             result = null;
+            isNeed2FA = false;
             if (this.IsLoginOK())
             {
+                isNeed2FA = SessionUtil.IsNeedLogin2FA(this.HttpContext);
+                if (isNeed2FA)
+                {
+                    result = RedirectToAction(nameof(UserController.TwoFALogin), "User");
+                    return true;
+                }
                 return false;
             }
             ShowMessage("Không thể dùng chức năng này", "Do bạn chưa đăng nhập nên không thể sử dụng chức năng này!", "is-danger");

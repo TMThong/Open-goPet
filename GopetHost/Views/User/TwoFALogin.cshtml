@@ -1,0 +1,28 @@
+﻿@using GopetHost.Controllers
+
+@{
+    ViewData["Title"] = "Xác thực 2 Hai Yếu Tố (2FA)";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h1 class="title">Xác thực 2 Hai Yếu Tố (2FA)</h1>
+
+    <div class="box">
+        <form asp-action="@nameof(UserController.TwoFALoginWithOtp)" asp-controller="User" method="POST">
+            <div class="columns is-centered">
+                <div class="column is-half">
+                    <div class="field">
+                        <label class="label">Nhập mã xác minh</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Nhập mã xác minh" name="verificationCode" id="verificationCode" />
+                        </div>
+                    </div>
+
+                    <div class="control">
+                        <button class="button is-primary">Xác thực</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>

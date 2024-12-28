@@ -48,6 +48,7 @@ public class TaskCalculator
     public const int REQUEST_WAIT_NEW_TASK = 18;
     public const int REUQEST_BET_PLAYER_WIN = 19;
     public const int REQUEST_NUM_OF_FUND_CLAN = 20;
+    public const int REQUEST_HIẾN_TẾ_THÚ_CƯNG = 21;
     public Player player { get; }
 
     private HashMap<int, JArrayList<TaskTemplate>> cacheTask = new();

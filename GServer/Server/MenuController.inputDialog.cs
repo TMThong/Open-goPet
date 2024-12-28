@@ -6,6 +6,7 @@ using Gopet.Data.GopetClan;
 using Gopet.Data.GopetItem;
 using Gopet.Util;
 using MySqlConnector;
+using OtpNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -773,6 +774,33 @@ public partial class MenuController
                         int count = Math.Min(Math.Abs(reader.readInt(0)), 100000);
                         player.controller.objectPerformed[OBJKEY_COUNT_USE_BÓ_HOA] = count;
                         player.okDialog(player.Language.SetCountUseBoHoa, count);
+                    }
+                    break;
+                case INPUT_OTP_2FA:
+                    {
+                        string text = reader.readString(0).Trim().Replace(" ", "");
+                        if (int.TryParse(text, out var result))
+                        {
+                            if (text.Length != 6)
+                            {
+                                player.redDialog(player.Language.OTP2FALaw);
+                                return;
+                            }
+                            Totp totp = new Totp(Base32Encoding.ToBytes(player.user.secretKey));
+                            if (totp.VerifyTotp(text, out long timeStepMatched, new VerificationWindow(5, 5)))
+                            {
+                                string username = player.user.username;
+                                string password = player.user.password;
+                                player.user = null;
+                                player.IsLogin2FAOK = true;
+                                player.login(username, password, string.Empty);
+                            }
+                            else
+                            {
+                                player.redDialog(player.Language.OTP2FAFail);
+                            }
+                        }
+                        else player.redDialog(player.Language.WrongInputNumber);
                     }
                     break;
             }

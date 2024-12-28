@@ -27,6 +27,10 @@ namespace GopetHost.Controllers
 
         public bool ReturnIfNonAdmin(out IActionResult actionResult)
         {
+            if (this.IfLoginIsNotOK(out actionResult))
+            {
+                return true;
+            }
             actionResult = null;
             UserData userData = GetUser(_context);
             if (userData == null)

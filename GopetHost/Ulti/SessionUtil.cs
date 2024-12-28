@@ -6,6 +6,7 @@ namespace GopetHost.Ulti
 {
     public static class SessionUtil
     {
+        public const string SESSION_2FA = "2FA_LOGIN";
         public static bool IsLoginOK(this ControllerBase controller)
         {
             return controller.HttpContext.Session.GetInt32(nameof(UserData.user_id)).HasValue;
@@ -55,6 +56,27 @@ namespace GopetHost.Ulti
         public static string GetSecretKey(this HttpContext context)
         {
             return context.Session.GetString("secretKey");
+        }
+
+        public static void SetHasLogin2FAOK(this HttpContext context, UserData user)
+        {
+            if (user.secretKey != null)
+            {
+                context.Session.SetInt32(SESSION_2FA, 0);
+            }
+        }
+
+        public static void SetLogin2FAOK(this HttpContext context, UserData user)
+        {
+            if (user.secretKey != null)
+            {
+                context.Session.SetInt32(SESSION_2FA, 1);
+            }
+        }
+
+        public static bool IsNeedLogin2FA(this HttpContext context)
+        {
+            return context.Session.GetInt32(SESSION_2FA).HasValue && context.Session.GetInt32(SESSION_2FA).Value == 0;
         }
     }
 }
