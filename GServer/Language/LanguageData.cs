@@ -488,7 +488,7 @@ namespace Gopet.Language
         public string TASK_REUQEST_BET_PLAYER_WIN { get; set; } = "Thách đấu thắng người chơi {0}/{1} lần";
         public string REQUEST_NUM_OF_FUND_CLAN { get; set; } = "Quyên góp quỹ bang hội {0}/{1} lần";
         public string TASK_REQUEST_WAIT_NEW_TASK { get; set; } = "Con hãy chờ nhiệm vụ mới nhé !!!";
-        public string TASK_REQUEST_SACRIFICE_PET { get; set; } = "Giao nộp thú cưng cấp {0}";
+        public string TASK_REQUEST_SACRIFICE_PET { get; set; } = "Giao nộp thú cưng cấp {0} với {1}/{2} lần";
         public string Request { get; set; } = "Yêu cầu";
         public string OnTaskSuccess { get; set; } = "Chức mừng bạn hoàn thành nhiệm vụ {0} nhận được {1}";
         public string DeleteTiemNangTitle { get; set; } = "Xóa 1 {0} với giá {1} (vang) và sẽ nhận lại 1 tiềm năng";
@@ -562,5 +562,6 @@ namespace Gopet.Language
         public string TwoFALoginTitle { get; set; } = "Xác thực 2 hậu tố";
         public string OTP2FALaw { get; set; } = "Mã OTP có 6 số";
         public string OTP2FAFail { get; set; } = "Mã OTP không chính xác hoặc quá hạn";
+        public string GuideToHeaven { get; set; } = "Bạn cần làm hết các nhiệm vụ trùng sinh để nhận được cánh bay về trời. Nơi thú cưng đột biến kinh khủng khiếp đang trên đầu chúng ta.";
     }
 }
