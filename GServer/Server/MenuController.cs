@@ -134,6 +134,7 @@ public partial class MenuController
     public const int MENU_FUSION_EQUIP_OPTION_COMFIRM = 1081;
     public const int MENU_FUSION_PET_OPTION = 1082;
     public const int MENU_FUSION_PET_OPTION_COMFIRM = 1083;
+    public const int MENU_PET_SACRIFICE = 1084;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
