@@ -477,7 +477,9 @@ public partial class MenuController
                 player.controller.noelDaily();
                 break;
             case OP_HƯỚNG_DẪN_LÊN_THIÊN_ĐÌNH:
-
+                player.okDialog(player.Language.GuideToHeaven);
+                break;
+            case OP_HIẾN_TẶNG_THÚ_CƯNG:
                 break;
             default:
                 player.redDialog(player.Language.FeatureIsNotFound);
