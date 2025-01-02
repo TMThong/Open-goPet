@@ -18,7 +18,6 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <form asp-action="@nameof(AdminController.EditSetting)">
                 <tr>
                     <td>
                         <input name="Key" class="input is-danger"
@@ -26,25 +25,24 @@
                                placeholder="Key" value="@item.Key" readonly />
                     </td>
                     <td>
-                        <input name="Value" class="input is-link"
+                        <input id="id-@item.Key" name="Value" class="input is-link"
                                type="text"
                                placeholder="Value" value="@item.Value" />
                     </td>
                     <td>@item.Type</td>
                     <td>
-                            @try
-                            {
-                                @item.ObjectAsValue
-                            }
-                            catch (Exception)
-                            {
-                            <p> Lỗi </p>
-                            }
+                        @try
+                        {
+                            @item.ObjectAsValue
+                        }
+                        catch (Exception)
+                        {
+                            <p>Lỗi</p>
+                        }
                     </td>
                     <td>@item.Comment</td>
-                    <td><button class="button is-success">Lưu</button></td>
+                    <td><button class="button is-success" onclick="saveSetting('@item.Key')">Lưu</button></td>
                 </tr>
-                </form>
             }
         </tbody>
         <tfoot>
@@ -57,3 +55,23 @@
         </tfoot>
     </table>
 </div>
+
+<script>
+    function saveSetting(key) {
+        var value = document.getElementById("id-" + key).value;
+        $.ajax({
+            url: '@Url.Action("EditSetting", "Admin")', 
+            type: 'POST',
+            data: {
+                Key: key,
+                Value: value
+            },
+            success: function (response) {
+                alert("Cập nhật thành công!");
+            },
+            error: function (xhr, status, error) {
+                alert("Có lỗi xảy ra khi lưu!");
+            }
+        });
+    }
+</script>
