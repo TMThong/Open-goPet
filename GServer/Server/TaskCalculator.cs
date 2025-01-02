@@ -49,6 +49,7 @@ public class TaskCalculator
     public const int REUQEST_BET_PLAYER_WIN = 19;
     public const int REQUEST_NUM_OF_FUND_CLAN = 20;
     public const int REQUEST_HIẾN_TẾ_THÚ_CƯNG = 21;
+    public const int REQUEST_KILL_ELITE_BOSS = 22;
     public Player player { get; }
 
     private HashMap<int, JArrayList<TaskTemplate>> cacheTask = new();
@@ -193,6 +194,9 @@ public class TaskCalculator
                     break;
                 case REQUEST_HIẾN_TẾ_THÚ_CƯNG:
                     taskText.Add(string.Format(player.Language.TASK_REQUEST_SACRIFICE_PET, taskI[2], task[i], taskI[1]));
+                    break;
+                case REQUEST_KILL_ELITE_BOSS:
+                    taskText.Add(string.Format(player.Language.REQUEST_KILL_ELITE_BOSS, task[i], taskI[1]));
                     break;
             }
         }
