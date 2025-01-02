@@ -565,5 +565,6 @@ namespace Gopet.Language
         public string GuideToHeaven { get; set; } = "Bạn cần làm hết các nhiệm vụ trùng sinh để nhận được cánh bay về trời. Nơi thú cưng đột biến kinh khủng khiếp đang trên đầu chúng ta.";
         public string PetSacrificeFail { get; set; } = "Không thể hiến do nhiệm vụ không phù hợp";
         public string PetSacrificeOK { get; set; } = "Hiến tặng thú cưng thành công";
+        public string REQUEST_KILL_ELITE_BOSS { get; set; } = "Tiêu diệt boss tinh anh {0}/{1}";
     }
 }
