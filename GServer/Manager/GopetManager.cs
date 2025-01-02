@@ -21,6 +21,7 @@ using System.Diagnostics;
 using Gopet.Data.Clan;
 using Gopet.Language;
 using System.Runtime;
+using Gopet.Data.pet;
 
 public class GopetManager
 {
@@ -737,6 +738,8 @@ public class GopetManager
         new Tuple<int[][]>(new int[][] { new int[] { GIFT_ITEM, 122, 1, 0 }, new int[] { GIFT_SKIN, 1000012, 0, 0, 0, 7 } }),
     };
 
+    public static readonly Dictionary<int, PetReincarnation> Reincarnations = new();
+
     static GopetManager()
     {
         SqlMapper.AddTypeHandler(new JsonAdapter<int[]>());
@@ -1033,6 +1036,12 @@ public class GopetManager
                 template.clanSkillLvlTemplates = conn.Query<ClanSkillLvlTemplate>("SELECT * FROM `clan_skill_lvl` WHERE skillId = @skillId ORDER BY `clan_skill_lvl`.`lvl` ASC", new { skillId = template.id }).ToArray();
             }
             HiddentStatItemTemplates = conn.Query<HiddenStatItemTemplate>("SELECT * FROM `hidden_stat`").ToArray();
+            var reincarnations = conn.Query<PetReincarnation>("SELECT * FROM reincarnation");
+            foreach (var reincarnation in reincarnations)
+            {
+                Reincarnations[reincarnation.PetId] = reincarnation;
+            }
+            ServerMonitor.LogInfo("Tải dữ liệu trùng sinh thú cưng từ cơ sở dữ liệu OK");
         }
         using (var connWeb = MYSQLManager.createWebMySqlConnection())
         {

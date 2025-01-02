@@ -48,6 +48,7 @@ public partial class MenuController
                     player.controller.showMenuItem(menuId, TYPE_MENU_SELECT_ELEMENT, player.Language.SellYourItemMenuTitle, menuItemInfos);
                 }
                 break;
+            case MENU_PET_REINCARNATION:
             case MENU_PET_SACRIFICE:
             case MENU_FUSION_MENU_PET:
             case MENU_SELECT_PET_TO_DEF_LEAGUE:

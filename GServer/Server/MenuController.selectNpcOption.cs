@@ -61,6 +61,9 @@ public partial class MenuController
                     }
                     break;
                 }
+            case OP_REINCARNATION:
+                sendMenu(MENU_PET_REINCARNATION, player);
+                break;
             case OP_TOP_EVENT_TASK:
                 {
                     showTop(TopEvent.Instance, player);
