@@ -136,6 +136,7 @@ public partial class MenuController
     public const int MENU_FUSION_PET_OPTION_COMFIRM = 1083;
     public const int MENU_PET_SACRIFICE = 1084;
     public const int MENU_PET_REINCARNATION = 1085;
+    public const int MENU_OPTION_PET_REINCARNATION = 1086;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -495,6 +496,7 @@ public partial class MenuController
     /// Khoá để lưu thú cưng dung hợp phụ
     /// </summary>
     public const int OBJKEY_DEPUTY_PET_ID_FUSION = 66;
+    public const int OBJKEY_PET_REINCARNATION = 67;
     /// <summary>
     /// Khoá để lưu thú cưng dung hợp đang được chọn hiện tại
     /// </summary>

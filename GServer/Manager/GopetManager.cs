@@ -724,6 +724,12 @@ public class GopetManager
         500000
     };
 
+    public static readonly int[] ReincarnationPetPrice = new int[]
+    {
+        200000,
+        80000000
+    };
+
 
     public const int GIÁ_NGỌC_NÂNG_GYM = 1000;
 

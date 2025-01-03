@@ -549,6 +549,9 @@ namespace Gopet.Language
         public string FusionPetGold { get; set; } = "Dung hợp thú cưng với {0} (vang) và có 100% tỉ lệ thành công";
         public string FusionPetGem { get; set; } = "Dung hợp thú cưng với {0} (ngoc) và có 100% tỉ lệ thành công";
 
+        public string ReincarnationPetGold { get; set; } = "Trùng sinh thú cưng với {0} (vang) và có 100% tỉ lệ thành công";
+        public string ReincarnationPetGem { get; set; } = "Trùng sinh thú cưng với {0} (ngoc) và có 100% tỉ lệ thành công";
+
         public string CouldNotFoundPet { get; set; } = "Không thể tìm thấy thú cưng";
         public string DuplicatePet { get; set; } = "Thú cưng bị trùng";
         public string FusionPetOK { get; set; } = "Thú cưng được dung hợp thành công nhận {0} điểm";

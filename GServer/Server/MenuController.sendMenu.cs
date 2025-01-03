@@ -988,6 +988,16 @@ public partial class MenuController
                     player.controller.sendListOption(menuId, player.Language.FusionTitle, "", options);
                 }
                 break;
+            case MENU_OPTION_PET_REINCARNATION:
+                {
+                    JArrayList<Option> options = new JArrayList<Option>()
+                    {
+                        new Option(0, string.Format(player.Language.ReincarnationPetGold, Utilities.FormatNumber(GopetManager.ReincarnationPetPrice[0]))),
+                        new Option(1, string.Format(player.Language.ReincarnationPetGem, Utilities.FormatNumber(GopetManager.ReincarnationPetPrice[1]))),
+                    };
+                    player.controller.sendListOption(menuId, "Trùng sinh", "", options);
+                }
+                break;
         }
     }
 }

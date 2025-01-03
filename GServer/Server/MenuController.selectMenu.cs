@@ -1374,6 +1374,7 @@ public partial class MenuController
                     }
                 }
                 break;
+            case MENU_PET_REINCARNATION:
             case MENU_PET_SACRIFICE:
             case MENU_FUSION_MENU_PET:
             case MENU_KIOSK_PET_SELECT:
@@ -1411,6 +1412,12 @@ public partial class MenuController
                                         HistoryManager.addHistory(new History(player).setLog($"Hiến tặng thú cưng {pet.getNameWithStar(player)}").setObj(pet));
                                     }
                                     else player.redDialog(player.Language.PetSacrificeFail);
+                                }
+                                break;
+                            case MENU_PET_REINCARNATION:
+                                {
+                                    player.controller.objectPerformed[OBJKEY_PET_REINCARNATION] = pet;
+                                    sendMenu(MENU_OPTION_PET_REINCARNATION, player);
                                 }
                                 break;
                         }
@@ -2638,6 +2645,26 @@ public partial class MenuController
                             else player.redDialog(player.Language.NotEnoughMaterial);
                         }
                         else player.redDialog(player.Language.NotEnoughMaterial);
+                    }
+                }
+                break;
+            case MENU_OPTION_PET_REINCARNATION:
+                {
+                    if (index >= 0 && index < 2)
+                    {
+                        if (!player.controller.objectPerformed.ContainsKey(OBJKEY_PET_REINCARNATION))
+                        {
+                            player.redDialog("Chưa chọn thú cưng trùng sinh");
+                            return;
+                        }
+
+                        Pet pet = player.controller.objectPerformed[OBJKEY_PET_REINCARNATION];
+                        var queries = GopetManager.Reincarnations.Where(x => x.Value.PetIdReincarnation == pet.petIdTemplate);
+                        if (!queries.Any())
+                        {
+                            player.redDialog("Thú cưng này không thể trùng sinh");
+                            return;
+                        }
                     }
                 }
                 break;
