@@ -191,6 +191,7 @@ public class GopetManager
     /// </summary>
     public const int ITEM_NATIVE_TITLE = 26;
     public const int ITEM_THẺ_KỸ_NĂNG = 27;
+    public const int ITEM_CARD_REINCARNATION = 28;
     public const int GIFT_GOLD = 0;
     public const int GIFT_COIN = 1;
     public const int GIFT_ITEM = 2;
@@ -745,7 +746,7 @@ public class GopetManager
     };
 
     public static readonly Dictionary<int, PetReincarnation> Reincarnations = new();
-
+    public const int ID_ITEM_CARD_REINCARNATION = 318;
     static GopetManager()
     {
         SqlMapper.AddTypeHandler(new JsonAdapter<int[]>());
