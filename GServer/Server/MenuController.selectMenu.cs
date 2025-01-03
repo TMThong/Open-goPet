@@ -18,6 +18,7 @@ using Gopet.Data.user;
 using Gopet.Manager;
 using Gopet.Data.Clan;
 using Gopet.Data.Event.Year2024;
+using Gopet.Data.pet;
 
 public partial class MenuController
 {
@@ -2657,7 +2658,7 @@ public partial class MenuController
                             player.redDialog("Chưa chọn thú cưng trùng sinh");
                             return;
                         }
-
+                       
                         Pet pet = player.controller.objectPerformed[OBJKEY_PET_REINCARNATION];
                         var queries = GopetManager.Reincarnations.Where(x => x.Value.PetIdReincarnation == pet.petIdTemplate);
                         if (!queries.Any())
@@ -2665,9 +2666,31 @@ public partial class MenuController
                             player.redDialog("Thú cưng này không thể trùng sinh");
                             return;
                         }
+                        PetReincarnation petReincarnation = queries.FirstOrDefault().Value;
+                        Item cardReincarnation = player.controller.selectItemsbytemp(GopetManager.ID_ITEM_CARD_REINCARNATION, GopetManager.NORMAL_INVENTORY);
+                        if (cardReincarnation == null)
+                        {
+                            player.redDialog("Không có thẻ trùng sinh");
+                            return;
+                        }
+                        if (!GameController.checkCount(cardReincarnation, petReincarnation.NumCard))
+                        {
+                            player.redDialog("Không đủ thẻ trùng sinh, cần {0} thẻ", petReincarnation.NumCard);
+                            return;
+                        }
                         if (checkMoney((sbyte)index, GopetManager.ReincarnationPetPrice[index], player))
                         {
                             addMoney((sbyte)index, -GopetManager.ReincarnationPetPrice[index], player);
+                            player.controller.subCountItem(cardReincarnation, petReincarnation.NumCard, GopetManager.NORMAL_INVENTORY);
+                            pet.petIdTemplate = petReincarnation.PetIdReincarnation;
+                            pet.skill = new int[0][];
+                            pet.lvl = 1;
+                            int maxTatto = Utilities.nextInt(0, 3);
+                            while (maxTatto >= pet.tatto.Count)
+                            {
+                                pet.tatto.removeAt(Utilities.nextInt(0, pet.tatto.Count));
+                            }
+                            player.okDialog("Trùng sinh thành công");
                         }
                         else
                         {
