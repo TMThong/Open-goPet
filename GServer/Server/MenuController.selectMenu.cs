@@ -2665,6 +2665,14 @@ public partial class MenuController
                             player.redDialog("Thú cưng này không thể trùng sinh");
                             return;
                         }
+                        if (checkMoney((sbyte)index, GopetManager.ReincarnationPetPrice[index], player))
+                        {
+                            addMoney((sbyte)index, -GopetManager.ReincarnationPetPrice[index], player);
+                        }
+                        else
+                        {
+                            NotEngouhMoney((sbyte)index, GopetManager.ReincarnationPetPrice[index], player);
+                        }
                     }
                 }
                 break;
