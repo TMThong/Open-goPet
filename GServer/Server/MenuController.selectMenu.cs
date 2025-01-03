@@ -2660,6 +2660,11 @@ public partial class MenuController
                         }
                        
                         Pet pet = player.controller.objectPerformed[OBJKEY_PET_REINCARNATION];
+                        if (pet.lvl < 41)
+                        {
+                            player.redDialog("Thú cưng phải cấp 41 trở lên mới có thể trùng sinh");
+                            return;
+                        }
                         var queries = GopetManager.Reincarnations.Where(x => x.Value.PetIdReincarnation == pet.petIdTemplate);
                         if (!queries.Any())
                         {
