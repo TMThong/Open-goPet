@@ -816,6 +816,7 @@ public partial class MenuController
                     }
                 }
                 break;
+            case MENU_ADMIN_BUFF_DUNG_HỢP:
             case MENU_FUSION_MENU_EQUIP:
             case MENU_UNLOCK_ITEM_PLAYER:
             case MENU_LOCK_ITEM_PLAYER:
@@ -1113,6 +1114,12 @@ public partial class MenuController
                                 player.controller.objectPerformed[OBJKEY_CURRENT_ITEM_ID_FUSION] = itemSelect.itemId;
                                 player.controller.objectPerformed[OBJKEY_CURRENT_ITEM_TEMP_ID_FUSION] = itemSelect.Template.itemId;
                                 sendMenu(MENU_FUSION_EQUIP_OPTION, player);
+                            }
+                            break;
+                        case MENU_ADMIN_BUFF_DUNG_HỢP:
+                            {
+                                player.controller.objectPerformed[OBJKEY_ITEM_BUFF_DUNG_HỢP] = itemSelect.itemId;
+                                player.controller.showInputDialog(INPUT_NUM_DUNG_HỢP, "BUFF DUNG HỢP", " Cấp: ");
                             }
                             break;
                     }
@@ -1701,6 +1708,11 @@ public partial class MenuController
                                 {
                                     player.petNotFollow();
                                 }
+                            }
+                            return;
+                        case ADMIN_INDEX_BUFF_DUNG_HỢP:
+                            {
+                                sendMenu(MENU_ADMIN_BUFF_DUNG_HỢP, player);
                             }
                             return;
                     }
@@ -2658,7 +2670,7 @@ public partial class MenuController
                             player.redDialog("Chưa chọn thú cưng trùng sinh");
                             return;
                         }
-                       
+
                         Pet pet = player.controller.objectPerformed[OBJKEY_PET_REINCARNATION];
                         if (pet.lvl < 41)
                         {

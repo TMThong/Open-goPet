@@ -137,6 +137,7 @@ public partial class MenuController
     public const int MENU_PET_SACRIFICE = 1084;
     public const int MENU_PET_REINCARNATION = 1085;
     public const int MENU_OPTION_PET_REINCARNATION = 1086;
+    public const int MENU_ADMIN_BUFF_DUNG_HỢP = 1087;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -170,6 +171,7 @@ public partial class MenuController
         new AdminItemInfo("Mở khoá vật phẩm", "Mở khoá vật phẩm của người chơi", "items/4000766.png"),
         new AdminItemInfo("Đập đồ nhanh", "Dùng để đập đồ nhanh và nó sẽ tự động tiến cấp", "items/4000766.png"),
         new AdminItemInfo("Test kích ẩn", "Xem pet đang theo có kích ẩn gì", "items/4000766.png"),
+        new AdminItemInfo("Buff dung hợp", "Buff dung hợp cho trang bị", "items/4000766.png"),
     };
     public const int ADMIN_INDEX_SET_PET_INFO = 0;
     public const int ADMIN_INDEX_TELE_TO_PLAYER = 1;
@@ -203,6 +205,7 @@ public partial class MenuController
     public const int ADMIN_INDEX_UNLOCK_ITEM_PLAYER = 29;
     public const int ADMIN_INDEX_FAST_UP_ITEM = 30;
     public const int ADMIN_INDEX_VIEW_CUR_PET_HIDDEN_STAT = 31;
+    public const int ADMIN_INDEX_BUFF_DUNG_HỢP = 32;
 
     /**
      * Danh sách nhận pet miễn phí
@@ -502,6 +505,7 @@ public partial class MenuController
     /// </summary>
     public const int OBJKEY_CURRENT_SELECT_PET_ID_FUSION = 67;
     public const int OBJKEY_COUNT_USE_BÓ_HOA = 68;
+    public const int OBJKEY_ITEM_BUFF_DUNG_HỢP = 69;
     public const int DIALOG_CONFIRM_REMOVE_ITEM_EQUIP = 0;
     public const int DIALOG_CONFIRM_BUY_KIOSK_ITEM = 1;
     public const int DIALOG_ENCHANT = 3;
@@ -554,6 +558,7 @@ public partial class MenuController
     public const int INPUT_TYPE_EXCHANGE_LUA_TO_COIN = 32;
     public const int INPUT_TYPE_COUNT_USE_BÓ_HOA = 33;
     public const int INPUT_OTP_2FA = 34;
+    public const int INPUT_NUM_DUNG_HỢP = 35;
     public const int IMGDIALOG_CAPTCHA = 0;
     #endregion
     public static JArrayList<MenuItemInfo> getPetFreeLst(Player player)
@@ -1051,6 +1056,7 @@ public partial class MenuController
                 return new sbyte[] { InputReader.FIELD_LONG };
             case INPUT_DIALOG_ADMIN_GET_HISTORY:
                 return new sbyte[] { InputReader.FIELD_STRING, InputReader.FIELD_STRING, InputReader.FIELD_STRING };
+            case INPUT_NUM_DUNG_HỢP:
             case INPUT_TYPE_COUNT_USE_BÓ_HOA:
             case INPUT_TYPE_COUNT_ADMIN_GIVE:
             case INPUT_TYPE_COUNT_ADMIN_GET:
@@ -1115,6 +1121,7 @@ public partial class MenuController
                     return new CopyOnWriteArrayList<Item>(player.playerData.getInventoryOrCreate(GopetManager.EQUIP_PET_INVENTORY).Where(x => x.Template.CanFusion && x.Template.itemId == player.controller.objectPerformed[OBJKEY_CURRENT_ITEM_TEMP_ID_FUSION]));
                 }
                 return new CopyOnWriteArrayList<Item>(player.playerData.getInventoryOrCreate(GopetManager.EQUIP_PET_INVENTORY).Where(x => x.Template.CanFusion));
+            case MENU_ADMIN_BUFF_DUNG_HỢP:
             case MENU_UNLOCK_ITEM_PLAYER:
             case MENU_LOCK_ITEM_PLAYER:
                 {
@@ -1183,6 +1190,7 @@ public partial class MenuController
     {
         switch (menuId)
         {
+            case MENU_ADMIN_BUFF_DUNG_HỢP:
             case MENU_UNLOCK_ITEM_PLAYER:
             case MENU_LOCK_ITEM_PLAYER:
             case MENU_SELECT_ITEM_TO_GET_BY_ADMIN:

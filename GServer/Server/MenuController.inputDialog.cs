@@ -176,7 +176,7 @@ public partial class MenuController
                                             }
                                             else
                                             {
-                                                GiftCodeData giftCodeData = MySqlConnection.QuerySingleOrDefault<GiftCodeData>("SELECT * FROM `gift_code` WHERE `gift_code`.`code` = @code;",  new { code = code});
+                                                GiftCodeData giftCodeData = MySqlConnection.QuerySingleOrDefault<GiftCodeData>("SELECT * FROM `gift_code` WHERE `gift_code`.`code` = @code;", new { code = code });
                                                 if (giftCodeData != null)
                                                 {
                                                     if (clanMember == null && giftCodeData.isClanCode)
@@ -801,6 +801,24 @@ public partial class MenuController
                             }
                         }
                         else player.redDialog(player.Language.WrongInputNumber);
+                    }
+                    break;
+                case INPUT_NUM_DUNG_HỢP:
+                    {
+                        int num = reader.readInt(0);
+                        if (player.checkIsAdmin())
+                        {
+                            if (player.controller.objectPerformed.ContainsKey(OBJKEY_ITEM_BUFF_DUNG_HỢP))
+                            {
+                                int itemId = player.controller.objectPerformed[OBJKEY_ITEM_BUFF_DUNG_HỢP];
+                                Item item = player.controller.selectItemByItemId(itemId, GopetManager.EQUIP_PET_INVENTORY);
+                                if (item != null)
+                                {
+                                    item.NumFusion = (byte)num;
+                                    player.okDialog("Buff dung hợp lên cấp {0} thành công", item.NumFusion);
+                                }
+                            }
+                        }
                     }
                     break;
             }

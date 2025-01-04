@@ -528,6 +528,7 @@ public partial class MenuController
             case MENU_SKIN_INVENTORY:
                 showInventory(player, GopetManager.SKIN_INVENTORY, menuId, player.Language.SkinInventory);
                 break;
+            case MENU_ADMIN_BUFF_DUNG_HỢP:
             case MENU_FUSION_MENU_EQUIP:
             case MENU_UNLOCK_ITEM_PLAYER:
             case MENU_LOCK_ITEM_PLAYER:
