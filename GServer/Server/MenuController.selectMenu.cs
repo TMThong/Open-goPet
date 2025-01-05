@@ -2663,6 +2663,11 @@ public partial class MenuController
                 break;
             case MENU_OPTION_PET_REINCARNATION:
                 {
+                    if (!player.checkIsAdmin())
+                    {
+                        player.redDialog("Tính năng này cho admin kiểm thử");
+                        return;
+                    }
                     if (index >= 0 && index < 2)
                     {
                         if (!player.controller.objectPerformed.ContainsKey(OBJKEY_PET_REINCARNATION))
@@ -2677,13 +2682,12 @@ public partial class MenuController
                             player.redDialog("Thú cưng phải cấp 41 trở lên mới có thể trùng sinh");
                             return;
                         }
-                        var queries = GopetManager.Reincarnations.Where(x => x.Value.PetIdReincarnation == pet.petIdTemplate);
-                        if (!queries.Any())
+                        if (!GopetManager.Reincarnations.ContainsKey(pet.petIdTemplate))
                         {
                             player.redDialog("Thú cưng này không thể trùng sinh");
                             return;
                         }
-                        PetReincarnation petReincarnation = queries.FirstOrDefault().Value;
+                        PetReincarnation petReincarnation = GopetManager.Reincarnations[pet.petIdTemplate];
                         Item cardReincarnation = player.controller.selectItemsbytemp(GopetManager.ID_ITEM_CARD_REINCARNATION, GopetManager.NORMAL_INVENTORY);
                         if (cardReincarnation == null)
                         {
@@ -2703,7 +2707,7 @@ public partial class MenuController
                             pet.skill = new int[0][];
                             pet.lvl = 1;
                             int maxTatto = Utilities.nextInt(0, 3);
-                            while (maxTatto >= pet.tatto.Count)
+                            while (maxTatto <= pet.tatto.Count && pet.tatto.Count != 0)
                             {
                                 pet.tatto.removeAt(Utilities.nextInt(0, pet.tatto.Count));
                             }
