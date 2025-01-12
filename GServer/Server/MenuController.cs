@@ -1115,13 +1115,13 @@ public partial class MenuController
     {
         switch (menuId)
         {
+            case MENU_ADMIN_BUFF_DUNG_HỢP:
             case MENU_FUSION_MENU_EQUIP:
                 if (player.controller.objectPerformed.ContainsKey(OBJKEY_CURRENT_ITEM_TEMP_ID_FUSION))
                 {
                     return new CopyOnWriteArrayList<Item>(player.playerData.getInventoryOrCreate(GopetManager.EQUIP_PET_INVENTORY).Where(x => x.Template.CanFusion && x.Template.itemId == player.controller.objectPerformed[OBJKEY_CURRENT_ITEM_TEMP_ID_FUSION]));
                 }
                 return new CopyOnWriteArrayList<Item>(player.playerData.getInventoryOrCreate(GopetManager.EQUIP_PET_INVENTORY).Where(x => x.Template.CanFusion));
-            case MENU_ADMIN_BUFF_DUNG_HỢP:
             case MENU_UNLOCK_ITEM_PLAYER:
             case MENU_LOCK_ITEM_PLAYER:
                 {
