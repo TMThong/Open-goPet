@@ -1274,13 +1274,16 @@ public partial class MenuController
                     return;
                 }
             }
-            int priceGold = pet == null ? GopetManager.PRICE_ASSIGNED_PET : GopetManager.PRICE_ASSIGNED_ITEM;
-            if (!player.checkGold(priceGold))
+            if (!string.IsNullOrEmpty(nameAssigned))
             {
-                player.controller.notEnoughGold();
-                return;
+                int priceGold = pet == null ? GopetManager.PRICE_ASSIGNED_PET : GopetManager.PRICE_ASSIGNED_ITEM;
+                if (!player.checkGold(priceGold))
+                {
+                    player.controller.notEnoughGold();
+                    return;
+                }
+                player.mineGold(priceGold);
             }
-            player.mineGold(priceGold);
             player.controller.objectPerformed.Remove(OBJKEY_SELECT_SELL_ITEM);
             player.controller.objectPerformed.Remove(OBJKEY_MENU_OF_KIOSK);
             int count = 1;

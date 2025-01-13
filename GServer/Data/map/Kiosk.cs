@@ -334,6 +334,10 @@ namespace Gopet.Data.Map
                             {
                                 player.playerData.addPet(kioskItem.pet, player);
                             }
+                            if (kioskItem.sumVal > 0)
+                            {
+                                Utilities.round(Utilities.GetValueFromPercent(kioskItem.sumVal, 100f - GopetManager.KIOSK_PER_SELL));
+                            }
                             HistoryManager.addHistory(new History(kioskItem.user_id).setObj(kioskItem).setLog("Lưu vật phẩm ki ốt vào cơ sở dữ liệu thành công"));
                             continue;
                         }

@@ -831,13 +831,13 @@ public partial class MenuController
                                     menuItemInfo.setCanSelect(true);
                                     menuItemInfo.setTitleMenu((menuId != MENU_KIOSK_OHTER ? kioskItem.ItemSell.getEquipName(player) : kioskItem.ItemSell.getName(player)) + string.Format(player.Language.KioskIdItemDescription, kioskItem.itemId));
                                     menuItemInfo.setImgPath(kioskItem.getFrameImgPath());
-                                    menuItemInfo.setDesc(string.Format(player.Language.PriceKioskDescription + "(ngoc) ", Utilities.FormatNumber(kioskItem.price)) + kioskItem.ItemSell.getTemp().getDescription(player));
+                                    menuItemInfo.setDesc(string.Format(player.Language.PriceKioskDescription + "(ngoc) ", Utilities.FormatNumber(kioskItem.MathPrice)) + kioskItem.ItemSell.getTemp().getDescription(player));
                                     menuItemInfo.setCloseScreenAfterClick(true);
                                     menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                                     menuItemInfo.setHasId(true);
                                     menuItemInfo.setItemId(kioskItem.itemId);
                                     menuItemInfo.setPaymentOptions(new MenuItemInfo.PaymentOption[]{
-                                new MenuItemInfo.PaymentOption(0, kioskItem.price + " (ngoc)", checkMoney(GopetManager.MONEY_TYPE_COIN, kioskItem.price, player) ? (sbyte) 1 : (sbyte) 0)
+                                new MenuItemInfo.PaymentOption(0, kioskItem.MathPrice + " (ngoc)", checkMoney(GopetManager.MONEY_TYPE_COIN, kioskItem.MathPrice, player) ? (sbyte) 1 : (sbyte) 0)
                             });
                                     arrayListEquip.add(menuItemInfo);
                                 }
@@ -853,13 +853,13 @@ public partial class MenuController
                                     menuItemInfo.setCanSelect(true);
                                     menuItemInfo.setTitleMenu(kioskItem.pet.getNameWithStar(player) + string.Format(player.Language.KioskIdItemDescription, kioskItem.itemId));
                                     menuItemInfo.setImgPath(kioskItem.pet.getPetTemplate().icon);
-                                    menuItemInfo.setDesc(string.Format(player.Language.PriceKioskDescription + "(ngoc) ", Utilities.FormatNumber(kioskItem.price)) + kioskItem.pet.getDesc(player));
+                                    menuItemInfo.setDesc(string.Format(player.Language.PriceKioskDescription + "(ngoc) ", Utilities.FormatNumber(kioskItem.MathPrice)) + kioskItem.pet.getDesc(player));
                                     menuItemInfo.setCloseScreenAfterClick(true);
                                     menuItemInfo.setLeftCmdText(CMD_CENTER_OK);
                                     menuItemInfo.setHasId(true);
                                     menuItemInfo.setItemId(kioskItem.itemId);
                                     menuItemInfo.setPaymentOptions(new MenuItemInfo.PaymentOption[]{
-                                    new MenuItemInfo.PaymentOption(0, kioskItem.price + " (ngoc)", checkMoney(GopetManager.MONEY_TYPE_COIN, kioskItem.price, player) ? (sbyte) 1 : (sbyte) 0)});
+                                    new MenuItemInfo.PaymentOption(0, kioskItem.MathPrice + " (ngoc)", checkMoney(GopetManager.MONEY_TYPE_COIN, kioskItem.MathPrice, player) ? (sbyte) 1 : (sbyte) 0)});
                                     arrayListEquip.add(menuItemInfo);
                                 }
                                 player.controller.showMenuItem(menuId, TYPE_MENU_PAYMENT, menuId == MENU_KIOSK_PET ? player.Language.KioskPet : player.Language.Kiosk, arrayListEquip);

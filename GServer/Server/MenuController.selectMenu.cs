@@ -2762,6 +2762,21 @@ public partial class MenuController
                                     SellItem sellItem = kiosk_.searchItem(itemId);
                                     if (sellItem != null)
                                     {
+                                        if (sellItem.pet != null)
+                                        {
+                                            player.redDialog("Thú cưng bán theo kí à! @@");
+                                            return;
+                                        }
+                                        if (!sellItem.ItemSell.Template.isStackable)
+                                        {
+                                            player.redDialog("Mấy món này bịp nha, có phải đồ gộp đâu!");
+                                            return;
+                                        }
+                                        if (sellItem.TotalCount * 10 > sellItem.price)
+                                        {
+                                            player.redDialog("ít nhất giá tổng phải lớn hơn {0} (ngoc)", Utilities.FormatNumber(sellItem.TotalCount * 10));
+                                            return;
+                                        }
                                         if (sellItem.sumVal > 0)
                                         {
                                             player.redDialog("Không thể hủy vì đã có người mua lẻ vài món");
@@ -2769,7 +2784,7 @@ public partial class MenuController
                                         else
                                         {
                                             sellItem.IsRetail = !sellItem.IsRetail;
-                                            player.okDialog("Thay đổi thành công. Hiện tại ", sellItem.IsRetail ? "cho phép bán lẻ" : "không cho phép bán lẻ");
+                                            player.okDialog("Thay đổi thành công. Hiện tại {0}", sellItem.IsRetail ? "cho phép bán lẻ" : "không cho phép bán lẻ");
                                         }
                                     }
                                 }
@@ -2780,20 +2795,21 @@ public partial class MenuController
                 break;
             case MENU_OPTION_BUY_KIOSK_ITEM:
                 {
-                    var obj = player.controller.objectPerformed.get(OBJKEY_KIOSK_ITEM);
-                    if (obj != null)
+                    if (!player.controller.objectPerformed.ContainsKey(OBJKEY_KIOSK_ITEM))
                     {
-                        var objENtry = (KeyValuePair<Kiosk, SellItem>)obj;
-                        switch (index)
-                        {
-                            case 0:
-                                player.controller.objectPerformed.Remove(OBJKEY_KIOSK_ITEM);
-                                objENtry.Key.confirmBuy(player, objENtry.Value);
-                                return;
-                            case 1:
-                                player.controller.showInputDialog(INPUT_NUM_BUY_RETAIL_ITEM_KIOSK, "Nhập số lượng", "Số lượng: ");
-                                return;
-                        }
+                        return;
+                    }
+                    var obj = player.controller.objectPerformed.get(OBJKEY_KIOSK_ITEM);
+                    var objENtry = (KeyValuePair<Kiosk, SellItem>)obj;
+                    switch (index)
+                    {
+                        case 0:
+                            player.controller.objectPerformed.Remove(OBJKEY_KIOSK_ITEM);
+                            objENtry.Key.confirmBuy(player, objENtry.Value);
+                            return;
+                        case 1:
+                            player.controller.showInputDialog(INPUT_NUM_BUY_RETAIL_ITEM_KIOSK, "Nhập số lượng", "Số lượng: ");
+                            return;
                     }
                 }
                 break;

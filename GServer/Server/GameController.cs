@@ -2811,7 +2811,7 @@ public class GameController
                     }
                     if (sellItem.sumVal > 0)
                     {
-                        player.addCoin(sellItem.sumVal);
+                        player.addCoin(Utilities.round(Utilities.GetValueFromPercent(sellItem.sumVal, 100f - GopetManager.KIOSK_PER_SELL)));
                     }
                     player.okDialog(player.Language.CancelItemKiosk);
                     HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Gỡ vật phẩm về túi thành công", sellItem.getName(player))).setObj(sellItem));

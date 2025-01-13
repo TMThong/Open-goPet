@@ -749,7 +749,12 @@ public partial class MenuController
                             SellItem sellItem = kiosk.getItemByUserId(player.user.user_id);
                             if (sellItem != null && sellItem.AssignedName != null)
                             {
-
+                                sellItem.AssignedName = assignedName;
+                                player.okDialog("Thay đổi tên người chỉ định thành công");
+                            }
+                            else
+                            {
+                                player.redDialog("Trước đó bạn không có chỉnh định người nào");
                             }
                             return;
                         }
@@ -763,13 +768,12 @@ public partial class MenuController
                     break;
                 case INPUT_NUM_BUY_RETAIL_ITEM_KIOSK:
                     {
+                        if (!player.controller.objectPerformed.ContainsKey(OBJKEY_KIOSK_ITEM))
+                            return;
                         int count = Math.Abs(reader.readInt(0));
                         var obj = player.controller.objectPerformed.get(OBJKEY_KIOSK_ITEM);
-                        if (obj != null)
-                        {
-                            var objENtry = (KeyValuePair<Kiosk, SellItem>)obj;
-                            objENtry.Key.buyRetail(objENtry.Value.itemId, player, count);
-                        }
+                        var objENtry = (KeyValuePair<Kiosk, SellItem>)obj;
+                        objENtry.Key.buyRetail(objENtry.Value.itemId, player, count);
                     }
                     break;
             }

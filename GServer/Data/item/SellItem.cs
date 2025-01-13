@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Gopet.Data.GopetItem
 {
-    public class SellItem 
+    public class SellItem
     {
         [NonSerialized]
         [JsonIgnore]
@@ -75,5 +75,17 @@ namespace Gopet.Data.GopetItem
             return ItemSell.getTemp().getDescription(player);
         }
 
+        public int MathPrice
+        {
+            get
+            {
+                if (sumVal > 0 && this.ItemSell != null)
+                {
+                    int price = Math.Max(1, this.price) / Math.Max(1, this.TotalCount);
+                    return Math.Max(1, price * this.ItemSell.count);
+                }
+                return this.price;
+            }
+        }
     }
 }
