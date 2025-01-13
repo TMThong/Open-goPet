@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 
 namespace Gopet.Data.Map
 {
+    
     public class Kiosk
     {
 
@@ -125,6 +126,11 @@ namespace Gopet.Data.Map
             SellItem sellItem = searchItem(itemId);
             if (sellItem != null)
             {
+                if (sellItem.AssignedName != null && !string.IsNullOrEmpty(sellItem.AssignedName) && sellItem.AssignedName != player.playerData.name)
+                {
+                    player.redDialog("Vật phẩm này chỉ bán cho người chơi có tên: {0}", sellItem.AssignedName);
+                    return;
+                }
                 if (sellItem.user_id == player.user.user_id)
                 {
                     player.redDialog(player.Language.CannotBuyThisItemOfYourself);
@@ -161,6 +167,11 @@ namespace Gopet.Data.Map
                 if (sellItem.user_id == player.user.user_id)
                 {
                     player.redDialog(player.Language.CannotBuyThisItemOfYourself);
+                }
+                if (sellItem.AssignedName != null && !string.IsNullOrEmpty(sellItem.AssignedName) && sellItem.AssignedName != player.playerData.name)
+                {
+                    player.redDialog("Vật phẩm này chỉ bán cho người chơi có tên: {0}", sellItem.AssignedName);
+                    return;
                 }
                 if (sellItem.pet == null)
                 {
