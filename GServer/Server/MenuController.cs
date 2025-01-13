@@ -564,6 +564,7 @@ public partial class MenuController
     public const int INPUT_OTP_2FA = 34;
     public const int INPUT_NUM_DUNG_HỢP = 35;
     public const int INPUT_ASSIGNED_NAME_KIOSK = 36;
+    public const int INPUT_ASSIGNED_CHANGE_NAME_KIOSK = 37;
     public const int IMGDIALOG_CAPTCHA = 0;
     #endregion
     public static JArrayList<MenuItemInfo> getPetFreeLst(Player player)
@@ -1070,6 +1071,7 @@ public partial class MenuController
             case INPUT_DIALOG_CHALLENGE_INVITE:
             case INPUT_DIALOG_KIOSK:
                 return new sbyte[] { InputReader.FIELD_INT };
+            case INPUT_ASSIGNED_CHANGE_NAME_KIOSK:
             case INPUT_ASSIGNED_NAME_KIOSK:
             case INPUT_OTP_2FA:
             case INPUT_TYPE_NAME_BUFF_ENCHANT_TATTOO:
