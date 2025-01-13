@@ -732,12 +732,18 @@ public partial class MenuController
                         }
                     }
                     break;
+                case INPUT_ASSIGNED_CHANGE_NAME_KIOSK:
                 case INPUT_ASSIGNED_NAME_KIOSK:
                     {
                         string assignedName = reader.readString(0).Trim();
                         if (string.IsNullOrEmpty(assignedName))
                         {
                             player.redDialog("Tên người chỉ định rỗng");
+                            return;
+                        }
+                        if (dialogInputId == INPUT_ASSIGNED_CHANGE_NAME_KIOSK)
+                        {
+
                             return;
                         }
                         if (player.controller.objectPerformed.ContainsKey(OBJKEY_PRICE_KIOSK_ITEM))
