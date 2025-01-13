@@ -510,6 +510,7 @@ public partial class MenuController
     public const int OBJKEY_COUNT_USE_BÓ_HOA = 68;
     public const int OBJKEY_ITEM_BUFF_DUNG_HỢP = 69;
     public const int OBJKEY_PRICE_KIOSK_ITEM = 70;
+    public const int OBJKEY_ITEM_KIOSK_CANCEL = 71;
     public const int DIALOG_CONFIRM_REMOVE_ITEM_EQUIP = 0;
     public const int DIALOG_CONFIRM_BUY_KIOSK_ITEM = 1;
     public const int DIALOG_ENCHANT = 3;

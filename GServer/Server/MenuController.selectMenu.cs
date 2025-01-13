@@ -2742,6 +2742,35 @@ public partial class MenuController
                     }
                     break;
                 }
+            case MENU_OTPION_KIOSK_CANCEL_ITEM:
+                {
+                    if (player.controller.objectPerformed.ContainsKey(OBJKEY_ITEM_KIOSK_CANCEL))
+                    {
+                        switch (index)
+                        {
+                            case 0:
+                                player.controller.removeSellItem(player.controller.objectPerformed[OBJKEY_ITEM_KIOSK_CANCEL]);
+                                return;
+                            case 1:
+                                player.controller.showInputDialog(INPUT_ASSIGNED_CHANGE_NAME_KIOSK, "Chỉ định", "Tên nhân vật: ");
+                                return;
+                            case 2:
+                                {
+                                    int itemId = player.controller.objectPerformed[OBJKEY_ITEM_KIOSK_CANCEL];
+                                    sbyte typeKiosk = (sbyte)player.controller.objectPerformed.get(MenuController.OBJKEY_TYPE_SHOW_KIOSK);
+                                    Kiosk kiosk_ = MarketPlace.getKiosk(typeKiosk);
+                                    SellItem sellItem = kiosk_.searchItem(itemId);
+                                    if (sellItem != null)
+                                    {
+                                        sellItem.IsRetail = !sellItem.IsRetail;
+                                        player.okDialog("Thay đổi thành công. Hiện tại ", sellItem.IsRetail ? "cho phép bán lẻ" : "không cho phép bán lẻ");
+                                    }
+                                }
+                                return;
+                        }
+                    }
+                }
+                break;
             default:
                 {
                     player.redDialog(player.Language.CannotFindMenu, menuId);

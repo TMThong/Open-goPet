@@ -1128,7 +1128,8 @@ public class GameController
                 selectKioskItem(message.readsbyte());
                 break;
             case GopetCMD.REMOVE_SELL_ITEM:
-                removeSellItem(message.readInt());
+                objectPerformed[MenuController.OBJKEY_ITEM_KIOSK_CANCEL] = message.readInt();
+                MenuController.sendMenu(MenuController.MENU_OTPION_KIOSK_CANCEL_ITEM, player);
                 break;
             case GopetCMD.PLAYER_PK:
                 pk(message.readInt());
@@ -4888,6 +4889,7 @@ public class GameController
             m.cleanup();
             p.sendMessage(m);
         }
+        
     }
 
     private void checkBugEquipItem()
