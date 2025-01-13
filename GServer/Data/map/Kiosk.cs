@@ -122,7 +122,6 @@ namespace Gopet.Data.Map
                 player.redDialog(player.Language.CannotBuyThisItemByMaintenance);
                 return;
             }
-
             SellItem sellItem = searchItem(itemId);
             if (sellItem != null)
             {
@@ -133,7 +132,14 @@ namespace Gopet.Data.Map
                 else
                 {
                     player.controller.objectPerformed.put(MenuController.OBJKEY_KIOSK_ITEM, new KeyValuePair<Kiosk, SellItem>(this, sellItem));
-                    MenuController.showYNDialog(MenuController.DIALOG_CONFIRM_BUY_KIOSK_ITEM, player.Language.DoYouWantBuyIt, player);
+                    if (!sellItem.IsRetail)
+                    {
+                        MenuController.showYNDialog(MenuController.DIALOG_CONFIRM_BUY_KIOSK_ITEM, player.Language.DoYouWantBuyIt, player);
+                    }
+                    else
+                    {
+                        MenuController.sendMenu(MenuController.MENU_OPTION_BUY_KIOSK_ITEM, player);
+                    }
                 }
             }
             else
@@ -141,6 +147,29 @@ namespace Gopet.Data.Map
                 player.redDialog(player.Language.ItemWasSell);
             }
         }
+
+        public void buyRetail(int itemId, Player player, int count)
+        {
+            if (Maintenance.gI().isIsMaintenance())
+            {
+                player.redDialog(player.Language.CannotBuyThisItemByMaintenance);
+                return;
+            }
+            SellItem sellItem = searchItem(itemId);
+            if (sellItem != null)
+            {
+                if (sellItem.user_id == player.user.user_id)
+                {
+                    player.redDialog(player.Language.CannotBuyThisItemOfYourself);
+                }
+                
+            }
+            else
+            {
+                player.redDialog(player.Language.ItemWasSell);
+            }
+        }
+
 
         public void confirmBuy(Player player, SellItem sellItem)
         {

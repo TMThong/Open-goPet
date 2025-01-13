@@ -141,6 +141,7 @@ public partial class MenuController
     public const int MENU_ADMIN_BUFF_DUNG_HỢP = 1087;
     public const int MENU_OPTION_KIOSK = 1088;
     public const int MENU_OPTION_KIOSK_CANCEL_ITEM = 1089;
+    public const int MENU_OPTION_BUY_KIOSK_ITEM = 1090;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -511,6 +512,7 @@ public partial class MenuController
     public const int OBJKEY_ITEM_BUFF_DUNG_HỢP = 69;
     public const int OBJKEY_PRICE_KIOSK_ITEM = 70;
     public const int OBJKEY_ITEM_KIOSK_CANCEL = 71;
+    public const int OBJKEY_BUY_ITEM_KIOSK_ITEM_ID = 72;
     public const int DIALOG_CONFIRM_REMOVE_ITEM_EQUIP = 0;
     public const int DIALOG_CONFIRM_BUY_KIOSK_ITEM = 1;
     public const int DIALOG_ENCHANT = 3;
@@ -566,6 +568,7 @@ public partial class MenuController
     public const int INPUT_NUM_DUNG_HỢP = 35;
     public const int INPUT_ASSIGNED_NAME_KIOSK = 36;
     public const int INPUT_ASSIGNED_CHANGE_NAME_KIOSK = 37;
+    public const int INPUT_NUM_BUY_RETAIL_ITEM_KIOSK = 38;
     public const int IMGDIALOG_CAPTCHA = 0;
     #endregion
     public static JArrayList<MenuItemInfo> getPetFreeLst(Player player)
@@ -1063,6 +1066,7 @@ public partial class MenuController
                 return new sbyte[] { InputReader.FIELD_LONG };
             case INPUT_DIALOG_ADMIN_GET_HISTORY:
                 return new sbyte[] { InputReader.FIELD_STRING, InputReader.FIELD_STRING, InputReader.FIELD_STRING };
+            case INPUT_NUM_BUY_RETAIL_ITEM_KIOSK:
             case INPUT_NUM_DUNG_HỢP:
             case INPUT_TYPE_COUNT_USE_BÓ_HOA:
             case INPUT_TYPE_COUNT_ADMIN_GIVE:

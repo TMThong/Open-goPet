@@ -2771,6 +2771,25 @@ public partial class MenuController
                     }
                 }
                 break;
+            case MENU_OPTION_BUY_KIOSK_ITEM:
+                {
+                    var obj = player.controller.objectPerformed.get(OBJKEY_KIOSK_ITEM);
+                    if (obj != null)
+                    {
+                        var objENtry = (KeyValuePair<Kiosk, SellItem>)obj;
+                        switch (index)
+                        {
+                            case 0:
+                                player.controller.objectPerformed.Remove(OBJKEY_KIOSK_ITEM);
+                                objENtry.Key.confirmBuy(player, objENtry.Value);
+                                return;
+                            case 1:
+                                player.controller.showInputDialog(INPUT_NUM_BUY_RETAIL_ITEM_KIOSK, "Nhập số lượng", "Số lượng: ");
+                                return;
+                        }
+                    }
+                }
+                break;
             default:
                 {
                     player.redDialog(player.Language.CannotFindMenu, menuId);

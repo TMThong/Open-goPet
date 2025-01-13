@@ -4,6 +4,7 @@ using Gopet.Data.Collections;
 using Gopet.Data.Dialog;
 using Gopet.Data.GopetClan;
 using Gopet.Data.GopetItem;
+using Gopet.Data.Map;
 using Gopet.Util;
 using MySqlConnector;
 using OtpNet;
@@ -751,6 +752,17 @@ public partial class MenuController
                             int price = player.controller.objectPerformed[OBJKEY_PRICE_KIOSK_ITEM];
                             player.controller.objectPerformed.Remove(OBJKEY_PRICE_KIOSK_ITEM);
                             SellKioskItem(player, price, assignedName);
+                        }
+                    }
+                    break;
+                case INPUT_NUM_BUY_RETAIL_ITEM_KIOSK:
+                    {
+                        int count = Math.Abs(reader.readInt(0));
+                        var obj = player.controller.objectPerformed.get(OBJKEY_KIOSK_ITEM);
+                        if (obj != null)
+                        {
+                            var objENtry = (KeyValuePair<Kiosk, SellItem>)obj;
+                            objENtry.Key.buyRetail(objENtry.Value.itemId, player, count);
                         }
                     }
                     break;

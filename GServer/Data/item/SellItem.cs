@@ -5,10 +5,9 @@ namespace Gopet.Data.GopetItem
 {
     public class SellItem 
     {
-        [JsonIgnore]
-        private object lockObject = new object();
         public Item ItemSell;
         public int price;
+        public int sumVal = 0;
         public bool hasSell = false;
         public bool hasRemoved = false;
         public Pet pet;
@@ -27,7 +26,6 @@ namespace Gopet.Data.GopetItem
 
         public SellItem(Item ItemSell, int price, int hoursExpire) : this(hoursExpire)
         {
-
             this.ItemSell = ItemSell;
             this.price = price;
         }

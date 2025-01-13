@@ -1022,6 +1022,18 @@ public partial class MenuController
                     player.controller.sendListOption(menuId, "Tuỳ chọn", "", options);
                 }
                 break;
+            case MENU_OPTION_BUY_KIOSK_ITEM:
+                {
+                    JArrayList<Option> options = new JArrayList<Option>()
+                    {
+                        new Option(0, "Mua tất cả"),
+                        new Option(1, "Mua lẻ"),
+                        new Option(2, "Đóng"),
+                    };
+                    player.controller.sendListOption(menuId, "Tuỳ chọn", "", options);
+                }
+                break;
+
         }
     }
 }
