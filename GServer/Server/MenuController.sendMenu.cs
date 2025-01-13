@@ -999,6 +999,29 @@ public partial class MenuController
                     player.controller.sendListOption(menuId, "Trùng sinh", "", options);
                 }
                 break;
+            case MENU_OTPION_KIOSK:
+                {
+                    JArrayList<Option> options = new JArrayList<Option>()
+                    {
+                        new Option(0, "Tiếp tục treo"),
+                        new Option(1, string.Format("Tiếp tục treo và chỉ định người mua (Thú cưng {0} (vang), còn lại {1} (vang))", Utilities.FormatNumber(GopetManager.PRICE_ASSIGNED_PET), Utilities.FormatNumber(GopetManager.PRICE_ASSIGNED_ITEM))),
+                        new Option(2, "Huỷ"),
+                    };
+                    player.controller.sendListOption(menuId, "Tuỳ chọn", "", options);
+                }
+                break;
+            case MENU_OTPION_KIOSK_CANCEL_ITEM:
+                {
+                    JArrayList<Option> options = new JArrayList<Option>()
+                    {
+                        new Option(0, "Huỷ bán vật phẩm này"),
+                        new Option(1, "Đổi người chỉ định"),
+                        new Option(2, "Cho phép người chơi khác mua lẻ món này"),
+                        new Option(3, "Đóng"),
+                    };
+                    player.controller.sendListOption(menuId, "Tuỳ chọn", "", options);
+                }
+                break;
         }
     }
 }

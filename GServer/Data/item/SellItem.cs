@@ -15,6 +15,8 @@ namespace Gopet.Data.GopetItem
         public long expireTime = 0l;
         public int itemId;
         public int user_id = 0;
+        public bool IsRetail { get; set; } = false;
+        public string AssignedName { get; set; } = null;
 
         protected SellItem() { }
 

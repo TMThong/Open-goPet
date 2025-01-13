@@ -138,6 +138,8 @@ public partial class MenuController
     public const int MENU_PET_REINCARNATION = 1085;
     public const int MENU_OPTION_PET_REINCARNATION = 1086;
     public const int MENU_ADMIN_BUFF_DUNG_HỢP = 1087;
+    public const int MENU_OTPION_KIOSK = 1088;
+    public const int MENU_OTPION_KIOSK_CANCEL_ITEM = 1089;
     public static readonly MenuItemInfo[] ADMIN_INFOS = new MenuItemInfo[]{
         new AdminItemInfo("Đặt chỉ số pet đang đi theo", "Đặt chỉ số cho pet đi theo", "items/4000766.png"),
         new AdminItemInfo("Dịch chuyển đến người chơi", "Dịch chuyển đến người chơi chỉ định", "items/4000766.png"),
@@ -559,6 +561,7 @@ public partial class MenuController
     public const int INPUT_TYPE_COUNT_USE_BÓ_HOA = 33;
     public const int INPUT_OTP_2FA = 34;
     public const int INPUT_NUM_DUNG_HỢP = 35;
+    public const int INPUT_ASSIGNED_NAME_KIOSK = 36;
     public const int IMGDIALOG_CAPTCHA = 0;
     #endregion
     public static JArrayList<MenuItemInfo> getPetFreeLst(Player player)
