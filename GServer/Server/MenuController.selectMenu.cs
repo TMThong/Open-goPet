@@ -2720,7 +2720,7 @@ public partial class MenuController
                     }
                 }
                 break;
-            case MENU_OTPION_KIOSK:
+            case MENU_OPTION_KIOSK:
                 {
                     if (player.controller.objectPerformed.ContainsKey(OBJKEY_PRICE_KIOSK_ITEM))
                     {
@@ -2742,7 +2742,7 @@ public partial class MenuController
                     }
                     break;
                 }
-            case MENU_OTPION_KIOSK_CANCEL_ITEM:
+            case MENU_OPTION_KIOSK_CANCEL_ITEM:
                 {
                     if (player.controller.objectPerformed.ContainsKey(OBJKEY_ITEM_KIOSK_CANCEL))
                     {

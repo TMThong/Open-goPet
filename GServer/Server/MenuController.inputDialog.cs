@@ -55,7 +55,7 @@ public partial class MenuController
                             return;
                         }
                         player.controller.objectPerformed[OBJKEY_PRICE_KIOSK_ITEM] = priceItem;
-                        sendMenu(MENU_OTPION_KIOSK, player);
+                        sendMenu(MENU_OPTION_KIOSK, player);
                     }
                     break;
                 case INPUT_TYPE_GIFT_CODE:

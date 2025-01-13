@@ -999,7 +999,7 @@ public partial class MenuController
                     player.controller.sendListOption(menuId, "Trùng sinh", "", options);
                 }
                 break;
-            case MENU_OTPION_KIOSK:
+            case MENU_OPTION_KIOSK:
                 {
                     JArrayList<Option> options = new JArrayList<Option>()
                     {
@@ -1010,7 +1010,7 @@ public partial class MenuController
                     player.controller.sendListOption(menuId, "Tuỳ chọn", "", options);
                 }
                 break;
-            case MENU_OTPION_KIOSK_CANCEL_ITEM:
+            case MENU_OPTION_KIOSK_CANCEL_ITEM:
                 {
                     JArrayList<Option> options = new JArrayList<Option>()
                     {

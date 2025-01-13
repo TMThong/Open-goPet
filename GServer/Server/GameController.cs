@@ -1129,7 +1129,7 @@ public class GameController
                 break;
             case GopetCMD.REMOVE_SELL_ITEM:
                 objectPerformed[MenuController.OBJKEY_ITEM_KIOSK_CANCEL] = message.readInt();
-                MenuController.sendMenu(MenuController.MENU_OTPION_KIOSK_CANCEL_ITEM, player);
+                MenuController.sendMenu(MenuController.MENU_OPTION_KIOSK_CANCEL_ITEM, player);
                 break;
             case GopetCMD.PLAYER_PK:
                 pk(message.readInt());
