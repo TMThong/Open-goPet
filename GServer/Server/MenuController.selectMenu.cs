@@ -2720,6 +2720,28 @@ public partial class MenuController
                     }
                 }
                 break;
+            case MENU_OTPION_KIOSK:
+                {
+                    if (player.controller.objectPerformed.ContainsKey(OBJKEY_PRICE_KIOSK_ITEM))
+                    {
+                        int price = player.controller.objectPerformed[OBJKEY_PRICE_KIOSK_ITEM];
+                        switch (index)
+                        {
+                            case 0:
+                                {
+                                    player.controller.objectPerformed.Remove(OBJKEY_PRICE_KIOSK_ITEM);
+                                    SellKioskItem(player, price);
+                                }
+                                break;
+                            case 1:
+                                {
+                                    player.controller.showInputDialog(INPUT_ASSIGNED_NAME_KIOSK, "Chỉ định", "Tên nhân vật: ");
+                                }
+                                break;
+                        }
+                    }
+                    break;
+                }
             default:
                 {
                     player.redDialog(player.Language.CannotFindMenu, menuId);

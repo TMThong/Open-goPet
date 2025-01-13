@@ -13,6 +13,7 @@ using Gopet.Data.item;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Gopet.Data.top;
+using System.Numerics;
 
 [NonController]
 public partial class MenuController
@@ -508,6 +509,7 @@ public partial class MenuController
     public const int OBJKEY_CURRENT_SELECT_PET_ID_FUSION = 67;
     public const int OBJKEY_COUNT_USE_BÓ_HOA = 68;
     public const int OBJKEY_ITEM_BUFF_DUNG_HỢP = 69;
+    public const int OBJKEY_PRICE_KIOSK_ITEM = 70;
     public const int DIALOG_CONFIRM_REMOVE_ITEM_EQUIP = 0;
     public const int DIALOG_CONFIRM_BUY_KIOSK_ITEM = 1;
     public const int DIALOG_ENCHANT = 3;
@@ -1068,6 +1070,7 @@ public partial class MenuController
             case INPUT_DIALOG_CHALLENGE_INVITE:
             case INPUT_DIALOG_KIOSK:
                 return new sbyte[] { InputReader.FIELD_INT };
+            case INPUT_ASSIGNED_NAME_KIOSK:
             case INPUT_OTP_2FA:
             case INPUT_TYPE_NAME_BUFF_ENCHANT_TATTOO:
             case INPUT_TYPE_NAME_PET_WHEN_BUY_PET:
@@ -1232,5 +1235,106 @@ public partial class MenuController
             To.redDialog(To.Language.PlayerOffline);
         }
         return false;
+    }
+
+    public static void SellKioskItem(Player player, int priceItem, string nameAssigned = null)
+    {
+        
+        if (player.controller.objectPerformed.ContainsKey(OBJKEY_SELECT_SELL_ITEM) && player.controller.objectPerformed.ContainsKey(OBJKEY_MENU_OF_KIOSK))
+        {
+            int menuKioskId = (int)player.controller.objectPerformed.get(OBJKEY_MENU_OF_KIOSK);
+            Item item = null;
+            Pet pet = null;
+            if (menuKioskId != MENU_KIOSK_PET_SELECT)
+            {
+                item = (Item)player.controller.objectPerformed.get(OBJKEY_SELECT_SELL_ITEM);
+            }
+            else if (menuKioskId == MENU_KIOSK_PET_SELECT)
+            {
+                pet = (Pet)player.controller.objectPerformed.get(OBJKEY_SELECT_SELL_ITEM);
+            }
+
+            if (item == null && pet == null)
+            {
+                return;
+            }
+
+            if (item != null)
+            {
+                if (!item.Template.canTrade || !item.canTrade)
+                {
+                    player.redDialog(player.Language.ItemCanNotTrade);
+                    return;
+                }
+            }
+            int priceGold = pet == null ? GopetManager.PRICE_ASSIGNED_PET : GopetManager.PRICE_ASSIGNED_ITEM;
+            if (!player.checkGold(priceGold))
+            {
+                player.controller.notEnoughGold();
+                return;
+            }
+            player.mineGold(priceGold);
+            player.controller.objectPerformed.Remove(OBJKEY_SELECT_SELL_ITEM);
+            player.controller.objectPerformed.Remove(OBJKEY_MENU_OF_KIOSK);
+            int count = 1;
+            if (player.controller.objectPerformed.ContainsKey(OBJKEY_COUNT_OF_ITEM_KIOSK))
+            {
+                count = (int)player.controller.objectPerformed.get(OBJKEY_COUNT_OF_ITEM_KIOSK);
+            }
+            MarketPlace marketPlace = (MarketPlace)player.getPlace();
+            switch (menuKioskId)
+            {
+                case MENU_KIOSK_PET_SELECT:
+                    player.playerData.pets.remove(pet);
+                    MarketPlace.getKiosk(GopetManager.KIOSK_PET).addKioskItem(pet, priceItem, player, nameAssigned);
+                    player.controller.showKiosk(GopetManager.KIOSK_PET);
+                    break;
+                case MENU_KIOSK_HAT_SELECT:
+                case MENU_KIOSK_WEAPON_SELECT:
+                case MENU_KIOSK_AMOUR_SELECT:
+                case MENU_KIOSK_OHTER_SELECT:
+                case MENU_KIOSK_GEM_SELECT:
+                    player.playerData.removeItem(menuKioskId != MENU_KIOSK_GEM_SELECT ? GopetManager.EQUIP_PET_INVENTORY : GopetManager.GEM_INVENTORY, item);
+                    switch (menuKioskId)
+                    {
+                        case MENU_KIOSK_HAT_SELECT:
+                            MarketPlace.getKiosk(GopetManager.KIOSK_HAT).addKioskItem(item, priceItem, player, nameAssigned);
+                            player.controller.showKiosk(GopetManager.KIOSK_HAT);
+                            break;
+                        case MENU_KIOSK_GEM_SELECT:
+                            MarketPlace.getKiosk(GopetManager.KIOSK_GEM).addKioskItem(item, priceItem, player, nameAssigned);
+                            player.controller.showKiosk(GopetManager.KIOSK_GEM);
+                            break;
+                        case MENU_KIOSK_WEAPON_SELECT:
+                            MarketPlace.getKiosk(GopetManager.KIOSK_WEAPON).addKioskItem(item, priceItem, player, nameAssigned);
+                            player.controller.showKiosk(GopetManager.KIOSK_WEAPON);
+                            break;
+                        case MENU_KIOSK_AMOUR_SELECT:
+                            MarketPlace.getKiosk(GopetManager.KIOSK_AMOUR).addKioskItem(item, priceItem, player, nameAssigned);
+                            player.controller.showKiosk(GopetManager.KIOSK_AMOUR);
+                            break;
+                        case MENU_KIOSK_PET_SELECT:
+                            MarketPlace.getKiosk(GopetManager.KIOSK_PET).addKioskItem(pet, priceItem, player, nameAssigned);
+                            player.controller.showKiosk(GopetManager.KIOSK_PET);
+                            break;
+                        case MENU_KIOSK_OHTER_SELECT:
+                            if (GameController.checkCount(item, count))
+                            {
+                                Item itemCopy = new Item(item.itemTemplateId);
+                                itemCopy.count = count;
+                                itemCopy.SourcesItem.Add(Gopet.Data.item.ItemSource.COPY_PHI_CHỢ);
+                                MarketPlace.getKiosk(GopetManager.KIOSK_OTHER).addKioskItem(itemCopy, priceItem, player, nameAssigned);
+                                player.controller.showKiosk(GopetManager.KIOSK_OTHER);
+                                player.controller.subCountItem(item, count, GopetManager.NORMAL_INVENTORY);
+                            }
+                            else
+                            {
+                                player.redDialog(player.Language.EnoughCountOfItem);
+                            }
+                            break;
+                    }
+                    break;
+            }
+        }
     }
 }

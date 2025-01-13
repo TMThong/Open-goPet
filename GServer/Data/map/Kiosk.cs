@@ -19,7 +19,7 @@ namespace Gopet.Data.Map
             kioskType = kioskType_;
         }
 
-        public void addKioskItem(Item item, int price, Player player)
+        public void addKioskItem(Item item, int price, Player player, string assignedName = null)
         {
             if (item != null)
             {
@@ -27,7 +27,10 @@ namespace Gopet.Data.Map
                 {
                     item.wasSell = true;
                 }
-                addKioskItem(new SellItem(item, price, GopetManager.HOUR_UPLOAD_ITEM), player);
+                addKioskItem(new SellItem(item, price, GopetManager.HOUR_UPLOAD_ITEM)
+                {
+                    AssignedName = assignedName
+                }, player);
                 HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Treo vật phẩm %s với giá %s ngoc", item.getTemp().getName(player), Utilities.FormatNumber(price))).setObj(item));
             }
             else
@@ -36,7 +39,7 @@ namespace Gopet.Data.Map
             }
         }
 
-        public void addKioskItem(Pet pet, int price, Player player)
+        public void addKioskItem(Pet pet, int price, Player player, string assignedName = null)
         {
             if (kioskType == GopetManager.KIOSK_PET)
             {
@@ -44,7 +47,10 @@ namespace Gopet.Data.Map
                 {
                     pet.wasSell = true;
                 }
-                addKioskItem(new SellItem(price, pet, GopetManager.HOUR_UPLOAD_ITEM), player);
+                addKioskItem(new SellItem(price, pet, GopetManager.HOUR_UPLOAD_ITEM)
+                {
+                    AssignedName = assignedName
+                }, player);
                 HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Treo pet %s với giá %s ngoc", pet.getPetTemplate().getName(player), Utilities.FormatNumber(price))).setObj(pet));
                 return;
             }
@@ -138,7 +144,7 @@ namespace Gopet.Data.Map
 
         public void confirmBuy(Player player, SellItem sellItem)
         {
-            if(Maintenance.gI().isIsMaintenance())
+            if (Maintenance.gI().isIsMaintenance())
             {
                 player.redDialog(player.Language.CannotBuyThisItemByMaintenance);
                 return;
@@ -146,6 +152,11 @@ namespace Gopet.Data.Map
             if (!kioskItems.Contains(sellItem))
             {
                 player.redDialog(player.Language.ItemWasSell);
+                return;
+            }
+            if (sellItem.AssignedName != null && !string.IsNullOrEmpty(sellItem.AssignedName) && sellItem.AssignedName != player.playerData.name)
+            {
+                player.redDialog("Vật phẩm này chỉ bán cho người chơi có tên: {0}", sellItem.AssignedName);
                 return;
             }
             if (player.checkCoin(sellItem.price))
@@ -171,14 +182,13 @@ namespace Gopet.Data.Map
                         sellPlayer.addCoin(priceReiceived);
                         sellPlayer.playerData.save();
                         HistoryManager.addHistory(new History(sellItem.user_id).setObj(sellItem).setLog("Bán thành công vật phẩm trong ki ốt người mua là " + player.playerData.name));
-                        
                     }
                     else
                     {
-                        using(var conn = MYSQLManager.create())
+                        using (var conn = MYSQLManager.create())
                         {
                             conn.Execute("Update `player` set coin = coin + @priceReiceived where user_id =@user_id",
-                                new { priceReiceived = priceReiceived,  user_id = sellItem.user_id });
+                                new { priceReiceived = priceReiceived, user_id = sellItem.user_id });
                             HistoryManager.addHistory(new History(sellItem.user_id).setObj(sellItem).setLog("Bán thành công vật phẩm trong ki ốt người mua là " + player.playerData.name));
                         }
                     }

@@ -54,96 +54,8 @@ public partial class MenuController
                             player.redDialog(string.Format(player.Language.GemLimitWarning, Utilities.FormatNumber(2000000000)));
                             return;
                         }
-
-                        if (player.controller.objectPerformed.ContainsKey(OBJKEY_SELECT_SELL_ITEM) && player.controller.objectPerformed.ContainsKey(OBJKEY_MENU_OF_KIOSK))
-                        {
-                            int menuKioskId = (int)player.controller.objectPerformed.get(OBJKEY_MENU_OF_KIOSK);
-                            Item item = null;
-                            Pet pet = null;
-                            if (menuKioskId != MENU_KIOSK_PET_SELECT)
-                            {
-                                item = (Item)player.controller.objectPerformed.get(OBJKEY_SELECT_SELL_ITEM);
-                            }
-                            else if (menuKioskId == MENU_KIOSK_PET_SELECT)
-                            {
-                                pet = (Pet)player.controller.objectPerformed.get(OBJKEY_SELECT_SELL_ITEM);
-                            }
-
-                            if (item == null && pet == null)
-                            {
-                                return;
-                            }
-
-                            if (item != null)
-                            {
-                                if (!item.Template.canTrade || !item.canTrade)
-                                {
-                                    player.redDialog(player.Language.ItemCanNotTrade);
-                                    return;
-                                }
-                            }
-                            player.controller.objectPerformed.Remove(OBJKEY_SELECT_SELL_ITEM);
-                            player.controller.objectPerformed.Remove(OBJKEY_MENU_OF_KIOSK);
-                            int count = 1;
-                            if (player.controller.objectPerformed.ContainsKey(OBJKEY_COUNT_OF_ITEM_KIOSK))
-                            {
-                                count = (int)player.controller.objectPerformed.get(OBJKEY_COUNT_OF_ITEM_KIOSK);
-                            }
-                            MarketPlace marketPlace = (MarketPlace)player.getPlace();
-                            switch (menuKioskId)
-                            {
-                                case MENU_KIOSK_PET_SELECT:
-                                    player.playerData.pets.remove(pet);
-                                    MarketPlace.getKiosk(GopetManager.KIOSK_PET).addKioskItem(pet, priceItem, player);
-                                    player.controller.showKiosk(GopetManager.KIOSK_PET);
-                                    break;
-                                case MENU_KIOSK_HAT_SELECT:
-                                case MENU_KIOSK_WEAPON_SELECT:
-                                case MENU_KIOSK_AMOUR_SELECT:
-                                case MENU_KIOSK_OHTER_SELECT:
-                                case MENU_KIOSK_GEM_SELECT:
-                                    player.playerData.removeItem(menuKioskId != MENU_KIOSK_GEM_SELECT ? GopetManager.EQUIP_PET_INVENTORY : GopetManager.GEM_INVENTORY, item);
-                                    switch (menuKioskId)
-                                    {
-                                        case MENU_KIOSK_HAT_SELECT:
-                                            MarketPlace.getKiosk(GopetManager.KIOSK_HAT).addKioskItem(item, priceItem, player);
-                                            player.controller.showKiosk(GopetManager.KIOSK_HAT);
-                                            break;
-                                        case MENU_KIOSK_GEM_SELECT:
-                                            MarketPlace.getKiosk(GopetManager.KIOSK_GEM).addKioskItem(item, priceItem, player);
-                                            player.controller.showKiosk(GopetManager.KIOSK_GEM);
-                                            break;
-                                        case MENU_KIOSK_WEAPON_SELECT:
-                                            MarketPlace.getKiosk(GopetManager.KIOSK_WEAPON).addKioskItem(item, priceItem, player);
-                                            player.controller.showKiosk(GopetManager.KIOSK_WEAPON);
-                                            break;
-                                        case MENU_KIOSK_AMOUR_SELECT:
-                                            MarketPlace.getKiosk(GopetManager.KIOSK_AMOUR).addKioskItem(item, priceItem, player);
-                                            player.controller.showKiosk(GopetManager.KIOSK_AMOUR);
-                                            break;
-                                        case MENU_KIOSK_PET_SELECT:
-                                            MarketPlace.getKiosk(GopetManager.KIOSK_PET).addKioskItem(pet, priceItem, player);
-                                            player.controller.showKiosk(GopetManager.KIOSK_PET);
-                                            break;
-                                        case MENU_KIOSK_OHTER_SELECT:
-                                            if (GameController.checkCount(item, count))
-                                            {
-                                                Item itemCopy = new Item(item.itemTemplateId);
-                                                itemCopy.count = count;
-                                                itemCopy.SourcesItem.Add(Gopet.Data.item.ItemSource.COPY_PHI_CHỢ);
-                                                MarketPlace.getKiosk(GopetManager.KIOSK_OTHER).addKioskItem(itemCopy, priceItem, player);
-                                                player.controller.showKiosk(GopetManager.KIOSK_OTHER);
-                                                player.controller.subCountItem(item, count, GopetManager.NORMAL_INVENTORY);
-                                            }
-                                            else
-                                            {
-                                                player.redDialog(player.Language.EnoughCountOfItem);
-                                            }
-                                            break;
-                                    }
-                                    break;
-                            }
-                        }
+                        player.controller.objectPerformed[OBJKEY_PRICE_KIOSK_ITEM] = priceItem;
+                        sendMenu(MENU_OTPION_KIOSK, player);
                     }
                     break;
                 case INPUT_TYPE_GIFT_CODE:
@@ -817,6 +729,22 @@ public partial class MenuController
                                     player.okDialog("Buff dung hợp lên cấp {0} thành công", item.NumFusion);
                                 }
                             }
+                        }
+                    }
+                    break;
+                case INPUT_ASSIGNED_NAME_KIOSK:
+                    {
+                        string assignedName = reader.readString(0).Trim();
+                        if (string.IsNullOrEmpty(assignedName))
+                        {
+                            player.redDialog("Tên người chỉ định rỗng");
+                            return;
+                        }
+                        if (player.controller.objectPerformed.ContainsKey(OBJKEY_PRICE_KIOSK_ITEM))
+                        {
+                            int price = player.controller.objectPerformed[OBJKEY_PRICE_KIOSK_ITEM];
+                            player.controller.objectPerformed.Remove(OBJKEY_PRICE_KIOSK_ITEM);
+                            SellKioskItem(player, price, assignedName);
                         }
                     }
                     break;
