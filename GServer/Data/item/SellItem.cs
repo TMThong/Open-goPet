@@ -5,6 +5,9 @@ namespace Gopet.Data.GopetItem
 {
     public class SellItem 
     {
+        [NonSerialized]
+        [JsonIgnore]
+        public Mutex sellItemMutex = new Mutex();
         public Item ItemSell;
         public int price;
         public int sumVal = 0;
