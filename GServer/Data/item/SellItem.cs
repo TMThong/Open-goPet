@@ -10,7 +10,7 @@ namespace Gopet.Data.GopetItem
         public Mutex sellItemMutex = new Mutex();
         public Item ItemSell;
         public int price;
-        public int sumVal = 0;
+        public long sumVal = 0;
         public bool hasSell = false;
         public bool hasRemoved = false;
         public Pet pet;
@@ -19,6 +19,8 @@ namespace Gopet.Data.GopetItem
         public int user_id = 0;
         public bool IsRetail { get; set; } = false;
         public string AssignedName { get; set; } = null;
+
+        public int TotalCount { get; set; } = 1;
 
         protected SellItem() { }
 
@@ -31,6 +33,7 @@ namespace Gopet.Data.GopetItem
         {
             this.ItemSell = ItemSell;
             this.price = price;
+            this.TotalCount = ItemSell.count;
         }
 
         public SellItem(int price, Pet pet, int hoursExpire) : this(hoursExpire)
