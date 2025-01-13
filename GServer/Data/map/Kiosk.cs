@@ -162,9 +162,40 @@ namespace Gopet.Data.Map
                 {
                     player.redDialog(player.Language.CannotBuyThisItemOfYourself);
                 }
+                if (sellItem.pet == null)
+                {
+                    if (sellItem.ItemSell.count == count)
+                    {
+                        confirmBuy(player, sellItem);
+                        return;
+                    }
+                }
                 try
                 {
                     sellItem.sellItemMutex.WaitOne();
+                    if (sellItem.pet == null)
+                    {
+                        if (count > sellItem.ItemSell.count)
+                        {
+                            player.redDialog(player.Language.NotEnoughItemToBuy);
+                            return;
+                        }
+                        long priceRetail = Math.Max(1, sellItem.price) / sellItem.TotalCount;
+                        long price = Math.Max(1, priceRetail * count);
+                        if (player.checkCoin(price))
+                        {
+                            player.addCoin(-price);
+                            sellItem.sumVal += price;
+                            sellItem.ItemSell.count -= count;
+                            player.addItemToInventory(new Item(sellItem.ItemSell.itemTemplateId, count));
+                            player.okDialog(player.Language.BuyOK);
+                            HistoryManager.addHistory(new History(player.playerData.user_id).setObj(sellItem).setLog($"Mua thành công {sellItem.getName(player)} có sớ lượng {count}"));
+                        }
+                        else
+                        {
+                            player.controller.notEnoughCoin();
+                        }
+                    }
                 }
                 finally
                 {
@@ -195,14 +226,15 @@ namespace Gopet.Data.Map
                 player.redDialog("Vật phẩm này chỉ bán cho người chơi có tên: {0}", sellItem.AssignedName);
                 return;
             }
-            if (player.checkCoin(sellItem.price))
+            if (player.checkCoin(sellItem.price) || (sellItem.sumVal > 0 && player.checkCoin(sellItem.price - sellItem.sumVal)))
             {
                 try
                 {
                     sellItem.sellItemMutex.WaitOne();
                     if (!sellItem.hasSell)
                     {
-                        player.addCoin(-sellItem.price);
+                        if (sellItem.sumVal > 0) player.addCoin(-(sellItem.price - sellItem.sumVal));
+                        else player.addCoin(-sellItem.price);
                         sellItem.setHasSell(true);
                         if (sellItem.ItemSell != null)
                         {
