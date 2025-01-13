@@ -156,6 +156,11 @@ namespace Gopet.Data.Map
 
         public void buyRetail(int itemId, Player player, int count)
         {
+            if (count <= 0)
+            {
+                player.redDialog(player.Language.BugWarning);
+                return;
+            }
             if (Maintenance.gI().isIsMaintenance())
             {
                 player.redDialog(player.Language.CannotBuyThisItemByMaintenance);
