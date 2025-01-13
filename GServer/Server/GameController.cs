@@ -2809,6 +2809,10 @@ public class GameController
                     {
                         player.addItemToInventory(sellItem.ItemSell);
                     }
+                    if (sellItem.sumVal > 0)
+                    {
+                        player.addCoin(sellItem.sumVal);
+                    }
                     player.okDialog(player.Language.CancelItemKiosk);
                     HistoryManager.addHistory(new History(player).setLog(Utilities.Format("Gỡ vật phẩm về túi thành công", sellItem.getName(player))).setObj(sellItem));
                     sellItem.hasRemoved = true;
