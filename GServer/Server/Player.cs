@@ -17,6 +17,7 @@ using Gopet.Data.user;
 using Gopet.Language;
 using System.Diagnostics;
 using System.Collections.Concurrent;
+using System.Numerics;
 
 public class Player : IHandleMessage
 {
@@ -521,6 +522,10 @@ Thread.Sleep(1000);
                                 else
                                 {
                                     playerData.addPet(sellItem.pet, this);
+                                }
+                                if (sellItem.sumVal > 0)
+                                {
+                                    addCoin(sellItem.sumVal);
                                 }
                             }
                         }
