@@ -569,5 +569,6 @@ namespace Gopet.Language
         public string PetSacrificeFail { get; set; } = "Không thể hiến do nhiệm vụ không phù hợp";
         public string PetSacrificeOK { get; set; } = "Hiến tặng thú cưng thành công";
         public string REQUEST_KILL_ELITE_BOSS { get; set; } = "Tiêu diệt boss tinh anh {0}/{1}";
+        public string NotEnoughItemToBuy { get; set; } = "Số lượng vật phẩm bạn nhập lớn hơn vật phẩm trên sạp";
     }
 }
