@@ -162,7 +162,14 @@ namespace Gopet.Data.Map
                 {
                     player.redDialog(player.Language.CannotBuyThisItemOfYourself);
                 }
-                
+                try
+                {
+                    sellItem.sellItemMutex.WaitOne();
+                }
+                finally
+                {
+                    sellItem.sellItemMutex.ReleaseMutex();
+                }
             }
             else
             {
@@ -190,42 +197,50 @@ namespace Gopet.Data.Map
             }
             if (player.checkCoin(sellItem.price))
             {
-                if (!sellItem.hasSell)
+                try
                 {
-                    player.addCoin(-sellItem.price);
-                    sellItem.setHasSell(true);
-                    if (sellItem.ItemSell != null)
+                    sellItem.sellItemMutex.WaitOne();
+                    if (!sellItem.hasSell)
                     {
-                        player.addItemToInventory(sellItem.ItemSell);
-                    }
-                    else
-                    {
-                        player.playerData.addPet(sellItem.pet, player);
-                    }
-                    player.okDialog(player.Language.BuyOK);
-                    kioskItems.remove(sellItem);
-                    Player sellPlayer = PlayerManager.get(sellItem.user_id);
-                    long priceReiceived = Utilities.round(Utilities.GetValueFromPercent(sellItem.price, 100f - GopetManager.KIOSK_PER_SELL));
-                    if (sellPlayer != null)
-                    {
-                        sellPlayer.addCoin(priceReiceived);
-                        sellPlayer.playerData.save();
-                        HistoryManager.addHistory(new History(sellItem.user_id).setObj(sellItem).setLog("Bán thành công vật phẩm trong ki ốt người mua là " + player.playerData.name));
-                    }
-                    else
-                    {
-                        using (var conn = MYSQLManager.create())
+                        player.addCoin(-sellItem.price);
+                        sellItem.setHasSell(true);
+                        if (sellItem.ItemSell != null)
                         {
-                            conn.Execute("Update `player` set coin = coin + @priceReiceived where user_id =@user_id",
-                                new { priceReiceived = priceReiceived, user_id = sellItem.user_id });
+                            player.addItemToInventory(sellItem.ItemSell);
+                        }
+                        else
+                        {
+                            player.playerData.addPet(sellItem.pet, player);
+                        }
+                        player.okDialog(player.Language.BuyOK);
+                        kioskItems.remove(sellItem);
+                        Player sellPlayer = PlayerManager.get(sellItem.user_id);
+                        long priceReiceived = Utilities.round(Utilities.GetValueFromPercent(sellItem.price, 100f - GopetManager.KIOSK_PER_SELL));
+                        if (sellPlayer != null)
+                        {
+                            sellPlayer.addCoin(priceReiceived);
+                            sellPlayer.playerData.save();
                             HistoryManager.addHistory(new History(sellItem.user_id).setObj(sellItem).setLog("Bán thành công vật phẩm trong ki ốt người mua là " + player.playerData.name));
                         }
+                        else
+                        {
+                            using (var conn = MYSQLManager.create())
+                            {
+                                conn.Execute("Update `player` set coin = coin + @priceReiceived where user_id =@user_id",
+                                    new { priceReiceived = priceReiceived, user_id = sellItem.user_id });
+                                HistoryManager.addHistory(new History(sellItem.user_id).setObj(sellItem).setLog("Bán thành công vật phẩm trong ki ốt người mua là " + player.playerData.name));
+                            }
+                        }
+                        HistoryManager.addHistory(new History(player.playerData.user_id).setObj(sellItem).setLog($"Mua thành công {sellItem.getName(player)}"));
                     }
-                    HistoryManager.addHistory(new History(player.playerData.user_id).setObj(sellItem).setLog($"Mua thành công {sellItem.getName(player)}"));
+                    else
+                    {
+                        player.redDialog(player.Language.ItemWasSell);
+                    }
                 }
-                else
+                finally
                 {
-                    player.redDialog(player.Language.ItemWasSell);
+                    sellItem.sellItemMutex.ReleaseMutex();
                 }
             }
             else
