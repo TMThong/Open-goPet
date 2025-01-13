@@ -2762,8 +2762,15 @@ public partial class MenuController
                                     SellItem sellItem = kiosk_.searchItem(itemId);
                                     if (sellItem != null)
                                     {
-                                        sellItem.IsRetail = !sellItem.IsRetail;
-                                        player.okDialog("Thay đổi thành công. Hiện tại ", sellItem.IsRetail ? "cho phép bán lẻ" : "không cho phép bán lẻ");
+                                        if (sellItem.sumVal > 0)
+                                        {
+                                            player.redDialog("Không thể hủy vì đã có người mua lẻ vài món");
+                                        }
+                                        else
+                                        {
+                                            sellItem.IsRetail = !sellItem.IsRetail;
+                                            player.okDialog("Thay đổi thành công. Hiện tại ", sellItem.IsRetail ? "cho phép bán lẻ" : "không cho phép bán lẻ");
+                                        }
                                     }
                                 }
                                 return;
