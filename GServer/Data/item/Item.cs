@@ -8,7 +8,6 @@ namespace Gopet.Data.GopetItem
 {
     public class Item : IBinaryObject<Item>
     {
-
         public int itemId;
 
         public int itemTemplateId = -1;
