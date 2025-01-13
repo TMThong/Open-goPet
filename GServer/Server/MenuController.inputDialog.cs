@@ -744,7 +744,13 @@ public partial class MenuController
                         }
                         if (dialogInputId == INPUT_ASSIGNED_CHANGE_NAME_KIOSK)
                         {
+                            sbyte typeKiosk = player.controller.objectPerformed.get(MenuController.OBJKEY_TYPE_SHOW_KIOSK);
+                            Kiosk kiosk = MarketPlace.getKiosk(typeKiosk);
+                            SellItem sellItem = kiosk.getItemByUserId(player.user.user_id);
+                            if (sellItem != null && sellItem.AssignedName != null)
+                            {
 
+                            }
                             return;
                         }
                         if (player.controller.objectPerformed.ContainsKey(OBJKEY_PRICE_KIOSK_ITEM))
