@@ -2706,6 +2706,13 @@ public partial class MenuController
                             pet.petIdTemplate = petReincarnation.PetIdReincarnation;
                             pet.skill = new int[0][];
                             pet.lvl = 1;
+                            pet.exp = 0;
+                            pet.pointTiemNangLvl = pet.Template.gymUpLevel;
+                            pet.tiemnang_point = 0;
+                            pet.str = pet.Template.str;
+                            pet.agi = pet.Template.agi;
+                            pet._int = pet.Template._int;
+                            Array.Fill(pet.tiemnang, 0);
                             int maxTatto = Utilities.nextInt(0, 3);
                             while (maxTatto <= pet.tatto.Count && pet.tatto.Count != 0)
                             {

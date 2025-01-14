@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+		<ProduceReferenceAssemblyInOutDir>true</ProduceReferenceAssemblyInOutDir>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Xamarin.Forms" Version="5.0.0.2196" />
+		<PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="IKVM.OpenJDK.Core">
+	    <HintPath>D:\Tools\ikvm-7.2.4630.5\bin\IKVM.OpenJDK.Core.dll</HintPath>
+	  </Reference>
+	  <Reference Include="IKVM.OpenJDK.Text">
+	    <HintPath>D:\Tools\ikvm-7.2.4630.5\bin\IKVM.OpenJDK.Text.dll</HintPath>
+	  </Reference>
+	  <Reference Include="IKVM.OpenJDK.Util">
+	    <HintPath>D:\Tools\ikvm-7.2.4630.5\bin\IKVM.OpenJDK.Util.dll</HintPath>
+	  </Reference>
+	  <Reference Include="IKVM.Runtime">
+	    <HintPath>D:\Tools\ikvm-7.2.4630.5\bin\IKVM.Runtime.dll</HintPath>
+	  </Reference>
+	  <Reference Include="IKVM.Runtime.JNI">
+	    <HintPath>D:\Tools\ikvm-7.2.4630.5\bin\IKVM.Runtime.JNI.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+</Project>
