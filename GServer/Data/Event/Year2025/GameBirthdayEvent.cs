@@ -49,6 +49,25 @@ namespace Gopet.Data.Event.Year2025
                 {
                     mapTemplate.npc = mapTemplate.npc.Concat(new int[] { NPC_BIRTHDAY_CAKE }).ToArray();
                 }
+                foreach (var item1 in GopetManager.shopTemplate[MenuController.SHOP_GIAN_THUONG].getShopTemplateItems())
+                {
+                    ShopTemplateItem shopTemplateItem = item1.Clone();
+                    for (global::System.Int32 i = 0; i < shopTemplateItem.moneyType.Length; i++)
+                    {
+                        switch (shopTemplateItem.moneyType[i])
+                        {
+                            case GopetManager.MONEY_TYPE_FLOWER_COIN:
+                                shopTemplateItem.moneyType[i] = GopetManager.MONEY_TYPE_CYLINDRIAL_COIN;
+                                break;
+                            case GopetManager.MONEY_TYPE_FLOWER_GOLD:
+                                shopTemplateItem.moneyType[i] = GopetManager.MONEY_TYPE_SQUARE_COIN;
+                                break;
+                            default:
+                                throw new UnsupportedOperationException();
+                        }
+                    }
+                    GopetManager.shopTemplate[MenuController.SHOP_BIRTHDAY_EVENT].shopTemplateItems.Add(shopTemplateItem);
+                }
             }
         }
 

@@ -916,6 +916,10 @@ public partial class MenuController
                 str += " điểm hoa vàng"; break;
             case GopetManager.MONEY_TYPE_FLOWER_COIN:
                 str += " điểm hoa ngọc"; break;
+            case GopetManager.MONEY_TYPE_CYLINDRIAL_COIN:
+                str += " điểm bánh tét"; break;
+            case GopetManager.MONEY_TYPE_SQUARE_COIN:
+                str += " điểm bánh chưng"; break;
         }
         return str;
     }
@@ -971,6 +975,10 @@ public partial class MenuController
                 return player.playerData.FlowerGold >= value;
             case GopetManager.MONEY_TYPE_FLOWER_COIN:
                 return player.playerData.FlowerCoin >= value;
+            case GopetManager.MONEY_TYPE_CYLINDRIAL_COIN:
+                return player.playerData.NumEatCylindricalStickyRiceCoin >= value;
+            case GopetManager.MONEY_TYPE_SQUARE_COIN:
+                return player.playerData.NumEatSquareStickyRiceCoin >= value;
         }
         return false;
     }
@@ -1008,6 +1016,12 @@ public partial class MenuController
                 break;
             case GopetManager.MONEY_TYPE_FLOWER_COIN:
                 player.playerData.FlowerCoin += (int)value;
+                break;
+            case GopetManager.MONEY_TYPE_CYLINDRIAL_COIN:
+                player.playerData.NumEatCylindricalStickyRiceCoin += (int)value;
+                break;
+            case GopetManager.MONEY_TYPE_SQUARE_COIN:
+                player.playerData.NumEatSquareStickyRiceCoin += (int)value;
                 break;
         }
     }
@@ -1274,7 +1288,7 @@ public partial class MenuController
 
     public static void SellKioskItem(Player player, int priceItem, string nameAssigned = null)
     {
-        
+
         if (player.controller.objectPerformed.ContainsKey(OBJKEY_SELECT_SELL_ITEM) && player.controller.objectPerformed.ContainsKey(OBJKEY_MENU_OF_KIOSK))
         {
             int menuKioskId = (int)player.controller.objectPerformed.get(OBJKEY_MENU_OF_KIOSK);

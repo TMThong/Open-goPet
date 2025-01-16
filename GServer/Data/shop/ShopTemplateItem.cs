@@ -293,4 +293,31 @@ public class ShopTemplateItem
     {
         this.isSpceial = v;
     }
+
+
+    public ShopTemplateItem Clone()
+    {
+        ShopTemplateItem item = new ShopTemplateItem();
+        item.shopId = shopId;
+        item.itemTemTempleId = itemTemTempleId;
+        item.count = count;
+        item.moneyType = moneyType.ToArray();
+        item.price = price.ToArray();
+        item.isSpceial = isSpceial;
+        item.nameSpeceial = nameSpeceial;
+        item.descriptionSpeceial = descriptionSpeceial;
+        item.needRemove = needRemove;
+        item.spceialType = spceialType;
+        item.CloseScreenAfterClick = CloseScreenAfterClick;
+        item.clanLvl = clanLvl;
+        item.perCount = perCount;
+        item.hasId = hasId;
+        item.menuId = menuId;
+        item.petId = petId;
+        item.isSellItem = isSellItem;
+        item.isLock = isLock;
+        item.TimeNeedReset = TimeNeedReset;
+        item.NeedFund = NeedFund;
+        return item;
+    }
 }
