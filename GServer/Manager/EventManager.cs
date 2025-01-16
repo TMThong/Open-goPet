@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Gopet.Data.Event.Year2024;
 using Gopet.Data.Collections;
+using Gopet.Data.Event.Year2025;
 namespace Gopet.Manager
 {
     public class EventManager
@@ -20,8 +21,9 @@ namespace Gopet.Manager
             _events.Add(ArenaEvent.Instance);
             //_events.Add(Summer2024Event.Instance);
             _events.Add(BannerEvent.Instance);
-            _events.Add(Winter2024Event.Instance);
-            _events.Add(TeacherDay2024.Instance);
+            //_events.Add(Winter2024Event.Instance);
+            //_events.Add(TeacherDay2024.Instance);
+            _events.Add(GameBirthdayEvent.Instance);
         }
 
         public static void AddEvent(EventBase eventBase)

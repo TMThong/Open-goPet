@@ -1,4 +1,5 @@
 ﻿using Gopet.Data.Event.Year2024;
+using Gopet.Data.Event.Year2025;
 using Gopet.Data.GopetClan;
 using Gopet.Data.item;
 using Gopet.Data.top;
@@ -484,6 +485,13 @@ public partial class MenuController
                 break;
             case OP_HIẾN_TẶNG_THÚ_CƯNG:
                 sendMenu(MENU_PET_SACRIFICE, player);
+                break;
+            case OP_GUIDE_EVENT_GAME_BIRTHDAY:
+            case OP_TOP_USE_SQUARE_STICKY_RICE_CAKE:
+            case OP_TOP_USE_CYLINDRICAL_STICKY_RICE_CAKE:
+            case OP_MAKE_SQUARE_STICKY_RICE_CAKE:
+            case OP_MAKE_CYLINDRICAL_STICKY_RICE_CAKE:
+                GameBirthdayEvent.Instance.NpcOption(player, option);
                 break;
             default:
                 player.redDialog(player.Language.FeatureIsNotFound);

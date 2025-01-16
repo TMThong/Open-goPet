@@ -373,6 +373,26 @@ public partial class MenuController
     public const int OP_HƯỚNG_DẪN_LÊN_THIÊN_ĐÌNH = 88;
     public const int OP_HIẾN_TẶNG_THÚ_CƯNG = 89;
     /// <summary>
+    /// Làm bánh tét
+    /// </summary>
+    public const int OP_MAKE_CYLINDRICAL_STICKY_RICE_CAKE = 90;
+    /// <summary>
+    /// Làm bánh chưng
+    /// </summary>
+    public const int OP_MAKE_SQUARE_STICKY_RICE_CAKE = 91;
+    /// <summary>
+    /// Bảng xếp hạng nhai bánh tét
+    /// </summary>
+    public const int OP_TOP_USE_CYLINDRICAL_STICKY_RICE_CAKE = 92;
+    /// <summary>
+    /// Bảng xếp hạng nhai bánh chưng
+    /// </summary>
+    public const int OP_TOP_USE_SQUARE_STICKY_RICE_CAKE = 93;
+    /// <summary>
+    /// Hướng dẫn sự kiện sinh nhật game
+    /// </summary>
+    public const int OP_GUIDE_EVENT_GAME_BIRTHDAY = 94;
+    /// <summary>
     /// Option Custom
     /// Trao đổi thưởng bằng 
     /// </summary>
