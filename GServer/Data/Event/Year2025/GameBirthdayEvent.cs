@@ -79,7 +79,7 @@ namespace Gopet.Data.Event.Year2025
             if (Condition)
             {
                 int point = Math.Max(player.playerData.NumEatSquareStickyRice, player.playerData.NumEatCylindricalStickyRice);
-                if (player.playerData.IndexMilistoneTeacherEvent < GiftMilistones.Length)
+                if (player.playerData.IndexMilistoneBirthdayEvent < GiftMilistones.Length)
                 {
                     for (int i = GiftMilistones.Length - 1; i >= 0; i--)
                     {
@@ -89,7 +89,7 @@ namespace Gopet.Data.Event.Year2025
                             Item item = new Item(milistone.Item2, milistone.Item3);
                             player.addItemToInventory(item);
                             player.okDialog(player.Language.GetMilistoneGiftTeacherEventOK, item.getName(player), i + 1);
-                            player.playerData.IndexMilistoneTeacherEvent = 100;
+                            player.playerData.IndexMilistoneBirthdayEvent = 100;
                             return;
                         }
                     }
@@ -128,6 +128,9 @@ namespace Gopet.Data.Event.Year2025
                         return;
                     case MenuController.OP_TOP_USE_SQUARE_STICKY_RICE_CAKE:
                         MenuController.showTop(TopUseSquareStickyRiceCake.Instance, player);
+                        return;
+                    case MenuController.OP_RECIVE_GIFT_MILISTONE_BIRTHDAY_EVNT:
+                        ReceiveMilistoneGift(player);
                         return;
                     default:
                         player.redDialog(Name + " không có option này");
