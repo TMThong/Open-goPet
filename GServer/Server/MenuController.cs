@@ -397,6 +397,10 @@ public partial class MenuController
     /// </summary>
     public const int OP_SHOW_SHOP_BIRTHDAY = 95;
     /// <summary>
+    /// Nhận quà mốc sinh nhật sự kiện
+    /// </summary>
+    public const int OP_RECIVE_GIFT_MILISTONE_BIRTHDAY_EVNT = 96;
+    /// <summary>
     /// Option Custom
     /// Trao đổi thưởng bằng 
     /// </summary>

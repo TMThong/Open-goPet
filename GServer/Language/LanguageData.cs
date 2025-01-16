@@ -526,6 +526,7 @@ namespace Gopet.Language
         public string InvalidFlowerMilestone { get; set; } = "Bạn đã nhận cột mốc rồi";
         public string EventHadFinished { get; set; } = "Sự kiện đã kết thúc rồi!";
         public string GetMilistoneGiftTeacherEventErorr { get; set; } = "Bạn hiện có {0} điểm và cột mốc cần {1} điểm. Lưu ý điểm {0} dựa trên số điểm sự kiện cao nhất giữa dâng ngọc tặng hoa và tặng vàng dâng hoa!!!";
+        public string GetMilistoneGiftBirthdayEventErorr { get; set; } = "Bạn hiện có {0} điểm và cột mốc cần {1} điểm. Lưu ý điểm {0} dựa trên số điểm sự kiện cao nhất giữa ăn bánh tét và bánh chưng!!!";
         public string GetMilistoneGiftTeacherEventOK { get; set; } = "Nhận quà mốc {1} thành công! Bạn nhận được {0}";
         public string GetMilistoneGiftTeacherEvent { get; set; } = "Nhận quà mốc";
         public string FusionEquip { get; set; } = "Dung hợp trang bị";

@@ -216,7 +216,12 @@ public class PlayerData
                             FlowerGold = @FlowerGold,
                             FlowerCoin = @FlowerCoin,
                             DailyNoelTime = @DailyNoelTime,
-                            DailyNoelIndex = @DailyNoelIndex
+                            DailyNoelIndex = @DailyNoelIndex,
+                            NumEatSquareStickyRice = @NumEatSquareStickyRice,
+                            NumEatSquareStickyRiceCoin = @NumEatSquareStickyRiceCoin,
+                            NumEatCylindricalStickyRice = @NumEatCylindricalStickyRice,
+                            NumEatCylindricalStickyRiceCoin = @NumEatCylindricalStickyRiceCoin,
+                            IndexMilistoneBirthdayEvent = @IndexMilistoneBirthdayEvent
                             WHERE ID = @ID", playerData);
     }
 

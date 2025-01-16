@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Gopet.Data.Event.Year2024;
+using Gopet.Data.GopetItem;
 using Gopet.Data.Map;
 using Gopet.Util;
 using System;
@@ -68,7 +69,35 @@ namespace Gopet.Data.Event.Year2025
                     }
                     GopetManager.shopTemplate[MenuController.SHOP_BIRTHDAY_EVENT].shopTemplateItems.Add(shopTemplateItem);
                 }
+                TopUseCylindricalStickyRiceCake.Instance.Update();
+                TopUseSquareStickyRiceCake.Instance.Update();
             }
+        }
+
+        public void ReceiveMilistoneGift(Player player)
+        {
+            if (Condition)
+            {
+                int point = Math.Max(player.playerData.NumEatSquareStickyRice, player.playerData.NumEatCylindricalStickyRice);
+                if (player.playerData.IndexMilistoneTeacherEvent < GiftMilistones.Length)
+                {
+                    for (int i = GiftMilistones.Length - 1; i >= 0; i--)
+                    {
+                        Tuple<int, int, int> milistone = GiftMilistones[i];
+                        if (point >= milistone.Item1)
+                        {
+                            Item item = new Item(milistone.Item2, milistone.Item3);
+                            player.addItemToInventory(item);
+                            player.okDialog(player.Language.GetMilistoneGiftTeacherEventOK, item.getName(player), i + 1);
+                            player.playerData.IndexMilistoneTeacherEvent = 100;
+                            return;
+                        }
+                    }
+                    player.redDialog(player.Language.GetMilistoneGiftBirthdayEventErorr, Utilities.FormatNumber(point), Utilities.FormatNumber(GiftMilistones.First().Item1));
+                }
+                else player.redDialog(player.Language.InvalidFlowerMilestone);
+            }
+            else player.redDialog(player.Language.EventHadFinished);
         }
 
 
@@ -101,6 +130,7 @@ namespace Gopet.Data.Event.Year2025
                         MenuController.showTop(TopUseSquareStickyRiceCake.Instance, player);
                         return;
                     default:
+                        player.redDialog(Name + " không có option này");
                         break;
                 }
             }
@@ -134,7 +164,7 @@ namespace Gopet.Data.Event.Year2025
                             topData.name = data.name;
                             topData.imgPath = data.avatarPath;
                             topData.title = topData.name;
-                            topData.desc = $"Hạng {index}. Bạn đang có {Utilities.FormatNumber(data.NumEatSquareStickyRice)} điểm bánh tét ^^.";
+                            topData.desc = $"Hạng {index}. Bạn đang có {Utilities.FormatNumber(data.NumEatCylindricalStickyRice)} điểm bánh tét.";
                             datas.Add(topData);
                             index++;
                         }
@@ -175,7 +205,7 @@ namespace Gopet.Data.Event.Year2025
                             topData.name = data.name;
                             topData.imgPath = data.avatarPath;
                             topData.title = topData.name;
-                            topData.desc = $"Hạng {index}. Bạn đang có {Utilities.FormatNumber(data.NumEatSquareStickyRice)} điểm bánh chưng ^^.";
+                            topData.desc = $"Hạng {index}. Bạn đang có {Utilities.FormatNumber(data.NumEatSquareStickyRice)} điểm bánh chưng.";
                             datas.Add(topData);
                             index++;
                         }
