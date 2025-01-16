@@ -65,6 +65,8 @@ namespace Gopet.Data.Event.Year2025
                 this.name = "Top ăn bánh tét";
                 this.desc = "Để chỉ số lần ăn bánh tét";
             }
+
+
         }
 
         protected class TopUseSquareStickyRiceCake : Top
