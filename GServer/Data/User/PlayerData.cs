@@ -82,6 +82,7 @@ public class PlayerData
     /// Trường này để ghi lại số lượng hoa tặng dùng vàng
     /// </summary>
     public int NumGiveFlowerGold { get; set; } = 0;
+   
     /// <summary>
     /// Trường thuộc sự kiện 20/11 2024
     /// Trường này để ghi lại số lượng hoa tặng dùng ngọc
@@ -92,11 +93,51 @@ public class PlayerData
     /// rường này để ghi lại chỉ mục của cột mốc quà sự kiện
     /// </summary>
     public byte IndexMilistoneTeacherEvent { get; set; } = 0;
-
+    /// <summary>
+    /// Trường thuộc sự kiện 20/11 2024
+    /// Để ghi lại điểm sự kiện
+    /// </summary>
     public int FlowerGold { get; set; } = -1;
+    /// <summary>
+    /// Trường thuộc sự kiện 20/11 2024
+    /// Để ghi lại điểm sự kiện
+    /// </summary>
     public int FlowerCoin { get; set; } = -1;
+    /// <summary>
+    /// Trường thuộc sự kiện Noel 2024
+    /// Để ghi lại thời gian ngày hôm nay đã nhận quà Noel chưa
+    /// </summary>
     public DateTime DailyNoelTime { get; set; } = DateTime.MinValue;
+    /// <summary>
+    /// Trường thuộc sự kiện Noel 2024
+    /// Để ghi lại chỉ mục của quà ngày Noel
+    /// </summary>
     public byte DailyNoelIndex { get; set; } = 0;
+    /// <summary>
+    /// Trường thuộc sự kiện sinh nhật trò chơi
+    /// Để ghi tổng số lần ăn bánh chưng
+    /// </summary>
+    public int NumEatSquareStickyRice { get; set; } = 0;
+    /// <summary>
+    /// Trường thuộc sự kiện sinh nhật trò chơi
+    /// Để ghi số điểm nhận được từ việc ăn bánh chưng
+    /// </summary>
+    public int NumEatSquareStickyRiceCoin { get; set; } = 0;
+    /// <summary>
+    /// Trường thuộc sự kiện sinh nhật trò chơi
+    /// Để ghi tổng số lần ăn bánh tét
+    /// </summary>
+    public int NumEatCylindricalStickyRice { get; set; } = 0;
+    /// <summary>
+    /// Trường thuộc sự kiện sinh nhật trò chơi
+    /// Để ghi số điểm nhận được từ việc ăn bánh tét
+    /// </summary>
+    public int NumEatCylindricalStickyRiceCoin { get; set; } = 0;
+    /// <summary>
+    /// Trường thuộc sự kiện sinh nhật trò chơi
+    /// Để ghi chỉ mục của cột mốc quà sự kiện
+    /// </summary>
+    public sbyte IndexMilistoneBirthdayEvent { get; set; } = -1;
     public PlayerData()
     {
         x = 24 * 4;
