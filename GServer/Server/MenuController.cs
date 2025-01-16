@@ -393,6 +393,10 @@ public partial class MenuController
     /// </summary>
     public const int OP_GUIDE_EVENT_GAME_BIRTHDAY = 94;
     /// <summary>
+    /// Hiển thị đổi quà cửa hàng sinh nhật
+    /// </summary>
+    public const int OP_SHOW_SHOP_BIRTHDAY = 95;
+    /// <summary>
     /// Option Custom
     /// Trao đổi thưởng bằng 
     /// </summary>
@@ -427,6 +431,10 @@ public partial class MenuController
     public const sbyte SHOP_CLAN = 10;
     public const sbyte SHOP_ENERGY = 11;
     public const sbyte SHOP_GIAN_THUONG = 12;
+    /// <summary>
+    /// Cửa hàng vật phẩm sự kiện sinh nhật trò chơi
+    /// </summary>
+    public const sbyte SHOP_BIRTHDAY_EVENT = 13;
 
     public const int OBJKEY_REMOVE_ITEM_EQUIP = 0;
     public const int OBJKEY_KIOSK_ITEM = 1;
