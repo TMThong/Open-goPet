@@ -48,6 +48,8 @@ public class ShopTemplate  {
                 return player.Language.SHOP_ENERGY;
             case MenuController.SHOP_GIAN_THUONG:
                 return player.Language.SHOP_GIAN_THUONG;
+            case MenuController.SHOP_BIRTHDAY_EVENT:
+                return player.Language.SHOP_BIRTHDAY_EVENT;
             default:
                 return "Error shop type " + type;
         }

@@ -486,6 +486,7 @@ public partial class MenuController
             case OP_HIẾN_TẶNG_THÚ_CƯNG:
                 sendMenu(MENU_PET_SACRIFICE, player);
                 break;
+            case OP_SHOW_SHOP_BIRTHDAY:
             case OP_GUIDE_EVENT_GAME_BIRTHDAY:
             case OP_TOP_USE_SQUARE_STICKY_RICE_CAKE:
             case OP_TOP_USE_CYLINDRICAL_STICKY_RICE_CAKE:

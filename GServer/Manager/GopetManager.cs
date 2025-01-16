@@ -470,18 +470,53 @@ public class GopetManager
     /// Lúa
     /// </summary>
     public const sbyte MONEY_TYPE_LUA = 8;
+    /// <summary>
+    /// Hoa vàng
+    /// </summary>
     public const sbyte MONEY_TYPE_FLOWER_GOLD = 9;
+    /// <summary>
+    /// Hoa bạc
+    /// </summary>
     public const sbyte MONEY_TYPE_FLOWER_COIN = 10;
+    /// <summary>
+    /// Bánh chưng
+    /// </summary>
+    public const sbyte MONEY_TYPE_SQUARE_COIN = 11;
+    /// <summary>
+    /// Bánh tét
+    /// </summary>
+    public const sbyte MONEY_TYPE_CYLINDRIAL_COIN = 12;
     public const int DAILY_STAR = 20;
     public const int STAR_JOIN_CHALLENGE = 2;
     public const int ITEM_OP_HP = 7;
     public const int ITEM_OP_MP = 8;
+    /// <summary>
+    /// Đường dẫn ảnh rỗng
+    /// </summary>
     public const string EMPTY_IMG_PATH = "dialog/empty.png";
+    /// <summary>
+    /// Ki ốt nón
+    /// </summary>
     public const sbyte KIOSK_HAT = 0;
+    /// <summary>
+    /// Ki ốt vũ khí
+    /// </summary>
     public const sbyte KIOSK_WEAPON = 1;
+    /// <summary>
+    /// Ki ốt giáp
+    /// </summary>
     public const sbyte KIOSK_AMOUR = 2;
+    /// <summary>
+    /// Ki ốt ngọc
+    /// </summary>
     public const sbyte KIOSK_GEM = 3;
+    /// <summary>
+    /// Ki ốt thú cưng
+    /// </summary>
     public const sbyte KIOSK_PET = 4;
+    /// <summary>
+    /// Ki ốt khác
+    /// </summary>
     public const sbyte KIOSK_OTHER = 5;
     public const int HOUR_UPLOAD_ITEM = 24;
     public const int DEBUFF_NONONSKY = 100;
@@ -491,7 +526,13 @@ public class GopetManager
     public const int TYPE_SELECT_ITEM_UP_TIER = 123;
     public const long CHANGE_CHANNEL_DELAY = 30000;
     public static readonly int[] ENCHANT_INFO = new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 20 };
+    /// <summary>
+    /// Tỉ lệ cường hoá
+    /// </summary>
     public static readonly float[] PERCENT_ENCHANT = new float[] { 90f, 80f, 70f, 60f, 50f, 30f, 20f, 5f, -10f, -20f };
+    /// <summary>
+    /// Tỉ lệ cường hoá hiển thị
+    /// </summary>
     public static readonly float[] DISPLAY_PERCENT_ENCHANT = new float[] { 90f, 80f, 70f, 60f, 50f, 30f, 20f, 15f, 10f, 5f };
     public static readonly float[] PERCENT_UP_SKILL = new float[] { 90, 80, 60, 50, 40, 30, 10, 5, 2, 0, 0 };
     public static float[] PERCENT_UP_SKILL_SKY = new float[] { };
@@ -788,6 +829,7 @@ public class GopetManager
         shopTemplate.put(MenuController.SHOP_CLAN, new ShopTemplate(MenuController.SHOP_CLAN));
         shopTemplate.put(MenuController.SHOP_ENERGY, new ShopTemplate(MenuController.SHOP_ENERGY));
         shopTemplate.put(MenuController.SHOP_GIAN_THUONG, new ShopTemplate(MenuController.SHOP_GIAN_THUONG));
+        shopTemplate.put(MenuController.SHOP_BIRTHDAY_EVENT, new ShopTemplate(MenuController.SHOP_BIRTHDAY_EVENT));
     }
 
     public static void readMobLvl(String cmd, HashMap<int, MobLvInfo> hashMap)

@@ -1,5 +1,7 @@
-﻿using Gopet.Data.Event.Year2024;
+﻿using Dapper;
+using Gopet.Data.Event.Year2024;
 using Gopet.Data.Map;
+using Gopet.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,20 @@ namespace Gopet.Data.Event.Year2025
         public static readonly GameBirthdayEvent Instance = new GameBirthdayEvent();
 
         public const int NPC_BIRTHDAY_CAKE = -41;
+
+        public static readonly Tuple<long, int>[] Data = new Tuple<long, int>[]
+        {
+            new Tuple<long, int>(500, 30),
+            new Tuple<long, int>(20000, 30)
+        };
+
+        public static readonly Tuple<int, int, int>[] GiftMilistones = new Tuple<int, int, int>[]
+        {
+            new Tuple<int, int,int>(5000, 134,2),
+            new Tuple<int, int,int>(10000, 140,2),
+            new Tuple<int, int,int>(50000, 141,2),
+            new Tuple<int, int,int>(100000, 142,2),
+        };
 
         protected GameBirthdayEvent()
         {
@@ -54,7 +70,20 @@ namespace Gopet.Data.Event.Year2025
         {
             if (this.CheckEventStatus(player))
             {
-
+                switch (optionId)
+                {
+                    case MenuController.OP_SHOW_SHOP_BIRTHDAY:
+                        MenuController.showShop(MenuController.SHOP_BIRTHDAY_EVENT, player);
+                        return;
+                    case MenuController.OP_TOP_USE_CYLINDRICAL_STICKY_RICE_CAKE:
+                        MenuController.showTop(TopUseCylindricalStickyRiceCake.Instance, player);
+                        return;
+                    case MenuController.OP_TOP_USE_SQUARE_STICKY_RICE_CAKE:
+                        MenuController.showTop(TopUseSquareStickyRiceCake.Instance, player);
+                        return;
+                    default:
+                        break;
+                }
             }
         }
 
@@ -67,7 +96,36 @@ namespace Gopet.Data.Event.Year2025
                 this.desc = "Để chỉ số lần ăn bánh tét";
             }
 
-
+            public override void Update()
+            {
+                try
+                {
+                    lastDatas.Clear();
+                    lastDatas.AddRange(datas);
+                    datas.Clear();
+                    using (var conn = MYSQLManager.create())
+                    {
+                        var topDataDynamic = conn.Query("SELECT user_id, name,avatarPath,NumEatCylindricalStickyRice  FROM `player` WHERE  isAdmin = 0 ORDER BY `player`.`NumEatCylindricalStickyRice` DESC LIMIT 50");
+                        int index = 1;
+                        foreach
+                            (dynamic data in topDataDynamic)
+                        {
+                            TopData topData = new TopData();
+                            topData.id = data.user_id;
+                            topData.name = data.name;
+                            topData.imgPath = data.avatarPath;
+                            topData.title = topData.name;
+                            topData.desc = $"Hạng {index}. Bạn đang có {Utilities.FormatNumber(data.NumEatSquareStickyRice)} điểm bánh tét ^^.";
+                            datas.Add(topData);
+                            index++;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
         }
 
         protected class TopUseSquareStickyRiceCake : Top
@@ -77,6 +135,37 @@ namespace Gopet.Data.Event.Year2025
             {
                 this.name = "Top ăn bánh chưng";
                 this.desc = "Để chỉ số lần ăn bánh chưng";
+            }
+
+            public override void Update()
+            {
+                try
+                {
+                    lastDatas.Clear();
+                    lastDatas.AddRange(datas);
+                    datas.Clear();
+                    using (var conn = MYSQLManager.create())
+                    {
+                        var topDataDynamic = conn.Query("SELECT user_id, name,avatarPath,NumEatSquareStickyRice  FROM `player` WHERE  isAdmin = 0 ORDER BY `player`.`NumEatSquareStickyRice` DESC LIMIT 50");
+                        int index = 1;
+                        foreach
+                            (dynamic data in topDataDynamic)
+                        {
+                            TopData topData = new TopData();
+                            topData.id = data.user_id;
+                            topData.name = data.name;
+                            topData.imgPath = data.avatarPath;
+                            topData.title = topData.name;
+                            topData.desc = $"Hạng {index}. Bạn đang có {Utilities.FormatNumber(data.NumEatSquareStickyRice)} điểm bánh chưng ^^.";
+                            datas.Add(topData);
+                            index++;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
     }
