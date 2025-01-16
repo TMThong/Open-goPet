@@ -13,14 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestExpression", "..\TestEx
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDNgoPet", "..\CDNgoPet\CDNgoPet.csproj", "{C9DB0058-5F8E-4E7E-BBAA-1BCCE750A623}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NativeClient.UWP", "..\NativeClient\NativeClient.UWP\NativeClient.UWP.csproj", "{CA0BA6C2-2318-4B2B-9696-15735B4BD218}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NativeClient.Android", "..\NativeClient\NativeClient.Android\NativeClient.Android.csproj", "{6C3F460B-4AC5-44C0-BB2C-0C0EB7BB31B9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NativeClient.iOS", "..\NativeClient\NativeClient.iOS\NativeClient.iOS.csproj", "{057A49B6-6163-40C6-8CA0-1EF22BBD89FB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NativeClient", "..\NativeClient\NativeClient\NativeClient.csproj", "{850D79B5-E067-4030-BF0A-03087236AE87}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,26 +39,6 @@ Global
 		{C9DB0058-5F8E-4E7E-BBAA-1BCCE750A623}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9DB0058-5F8E-4E7E-BBAA-1BCCE750A623}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9DB0058-5F8E-4E7E-BBAA-1BCCE750A623}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CA0BA6C2-2318-4B2B-9696-15735B4BD218}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{CA0BA6C2-2318-4B2B-9696-15735B4BD218}.Debug|Any CPU.Build.0 = Debug|x64
-		{CA0BA6C2-2318-4B2B-9696-15735B4BD218}.Debug|Any CPU.Deploy.0 = Debug|x64
-		{CA0BA6C2-2318-4B2B-9696-15735B4BD218}.Release|Any CPU.ActiveCfg = Release|x64
-		{CA0BA6C2-2318-4B2B-9696-15735B4BD218}.Release|Any CPU.Build.0 = Release|x64
-		{CA0BA6C2-2318-4B2B-9696-15735B4BD218}.Release|Any CPU.Deploy.0 = Release|x64
-		{6C3F460B-4AC5-44C0-BB2C-0C0EB7BB31B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C3F460B-4AC5-44C0-BB2C-0C0EB7BB31B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6C3F460B-4AC5-44C0-BB2C-0C0EB7BB31B9}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{6C3F460B-4AC5-44C0-BB2C-0C0EB7BB31B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6C3F460B-4AC5-44C0-BB2C-0C0EB7BB31B9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6C3F460B-4AC5-44C0-BB2C-0C0EB7BB31B9}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{057A49B6-6163-40C6-8CA0-1EF22BBD89FB}.Debug|Any CPU.ActiveCfg = Debug|iPhoneSimulator
-		{057A49B6-6163-40C6-8CA0-1EF22BBD89FB}.Debug|Any CPU.Build.0 = Debug|iPhoneSimulator
-		{057A49B6-6163-40C6-8CA0-1EF22BBD89FB}.Release|Any CPU.ActiveCfg = Release|iPhoneSimulator
-		{057A49B6-6163-40C6-8CA0-1EF22BBD89FB}.Release|Any CPU.Build.0 = Release|iPhoneSimulator
-		{850D79B5-E067-4030-BF0A-03087236AE87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{850D79B5-E067-4030-BF0A-03087236AE87}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{850D79B5-E067-4030-BF0A-03087236AE87}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{850D79B5-E067-4030-BF0A-03087236AE87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

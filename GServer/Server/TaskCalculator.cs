@@ -341,7 +341,7 @@ public class TaskCalculator
                     case REQUEST_HIẾN_TẾ_THÚ_CƯNG:
                         {
                             int lvl = (int)dObjects[0];
-                            if (taskData.taskInfo[i][2] >= lvl)
+                            if (taskData.taskInfo[i][2] <= lvl)
                             {
                                 taskData.task[i]++;
                             }

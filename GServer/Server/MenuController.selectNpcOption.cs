@@ -483,6 +483,7 @@ public partial class MenuController
                 player.okDialog(player.Language.GuideToHeaven);
                 break;
             case OP_HIẾN_TẶNG_THÚ_CƯNG:
+                sendMenu(MENU_PET_SACRIFICE, player);
                 break;
             default:
                 player.redDialog(player.Language.FeatureIsNotFound);

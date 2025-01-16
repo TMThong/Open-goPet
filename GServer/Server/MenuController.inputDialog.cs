@@ -776,6 +776,30 @@ public partial class MenuController
                         objENtry.Key.buyRetail(objENtry.Value.itemId, player, count);
                     }
                     break;
+                case INPUT_DIALOG_SET_PET_SELECTED_INFo:
+                    {
+                        if (player.checkIsAdmin())
+                        {
+                            int lvl = reader.readInt(2);
+                            int gym = reader.readInt(0);
+                            int star = reader.readInt(1);
+                            if (star > 100)
+                            {
+                                player.redDialog("Lag máy chủ anh ơi, hãy tưởng tượng số sao mà cái máy render chắc nổ luôn quá");
+                                return;
+                            }
+                            if (player.playerData.petSelected == null)
+                            {
+                                player.petNotFollow();
+                                return;
+                            }
+                            player.playerData.petSelected.lvl = lvl;
+                            player.playerData.petSelected.tiemnang_point = gym;
+                            player.playerData.petSelected.star = star;
+                            player.okDialog("Set pet cấp {0} có {1} gym và {2} (sao) thành công", lvl, gym, star);
+                        }
+                    }
+                    break;
             }
         }
         catch (FormatException ex)
