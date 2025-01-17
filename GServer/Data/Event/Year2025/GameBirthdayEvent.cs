@@ -45,8 +45,8 @@ namespace Gopet.Data.Event.Year2025
         /// </summary>
         public static readonly Tuple<long, int>[] Data = new Tuple<long, int>[]
         {
-            new Tuple<long, int>(500, 30),
-            new Tuple<long, int>(20000, 30)
+            new Tuple<long, int>(500, 15),
+            new Tuple<long, int>(20000, 15)
         };
         /// <summary>
         /// Mốc quà sự kiện
@@ -64,6 +64,8 @@ namespace Gopet.Data.Event.Year2025
         }
 
         public override bool Condition => true;
+
+        public override int[] ItemsOfEvent { get; set; } = new int[] { ID_SQUARE_CAKE, ID_CYLINDRIAL_CAKE, ID_PHRYNIUM, ID_GLUTINOUS };
 
 
         public override void Init()
@@ -146,7 +148,43 @@ namespace Gopet.Data.Event.Year2025
 
         public override void UseItem(int itemId, Player player)
         {
-
+            if (this.CheckEventStatus(player))
+            {
+                switch (itemId)
+                {
+                    case ID_CYLINDRIAL_CAKE:
+                    case ID_SQUARE_CAKE:
+                        UseCake(itemId, player);
+                        break;
+                    default:
+                        player.redDialog(player.Language.ThisEventItemIsMaterial);
+                        break;
+                }
+            }
+        }
+        void UseCake(int itemId, Player player)
+        {
+            Item item = player.controller.selectItemsbytemp(itemId, GopetManager.NORMAL_INVENTORY);
+            if (item != null)
+            {
+                switch (item.itemTemplateId)
+                {
+                    case ID_SQUARE_CAKE:
+                        player.playerData.NumEatSquareStickyRice+=10;
+                        player.playerData.NumEatSquareStickyRiceCoin+=10;
+                        player.controller.subCountItem(item, 1, GopetManager.NORMAL_INVENTORY);
+                        player.okDialog(player.Language.EatSquareStickyRiceOK);
+                        break;
+                    case ID_CYLINDRIAL_CAKE:
+                        player.playerData.NumEatCylindricalStickyRice += 10;
+                        player.playerData.NumEatCylindricalStickyRiceCoin += 10;
+                        player.controller.subCountItem(item, 1, GopetManager.NORMAL_INVENTORY);
+                        player.okDialog(player.Language.EatCylindricalStickyRiceOK);
+                        break;
+                    default:
+                        throw new UnsupportedOperationException();
+                }
+            }
         }
 
         public override void Update()
@@ -154,26 +192,31 @@ namespace Gopet.Data.Event.Year2025
 
         }
 
-        void MakeCake(byte Type, Player player)
+        void MakeCake(sbyte Type, Player player)
         {
             if (Type >= 0 && Type < Data.Length)
             {
                 Tuple<long, int> data = Data[Type];
-                Item itemGlutinous = player.controller.selectItemsbytemp(ID_GLUTINOUS, GopetManager.NORMAL_INVENTORY);
-                Item itemPhrynium = player.controller.selectItemsbytemp(ID_PHRYNIUM, GopetManager.NORMAL_INVENTORY);
-                if (itemGlutinous != null && itemPhrynium != null)
+                if (MenuController.checkMoney(Type, data.Item2, player))
                 {
-                    if (GameController.checkCount(itemGlutinous, data.Item2) && GameController.checkCount(itemPhrynium, data.Item2))
+                    Item itemGlutinous = player.controller.selectItemsbytemp(ID_GLUTINOUS, GopetManager.NORMAL_INVENTORY);
+                    Item itemPhrynium = player.controller.selectItemsbytemp(ID_PHRYNIUM, GopetManager.NORMAL_INVENTORY);
+                    if (itemGlutinous != null && itemPhrynium != null)
                     {
-                        player.controller.subCountItem(itemGlutinous, data.Item2, GopetManager.NORMAL_INVENTORY);
-                        player.controller.subCountItem(itemPhrynium, data.Item2, GopetManager.NORMAL_INVENTORY);
-                        Item item = new Item(Type == 0 ? ID_SQUARE_CAKE : ID_CYLINDRIAL_CAKE, 1);
-                        player.addItemToInventory(item);
-                        player.okDialog(player.Language.MakeCakeOK);
+                        if (GameController.checkCount(itemGlutinous, data.Item2) && GameController.checkCount(itemPhrynium, data.Item2))
+                        {
+                            MenuController.addMoney(Type, -data.Item1, player);
+                            player.controller.subCountItem(itemGlutinous, data.Item2, GopetManager.NORMAL_INVENTORY);
+                            player.controller.subCountItem(itemPhrynium, data.Item2, GopetManager.NORMAL_INVENTORY);
+                            Item item = new Item(Type == 0 ? ID_SQUARE_CAKE : ID_CYLINDRIAL_CAKE, 1);
+                            player.addItemToInventory(item);
+                            player.okDialog(player.Language.MakeCakeOK);
+                        }
+                        else player.redDialog(player.Language.NotEnoughMaterial);
                     }
-                    else player.redDialog(player.Language.NotEnoughMaterial);
+                    else player.redDialog(player.Language.MakeCakeErorr);
                 }
-                else player.redDialog(player.Language.MakeCakeErorr);
+                else MenuController.NotEngouhMoney(Type, data.Item2, player);
             }
         }
 
