@@ -638,6 +638,7 @@ public partial class MenuController
                     }
                 }
                 break;
+            case SHOP_BIRTHDAY_EVENT:
             case SHOP_GIAN_THUONG:
             case SHOP_ENERGY:
             case SHOP_CLAN:
