@@ -5,7 +5,7 @@ public class RuntimeServer
 {
 
     public JArrayList<IRuntime> runtimes = new();
-    public static int MINUTE = 1000 * 60;
+    public static int TIME_WAIT = 5000;
     public static bool isRunning = true;
     public static RuntimeServer instance = new RuntimeServer();
     public Thread MyThread;
@@ -49,6 +49,6 @@ public class RuntimeServer
                 e.printStackTrace();
             }
         }
-        Thread.Sleep(MINUTE);
+        Thread.Sleep(TIME_WAIT);
     }
 }

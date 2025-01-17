@@ -57,10 +57,7 @@ namespace Gopet.Server
             return base.GetHashCode();
         }
 
-        public override void login(string username, string password, string version)
-        {
-             
-        }
+        
 
         public override void loginFailed(string text)
         {

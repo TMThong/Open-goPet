@@ -10,6 +10,21 @@ namespace Gopet.Data.GopetItem
         public int[] lvlRange;
         public int count;
 
+        public DropItem()
+        {
+             
+        }
+
+        public DropItem(int mapId, int dropId, int itemTemplateId, float percent, int[] lvlRange, int count)
+        {
+            this.mapId = mapId;
+            this.dropId = dropId;
+            this.itemTemplateId = itemTemplateId;
+            this.percent = percent;
+            this.lvlRange = lvlRange;
+            this.count = count;
+        }
+
         public void setMapId(int mapId)
         {
             this.mapId = mapId;

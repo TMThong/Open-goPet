@@ -11,18 +11,46 @@ using System.Threading.Tasks;
 
 namespace Gopet.Data.Event.Year2025
 {
+    /// <summary>
+    /// Sự kiện sinh nhật
+    /// </summary>
     public class GameBirthdayEvent : EventBase
     {
+        /// <summary>
+        /// Sự kiện sinh nhật
+        /// </summary>
         public static readonly GameBirthdayEvent Instance = new GameBirthdayEvent();
-
+        /// <summary>
+        /// NPC bánh sinh nhật
+        /// </summary>
         public const int NPC_BIRTHDAY_CAKE = -41;
-
+        /// <summary>
+        /// ID bánh chưng
+        /// </summary>
+        public const int ID_SQUARE_CAKE = 240019;
+        /// <summary>
+        /// ID bánh tét
+        /// </summary>
+        public const int ID_CYLINDRIAL_CAKE = 240020;
+        /// <summary>
+        /// ID lá dong
+        /// </summary>
+        public const int ID_PHRYNIUM = 240022;
+        /// <summary>
+        /// ID gạo nếp
+        /// </summary>
+        public const int ID_GLUTINOUS = 240021;
+        /// <summary>
+        /// Dữ liệu làm bánh sự kiện
+        /// </summary>
         public static readonly Tuple<long, int>[] Data = new Tuple<long, int>[]
         {
             new Tuple<long, int>(500, 30),
             new Tuple<long, int>(20000, 30)
         };
-
+        /// <summary>
+        /// Mốc quà sự kiện
+        /// </summary>
         public static readonly Tuple<int, int, int>[] GiftMilistones = new Tuple<int, int, int>[]
         {
             new Tuple<int, int,int>(5000, 134,2),
@@ -30,7 +58,6 @@ namespace Gopet.Data.Event.Year2025
             new Tuple<int, int,int>(50000, 141,2),
             new Tuple<int, int,int>(100000, 142,2),
         };
-
         protected GameBirthdayEvent()
         {
             this.Name = "Sự kiện sinh nhật";
@@ -50,9 +77,9 @@ namespace Gopet.Data.Event.Year2025
                 {
                     mapTemplate.npc = mapTemplate.npc.Concat(new int[] { NPC_BIRTHDAY_CAKE }).ToArray();
                 }
-                foreach (var item1 in GopetManager.shopTemplate[MenuController.SHOP_GIAN_THUONG].getShopTemplateItems())
+                foreach (var shopItemTemp in GopetManager.shopTemplate[MenuController.SHOP_GIAN_THUONG].getShopTemplateItems())
                 {
-                    ShopTemplateItem shopTemplateItem = item1.Clone();
+                    ShopTemplateItem shopTemplateItem = shopItemTemp.Clone();
                     for (global::System.Int32 i = 0; i < shopTemplateItem.moneyType.Length; i++)
                     {
                         switch (shopTemplateItem.moneyType[i])
@@ -68,6 +95,22 @@ namespace Gopet.Data.Event.Year2025
                         }
                     }
                     GopetManager.shopTemplate[MenuController.SHOP_BIRTHDAY_EVENT].shopTemplateItems.Add(shopTemplateItem);
+                }
+                IDictionary<int, float> MapPercent = new Dictionary<int, float>();
+                MapPercent.Add(MapTemplate.LINH_LÂM, 50f);
+                MapPercent.Add(MapTemplate.ĐẠI_LINH_CẢNH, 40f);
+                MapPercent.Add(MapTemplate.LINH_MỘC, 30f);
+                MapPercent.Add(MapTemplate.ĐƯỜNG_LÊN_ĐỈNH_NÚI, 20f);
+                MapPercent.Add(MapTemplate.NÚI_PHỤC_QUANG, 10f);
+                foreach (var mapTemp in GopetManager.mapTemplate)
+                {
+                    float percent = 5f;
+                    if (MapPercent.ContainsKey(mapTemp.Key))
+                    {
+                        percent = MapPercent[mapTemp.Key];
+                    }
+                    GopetManager.dropItem[mapTemp.Key].Add(new DropItem(mapTemp.Key, -1, ID_GLUTINOUS, percent, new int[] { 0, 99 }, 1));
+                    GopetManager.dropItem[mapTemp.Key].Add(new DropItem(mapTemp.Key, -1, ID_PHRYNIUM, percent, new int[] { 0, 99 }, 1));
                 }
                 TopUseCylindricalStickyRiceCake.Instance.Update();
                 TopUseSquareStickyRiceCake.Instance.Update();
@@ -103,15 +146,35 @@ namespace Gopet.Data.Event.Year2025
 
         public override void UseItem(int itemId, Player player)
         {
-            if (this.CheckEventStatus(player))
-            {
 
-            }
         }
 
         public override void Update()
         {
 
+        }
+
+        void MakeCake(byte Type, Player player)
+        {
+            if (Type >= 0 && Type < Data.Length)
+            {
+                Tuple<long, int> data = Data[Type];
+                Item itemGlutinous = player.controller.selectItemsbytemp(ID_GLUTINOUS, GopetManager.NORMAL_INVENTORY);
+                Item itemPhrynium = player.controller.selectItemsbytemp(ID_PHRYNIUM, GopetManager.NORMAL_INVENTORY);
+                if (itemGlutinous != null && itemPhrynium != null)
+                {
+                    if (GameController.checkCount(itemGlutinous, data.Item2) && GameController.checkCount(itemPhrynium, data.Item2))
+                    {
+                        player.controller.subCountItem(itemGlutinous, data.Item2, GopetManager.NORMAL_INVENTORY);
+                        player.controller.subCountItem(itemPhrynium, data.Item2, GopetManager.NORMAL_INVENTORY);
+                        Item item = new Item(Type == 0 ? ID_SQUARE_CAKE : ID_CYLINDRIAL_CAKE, 1);
+                        player.addItemToInventory(item);
+                        player.okDialog(player.Language.MakeCakeOK);
+                    }
+                    else player.redDialog(player.Language.NotEnoughMaterial);
+                }
+                else player.redDialog(player.Language.MakeCakeErorr);
+            }
         }
 
         public override void NpcOption(Player player, int optionId)
@@ -131,6 +194,12 @@ namespace Gopet.Data.Event.Year2025
                         return;
                     case MenuController.OP_RECIVE_GIFT_MILISTONE_BIRTHDAY_EVNT:
                         ReceiveMilistoneGift(player);
+                        return;
+                    case MenuController.OP_MAKE_SQUARE_STICKY_RICE_CAKE:
+                        MakeCake(0, player);
+                        return;
+                    case MenuController.OP_MAKE_CYLINDRICAL_STICKY_RICE_CAKE:
+                        MakeCake(1, player);
                         return;
                     default:
                         player.redDialog(Name + " không có option này");

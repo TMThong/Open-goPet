@@ -382,11 +382,21 @@ Thread.Sleep(1000);
         controller.showInputDialog(MenuController.INPUT_OTP_2FA, Language.TwoFALoginTitle, " OTP: ");
     }
 
-    public virtual void login(String username, String password, String version)
+    public virtual void login(String username, String password, String version, bool SkipIpv4Check = false)
     {
         if (this.user != null)
         {
             return;
+        }
+        IPEndPoint iPEndPoint = (IPEndPoint)this.session.CSocket.RemoteEndPoint;
+        if (!SkipIpv4Check)
+        {
+            
+            if (PlayerManager.Ipv4Tracker.IsLimited(iPEndPoint.Address.ToString()))
+            {
+                redDialog(Language.Ipv4Limited);
+                return;
+            }
         }
         username = username.Trim();
         password = password.Trim();
@@ -401,6 +411,7 @@ Thread.Sleep(1000);
             redDialog(Language.HaveSpecialChar);
             return;
         }
+        PlayerManager.Ipv4Tracker.Add(iPEndPoint.Address.ToString());
         using (MySqlConnection conn = MYSQLManager.createWebMySqlConnection())
         {
             try

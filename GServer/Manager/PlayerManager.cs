@@ -19,6 +19,8 @@ public class PlayerManager
     public static ConcurrentHashMap<int, long> waitLogin = new ConcurrentHashMap<int, long>();
     private static ConcurrentDictionary<string, Tuple<int, DateTime>> WaitLogin = new ConcurrentDictionary<string, Tuple<int, DateTime>>();
 
+    public static readonly TimeTracker<string> Ipv4Tracker = new TimeTracker<string>(TimeSpan.FromMinutes(2), 10);
+
     public static Player get(String ID)
     {
         return player_name.get(ID);

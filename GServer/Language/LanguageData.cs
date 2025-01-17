@@ -572,5 +572,8 @@ namespace Gopet.Language
         public string REQUEST_KILL_ELITE_BOSS { get; set; } = "Tiêu diệt boss tinh anh {0}/{1}";
         public string NotEnoughItemToBuy { get; set; } = "Số lượng vật phẩm bạn nhập lớn hơn vật phẩm trên sạp";
         public string SHOP_BIRTHDAY_EVENT { get; set; } = "Cửa hàng sinh nhật";
+        public string MakeCakeErorr { get; set; } = "Làm bánh thất bại do không đủ nguyên liệu vui lòng xem hướng dẫn để biết thêm chi tiết";
+        public string MakeCakeOK { get; set; } = "Làm bánh thành công";
+        public string Ipv4Limited { get; set; } = "Địa chỉ IP này đăng nhập nhập quá nhiều, vui lòng chờ xíu";
     }
 }

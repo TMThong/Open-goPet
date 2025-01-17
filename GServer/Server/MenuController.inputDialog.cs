@@ -705,7 +705,7 @@ public partial class MenuController
                                 string password = player.user.password;
                                 player.user = null;
                                 player.IsLogin2FAOK = true;
-                                player.login(username, password, string.Empty);
+                                player.login(username, password, string.Empty, true);
                             }
                             else
                             {
