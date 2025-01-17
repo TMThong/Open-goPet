@@ -170,8 +170,8 @@ namespace Gopet.Data.Event.Year2025
                 switch (item.itemTemplateId)
                 {
                     case ID_SQUARE_CAKE:
-                        player.playerData.NumEatSquareStickyRice+=10;
-                        player.playerData.NumEatSquareStickyRiceCoin+=10;
+                        player.playerData.NumEatSquareStickyRice += 10;
+                        player.playerData.NumEatSquareStickyRiceCoin += 10;
                         player.controller.subCountItem(item, 1, GopetManager.NORMAL_INVENTORY);
                         player.okDialog(player.Language.EatSquareStickyRiceOK);
                         break;
