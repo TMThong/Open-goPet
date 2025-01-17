@@ -578,5 +578,6 @@ namespace Gopet.Language
         public string ThisEventItemIsMaterial { get; set; } = "Vật phẩm này là nguyên liệu sự kiện";
         public string EatSquareStickyRiceOK { get; set; } = "Ăn bánh chưng muốn bể bụng :)";
         public string EatCylindricalStickyRiceOK { get; set; } = "Ăn bánh tét muốn bể bụng :)";
+        public string GuideEventGameBirthday { get; set; } = "Trong thời gian diễn ra sự kiện các map sẽ có tỉ lệ rớt ra lá dong và gạo nếp. Làm bánh tét cần 15 nếp + 15 lá dong + 20.0000 (ngoc). Làm bánh chưng cần 15 nếp + 15 lá dong + 500 (vang).Khi ăn bánh các bạn sẽ được điểm đổi quà";
     }
 }
