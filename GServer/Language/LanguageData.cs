@@ -575,5 +575,8 @@ namespace Gopet.Language
         public string MakeCakeErorr { get; set; } = "Làm bánh thất bại do không đủ nguyên liệu vui lòng xem hướng dẫn để biết thêm chi tiết";
         public string MakeCakeOK { get; set; } = "Làm bánh thành công";
         public string Ipv4Limited { get; set; } = "Địa chỉ IP này đăng nhập nhập quá nhiều, vui lòng chờ xíu";
+        public string ThisEventItemIsMaterial { get; set; } = "Vật phẩm này là nguyên liệu sự kiện";
+        public string EatSquareStickyRiceOK { get; set; } = "Ăn bánh chưng muốn bể bụng :)";
+        public string EatCylindricalStickyRiceOK { get; set; } = "Ăn bánh tét muốn bể bụng :)";
     }
 }
