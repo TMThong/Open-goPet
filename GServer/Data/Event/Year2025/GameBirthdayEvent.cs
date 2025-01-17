@@ -244,6 +244,9 @@ namespace Gopet.Data.Event.Year2025
                     case MenuController.OP_MAKE_CYLINDRICAL_STICKY_RICE_CAKE:
                         MakeCake(1, player);
                         return;
+                        case MenuController.OP_GUIDE_EVENT_GAME_BIRTHDAY:
+                        player.okDialog(player.Language.GuideEventGameBirthday);
+                        return;
                     default:
                         player.redDialog(Name + " không có option này");
                         break;
