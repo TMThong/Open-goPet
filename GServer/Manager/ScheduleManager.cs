@@ -29,6 +29,28 @@ namespace Gopet.Manager
 
             public DateTime NextExcute { get; set; } = DateTime.MinValue;
 
+            public ScheduleItem(int? hour, int? minute, bool isNeedRemove)
+            {
+                Hour = hour;
+                Minute = minute;
+                IsNeedRemove = isNeedRemove;
+            }
+
+            public ScheduleItem(int? hour, int? minute)
+            {
+                Hour = hour;
+                Minute = minute;
+            }
+
+            public ScheduleItem(int? minute)
+            {
+                Minute = minute;
+            }
+
+            public ScheduleItem()
+            {
+            }
+
             public virtual void Execute()
             {
 
@@ -37,6 +59,12 @@ namespace Gopet.Manager
         protected ScheduleManager() : base("Quản lí hẹn")
         {
             TimeSleep = TimeSpan.FromMinutes(1);
+        }
+
+
+        public void AddScheduleItem(ScheduleItem item)
+        {
+            ScheduleItems.Add(item);
         }
 
         public override void Update()
@@ -57,6 +85,10 @@ namespace Gopet.Manager
                         next = next.AddMinutes(item.Minute.Value);
                     }
                     item.NextExcute = next;
+                }
+                if (item.IsNeedRemove)
+                {
+                    this.ScheduleItems.Remove(item);
                 }
             }
         }
