@@ -2,6 +2,7 @@
 using Gopet.Data.Event.Year2024;
 using Gopet.Data.GopetItem;
 using Gopet.Data.Map;
+using Gopet.Manager;
 using Gopet.Util;
 using System;
 using System.Collections.Generic;
@@ -333,6 +334,19 @@ namespace Gopet.Data.Event.Year2025
                 {
                     e.printStackTrace();
                 }
+            }
+        }
+
+        public class SummonBossSchedule : ScheduleManager.ScheduleItem
+        {
+            public SummonBossSchedule() : base()
+            {
+                this.Hour = 12;
+                this.Minute = 0;
+            }
+            public override void Execute()
+            {
+                 
             }
         }
     }
