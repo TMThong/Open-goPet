@@ -224,7 +224,6 @@ namespace Gopet.Data.Event.Year2025
                 else MenuController.NotEngouhMoney(Type, data.Item2, player);
             }
         }
-
         public override void NpcOption(Player player, int optionId)
         {
             if (this.CheckEventStatus(player))
@@ -258,7 +257,9 @@ namespace Gopet.Data.Event.Year2025
                 }
             }
         }
-
+        /// <summary>
+        /// Top ăn bánh tét
+        /// </summary>
         protected class TopUseCylindricalStickyRiceCake : Top
         {
             public static readonly TopUseCylindricalStickyRiceCake Instance = new TopUseCylindricalStickyRiceCake();
@@ -299,7 +300,9 @@ namespace Gopet.Data.Event.Year2025
                 }
             }
         }
-
+        /// <summary>
+        /// Top ăn bánh chưng
+        /// </summary>
         protected class TopUseSquareStickyRiceCake : Top
         {
             public static readonly TopUseSquareStickyRiceCake Instance = new TopUseSquareStickyRiceCake();
@@ -340,7 +343,9 @@ namespace Gopet.Data.Event.Year2025
                 }
             }
         }
-
+        /// <summary>
+        /// Lịch triệu hồi boss
+        /// </summary>
         public class SummonBossSchedule : ScheduleManager.ScheduleItem
         {
             public SummonBossSchedule()
