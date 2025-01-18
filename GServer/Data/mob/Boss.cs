@@ -61,7 +61,7 @@ namespace Gopet.Data.Mob
         public Boss(int bossTemplateId, MobLocation mobLocation)
         {
             bossTemplate = GopetManager.boss.get(bossTemplateId);
-            this.petIdTemplate = Template.petTemplateId;
+            this.petIdTemplate = bossTemplate.petTemplateId;
             this.setMobLocation(mobLocation);
             this.setMobLvInfo(new MobLvInfoImp(bossTemplate));
             initMob();

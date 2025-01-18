@@ -2,6 +2,7 @@
 using Gopet.Data.Event.Year2024;
 using Gopet.Data.GopetItem;
 using Gopet.Data.Map;
+using Gopet.Data.Mob;
 using Gopet.Manager;
 using Gopet.Util;
 using System;
@@ -41,6 +42,10 @@ namespace Gopet.Data.Event.Year2025
         /// ID gạo nếp
         /// </summary>
         public const int ID_GLUTINOUS = 240021;
+        /// <summary>
+        /// ID boss bánh sinh nhật
+        /// </summary>
+        public const int ID_BOSS_BIRTHDAY_CAKE = 23;
         /// <summary>
         /// Dữ liệu làm bánh sự kiện
         /// </summary>
@@ -82,8 +87,13 @@ namespace Gopet.Data.Event.Year2025
             {
                 for (global::System.Int32 i = 0; i < 25; i++)
                 {
-                    ScheduleManager.Instance.AddScheduleItem(new SummonBossSchedule(i));
+                    for (int j = 0; j < 61; j++)
+                    {
+                        ScheduleManager.Instance.AddScheduleItem(new SummonBossSchedule(i, j));
+                    }
+                    
                 }
+                ScheduleManager.Instance.ReleaseMutex();
                 BXHManager.listTop.Add(TopUseCylindricalStickyRiceCake.Instance);
                 BXHManager.listTop.Add(TopUseSquareStickyRiceCake.Instance);
                 MapTemplate mapTemplate = GopetManager.mapTemplate[MapTemplate.THÀNH_PHỐ_LINH_THÚ];
@@ -373,7 +383,27 @@ namespace Gopet.Data.Event.Year2025
 
             public override void Execute()
             {
-                 
+                DateTime dateTime = DateTime.Now.AddSeconds(3);
+                while (dateTime > DateTime.Now)
+                {
+                    var gopetMaps = MapManager.mapArr.Where(x => x.mapID != MapTemplate.ẢI && x.places.Any(m => ((GopetPlace)m).mobs.Any())).ToArray();
+                    var map = Utilities.RandomArray(gopetMaps);
+                    var place = (GopetPlace)Utilities.RandomArray(map.places);
+                    var mobs = place.mobs.Where(x => !x.HasBattle);
+                    if (!mobs.Any())
+                    {
+                        continue;
+                    }
+                    Mob.Mob mob = Utilities.RandomArray(mobs);
+                    place.mobs.remove(mob);
+                    Boss boss = new Boss(ID_BOSS_BIRTHDAY_CAKE, mob.getMobLocation());
+                    boss.isTimeOut = true;
+                    boss.TimeOut = DateTime.Now.AddMilliseconds(GopetManager.TIME_BOSS_DISPOINTED);
+                    place.addNewMob(boss);
+                    PlayerManager.showBannerZ(string.Format("Boss {0} của sự kiện sinh nhật đã xuất hiện tại {1} khu {2} nhanh tay nhé", mob.Template.name, place.map.mapTemplate.name, place.zoneID));
+                    GopetManager.ServerMonitor.LogWarning(string.Format("Boss {0} của sự kiện sinh nhật đã xuất hiện tại {1} khu {2} nhanh tay nhé", mob.Template.name, place.map.mapTemplate.name, place.zoneID));
+                    return;
+                }
             }
         }
     }
