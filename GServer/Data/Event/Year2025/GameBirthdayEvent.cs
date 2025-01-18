@@ -73,6 +73,10 @@ namespace Gopet.Data.Event.Year2025
         {
             if (this.Condition)
             {
+                for (global::System.Int32 i = 0; i < 25; i++)
+                {
+                    ScheduleManager.Instance.AddScheduleItem(new SummonBossSchedule(i));
+                }
                 BXHManager.listTop.Add(TopUseCylindricalStickyRiceCake.Instance);
                 BXHManager.listTop.Add(TopUseSquareStickyRiceCake.Instance);
                 MapTemplate mapTemplate = GopetManager.mapTemplate[MapTemplate.THÀNH_PHỐ_LINH_THÚ];
@@ -339,11 +343,22 @@ namespace Gopet.Data.Event.Year2025
 
         public class SummonBossSchedule : ScheduleManager.ScheduleItem
         {
-            public SummonBossSchedule() : base()
+            public SummonBossSchedule()
             {
-                this.Hour = 12;
-                this.Minute = 0;
             }
+
+            public SummonBossSchedule(int? minute) : base(minute)
+            {
+            }
+
+            public SummonBossSchedule(int? hour, int? minute) : base(hour, minute)
+            {
+            }
+
+            public SummonBossSchedule(int? hour, int? minute, bool isNeedRemove) : base(hour, minute, isNeedRemove)
+            {
+            }
+
             public override void Execute()
             {
                  
