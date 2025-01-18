@@ -38,6 +38,14 @@ namespace Gopet.Data.Mob
 
         public override void addHp(int damage, Player player)
         {
+            if (this.bossTemplate.typeBoss == BossTemplate.TYPE_BIRTHDAY_EVENT)
+            {
+                if (damage > 0)
+                {
+                    this.hp -= 1;
+                }
+                return;
+            }
             base.addHp(damage, player);
             if (damage < 0)
             {
