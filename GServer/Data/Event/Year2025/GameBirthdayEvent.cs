@@ -63,7 +63,7 @@ namespace Gopet.Data.Event.Year2025
             this.Name = "Sự kiện sinh nhật";
         }
 
-        public override bool Condition => true;
+        public override bool Condition => DateTime.Now < new DateTime(2025, 2, 18);
 
         public override int[] ItemsOfEvent { get; set; } = new int[] { ID_SQUARE_CAKE, ID_CYLINDRIAL_CAKE, ID_PHRYNIUM, ID_GLUTINOUS };
 
