@@ -7,22 +7,36 @@ using System.Text.RegularExpressions;
 
 namespace Gopet.Util
 {
+    /// <summary>
+    /// Class chứa các hàm tiện ích
+    /// </summary>
     public static class Utilities
     {
         private static readonly NumberFormatInfo viNumberFormat = new CultureInfo("vi").NumberFormat;
         private static readonly Random rand = new Random();
         private static readonly DateTimeFormat dateFormat = new DateTimeFormat("yyyy-MM-dd HH:mm:ss");
-
+        /// <summary>
+        /// Lấy thời gian hiện tại
+        /// </summary>
+        /// <returns></returns>
         public static DateTime GetCurrentDate()
         {
             return DateTime.Now;
         }
-
+        /// <summary>
+        /// Lấy thời gian hiện tại dưới dạng chuỗi
+        /// </summary>
+        /// <param name="dateString"></param>
+        /// <returns></returns>
         public static DateTime GetDate(string dateString)
         {
             return DateTime.Parse(dateString, dateFormat.FormatProvider);
         }
-
+        /// <summary>
+        /// Lấy thời gian hiện tại dưới dạng chuỗi
+        /// </summary>
+        /// <param name="miliSecondTime"></param>
+        /// <returns></returns>
         public static DateTime GetDate(long miliSecondTime)
         {
             // Chuyển đổi mili giây thành ticks (1 giây = 10^7 ticks)
@@ -34,7 +48,7 @@ namespace Gopet.Util
             // Trả về đối tượng DateTime
             return o;
         }
-
+         
         public static long TimeDay(int nDays)
         {
             return CurrentTimeMillis + (nDays * 86400000L);
@@ -71,7 +85,11 @@ namespace Gopet.Util
             dat = dat.AddDays(nDays);
             return dat;
         }
-
+        /// <summary>
+        /// Chuyển đổi thời gian thành chuỗi
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
         public static string ToDateString(DateTime date)
         {
             return date.ToString(dateFormat.FormatProvider);
@@ -97,7 +115,11 @@ namespace Gopet.Util
             dat = dat.AddSeconds(nSeconds);
             return dat;
         }
-
+        /// <summary>
+        /// Chuyển đổi thời gian thành chuỗi
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
         public static string GetFormatNumber(long num)
         {
             return num.ToString("N0", viNumberFormat);
