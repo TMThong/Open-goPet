@@ -74,7 +74,14 @@ namespace Gopet.Manager
                 DateTime now = DateTime.Now;
                 if ((!item.Hour.HasValue || (item.Hour.HasValue && item.Hour.Value == now.Hour)) && (!item.Minute.HasValue || (item.Minute.HasValue && item.Minute.Value == now.Minute)) && item.NextExcute < DateTime.Now.AddMilliseconds(100))
                 {
-                    item.Execute();
+                    try
+                    {
+                        item.Execute();
+                    }
+                    catch (Exception e)
+                    {
+                        GopetManager.ServerMonitor.LogError(e.GetBaseException().ToString());
+                    }
                     DateTime next = DateTime.Now;
                     if (item.Hour.HasValue)
                     {
