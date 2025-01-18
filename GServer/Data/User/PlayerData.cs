@@ -144,7 +144,12 @@ public class PlayerData
         y = 24 * 4;
     }
 
-
+    /// <summary>
+    /// Lấy thông tin người chơi
+    /// </summary>
+    /// <param name="user_id"></param>
+    /// <param name="name"></param>
+    /// <param name="gender"></param>
     public static void create(int user_id, string name, sbyte gender)
     {
         using (MySqlConnection conn = MYSQLManager.create())
@@ -157,12 +162,18 @@ public class PlayerData
             });
         }
     }
-
+    /// <summary>
+    /// Lưu thông tin người chơi
+    /// </summary>
     public void save()
     {
         saveStatic(this);
     }
-
+    /// <summary>
+    /// Lưu thông tin người chơi
+    /// </summary>
+    /// <param name="playerData"></param>
+    /// <param name="conn"></param>
     public static void saveStatic(PlayerData playerData, MySqlConnection conn)
     {
         playerData.LastTimeOnline = DateTime.Now;
@@ -224,7 +235,10 @@ public class PlayerData
                             IndexMilistoneBirthdayEvent = @IndexMilistoneBirthdayEvent
                             WHERE ID = @ID", playerData);
     }
-
+    /// <summary>
+    /// Lưu thông tin người chơi
+    /// </summary>
+    /// <param name="playerData"></param>
     public static void saveStatic(PlayerData playerData)
     {
         using (var conn = MYSQLManager.create())
@@ -232,7 +246,11 @@ public class PlayerData
             saveStatic(playerData, conn);
         }
     }
-
+    /// <summary>
+    /// Hành trang
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
     public CopyOnWriteArrayList<Item> this[sbyte type]
     {
         get
@@ -241,7 +259,11 @@ public class PlayerData
         }
     }
 
-
+    /// <summary>
+    /// Lấy hành trang hoặc tạo mới nếu chưa có
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
     public CopyOnWriteArrayList<Item> getInventoryOrCreate(sbyte type)
     {
         if (items.ContainsKey(type))
@@ -255,7 +277,11 @@ public class PlayerData
             return list;
         }
     }
-
+    /// <summary>
+    /// Lấy hành trang hoặc tạo mới nếu chưa có
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="item"></param>
     public void addItem(sbyte type, Item item)
     {
         CopyOnWriteArrayList<Item> list = getInventoryOrCreate(type);

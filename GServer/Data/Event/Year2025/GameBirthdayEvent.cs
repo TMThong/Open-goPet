@@ -63,12 +63,19 @@ namespace Gopet.Data.Event.Year2025
         {
             this.Name = "Sự kiện sinh nhật";
         }
-
+        /// <summary>
+        /// Điều kiện sự kiện
+        /// </summary>
         public override bool Condition => DateTime.Now < new DateTime(2025, 2, 18);
-
+        /// <summary>
+        /// Danh sách item sự kiện
+        /// </summary>
         public override int[] ItemsOfEvent { get; set; } = new int[] { ID_SQUARE_CAKE, ID_CYLINDRIAL_CAKE, ID_PHRYNIUM, ID_GLUTINOUS };
 
-
+        /// <summary>
+        /// Khởi tạo sự kiện
+        /// </summary>
+        /// <exception cref="UnsupportedOperationException"></exception>
         public override void Init()
         {
             if (this.Condition)

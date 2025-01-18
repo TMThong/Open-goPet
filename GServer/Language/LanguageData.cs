@@ -32,11 +32,23 @@ namespace Gopet.Language
             [BANNER_SHOW_BOSS_SUMMON] = "Boss {0} đã xuất hiện tại {1} khu {2} nhanh tay lên nào!!!!",
             [BANNER_MANTENANCE_MESSAGE] = "Sau {0} phút nữa sẽ bảo trì, các người chơi vui lòng thoát game sớm tránh bị mất dữ liệu",
         };
-
+        /// <summary>
+        /// Phiên bản cũ rồi, bạn vui lòng tải bản mới nhất
+        /// </summary>
         public string OldVersionNotify { get; set; } = "Phiên bản cũ rồi, bạn vui lòng tải bản mới nhất";
+        /// <summary>
+        /// Tài khoản chưa được kích hoạt
+        /// </summary>
         public string AccountNonAcitve { get; set; } = "Tài khoản chưa được kích hoạt";
+        /// <summary>
+        /// Tài khoản của bạn đã bị khóa vì {0} \n Sau {1} giờ {2} phút nữa tài khoản sẽ được mở khóa
+        /// </summary>
         public string AccountBanTime { get; set; } = "Tài khoản của bạn đã bị khóa vì {0} \n Sau {1} giờ {2} phút nữa tài khoản sẽ được mở khóa";
+        /// <summary>
+        /// Tài khoản của bạn đã bị khóa vĩnh viên \n Lý do :{0}
+        /// </summary>
         public string AccountBanInfinity { get; set; } = "Tài khoản của bạn đã bị khóa vĩnh viên \n Lý do :{0}";
+
         public string AccountLogingDuplicate { get; set; } = "Người chơi khác đăng nhập vào tài khoản";
         public string WaitLoging { get; set; } = "Vui lòng chờ {0} giây nữa để đăng nhập";
         public string WarningPlayerWhenLogin { get; set; } = "Người chơi game quá 180 phút có thể gây ảnh hưởng đến sức khỏe";
