@@ -1,4 +1,4 @@
-namespace Gopet.Data.Mob
+﻿namespace Gopet.Data.Mob
 {
     public class BossTemplate
     {
@@ -16,7 +16,12 @@ namespace Gopet.Data.Mob
         public int atk { get; private set; }
         public int[] HourSummon { get; private set; }
         public int[] BossMapSummon { get; private set; }
-
+        #region CONST
+        /// <summary>
+        /// Loại boss là boss sự kiện sinh nhật hoặc chỉ đánh giảm đc 1 máu
+        /// </summary>
+        public const int TYPE_BIRTHDAY_EVENT = 6;
+        #endregion
         public string getName(Player player)
         {
             return player.Language.BossNameLanguage[this.bossId];
