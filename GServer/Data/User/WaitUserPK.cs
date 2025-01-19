@@ -17,11 +17,14 @@ namespace Gopet.Data.User
 
         public Player Passive { get; }
 
-        public WaitUserPK(GopetPlace place, Player active, Player passive)
+        public int Card { get; }
+
+        public WaitUserPK(GopetPlace place, Player active, Player passive, int card)
         {
             Place = place;
             Active = active;
             Passive = passive;
+            Card = card;
         }
     }
 }
