@@ -2445,7 +2445,7 @@ public class GameController
 
     public void clan(sbyte subCMD, Message message)
     {
-#if DEBUG
+#if DEBUG_LOG
         GopetManager.ServerMonitor.LogWarning("Bang hội MSG: " + subCMD);
 #endif
         switch (subCMD)
@@ -4084,6 +4084,9 @@ public class GameController
                                     case -136:
                                         itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PART_PET_TIER_FOUR);
                                         break;
+                                    case -137:
+                                        itemId = Utilities.RandomArray(GopetManager.ID_ITEM_PART_PET_TIER_FIVE);
+                                        break;
                                 }
                                 if (flag) break;
                                 Item item = new Item(itemId);
@@ -4894,7 +4897,7 @@ public class GameController
             m.cleanup();
             p.sendMessage(m);
         }
-        
+
     }
 
     private void checkBugEquipItem()

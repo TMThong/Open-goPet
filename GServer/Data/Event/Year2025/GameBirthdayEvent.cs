@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Gopet.Data.Collections;
 using Gopet.Data.Event.Year2024;
 using Gopet.Data.GopetItem;
 using Gopet.Data.Map;
@@ -64,6 +65,15 @@ namespace Gopet.Data.Event.Year2025
             new Tuple<int, int,int>(50000, 141,2),
             new Tuple<int, int,int>(100000, 142,2),
         };
+        /// <summary>
+        /// ID Hộp quà Tết 2025
+        /// </summary>
+        public const int ID_RANDOM_EVENT_BOX = 240023;
+        /// <summary>
+        /// Dữ liệu hộp quà Tết 2025
+        /// </summary>
+        public static readonly int[][] GIFT_OPEN_EVENT_BOX_DATA = new int[][] { new int[] { 9, 1, 1, 809, 1, -135, 1, 693, 1, -137, 1, 5161, 1, 5162, 1, 5163, 1, 5164, 1, 5150, 1, 5151, 1, 5152, 1, 5153, 1, 5154, 1, 185, 1, -136, 1, 136, 1, 137, 1, 138, 1, 139, 1, 132, 1, 133, 1, 134, 1, 135 } };
+
         protected GameBirthdayEvent()
         {
             this.Name = "Sự kiện sinh nhật";
@@ -75,7 +85,7 @@ namespace Gopet.Data.Event.Year2025
         /// <summary>
         /// Danh sách item sự kiện
         /// </summary>
-        public override int[] ItemsOfEvent { get; set; } = new int[] { ID_SQUARE_CAKE, ID_CYLINDRIAL_CAKE, ID_PHRYNIUM, ID_GLUTINOUS };
+        public override int[] ItemsOfEvent { get; set; } = new int[] { ID_SQUARE_CAKE, ID_CYLINDRIAL_CAKE, ID_PHRYNIUM, ID_GLUTINOUS, ID_RANDOM_EVENT_BOX };
 
         /// <summary>
         /// Khởi tạo sự kiện
@@ -87,11 +97,7 @@ namespace Gopet.Data.Event.Year2025
             {
                 for (global::System.Int32 i = 0; i < 25; i++)
                 {
-                    for (int j = 0; j < 61; j++)
-                    {
-                        ScheduleManager.Instance.AddScheduleItem(new SummonBossSchedule(i, j));
-                    }
-                    
+                    ScheduleManager.Instance.AddScheduleItem(new SummonBossSchedule(i));
                 }
                 ScheduleManager.Instance.ReleaseMutex();
                 BXHManager.listTop.Add(TopUseCylindricalStickyRiceCake.Instance);
@@ -174,9 +180,10 @@ namespace Gopet.Data.Event.Year2025
             {
                 switch (itemId)
                 {
+                    case ID_RANDOM_EVENT_BOX:
                     case ID_CYLINDRIAL_CAKE:
                     case ID_SQUARE_CAKE:
-                        UseCake(itemId, player);
+                        UseEventItem(itemId, player);
                         break;
                     default:
                         player.redDialog(player.Language.ThisEventItemIsMaterial);
@@ -184,27 +191,40 @@ namespace Gopet.Data.Event.Year2025
                 }
             }
         }
-        void UseCake(int itemId, Player player)
+        void UseEventItem(int itemId, Player player)
         {
             Item item = player.controller.selectItemsbytemp(itemId, GopetManager.NORMAL_INVENTORY);
             if (item != null)
             {
-                switch (item.itemTemplateId)
+                if (GameController.checkCount(item, 1))
                 {
-                    case ID_SQUARE_CAKE:
-                        player.playerData.NumEatSquareStickyRice += 10;
-                        player.playerData.NumEatSquareStickyRiceCoin += 10;
-                        player.controller.subCountItem(item, 1, GopetManager.NORMAL_INVENTORY);
-                        player.okDialog(player.Language.EatSquareStickyRiceOK);
-                        break;
-                    case ID_CYLINDRIAL_CAKE:
-                        player.playerData.NumEatCylindricalStickyRice += 10;
-                        player.playerData.NumEatCylindricalStickyRiceCoin += 10;
-                        player.controller.subCountItem(item, 1, GopetManager.NORMAL_INVENTORY);
-                        player.okDialog(player.Language.EatCylindricalStickyRiceOK);
-                        break;
-                    default:
-                        throw new UnsupportedOperationException();
+                    switch (item.itemTemplateId)
+                    {
+                        case ID_SQUARE_CAKE:
+                            player.playerData.NumEatSquareStickyRice += 10;
+                            player.playerData.NumEatSquareStickyRiceCoin += 10;
+                            player.controller.subCountItem(item, 1, GopetManager.NORMAL_INVENTORY);
+                            player.okDialog(player.Language.EatSquareStickyRiceOK);
+                            break;
+                        case ID_CYLINDRIAL_CAKE:
+                            player.playerData.NumEatCylindricalStickyRice += 10;
+                            player.playerData.NumEatCylindricalStickyRiceCoin += 10;
+                            player.controller.subCountItem(item, 1, GopetManager.NORMAL_INVENTORY);
+                            player.okDialog(player.Language.EatCylindricalStickyRiceOK);
+                            break;
+                        case ID_RANDOM_EVENT_BOX:
+                            player.controller.subCountItem(item, 1, GopetManager.NORMAL_INVENTORY);
+                            JArrayList<Popup> popups = player.controller.onReiceiveGift(GIFT_OPEN_EVENT_BOX_DATA);
+                            JArrayList<String> textInfo = new();
+                            foreach (Popup popup in popups)
+                            {
+                                textInfo.add(popup.getText());
+                            }
+                            player.okDialog(string.Format(player.Language.GetGiftCodeOK, String.Join(",", textInfo)));
+                            break;
+                        default:
+                            throw new UnsupportedOperationException();
+                    }
                 }
             }
         }
@@ -400,8 +420,7 @@ namespace Gopet.Data.Event.Year2025
                     boss.isTimeOut = true;
                     boss.TimeOut = DateTime.Now.AddMilliseconds(GopetManager.TIME_BOSS_DISPOINTED);
                     place.addNewMob(boss);
-                    PlayerManager.showBannerZ(string.Format("Boss {0} của sự kiện sinh nhật đã xuất hiện tại {1} khu {2} nhanh tay nhé", mob.Template.name, place.map.mapTemplate.name, place.zoneID));
-                    GopetManager.ServerMonitor.LogWarning(string.Format("Boss {0} của sự kiện sinh nhật đã xuất hiện tại {1} khu {2} nhanh tay nhé", mob.Template.name, place.map.mapTemplate.name, place.zoneID));
+                    PlayerManager.showBannerZ(string.Format("Boss {0} của sự kiện sinh nhật đã xuất hiện tại {1} nhanh tay nhé", boss.Template.name, place.map.mapTemplate.name));
                     return;
                 }
             }

@@ -213,7 +213,6 @@ namespace Gopet.App
         {
             RuntimeServer.instance.runtimes.add(new AutoSave());
             RuntimeServer.instance.runtimes.add(new DBBackup());
-            RuntimeServer.instance.runtimes.add(new IpTracker());
             RuntimeServer.instance.runtimes.add(Maintenance.gI());
         }
 

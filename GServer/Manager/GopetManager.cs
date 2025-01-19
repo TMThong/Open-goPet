@@ -607,6 +607,23 @@ public class GopetManager
     public static readonly int[] ID_ITEM_PET_TIER_TWO = new int[] { 740, 742, 744, 746, 748, 750, 756, 760, 762, 764, 766 };
     public static readonly int[] ID_ITEM_PART_PET_TIER_THREE = new int[] { 851, 852, 849, 850, 845, 846, 835, 802, 803 };
     public static readonly int[] ID_ITEM_PART_PET_TIER_FOUR = new int[] { 819, 1005, 1006, 820, 1001, 1002, 821, 1003, 1004 };
+    public static readonly int[] ID_ITEM_PART_PET_TIER_FIVE = new int[]
+    {
+        822,
+        823,
+        1009,
+        1010,
+        824,
+        1011,
+        1012,
+        825,
+        826,
+        1007,
+        1008,
+        827,
+        828,
+        829
+    };
     public static readonly int[] ID_ITEM_PART_WING_TIER_1 = new int[] { 506, 507, 508, 509, 510 };
     public static readonly int[] ID_ITEM_PART_WING_TIER_2 = new int[] { 511, 512, 513, 514, 515 };
     public static readonly int[] ID_ITEM_PART_WING_TIER_3 = new int[] { 5155, 5156, 5157, 5158, 5159 };
