@@ -9,7 +9,7 @@ namespace Gopet.Data.User
 
     public class WaitUserPK
     {
-        public DateTime TimeInit { get; } = DateTime.Now;
+        public DateTime TimeInit { get; } = DateTime.Now.AddMinutes(3);
 
         public GopetPlace Place { get; }
 
