@@ -3627,6 +3627,11 @@ public class GameController
 
     public void confirmpk()
     {
+        if (PlayerManager.Instance.waitUserPKs.Any(x => x.Active.user.user_id == this.player.user.user_id))
+        {
+            player.redDialog("Bạn đang chờ người chơi khác PK với bạn, vui lòng chờ đợi");
+            return;
+        }
         int user_id = (int)objectPerformed.get(MenuController.OBJKEY_USER_ID_PK);
         Item cardPK = (Item)objectPerformed.get(MenuController.OBJKEY_ITEM_PK);
         objectPerformed.Remove(MenuController.OBJKEY_ITEM_PK);
@@ -3644,26 +3649,24 @@ public class GameController
                     {
                         if (playerPassive.controller.getPetBattle() == null)
                         {
-                            if (!ownPet.petDieByPK)
+                            if (checkCount(cardPK, 1))
                             {
-                                if (checkCount(cardPK, 1))
+                                if (ownPet.hp <= 0)
                                 {
-                                    subCountItem(cardPK, 1, GopetManager.NORMAL_INVENTORY);
-                                    player.playerData.pkPoint++;
-                                    GopetPlace place = (GopetPlace)player.getPlace();
-                                    place.startFightPlayer(user_id, player, true, 0);
-                                    HistoryManager.addHistory(new History(playerPassive).setLog(Utilities.Format("Bị người chơi %s PK", player.playerData.name)));
-                                    HistoryManager.addHistory(new History(player).setLog(Utilities.Format("PK người chơi %s", playerPassive.playerData.name)));
+                                    ownPet.hp = 1;
                                 }
-                            }
-                            else
-                            {
-                                player.redDialog("Thú cưng của người này vừa bị PK đã chết rồi");
+                                subCountItem(cardPK, 1, GopetManager.NORMAL_INVENTORY);
+                                player.playerData.pkPoint++;
+                                GopetPlace place = (GopetPlace)player.getPlace();
+                                place.startFightPlayer(user_id, player, true, 0);
+                                HistoryManager.addHistory(new History(playerPassive).setLog(Utilities.Format("Bị người chơi %s PK", player.playerData.name)));
+                                HistoryManager.addHistory(new History(player).setLog(Utilities.Format("PK người chơi %s", playerPassive.playerData.name)));
                             }
                         }
                         else
                         {
-                            player.redDialog(player.Language.PlayerHasABatte);
+                            WaitUserPK waitUserPK = new WaitUserPK((GopetPlace)player.getPlace(), this.player, playerPassive, cardPK.itemTemplateId);
+                            PlayerManager.Instance.waitUserPKs.Add(waitUserPK);
                         }
                     }
                     else

@@ -1,5 +1,7 @@
 
 using Gopet.Data.Collections;
+using Gopet.Data.GopetItem;
+using Gopet.Data.User;
 using Gopet.IO;
 using Gopet.Language;
 using Gopet.Util;
@@ -10,14 +12,62 @@ using System.Net.Sockets;
 using System.Numerics;
 using static System.Net.Mime.MediaTypeNames;
 
-public class PlayerManager
+public class PlayerManager : UpdateThread
 {
-
+    public static readonly PlayerManager Instance = new PlayerManager();
     public static CopyOnWriteArrayList<Player> players = new CopyOnWriteArrayList<Player>();
     public static ConcurrentHashMap<int, Player> player_ID = new ConcurrentHashMap<int, Player>();
     public static ConcurrentHashMap<String, Player> player_name = new ConcurrentHashMap<String, Player>();
     public static ConcurrentHashMap<int, long> waitLogin = new ConcurrentHashMap<int, long>();
     private static ConcurrentDictionary<string, Tuple<int, DateTime>> WaitLogin = new ConcurrentDictionary<string, Tuple<int, DateTime>>();
+    public CopyOnWriteArrayList<WaitUserPK> waitUserPKs = new CopyOnWriteArrayList<WaitUserPK>();
+
+    protected PlayerManager() : base("Quản lí người chơi")
+    {
+
+    }
+
+
+    public override void Update()
+    {
+        foreach (var item in waitUserPKs)
+        {
+            if (ExecuteWaitPK(item))
+            {
+                waitUserPKs.remove(item);
+            }
+        }
+    }
+
+    bool ExecuteWaitPK(WaitUserPK waitUserPK)
+    {
+        if (waitUserPK.Active.controller.getPetBattle() == null && waitUserPK.Passive.controller.getPetBattle() == null)
+        {
+            Item item = waitUserPK.Active.controller.selectItemsbytemp(waitUserPK.Card, GopetManager.NORMAL_INVENTORY);
+            if (item == null)
+            {
+                return true;
+            }
+            if (GameController.checkCount(item, 1))
+            {
+                Pet pet = waitUserPK.Passive.playerData.petSelected;
+                if (pet.hp <= 0)
+                {
+                    pet.hp = 1;
+                }
+                waitUserPK.Active.controller.subCountItem(item, 1, GopetManager.NORMAL_INVENTORY);
+                waitUserPK.Active.playerData.pkPoint++;
+                GopetPlace place = waitUserPK.Place;
+                place.startFightPlayer(waitUserPK.Passive.user.user_id, waitUserPK.Active, true, 0);
+                HistoryManager.addHistory(new History(waitUserPK.Passive).setLog(Utilities.Format("Bị người chơi %s PK", waitUserPK.Active.playerData.name)));
+                HistoryManager.addHistory(new History(waitUserPK.Active).setLog(Utilities.Format("PK người chơi %s", waitUserPK.Passive.playerData.name)));
+                return true;
+            }
+            else return true;
+        }
+        return waitUserPK.TimeInit < DateTime.Now;
+    }
+
     public static Player get(String ID)
     {
         return player_name.get(ID);

@@ -50,6 +50,7 @@ namespace Gopet.App
             //EventManager.AddEvent(DailyBossEvent.Instance);
             EventManager.Start();
             ScheduleManager.Instance.Start();
+            PlayerManager.Instance.Start();
             APIServer = new HttpServer(HTTP_PORT);
             APIServer.Start();
             server = new Gopet.MServer.Server(PORT_SERVER);
