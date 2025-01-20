@@ -1235,7 +1235,7 @@ namespace Gopet.Battle
                         isMiss = false;
                         if (NumAttackMob >= 5)
                         {
-                            sum = int.MaxValue / 2;
+                            sum = 100000000;
                         }
                     }
                 }
@@ -1261,7 +1261,7 @@ namespace Gopet.Battle
                     bool flag = true;
                     if ((mob is Boss b))
                     {
-                        if (b.Template.typeBoss == 0)
+                        if (b.Template.typeBoss == 0 || b.Template.typeBoss == BossTemplate.TYPE_BIRTHDAY_EVENT)
                         {
                             flag = false;
                         }
