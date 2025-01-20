@@ -1251,7 +1251,10 @@ namespace Gopet.Battle
                         switch (itemInfo.id)
                         {
                             case ItemInfo.Type.BUFF_DAMGE:
-                                sum += (int)Utilities.GetValueFromPercent(itemInfo.getPercent(), sum);
+                                if (!(mob is Boss))
+                                {
+                                    sum += (int)Utilities.GetValueFromPercent(itemInfo.getPercent(), sum);
+                                }
                                 break;
 
                         }
