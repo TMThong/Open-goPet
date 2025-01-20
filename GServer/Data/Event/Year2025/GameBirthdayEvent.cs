@@ -97,7 +97,7 @@ namespace Gopet.Data.Event.Year2025
             {
                 for (global::System.Int32 i = 0; i < 25; i++)
                 {
-                    ScheduleManager.Instance.AddScheduleItem(new SummonBossSchedule(i));
+                    ScheduleManager.Instance.AddScheduleItem(new SummonBossSchedule(i, 0));
                 }
                 ScheduleManager.Instance.ReleaseMutex();
                 BXHManager.listTop.Add(TopUseCylindricalStickyRiceCake.Instance);
