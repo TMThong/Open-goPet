@@ -21,10 +21,10 @@ public class PlayerManager : UpdateThread
     public static ConcurrentHashMap<int, long> waitLogin = new ConcurrentHashMap<int, long>();
     private static ConcurrentDictionary<string, Tuple<int, DateTime>> WaitLogin = new ConcurrentDictionary<string, Tuple<int, DateTime>>();
     public CopyOnWriteArrayList<WaitUserPK> waitUserPKs = new CopyOnWriteArrayList<WaitUserPK>();
-
+    public static readonly TimeTracker<string> Ipv4Tracker = new TimeTracker<string>(TimeSpan.FromMinutes(1), 400);
     protected PlayerManager() : base("Quản lí người chơi")
     {
-
+        this.TimeSleep = TimeSpan.FromMilliseconds(1000);
     }
 
 
@@ -37,6 +37,7 @@ public class PlayerManager : UpdateThread
                 waitUserPKs.remove(item);
             }
         }
+        Ipv4Tracker.CleanOldTrack();
     }
 
     bool ExecuteWaitPK(WaitUserPK waitUserPK)
