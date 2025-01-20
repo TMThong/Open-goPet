@@ -13,7 +13,7 @@ namespace Gopet.Data.Collections
     {
         private Mutex mutex = new Mutex();
 
-        private ConcurrentDictionary<T, CopyOnWriteArrayList<DateTime>> Tracks = new ConcurrentDictionary<T, CopyOnWriteArrayList<DateTime>>();
+        public ConcurrentDictionary<T, CopyOnWriteArrayList<DateTime>> Tracks = new ConcurrentDictionary<T, CopyOnWriteArrayList<DateTime>>();
 
         public TimeSpan Time { get; }
 
