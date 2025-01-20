@@ -283,6 +283,11 @@ namespace Gopet.APIs
         {
             return ThreadPool.CompletedWorkItemCount;
         }
+        [HttpGet("/api/Ipv4Tracker")]
+        public IActionResult Ipv4Tracker()
+        {
+            return Ok(GopetApiExtentsion.CreateOKRepository(PlayerManager.Ipv4Tracker));
+        }
 
         private string GetDebuggerDisplay()
         {
