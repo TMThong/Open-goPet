@@ -286,7 +286,7 @@ namespace Gopet.APIs
         [HttpGet("/api/Ipv4Tracker")]
         public IActionResult Ipv4Tracker()
         {
-            return Ok(GopetApiExtentsion.CreateOKRepository(PlayerManager.Ipv4Tracker.Tracks.Select(x => new KeyValuePair<string, int>(x.Key, x.Value.Count))));
+            return Ok(GopetApiExtentsion.CreateOKRepository(PlayerManager.Ipv4Tracker.Tracks.Select(x => new object[] { x.Key, x.Value.Count })));
         }
 
         private string GetDebuggerDisplay()
