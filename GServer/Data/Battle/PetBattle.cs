@@ -1224,6 +1224,14 @@ namespace Gopet.Battle
                 JArrayList<TurnEffect> turnEffects = new();
                 bool isMiss = randMiss(getNonUserPetBattleInfo());
                 int sum = mob.getAtk();
+                if (mob is Boss boss)
+                {
+                    if (boss.Template.typeBoss == BossTemplate.TYPE_BIRTHDAY_EVENT)
+                    {
+                        sum = (int)Utilities.GetValueFromPercent(activePet.maxHp, 20f) + activePet.getDef();
+                        isMiss = false;
+                    }
+                }
                 if (!isMiss)
                 {
                     bool crit = mob.IsCrit;
