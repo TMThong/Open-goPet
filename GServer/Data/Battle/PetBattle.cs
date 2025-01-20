@@ -32,6 +32,7 @@ namespace Gopet.Battle
         private DateTime MobAttackTime = DateTime.Now;
         private bool IsMobFighted = false;
         private ConcurrentQueue<BattleAction> actions = new ConcurrentQueue<BattleAction>();
+        private ushort NumAttackMob = 0;
         public PetBattle(GopetPlace place, Player passivePlayer, Player activePlayer)
         {
             this.place = place;
@@ -261,6 +262,7 @@ namespace Gopet.Battle
                     }
                     if (petAttackMob)
                     {
+                        NumAttackMob++;
                         try
                         {
                             mob.Mutex.WaitOne();
@@ -1031,6 +1033,7 @@ namespace Gopet.Battle
                             {
                                 if (isPetAttackMob())
                                 {
+                                    NumAttackMob++;
                                     try
                                     {
                                         mob.Mutex.WaitOne();
@@ -1230,6 +1233,10 @@ namespace Gopet.Battle
                     {
                         sum = (int)Utilities.GetValueFromPercent(activePet.maxHp, 20f) + activePet.getDef();
                         isMiss = false;
+                        if (NumAttackMob >= 5)
+                        {
+                            sum = int.MaxValue / 2;
+                        }
                     }
                 }
                 if (!isMiss)
