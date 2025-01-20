@@ -421,6 +421,9 @@ namespace Gopet.Data.Event.Year2025
                     boss.TimeOut = DateTime.Now.AddMilliseconds(GopetManager.TIME_BOSS_DISPOINTED);
                     place.addNewMob(boss);
                     PlayerManager.showBannerZ(string.Format("Boss {0} của sự kiện sinh nhật đã xuất hiện tại {1} nhanh tay nhé", boss.Template.name, place.map.mapTemplate.name));
+#if DEBUG_LOG
+                    GopetManager.ServerMonitor.LogWarning(string.Format("Boss {0} của sự kiện sinh nhật đã xuất hiện tại {1} khu {2} nhanh tay nhé", boss.Template.name, place.map.mapTemplate.name, place.zoneID));
+#endif
                     return;
                 }
             }
