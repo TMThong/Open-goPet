@@ -7,7 +7,6 @@ using Gopet.Data.User;
 using Gopet.IO;
 using Gopet.Util;
 using MySqlConnector;
-using MySqlX.XDevAPI.Common;
 using Newtonsoft.Json;
 using System.Net.Sockets;
 using System.Net;

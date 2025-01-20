@@ -3,7 +3,6 @@ using Gopet.Data.GopetItem;
 using Gopet.Data.item;
 using Gopet.Data.Map;
 using Gopet.Util;
-using Org.BouncyCastle.Crypto;
 using System;
 using System.Collections.Generic;
 using System.Linq;

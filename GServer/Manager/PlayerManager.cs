@@ -5,7 +5,6 @@ using Gopet.Data.User;
 using Gopet.IO;
 using Gopet.Language;
 using Gopet.Util;
-using MySqlX.XDevAPI;
 using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;

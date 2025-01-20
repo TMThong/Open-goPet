@@ -6,7 +6,6 @@ using System.Configuration;
 
 public class MYSQLManager
 {
-
     public static MySqlConnection create()
     {
         var conn = new MySqlConnection(ConfigurationManager.ConnectionStrings["GameConnectString"].ConnectionString);
@@ -28,7 +27,6 @@ public class MYSQLManager
         return conn;
     }
 
-
     public static string GameOldSQLInfoStr
     {
         get
@@ -36,7 +34,6 @@ public class MYSQLManager
             return $"SERVER={MysqlSetting.SINGLETON.INSTANCE.host};DATABASE=gopettae_gopet;UID={MysqlSetting.SINGLETON.INSTANCE.username};PASSWORD={MysqlSetting.SINGLETON.INSTANCE.password};CharSet=utf8;";
         }
     }
-
 
     public static MySqlConnection createWebMySqlConnection()
     {
@@ -47,11 +44,10 @@ public class MYSQLManager
 
     public static void Backup(MySqlConnection conn, string filePath)
     {
-        /*
-        using (var cmd = new MySql.Data.MySqlClient.MySqlCommand())
+        using (var cmd = new MySqlCommand())
         {
             cmd.Connection = conn;
-            using (var backup = new MySql.Data.MySqlClient.MySqlBackup(cmd))
+            using (var backup = new MySqlBackup(cmd))
             {
                 FileInfo f = new FileInfo(filePath);
                 f.Directory.Create();
@@ -62,6 +58,6 @@ public class MYSQLManager
                     stream.Close();
                 }
             }
-        }*/
+        }
     }
 }

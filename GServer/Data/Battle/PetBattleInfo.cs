@@ -1,6 +1,5 @@
 using Gopet.Data.Collections;
 using Gopet.Data.GopetItem;
-using MySqlX.XDevAPI;
 
 namespace Gopet.Battle
 {
