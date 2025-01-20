@@ -74,6 +74,7 @@ namespace Gopet.Manager
                 DateTime now = DateTime.Now;
                 if ((!item.Hour.HasValue || (item.Hour.HasValue && item.Hour.Value == now.Hour)) && (!item.Minute.HasValue || (item.Minute.HasValue && item.Minute.Value == now.Minute)) && item.NextExcute < DateTime.Now.AddMilliseconds(100))
                 {
+                    item.NextExcute = DateTime.Now.AddDays(1);
                     try
                     {
                         item.Execute();
@@ -82,16 +83,6 @@ namespace Gopet.Manager
                     {
                         GopetManager.ServerMonitor.LogError(e.GetBaseException().ToString());
                     }
-                    DateTime next = DateTime.Now;
-                    if (item.Hour.HasValue)
-                    {
-                        next = next.AddHours(item.Hour.Value);
-                    }
-                    if (item.Minute.HasValue)
-                    {
-                        next = next.AddMinutes(item.Minute.Value);
-                    }
-                    item.NextExcute = next;
                 }
                 if (item.IsNeedRemove)
                 {
