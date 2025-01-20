@@ -388,6 +388,16 @@ Thread.Sleep(1000);
         {
             return;
         }
+        IPEndPoint iPEndPoint = (IPEndPoint)this.session.CSocket.RemoteEndPoint;
+        if (!SkipIpv4Check)
+        {
+
+            if (PlayerManager.Ipv4Tracker.IsLimited(iPEndPoint.Address.ToString()))
+            {
+                redDialog(Language.Ipv4Limited);
+                return;
+            }
+        }
         username = username.Trim();
         password = password.Trim();
         version = version.Trim();
@@ -401,6 +411,7 @@ Thread.Sleep(1000);
             redDialog(Language.HaveSpecialChar);
             return;
         }
+        PlayerManager.Ipv4Tracker.Add(iPEndPoint.Address.ToString());
         using (MySqlConnection conn = MYSQLManager.createWebMySqlConnection())
         {
             try
