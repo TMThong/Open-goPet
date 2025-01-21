@@ -60,10 +60,10 @@ namespace Gopet.Data.Event.Year2025
         /// </summary>
         public static readonly Tuple<int, int, int>[] GiftMilistones = new Tuple<int, int, int>[]
         {
-            new Tuple<int, int,int>(5000, 134,2),
-            new Tuple<int, int,int>(10000, 140,2),
-            new Tuple<int, int,int>(50000, 141,2),
-            new Tuple<int, int,int>(100000, 142,2),
+            new Tuple<int, int,int>(20000, 134,2),
+            new Tuple<int, int,int>(50000, 140,2),
+            new Tuple<int, int,int>(200000, 141,2),
+            new Tuple<int, int,int>(300000, 142,2),
         };
         /// <summary>
         /// ID Hộp quà Tết 2025
