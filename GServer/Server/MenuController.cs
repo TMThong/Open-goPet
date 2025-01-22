@@ -401,6 +401,10 @@ public partial class MenuController
     /// </summary>
     public const int OP_RECIVE_GIFT_MILISTONE_BIRTHDAY_EVNT = 96;
     /// <summary>
+    /// Bảng xếp hạng sử dụng hộp quà
+    /// </summary>
+    public const int OP_TOP_USE_GIFT_BOX_2025 = 97;
+    /// <summary>
     /// Option Custom
     /// Trao đổi thưởng bằng 
     /// </summary>
