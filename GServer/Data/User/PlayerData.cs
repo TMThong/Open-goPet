@@ -138,6 +138,10 @@ public class PlayerData
     /// Để ghi chỉ mục của cột mốc quà sự kiện
     /// </summary>
     public sbyte IndexMilistoneBirthdayEvent { get; set; } = -1;
+    /// <summary>
+    /// Trường thuộc sự kiện sinh nhật trò chơi
+    /// </summary>
+    public int NumUseGiftBox2025 { get; set; } = 0;
     public PlayerData()
     {
         x = 24 * 4;
@@ -232,7 +236,8 @@ public class PlayerData
                             NumEatSquareStickyRiceCoin = @NumEatSquareStickyRiceCoin,
                             NumEatCylindricalStickyRice = @NumEatCylindricalStickyRice,
                             NumEatCylindricalStickyRiceCoin = @NumEatCylindricalStickyRiceCoin,
-                            IndexMilistoneBirthdayEvent = @IndexMilistoneBirthdayEvent
+                            IndexMilistoneBirthdayEvent = @IndexMilistoneBirthdayEvent,
+                            NumUseGiftBox2025 = @NumUseGiftBox2025
                             WHERE ID = @ID", playerData);
     }
     /// <summary>
