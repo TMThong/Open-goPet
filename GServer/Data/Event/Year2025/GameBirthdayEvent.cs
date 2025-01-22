@@ -102,6 +102,7 @@ namespace Gopet.Data.Event.Year2025
                 ScheduleManager.Instance.ReleaseMutex();
                 BXHManager.listTop.Add(TopUseCylindricalStickyRiceCake.Instance);
                 BXHManager.listTop.Add(TopUseSquareStickyRiceCake.Instance);
+                BXHManager.listTop.Add(TopUseGiftLootBox2025.Instance);
                 MapTemplate mapTemplate = GopetManager.mapTemplate[MapTemplate.THÀNH_PHỐ_LINH_THÚ];
                 if (!mapTemplate.npc.Contains(NPC_BIRTHDAY_CAKE))
                 {
@@ -144,6 +145,7 @@ namespace Gopet.Data.Event.Year2025
                 }
                 TopUseCylindricalStickyRiceCake.Instance.Update();
                 TopUseSquareStickyRiceCake.Instance.Update();
+                TopUseGiftLootBox2025.Instance.Update();
             }
         }
 
@@ -213,6 +215,7 @@ namespace Gopet.Data.Event.Year2025
                             player.okDialog(player.Language.EatCylindricalStickyRiceOK);
                             break;
                         case ID_RANDOM_EVENT_BOX:
+                            player.playerData.NumUseGiftBox2025++;
                             player.controller.subCountItem(item, 1, GopetManager.NORMAL_INVENTORY);
                             JArrayList<Popup> popups = player.controller.onReiceiveGift(GIFT_OPEN_EVENT_BOX_DATA);
                             JArrayList<String> textInfo = new();
@@ -267,6 +270,9 @@ namespace Gopet.Data.Event.Year2025
             {
                 switch (optionId)
                 {
+                    case MenuController.OP_TOP_USE_GIFT_BOX_2025:
+                        MenuController.showTop(TopUseGiftLootBox2025.Instance, player);
+                        return;
                     case MenuController.OP_SHOW_SHOP_BIRTHDAY:
                         MenuController.showShop(MenuController.SHOP_BIRTHDAY_EVENT, player);
                         return;
@@ -380,6 +386,48 @@ namespace Gopet.Data.Event.Year2025
                 }
             }
         }
+
+        public class TopUseGiftLootBox2025 : Top
+        {
+            public static readonly TopUseGiftLootBox2025 Instance = new TopUseGiftLootBox2025();
+            protected TopUseGiftLootBox2025() : base("top.use.gift.loot.box.2025")
+            {
+                this.name = "Top sử dụng hộp quà Tết 2025";
+                this.desc = "Để chỉ số lần sử dụng hộp quà Tết 2025";
+            }
+
+            public override void Update()
+            {
+                try
+                {
+                    lastDatas.Clear();
+                    lastDatas.AddRange(datas);
+                    datas.Clear();
+                    using (var conn = MYSQLManager.create())
+                    {
+                        var topDataDynamic = conn.Query("SELECT user_id, name,avatarPath, NumUseGiftBox2025  FROM `player` WHERE  isAdmin = 0 ORDER BY `player`.`NumUseGiftBox2025` DESC LIMIT 50");
+                        int index = 1;
+                        foreach
+                            (dynamic data in topDataDynamic)
+                        {
+                            TopData topData = new TopData();
+                            topData.id = data.user_id;
+                            topData.name = data.name;
+                            topData.imgPath = data.avatarPath;
+                            topData.title = topData.name;
+                            topData.desc = $"Hạng {index}. Bạn đã sử dụng {Utilities.FormatNumber(data.NumUseGiftBox2025)} hộp quà.";
+                            datas.Add(topData);
+                            index++;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         /// <summary>
         /// Lịch triệu hồi boss
         /// </summary>
