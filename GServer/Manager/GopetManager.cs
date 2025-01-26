@@ -805,6 +805,7 @@ public class GopetManager
     public const int ID_ITEM_CARD_REINCARNATION = 332;
     public const int PRICE_ASSIGNED_PET = 15000;
     public const int PRICE_ASSIGNED_ITEM = 10000;
+    public static readonly Dictionary<int, PetEffectTemplate> PET_EFF_TEMP = new();
     static GopetManager()
     {
         SqlMapper.AddTypeHandler(new JsonAdapter<int[]>());

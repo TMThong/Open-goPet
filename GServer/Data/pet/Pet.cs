@@ -3,6 +3,7 @@ using Gopet.Data.Collections;
 using Gopet.Data.GopetClan;
 using Gopet.Data.GopetItem;
 using Gopet.Data.item;
+using Gopet.Data.pet;
 using Gopet.Data.user;
 using Gopet.Util;
 using Newtonsoft.Json;
@@ -520,5 +521,23 @@ public class Pet : GameObject, IBinaryObject<Pet>
     public void SetId(int id)
     {
         this.petId = id;
+    }
+
+    public IEnumerable<PetEffectTemplate> EffectTemplates
+    {
+        get
+        {
+            return new List<PetEffectTemplate>()
+            {
+            new PetEffectTemplate ()
+            {
+                FramePath = "peteff/nuoc.png",
+                FrameNum = 11,
+                IsDrawBefore = true,
+                FrameTime = 1,
+                vY = -21
+            }
+            };
+        }
     }
 }

@@ -20,6 +20,7 @@ using Gopet.Data.Clan;
 using Gopet.Data.user;
 using static System.Net.Mime.MediaTypeNames;
 using System.Numerics;
+using Gopet.Data.pet;
 
 [NonController]
 public class GameController
@@ -5180,6 +5181,21 @@ public class GameController
             }
         }
         return false;
+    }
+
+    public static void WritePetEffect(Message message, IEnumerable<PetEffectTemplate> petEffects)
+    {
+        message.putInt(petEffects.Count());
+        foreach (var petEffect in petEffects)
+        {
+            message.putInt(petEffect.FrameNum);
+            message.putString(petEffect.FramePath);
+            message.putShort(petEffect.vX);
+            message.putShort(petEffect.vY);
+            message.putbool(petEffect.IsDrawBefore);
+            message.putsbyte(petEffect.Type);
+            message.putInt(petEffect.FrameTime);
+        }
     }
 }
 
