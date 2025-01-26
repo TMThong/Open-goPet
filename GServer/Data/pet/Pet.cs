@@ -73,7 +73,7 @@ public class Pet : GameObject, IBinaryObject<Pet>
 
     public CopyOnWriteArrayList<int> HiddenStats = new CopyOnWriteArrayList<int>();
 
-
+    public CopyOnWriteArrayList<PetEffect> PetEffects = new CopyOnWriteArrayList<PetEffect>();
     protected Pet()
     {
 
@@ -534,7 +534,7 @@ public class Pet : GameObject, IBinaryObject<Pet>
                 FramePath = "peteff/nuoc.png",
                 FrameNum = 11,
                 IsDrawBefore = true,
-                FrameTime = 1,
+                FrameTime = 1000,
                 vY = -21
             }
             };
