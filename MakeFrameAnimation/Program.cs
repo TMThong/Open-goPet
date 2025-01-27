@@ -31,7 +31,7 @@ namespace MakeFrameAnimation
             Direction direction = Direction.Center;
             if (args.Length > 1)
             {
-                if (byte.TryParse(args[0], out var result))
+                if (byte.TryParse(args[1], out var result))
                 {
                     if (result > 0 && result <= (byte)Direction.Center)
                     {

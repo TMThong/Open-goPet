@@ -25,5 +25,7 @@ namespace GopetHost.Models
 		public bool IsPin { get; set; } = false;
 		[Required]
 		public DateTime TimeCreate { get; set; } = DateTime.Now;
-	}
+
+		public DateTime? TimeUnlock { get; set; } = null;
+    }
 }

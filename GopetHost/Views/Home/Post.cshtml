@@ -17,7 +17,14 @@
                     </div>
                     <div class="media-content">
                         <div class="content">
-                            @Html.Raw(Model.Description)
+                            @if (Model.TimeUnlock.HasValue && Model.TimeUnlock.Value > DateTime.Now)
+                            {
+                                <p class="tag is-warning medium">Bài viết sẽ được mở lúc @Model.TimeUnlock.Value.ToString("dd/MM/yyyy HH:mm")</p>
+                            }
+                            else
+                            {
+                                @Html.Raw(Model.Description)
+                            }
                         </div>
                     </div>
                     <div class="media-right">

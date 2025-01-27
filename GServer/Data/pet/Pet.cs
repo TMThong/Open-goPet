@@ -531,11 +531,11 @@ public class Pet : GameObject, IBinaryObject<Pet>
             {
             new PetEffectTemplate ()
             {
-                FramePath = "peteff/output.png",
-                FrameNum = 10,
-                IsDrawBefore = false,
-                FrameTime = 50,
-                vY = -120
+                FramePath = "peteff/output3.png",
+                FrameNum = 3,
+                IsDrawBefore = true,
+                FrameTime = 500,
+                vY = -110
             }
             };
         }

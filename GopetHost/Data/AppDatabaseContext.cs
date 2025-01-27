@@ -26,8 +26,10 @@ namespace GopetHost.Data
 
         public DbSet<DongTienModel> DongTiens { get; set; }
 
+        public DbSet<RedirectUrlModel> RedirectUrls { get; set; }
 
-		public T LoadWebConfig<T>(string Key, T defaultValue)
+
+        public T LoadWebConfig<T>(string Key, T defaultValue)
 		{
             var query = WebConfigs.Where(x => x.Key == Key);
             if (query.Count() > 0)

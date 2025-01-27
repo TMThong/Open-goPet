@@ -91,7 +91,15 @@ namespace GopetHost.Controllers
             _context.SaveChanges();
             return View(post);
         }
-
-        
+        [HttpGet("redirect/{key}")]
+        public IActionResult RedirectUrl(string key)
+        {
+            var url = _context.RedirectUrls.Where(x => x.Key == key).FirstOrDefault();
+            if (url == null)
+            {
+                return RedirectToHome();
+            }
+            return Redirect(url.RedirectUrl);
+        }
     }
 }
