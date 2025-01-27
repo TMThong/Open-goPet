@@ -17,6 +17,7 @@ using Gopet.Language;
 using System.Diagnostics;
 using System.Collections.Concurrent;
 using System.Numerics;
+using System.Diagnostics.CodeAnalysis;
 
 public class Player : IHandleMessage
 {
@@ -252,7 +253,6 @@ Thread.Sleep(1000);
     }
 
     public const long TIME_GEN = 1000 * 60 * 60 * 6;
-
     public virtual void update()
     {
         checkSpeed();
@@ -260,7 +260,8 @@ Thread.Sleep(1000);
 
         if (playerData != null)
         {
-            if (playerData.buffExp == null) playerData.buffExp = new BuffExp();
+            if (playerData.buffExp == null) 
+                playerData.buffExp = new BuffExp();
 
             playerData.buffExp.update();
             updatePkPoint();
@@ -717,7 +718,7 @@ Thread.Sleep(1000);
     {
         get
         {
-            return DateTime.Now <= new DateTime(2025, 1, 3, 21, 0, 0);
+            return DateTime.Now <= new DateTime(2025, 2, 1, 21, 0, 0);
         }
     }
 

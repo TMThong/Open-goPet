@@ -14,6 +14,7 @@ using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Gopet.Data.top;
 using System.Numerics;
+using System.Diagnostics.CodeAnalysis;
 
 [NonController]
 public partial class MenuController
@@ -1161,7 +1162,7 @@ public partial class MenuController
         }
         return null;
     }
-
+    [SuppressMessage("Style", "IDE0066:Use switch")]
     private static sbyte getTypeInventorySelect(int menuId)
     {
         switch (menuId)
@@ -1341,7 +1342,6 @@ public partial class MenuController
             {
                 count = (int)player.controller.objectPerformed.get(OBJKEY_COUNT_OF_ITEM_KIOSK);
             }
-            MarketPlace marketPlace = (MarketPlace)player.getPlace();
             switch (menuKioskId)
             {
                 case MENU_KIOSK_PET_SELECT:

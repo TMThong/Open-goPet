@@ -20,7 +20,7 @@ using Gopet.Data.Clan;
 using Gopet.Language;
 using System.Runtime;
 using Gopet.Data.pet;
-
+using System.Diagnostics.CodeAnalysis;
 public class GopetManager
 {
     public const string OldFeatures = "Chức năng cũ, đã bị xóa";
@@ -1109,6 +1109,12 @@ public class GopetManager
                 Reincarnations[reincarnation.PetId] = reincarnation;
             }
             ServerMonitor.LogInfo("Tải dữ liệu trùng sinh thú cưng từ cơ sở dữ liệu OK");
+            var petEffectTemplates = conn.Query<PetEffectTemplate>("SELECT * FROM `pet_eff`");
+            foreach (var item in petEffectTemplates)
+            {
+                PET_EFF_TEMP[item.IdTemplate] = item;
+            }
+            ServerMonitor.LogInfo("Tải dữ liệu hiệu ứng thú cưng từ cơ sở dữ liệu OK");
         }
         using (var connWeb = MYSQLManager.createWebMySqlConnection())
         {
@@ -1291,7 +1297,7 @@ public class GopetManager
         }
         return string.Empty;
     }
-
+    [SuppressMessage("Style", "IDE0066:Dùng switch")]
     public static string GetClassDisplay(sbyte nclass, Player player)
     {
         switch (nclass)

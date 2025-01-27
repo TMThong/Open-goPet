@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace Gopet.Data.pet
     /// <summary>
     /// Template của hiệu ứng của pet
     /// </summary>
-    public class PetEffectTemplate
+    public sealed class PetEffectTemplate
     {
         /// <summary>
         /// ID của template
@@ -35,7 +36,7 @@ namespace Gopet.Data.pet
         /// <summary>
         /// Số frame
         /// </summary>
-        public sbyte FrameNum { get; set; }
+        public int FrameNum { get; set; }
         /// <summary>
         /// Tấn công
         /// </summary>
@@ -84,5 +85,55 @@ namespace Gopet.Data.pet
         /// Loại hiệu ứng
         /// </summary>
         public sbyte Type { get; set; }
+
+        #region Hằng số
+        /// <summary>
+        /// Là loại hiệu ứng hào quang
+        /// </summary>
+        public const sbyte TYPE_AURA = 0;
+        /// <summary>
+        /// Hào quang hệ lửa
+        /// </summary>
+        public const int ID_AURA_FIRE = 1;
+        /// <summary>
+        /// Hào quang hệ cây
+        /// </summary>
+        public const int ID_AURA_TREE = 2;
+        /// <summary>
+        /// Hào quang hệ đất
+        /// </summary>
+        public const int ID_AURA_ROCK = 3;
+        /// <summary>
+        /// Hào quang hệ sét
+        /// </summary>
+        public const int ID_AURA_THUNDER = 4;
+        /// <summary>
+        /// Hào quang hệ nước
+        /// </summary>
+        public const int ID_AURA_WATER = 5;
+        /// <summary>
+        /// Hào quang hệ bóng tối
+        /// </summary>
+        public const int ID_AURA_DARK = 6;
+        /// <summary>
+        /// Hào quang hệ sáng
+        /// </summary>
+        public const int ID_AURA_LIGHT = 7;
+
+        public static int GetAuraIdByElement(int element)
+        {
+            return element switch
+            {
+                1 => ID_AURA_FIRE,
+                2 => ID_AURA_TREE,
+                3 => ID_AURA_ROCK,
+                4 => ID_AURA_THUNDER,
+                5 => ID_AURA_WATER,
+                6 => ID_AURA_DARK,
+                7 => ID_AURA_LIGHT,
+                _ => 1,
+            };
+        }
+        #endregion
     }
 }
