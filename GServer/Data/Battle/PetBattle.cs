@@ -89,7 +89,7 @@ namespace Gopet.Battle
                         case ItemInfo.Type.KÍCH_ẨN_HÚT_MÁU:
                             petBattleInfo.addBuff(new Buff(new ItemInfo[]
                             {
-                                new ItemInfo(ItemInfo.Type.RECOVERY_HP_IN_4_TURN, itemInfo.value)
+                                new ItemInfo(ItemInfo.Type.RECOVERY_HP, itemInfo.value)
                             }, 9999999));
                             break;
                         case ItemInfo.Type.KÍCH_ẨN_ĐỊNH_THÂN:
