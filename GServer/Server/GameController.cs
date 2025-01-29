@@ -4202,6 +4202,24 @@ public class GameController
                         popups.add(new Popup(item.getName(player)));
                     }
                     break;
+                case GopetManager.GIFT_PET_TRIAL:
+                    {
+                        int petId = giftInfo[1];
+                        Pet pet = new Pet(petId);
+                        bool isInfinity = giftInfo[2] == 1;
+                        if (!isInfinity)
+                        {
+                            int min = giftInfo[3];
+                            int hours = giftInfo.Length > 4 ? giftInfo[4] : 0;
+                            int day = giftInfo.Length > 5 ? giftInfo[5] : 0;
+                            int month = giftInfo.Length > 6 ? giftInfo[6] : 0;
+                            int year = giftInfo.Length > 7 ? giftInfo[7] : 0;
+                            pet.Expire = DateTime.Now.AddMinutes(min).AddHours(hours).AddDays(day).AddMonths(month).AddYears(year);
+                        }
+                        player.playerData.addPet(pet, player);
+                        popups.add(new Popup(pet.getNameWithoutStar(player)));
+                    }
+                    break;
             }
         }
         return popups;
