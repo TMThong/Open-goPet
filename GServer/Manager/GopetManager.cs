@@ -217,6 +217,10 @@ public class GopetManager
     /// Quà là trang phục
     /// </summary>
     public const int GIFT_SKIN = 14;
+    /// <summary>
+    /// Quà là thú cưng thử nghiệm
+    /// </summary>
+    public const int GIFT_PET_TRIAL = 15;
     /**
      * thời gian chờ lượt đánh (mili giây)
      */
