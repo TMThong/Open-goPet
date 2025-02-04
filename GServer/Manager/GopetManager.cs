@@ -810,6 +810,7 @@ public class GopetManager
     public const int PRICE_ASSIGNED_PET = 15000;
     public const int PRICE_ASSIGNED_ITEM = 10000;
     public static readonly Dictionary<int, PetEffectTemplate> PET_EFF_TEMP = new();
+    public static readonly int[] PERCENT_BUFF_ITEM = new int[] { 0, 10, 10, 10, 15, 15, 15, 20, 20, 30, 40, 40 };
     static GopetManager()
     {
         SqlMapper.AddTypeHandler(new JsonAdapter<int[]>());
