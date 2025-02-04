@@ -300,11 +300,11 @@ namespace Gopet.Data.GopetItem
             }
             return getTemp().getDescription(player) + string.Join(",", strs);
         }
-        public static int GetPercentBuff(int index)
+        public static int GetPercentBuff(int index, int[] array)
         {
-            if (index >= 0 && index < GopetManager.PERCENT_BUFF_ITEM.Length)
+            if (index >= 0 && index < array.Length)
             {
-                return GopetManager.PERCENT_BUFF_ITEM[index];
+                return array[index];
             }
             return 1;
         }
@@ -317,7 +317,7 @@ namespace Gopet.Data.GopetItem
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
-            int info = value + (int)Utilities.GetValueFromPercent(value, GetPercentBuff(lvl));
+            int info = value + (int)Utilities.GetValueFromPercent(value, GetPercentBuff(lvl, GopetManager.PERCENT_BUFF_DEF_ITEM));
             info += Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_DEF)));
             return GetFusionValue(info, NumFusion, 5f);
         }
@@ -330,7 +330,7 @@ namespace Gopet.Data.GopetItem
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
-            int info = value + (int)Utilities.GetValueFromPercent(value, GetPercentBuff(lvl));
+            int info = value + (int)Utilities.GetValueFromPercent(value, GetPercentBuff(lvl, GopetManager.PERCENT_BUFF_ATK_ITEM));
             info += Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_ATK)));
             return GetFusionValue(info, NumFusion, 10f);
         }
@@ -344,7 +344,7 @@ namespace Gopet.Data.GopetItem
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
-            int info = value + (int)Utilities.GetValueFromPercent(value, GetPercentBuff(lvl));
+            int info = value + (int)Utilities.GetValueFromPercent(value, GetPercentBuff(lvl, GopetManager.PERCENT_BUFF_HP_ITEM));
             info += Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_HP)));
             return GetFusionValue(info, NumFusion, 30f);
         }
@@ -358,7 +358,7 @@ namespace Gopet.Data.GopetItem
             {
                 return value + Utilities.round(Utilities.GetValueFromPercent(value, lvl * GopetManager.PERCENT_ADD_WHEN_ENCHANT_WING));
             }
-            int info = value + (int)Utilities.GetValueFromPercent(value, GetPercentBuff(lvl));
+            int info = value + (int)Utilities.GetValueFromPercent(value, GetPercentBuff(lvl, GopetManager.PERCENT_BUFF_MP_ITEM));
             info += Utilities.round(Utilities.GetValueFromPercent(info, getPercentGemBuff(ItemInfo.OptionType.PERCENT_MP)));
             return GetFusionValue(info, NumFusion, 5f);
         }
