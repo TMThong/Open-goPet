@@ -8,6 +8,7 @@ namespace Gopet.Data.GopetItem
 {
     public class Item : IBinaryObject<Item>
     {
+
         public int itemId;
 
         public int itemTemplateId = -1;
@@ -63,6 +64,8 @@ namespace Gopet.Data.GopetItem
         /// </summary>
         public byte NumFusion { get; set; } = 0;
 
+        public Version version { get; set; } = new Version(1, 0, 0, 0);
+
         public Item()
         {
 
@@ -70,6 +73,7 @@ namespace Gopet.Data.GopetItem
 
         public Item(int itemTemplateId, int count_ = 0, bool isSkipRandom = false)
         {
+            this.version = new Version(1, 0, 0, 1);
             this.SourcesItem.Clear();
             this.count = count_;
             this.itemTemplateId = itemTemplateId;
