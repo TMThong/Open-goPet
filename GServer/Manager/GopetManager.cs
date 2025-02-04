@@ -678,14 +678,14 @@ public class GopetManager
     /// </summary>
     public static readonly CopyOnWriteArrayList<ClanMemberDonateInfo> clanMemberDonateInfos = new(new ClanMemberDonateInfo[]
     {
-            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_COIN, 100000, 100),
-            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_COIN, 1000000, 1000),
-            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_COIN, 10000000, 10000),
-            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 10, 1),
-            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 100, 10),
-            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 1000, 100),
-            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 10000,  1000),
-            new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 100000,  10000)
+        new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_COIN, 100000, 100),
+        new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_COIN, 1000000, 1000),
+        new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_COIN, 10000000, 10000),
+        new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 10, 1),
+        new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 100, 10),
+        new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 1000, 100),
+        new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 10000,  1000),
+        new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 100000,  10000)
     });
 
     public const int MAX_ITEM_MERGE_SERVER = int.MaxValue;
