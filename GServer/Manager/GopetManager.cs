@@ -677,7 +677,7 @@ public class GopetManager
     /// Dữ liệu góp quỹ bang
     /// </summary>
     public static readonly CopyOnWriteArrayList<ClanMemberDonateInfo> clanMemberDonateInfos = new(new ClanMemberDonateInfo[]
-            {
+    {
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_COIN, 100000, 100),
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_COIN, 1000000, 1000),
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_COIN, 10000000, 10000),
@@ -686,7 +686,7 @@ public class GopetManager
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 1000, 100),
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 10000,  1000),
             new ClanMemberDonateInfo(GopetManager.MONEY_TYPE_GOLD, 100000,  10000)
-            });
+    });
 
     public const int MAX_ITEM_MERGE_SERVER = int.MaxValue;
     public const int MAX_PET_MERGE_SERVER = 0;
