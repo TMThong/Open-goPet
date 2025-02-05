@@ -52,6 +52,19 @@ namespace Gopet.Manager
             }
         }
 
+        public static void FindAndUseItemEvent(int itemId, Player player, int Count)
+        {
+            var findEvent = _events.Where(p => p.ItemsOfEvent.Contains(itemId));
+            if (findEvent.Any())
+            {
+                findEvent.First().UseItemCount(itemId, player, Count);
+            }
+            else
+            {
+                player.redDialog(player.Language.CannotFindEvents);
+            }
+        }
+
         private static void Run()
         {
             while (IsRunning)

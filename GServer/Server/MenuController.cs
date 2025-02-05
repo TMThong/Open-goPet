@@ -550,6 +550,7 @@ public partial class MenuController
     public const int OBJKEY_PRICE_KIOSK_ITEM = 70;
     public const int OBJKEY_ITEM_KIOSK_CANCEL = 71;
     public const int OBJKEY_BUY_ITEM_KIOSK_ITEM_ID = 72;
+    public const int OBJKEY_ID_ITEM_USE_ITEM_COUNT = 73;
     public const int DIALOG_CONFIRM_REMOVE_ITEM_EQUIP = 0;
     public const int DIALOG_CONFIRM_BUY_KIOSK_ITEM = 1;
     public const int DIALOG_ENCHANT = 3;
@@ -606,6 +607,7 @@ public partial class MenuController
     public const int INPUT_ASSIGNED_NAME_KIOSK = 36;
     public const int INPUT_ASSIGNED_CHANGE_NAME_KIOSK = 37;
     public const int INPUT_NUM_BUY_RETAIL_ITEM_KIOSK = 38;
+    public const int INPUT_USE_NUM_ITEM = 39;
     public const int IMGDIALOG_CAPTCHA = 0;
     #endregion
     public static JArrayList<MenuItemInfo> getPetFreeLst(Player player)
@@ -1117,6 +1119,7 @@ public partial class MenuController
                 return new sbyte[] { InputReader.FIELD_LONG };
             case INPUT_DIALOG_ADMIN_GET_HISTORY:
                 return new sbyte[] { InputReader.FIELD_STRING, InputReader.FIELD_STRING, InputReader.FIELD_STRING };
+            case INPUT_USE_NUM_ITEM:
             case INPUT_NUM_BUY_RETAIL_ITEM_KIOSK:
             case INPUT_NUM_DUNG_HỢP:
             case INPUT_TYPE_COUNT_USE_BÓ_HOA:
@@ -1293,6 +1296,12 @@ public partial class MenuController
             To.redDialog(To.Language.PlayerOffline);
         }
         return false;
+    }
+
+    public static void ShowUseItemCountDialog(Player player, int itemId)
+    {
+        player.controller.objectPerformed[OBJKEY_ID_ITEM_USE_ITEM_COUNT] = itemId;
+        player.controller.showInputDialog(INPUT_USE_NUM_ITEM, "Dùng vật phẩm theo số lượng", "Số lượng: ");
     }
 
     public static void SellKioskItem(Player player, int priceItem, string nameAssigned = null)

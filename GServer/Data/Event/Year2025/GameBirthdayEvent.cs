@@ -183,9 +183,13 @@ namespace Gopet.Data.Event.Year2025
                 switch (itemId)
                 {
                     case ID_RANDOM_EVENT_BOX:
-                    case ID_CYLINDRIAL_CAKE:
-                    case ID_SQUARE_CAKE:
                         UseEventItem(itemId, player);
+                        break;
+                    case ID_CYLINDRIAL_CAKE:
+                        MenuController.ShowUseItemCountDialog(player, ID_CYLINDRIAL_CAKE);
+                        break;
+                    case ID_SQUARE_CAKE:
+                        MenuController.ShowUseItemCountDialog(player, ID_SQUARE_CAKE);
                         break;
                     default:
                         player.redDialog(player.Language.ThisEventItemIsMaterial);
@@ -193,6 +197,40 @@ namespace Gopet.Data.Event.Year2025
                 }
             }
         }
+
+        public override void UseItemCount(int itemId, Player player, int count)
+        {
+            if (this.CheckEventStatus(player))
+            {
+                Item item = player.controller.selectItemsbytemp(itemId, GopetManager.NORMAL_INVENTORY);
+                if (item != null)
+                {
+                    switch (itemId)
+                    {
+                        case ID_CYLINDRIAL_CAKE:
+                            {
+                                player.playerData.NumEatCylindricalStickyRice += 10 * count;
+                                player.playerData.NumEatCylindricalStickyRiceCoin += 10 * count;
+                                player.controller.subCountItem(item, count, GopetManager.NORMAL_INVENTORY);
+                                player.okDialog(player.Language.EatCylindricalStickyRiceOK);
+                            }
+                            break;
+                        case ID_SQUARE_CAKE:
+                            {
+                                player.playerData.NumEatSquareStickyRice += 10 * count;
+                                player.playerData.NumEatSquareStickyRiceCoin += 10 * count;
+                                player.controller.subCountItem(item, count, GopetManager.NORMAL_INVENTORY);
+                                player.okDialog(player.Language.EatSquareStickyRiceOK);
+                            }
+                            break;
+                        default:
+                            player.redDialog(player.Language.ThisEventItemIsMaterial);
+                            break;
+                    }
+                }
+            }
+        }
+
         void UseEventItem(int itemId, Player player)
         {
             Item item = player.controller.selectItemsbytemp(itemId, GopetManager.NORMAL_INVENTORY);
@@ -203,16 +241,10 @@ namespace Gopet.Data.Event.Year2025
                     switch (item.itemTemplateId)
                     {
                         case ID_SQUARE_CAKE:
-                            player.playerData.NumEatSquareStickyRice += 10;
-                            player.playerData.NumEatSquareStickyRiceCoin += 10;
-                            player.controller.subCountItem(item, 1, GopetManager.NORMAL_INVENTORY);
-                            player.okDialog(player.Language.EatSquareStickyRiceOK);
+                            
                             break;
                         case ID_CYLINDRIAL_CAKE:
-                            player.playerData.NumEatCylindricalStickyRice += 10;
-                            player.playerData.NumEatCylindricalStickyRiceCoin += 10;
-                            player.controller.subCountItem(item, 1, GopetManager.NORMAL_INVENTORY);
-                            player.okDialog(player.Language.EatCylindricalStickyRiceOK);
+                            
                             break;
                         case ID_RANDOM_EVENT_BOX:
                             player.playerData.NumUseGiftBox2025++;

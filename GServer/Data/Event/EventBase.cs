@@ -43,6 +43,11 @@ namespace Gopet.Data.Event
 
         }
 
+        public virtual void UseItemCount(int itemId, Player player, int count)
+        {
+
+        }
+
         public virtual void NpcOption(Player player, int optionId)
         {
 

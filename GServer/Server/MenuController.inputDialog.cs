@@ -2,9 +2,11 @@
 using Gopet.APIs;
 using Gopet.Data.Collections;
 using Gopet.Data.Dialog;
+using Gopet.Data.Event.Year2025;
 using Gopet.Data.GopetClan;
 using Gopet.Data.GopetItem;
 using Gopet.Data.Map;
+using Gopet.Manager;
 using Gopet.Util;
 using MySqlConnector;
 using OtpNet;
@@ -797,6 +799,32 @@ public partial class MenuController
                             player.playerData.petSelected.tiemnang_point = gym;
                             player.playerData.petSelected.star = star;
                             player.okDialog("Set pet cấp {0} có {1} gym và {2} (sao) thành công", lvl, gym, star);
+                        }
+                    }
+                    break;
+                case INPUT_USE_NUM_ITEM:
+                    {
+                        int count = reader.readInt(0);
+                        if (count > 0 && player.controller.objectPerformed.ContainsKey(OBJKEY_ID_ITEM_USE_ITEM_COUNT))
+                        {
+                            int itemId = player.controller.objectPerformed[OBJKEY_ID_ITEM_USE_ITEM_COUNT];
+                            Item item = player.controller.selectItemsbytemp(itemId, GopetManager.NORMAL_INVENTORY);
+                            if (item != null && GameController.checkCount(item, count))
+                            {
+                                switch (item.Template.itemId)
+                                {
+                                    case GameBirthdayEvent.ID_SQUARE_CAKE:
+                                    case GameBirthdayEvent.ID_CYLINDRIAL_CAKE:
+                                        EventManager.FindAndUseItemEvent(item.Template.itemId, player, count);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            player.redDialog(player.Language.BugWarning);
                         }
                     }
                     break;
