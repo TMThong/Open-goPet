@@ -1251,10 +1251,14 @@ namespace Gopet.Battle
                         switch (itemInfo.id)
                         {
                             case ItemInfo.Type.BUFF_DAMGE:
-                                if (!(mob is Boss))
+                                if (mob is Boss boss1)
                                 {
-                                    sum += (int)Utilities.GetValueFromPercent(itemInfo.getPercent(), sum);
+                                    if (boss1.Template.typeBoss == BossTemplate.TYPE_BIRTHDAY_EVENT)
+                                    {
+                                        continue;
+                                    }
                                 }
+                                sum += (int)Utilities.GetValueFromPercent(itemInfo.getPercent(), sum);
                                 break;
 
                         }
