@@ -203,7 +203,7 @@ namespace Gopet.Data.Event.Year2025
             if (this.CheckEventStatus(player))
             {
                 Item item = player.controller.selectItemsbytemp(itemId, GopetManager.NORMAL_INVENTORY);
-                if (item != null)
+                if (item != null && GameController.checkCount(item, count))
                 {
                     switch (itemId)
                     {
