@@ -209,7 +209,7 @@ namespace Gopet.APIs
             return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
         }
 
-        public static void BuffItem(string name, int itemId, int LevelUpTier, int MaxTier, int count, bool MaxOption, int EndLevel)
+        public static void BuffItem(string name, int itemId, int LevelUpTier, int MaxTier, int count, bool MaxOption, int EndLevel, byte NumFusion = 0, byte EndNumFusion = 0)
         {
             if (PlayerManager.player_name.TryGetValue(name, out var p))
             {
@@ -240,6 +240,7 @@ namespace Gopet.APIs
                             item.AddEnchantInfo();
                             item.lvl = t;
                         }
+                        item.NumFusion = NumFusion;
                         if (GopetManager.tierItem.TryGetValue(item.itemTemplateId, out var tierItem))
                         {
                             item.itemTemplateId = tierItem.itemTemplateIdTier2;
@@ -254,16 +255,17 @@ namespace Gopet.APIs
                         item.AddEnchantInfo();
                         item.lvl = j;
                     }
+                    item.NumFusion = EndNumFusion;
                     p.addItemToInventory(item);
                     p.Popup($"Bạn được buff bẩn {item.getName(p)}");
                 }
             }
         }
 
-        [HttpGet("/api/BuffItem/{name}/{itemId}/{LevelUpTier}/{MaxTier}/{count}/{MaxOption}/{EndLevel}")]
-        public IActionResult ApiBuffItem(string name, int itemId, int LevelUpTier, int MaxTier, int count, bool MaxOption, int EndLevel)
+        [HttpGet("/api/BuffItem/{name}/{itemId}/{LevelUpTier}/{MaxTier}/{count}/{MaxOption}/{EndLevel}/{NumFusion}/{EndFusion}")]
+        public IActionResult ApiBuffItem(string name, int itemId, int LevelUpTier, int MaxTier, int count, bool MaxOption, int EndLevel, byte NumFusion, byte EndFusion)
         {
-            BuffItem(name, itemId, LevelUpTier, MaxTier, count, MaxOption, EndLevel);
+            BuffItem(name, itemId, LevelUpTier, MaxTier, count, MaxOption, EndLevel, NumFusion, EndFusion);
             return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
         }
         [HttpGet("/api/ThreadCount")]

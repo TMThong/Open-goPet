@@ -813,7 +813,7 @@ public class GopetManager
     public static readonly int[] PERCENT_BUFF_ATK_ITEM = new int[] { 0, 10, 10, 10, 15, 15, 15, 20, 20, 30, 40, 40 };
     public static readonly int[] PERCENT_BUFF_DEF_ITEM = new int[] { 0, 2, 2, 2, 5, 5, 5, 6, 6, 8, 10, 10 };
     public static readonly int[] PERCENT_BUFF_MP_ITEM = new int[] { 0, 2, 2, 2, 5, 5, 5, 6, 6, 8, 10, 10 };
-    public static readonly int[] PERCENT_BUFF_HP_ITEM = new int[] { 0, 20, 20, 20, 30, 30, 30, 40, 40, 50, 60, 60 };
+    public static readonly int[] PERCENT_BUFF_HP_ITEM = new int[] { 0, 10, 10, 10, 20, 20, 20, 30, 30, 40, 50, 50 };
     static GopetManager()
     {
         SqlMapper.AddTypeHandler(new JsonAdapter<int[]>());
