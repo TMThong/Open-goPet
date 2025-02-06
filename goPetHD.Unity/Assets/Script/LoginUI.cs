@@ -1,4 +1,5 @@
-﻿using goPetHD.Helper;
+﻿using goPetHD;
+using goPetHD.Helper;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,6 +28,7 @@ public class LoginUI : MonoBehaviour
         if (StringHelper.IsUsernamePassValid(this.username.text) && StringHelper.IsUsernamePassValid(this.password.text))
         {
             UICamera.ShowWaitDialog();
+            GameClient.client.doConnect();
         }
         else UICamera.ShowOkDialog("Tài khoản và mật khẩu không được để trống từ 6-20 kí tự và không chứa kí tự đặc biệt.");
     }
