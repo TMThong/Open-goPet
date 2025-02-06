@@ -82,17 +82,16 @@ namespace Gopet.IO
                     int v0 = buf[i];
                     int v1 = buf[i + 1];
 
-                    for (int sum = 0; n-- > 0; v1 += ((v0 << 4) + this.S[2] ^ v0) + (sum ^ v0 >>> 5) + this.S[3])
+                    for (int sum = 0; n-- > 0; v1 += ((v0 << 4) + this.S[2] ^ v0) + (sum ^ (int)((uint)v0 >> 5)) + this.S[3])
                     {
                         sum -= 1640531527;
-                        v0 += ((v1 << 4) + this.S[0] ^ v1) + (sum ^ v1 >>> 5) + this.S[1];
+                        v0 += ((v1 << 4) + this.S[0] ^ v1) + (sum ^ (int)((uint)v1 >> 5)) + this.S[1];
                     }
 
                     buf[i] = v0;
                     buf[i + 1] = v1;
                 }
             }
-
         }
 
         void unbrew(int[] buf)
@@ -107,15 +106,14 @@ namespace Gopet.IO
 
                     for (int sum = -957401312; n-- > 0; sum += 1640531527)
                     {
-                        v1 -= ((v0 << 4) + this.S[2] ^ v0) + (sum ^ v0 >>> 5) + this.S[3];
-                        v0 -= ((v1 << 4) + this.S[0] ^ v1) + (sum ^ v1 >>> 5) + this.S[1];
+                        v1 -= ((v0 << 4) + this.S[2] ^ v0) + (sum ^ (int)((uint)v0 >> 5)) + this.S[3];
+                        v0 -= ((v1 << 4) + this.S[0] ^ v1) + (sum ^ (int)((uint)v1 >> 5)) + this.S[1];
                     }
 
                     buf[i] = v0;
                     buf[i + 1] = v1;
                 }
             }
-
         }
 
         void pack(sbyte[] src, int[] dest, int destOffset)

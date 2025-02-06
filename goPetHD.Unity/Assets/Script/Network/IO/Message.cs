@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+
 namespace Gopet.IO
 {
     public class Message
@@ -43,8 +46,8 @@ namespace Gopet.IO
                 {
                     buffer = new sbyte[data.Length + 3];
                     buffer[0] = 40;
-                    buffer[1] = (sbyte)(this.id >>> 8 & 255);
-                    buffer[2] = (sbyte)(this.id >>> 0 & 255);
+                    buffer[1] = (sbyte)(((uint)this.id >> 8) & 255);
+                    buffer[2] = (sbyte)(((uint)this.id >> 0) & 255);
                     Buffer.BlockCopy(data, 0, buffer, 3, data.Length);
                     return buffer;
                 }
