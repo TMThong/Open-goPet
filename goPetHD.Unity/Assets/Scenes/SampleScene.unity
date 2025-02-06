@@ -973,7 +973,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 364350044}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 0}
@@ -2786,7 +2786,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 8.900002}
+  m_AnchoredPosition: {x: 0, y: -2.6}
   m_SizeDelta: {x: -22.9616, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1434056737
@@ -2844,7 +2844,7 @@ MonoBehaviour:
   m_fontSizeMax: 0
   m_fontStyle: 1
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -3666,6 +3666,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5e903f5346b274449548d7ba0e50f07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loginUI: {fileID: 0}
+  okDialog: {fileID: 0}
+  answerDialog: {fileID: 0}
+  waitDialog: {fileID: 0}
 --- !u!1 &1984859759
 GameObject:
   m_ObjectHideFlags: 0
@@ -3759,7 +3763,7 @@ GameObject:
   - component: {fileID: 2035662238}
   m_Layer: 5
   m_Name: username
-  m_TagString: Untagged
+  m_TagString: UICompoent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3781,7 +3785,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.48319325}
   m_AnchorMax: {x: 0.5, y: 0.48319325}
-  m_AnchoredPosition: {x: 0.000017643, y: 17.2}
+  m_AnchoredPosition: {x: -4.4001, y: 13}
   m_SizeDelta: {x: 375, y: 105}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2035662238
@@ -4063,7 +4067,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000015258789, y: 11.7}
+  m_AnchoredPosition: {x: 0.000015258789, y: -2.5999985}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2076743828
