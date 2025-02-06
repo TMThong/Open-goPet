@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>OPS.Serialization.Json</name>
+    </assembly>
+    <members>
+        <member name="T:OPS.Serialization.Json.Attributes.JsonPropertyAttribute">
+            <summary>
+            Assign to a public field or public property to mark it as json serializable.
+            This attribute is only needed if you attach a JsonObject attribute to the declaring class.
+            </summary>
+        </member>
+        <member name="P:OPS.Serialization.Json.Attributes.JsonPropertyAttribute.Name">
+            <summary>
+            Custom name stored to and loaded from.
+            </summary>
+        </member>
+        <member name="T:OPS.Serialization.Json.Attributes.CustomJsonDeserializationMethodAttribute">
+            <summary>
+            Assign to a method, with a single JsonObject as input parameter, so this will be callen to deserialize the json instead of default deserialization.
+            </summary>
+        </member>
+        <member name="T:OPS.Serialization.Json.Attributes.CustomJsonSerializationMethodAttribute">
+            <summary>
+            Assign to a method, with JsonObject as return type, so this will be callen to serialize to json instead of default deserialization.
+            </summary>
+        </member>
+        <member name="T:OPS.Serialization.Json.Attributes.PostJsonDeserializationMethodAttribute">
+            <summary>
+            Assign to a method, so this will be callen post json deserialization.
+            You can modify fields or properties after they got deserialized.
+            </summary>
+        </member>
+        <member name="T:OPS.Serialization.Json.Attributes.PreJsonSerializationMethodAttribute">
+            <summary>
+            Assign to a method, so this will be callen pre json serialization.
+            You can modify fields or properties before they will be serialized.
+            </summary>
+        </member>
+        <member name="T:OPS.Serialization.Json.Attributes.JsonObjectAttribute">
+            <summary>
+            Assign to a class to mark it as json serializable.
+            If you do so, only public fields and public properties with a JsonProperty attribute will be serialized.
+            </summary>
+        </member>
+        <member name="T:OPS.Serialization.Json.Interfaces.ICustomJsonSerializeable">
+            <summary>
+            Assign to a class, to auto implement the custom json serialization and deserialization methods.
+            </summary>
+        </member>
+        <member name="M:OPS.Serialization.Json.Interfaces.ICustomJsonSerializeable.OnCustomSerialization">
+            <summary>
+            Called to serialize the json to a custom string.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OPS.Serialization.Json.Interfaces.ICustomJsonSerializeable.OnCustomDeserialization(OPS.Serialization.Json.JsonObject)">
+            <summary>
+            Called to deserialize from custom _JsonObject.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:OPS.Serialization.Json.Interfaces.IJsonObject">
+            <summary>
+            Assign to a class, to auto implement the json pre serialization and post deserialization methods.
+            </summary>
+        </member>
+        <member name="M:OPS.Serialization.Json.Interfaces.IJsonObject.OnPreSerialization">
+            <summary>
+            Called on json pre serialization.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OPS.Serialization.Json.Interfaces.IJsonObject.OnPostDeserialization">
+            <summary>
+            Called on json post deserialization.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:OPS.Serialization.Json.JsonArray">
+            <summary>
+            Json Array Object.
+            </summary>
+        </member>
+        <member name="T:OPS.Serialization.Json.JsonBool">
+            <summary>
+            Json Boolean Object.
+            </summary>
+        </member>
+        <member name="P:OPS.Serialization.Json.JsonNode.ForceASCII">
+            <summary>
+            Use Unicode by default.
+            </summary>
+        </member>
+        <member name="P:OPS.Serialization.Json.JsonNode.LongAsString">
+            <summary>
+            Use JSONNumber as default.
+            </summary>
+        </member>
+        <member name="P:OPS.Serialization.Json.JsonNode.AllowLineComments">
+            <summary>
+            Allow "//"-style comments at the end of a line.
+            </summary>
+        </member>
+        <member name="T:OPS.Serialization.Json.JsonNull">
+            <summary>
+            Json Null Object.
+            </summary>
+        </member>
+        <member name="T:OPS.Serialization.Json.JsonNumber">
+            <summary>
+            Json Number Object.
+            </summary>
+        </member>
+        <member name="T:OPS.Serialization.Json.JsonObject">
+            <summary>
+            Json Object.
+            </summary>
+        </member>
+        <member name="T:OPS.Serialization.Json.JsonString">
+            <summary>
+            Json String Object.
+            </summary>
+        </member>
+        <member name="T:OPS.Serialization.Json.JsonSerializer">
+            <summary>
+            Used to parse json string to an object or the other way around.
+            </summary>
+        </member>
+        <member name="M:OPS.Serialization.Json.JsonSerializer.IsJson(System.String)">
+            <summary>
+            Returns true if _Json is a valid json object.
+            </summary>
+            <param name="_Json"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OPS.Serialization.Json.JsonSerializer.ParseStringToObject``1(System.String)">
+            <summary>
+            Parse a String _Json to an Object of type T.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="_Json"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OPS.Serialization.Json.JsonSerializer.ParseStringToObject(System.Type,System.String)">
+            <summary>
+            Parse a String _Json to an Object of type _Type.
+            </summary>
+            <param name="_Type"></param>
+            <param name="_Json"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OPS.Serialization.Json.JsonSerializer.ParseObjectToJson(System.Object,OPS.Serialization.Json.EJsonTextMode)">
+            <summary>
+            Parse an object _Object to a Json String.
+            </summary>
+            <param name="_Object"></param>
+            <param name="_JsonTextMode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OPS.Serialization.Json.JsonSerializer.GetCustomAttributes``1(System.Type)">
+            <summary>Searches and returns attributes. The inheritance chain is not used to find the attributes.</summary>
+            <typeparam name="T">The type of attribute to search for.</typeparam>
+            <param name="type">The type which is searched for the attributes.</param>
+            <returns>Returns all attributes.</returns>
+        </member>
+        <member name="M:OPS.Serialization.Json.JsonSerializer.GetCustomAttributes``1(System.Type,System.Boolean)">
+            <summary>Searches and returns attributes.</summary>
+            <typeparam name="T">The type of attribute to search for.</typeparam>
+            <param name="type">The type which is searched for the attributes.</param>
+            <param name="inherit">Specifies whether to search this member's inheritance chain to find the attributes. Interfaces will be searched, too.</param>
+            <returns>Returns all attributes.</returns>
+        </member>
+        <member name="M:OPS.Serialization.Json.JsonSerializer.GetCustomAttributes(System.Type,System.Type,System.Boolean)">
+            <summary>Private helper for searching attributes.</summary>
+            <param name="type">The type which is searched for the attribute.</param>
+            <param name="attributeType">The type of attribute to search for.</param>
+            <param name="inherit">Specifies whether to search this member's inheritance chain to find the attribute. Interfaces will be searched, too.</param>
+            <returns>An array that contains all the custom attributes, or an array with zero elements if no attributes are defined.</returns>
+        </member>
+        <member name="M:OPS.Serialization.Json.JsonSerializer.Apply``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
+            <summary>Applies a function to every element of the list.</summary>
+        </member>
+    </members>
+</doc>
