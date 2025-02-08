@@ -228,19 +228,28 @@ namespace Gopet.APIs
                     {
                         item.AddEnchantInfo();
                         item.lvl = j;
+                        GopetManager.ServerMonitor.LogInfo($"BuffItem TIER {j} {Utilities.FormatNumber(Utilities.GetValueFromPercentL(item.getHp() + item.hp, GopetManager.PERCENT_ITEM_TIER_INFO))} HP");
                     }
+                    item.NumFusion = NumFusion;
                     for (global::System.Int32 j = 0; j < MaxTier; j++)
                     {
+#if DEBUG_LOG
+                        GopetManager.ServerMonitor.LogInfo($"BuffItem TIER {j} {Utilities.FormatNumber(Utilities.GetValueFromPercentL(item.getHp() + item.hp, GopetManager.PERCENT_ITEM_TIER_INFO))} HP");
+                        GopetManager.ServerMonitor.LogInfo($"BuffItem TIER {j} {Utilities.FormatNumber(Utilities.GetValueFromPercentL(item.getMp() + item.mp, GopetManager.PERCENT_ITEM_TIER_INFO))} MP");
+                        GopetManager.ServerMonitor.LogInfo($"BuffItem TIER {j} {Utilities.FormatNumber(Utilities.GetValueFromPercentL(item.getAtk() + item.atk, GopetManager.PERCENT_ITEM_TIER_INFO))} ATK");
+                        GopetManager.ServerMonitor.LogInfo($"BuffItem TIER {j} {Utilities.FormatNumber(Utilities.GetValueFromPercentL(item.getDef() + item.def, GopetManager.PERCENT_ITEM_TIER_INFO))} DEF");
+#endif
                         item.hp = Utilities.round(Utilities.GetValueFromPercent(item.getHp() + item.hp, GopetManager.PERCENT_ITEM_TIER_INFO));
                         item.mp = (Utilities.round(Utilities.GetValueFromPercent(item.getMp() + item.mp, GopetManager.PERCENT_ITEM_TIER_INFO)));
                         item.atk = (Utilities.round(Utilities.GetValueFromPercent(item.getAtk() + item.atk, GopetManager.PERCENT_ITEM_TIER_INFO)));
                         item.def = (Utilities.round(Utilities.GetValueFromPercent(item.getDef() + item.def, GopetManager.PERCENT_ITEM_TIER_INFO)));
+                        item.NumFusion = 0;
                         for (global::System.Int32 t = 0; t <= LevelUpTier; t++)
                         {
                             item.AddEnchantInfo();
                             item.lvl = t;
                         }
-                        item.NumFusion = NumFusion;
+                        
                         if (GopetManager.tierItem.TryGetValue(item.itemTemplateId, out var tierItem))
                         {
                             item.itemTemplateId = tierItem.itemTemplateIdTier2;
@@ -255,7 +264,6 @@ namespace Gopet.APIs
                         item.AddEnchantInfo();
                         item.lvl = j;
                     }
-                    item.NumFusion = EndNumFusion;
                     p.addItemToInventory(item);
                     p.Popup($"Bạn được buff bẩn {item.getName(p)}");
                 }
