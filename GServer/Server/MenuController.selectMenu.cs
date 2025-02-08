@@ -1224,8 +1224,6 @@ public partial class MenuController
                                 {
                                     Pet pet = new Pet(itemSelect.Template.itemOptionValue[0]);
                                     player.okDialog(pet.getNameWithoutStar(player) + ": " + pet.getDesc(player));
-                                    pet = null;
-                                    HistoryManager.addHistory(new History(player).setLog($"Show mảnh pet {pet.Template?.name}").setObj(pet));
                                 }
                                 else
                                 {
