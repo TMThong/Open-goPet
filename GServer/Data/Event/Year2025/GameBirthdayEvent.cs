@@ -103,6 +103,15 @@ namespace Gopet.Data.Event.Year2025
                 BXHManager.listTop.Add(TopUseCylindricalStickyRiceCake.Instance);
                 BXHManager.listTop.Add(TopUseSquareStickyRiceCake.Instance);
                 BXHManager.listTop.Add(TopUseGiftLootBox2025.Instance);
+                GopetManager.shopTemplate[MenuController.SHOP_PET].shopTemplateItems.add(new ShopTemplateItem()
+                {
+                    itemTemTempleId = 865,
+                    shopId = MenuController.SHOP_PET,
+                    price = new int[] { 1000000 },
+                    moneyType = new sbyte[] { GopetManager.MONEY_TYPE_COIN },
+                    count = 1,
+                    CloseScreenAfterClick = false,
+                });
                 MapTemplate mapTemplate = GopetManager.mapTemplate[MapTemplate.THÀNH_PHỐ_LINH_THÚ];
                 if (!mapTemplate.npc.Contains(NPC_BIRTHDAY_CAKE))
                 {
@@ -241,10 +250,10 @@ namespace Gopet.Data.Event.Year2025
                     switch (item.itemTemplateId)
                     {
                         case ID_SQUARE_CAKE:
-                            
+
                             break;
                         case ID_CYLINDRIAL_CAKE:
-                            
+
                             break;
                         case ID_RANDOM_EVENT_BOX:
                             player.playerData.NumUseGiftBox2025++;
@@ -323,7 +332,7 @@ namespace Gopet.Data.Event.Year2025
                     case MenuController.OP_MAKE_CYLINDRICAL_STICKY_RICE_CAKE:
                         MakeCake(1, player);
                         return;
-                        case MenuController.OP_GUIDE_EVENT_GAME_BIRTHDAY:
+                    case MenuController.OP_GUIDE_EVENT_GAME_BIRTHDAY:
                         player.okDialog(player.Language.GuideEventGameBirthday);
                         return;
                     default:
