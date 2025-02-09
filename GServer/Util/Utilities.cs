@@ -245,6 +245,11 @@ namespace Gopet.Util
             return total / 100 * percent;
         }
 
+        public static long GetValueFromPercentL(long total, float percent)
+        {
+            return (long) ((total / 100L) * percent);
+        }
+
         public static string GetUID()
         {
             return Guid.NewGuid().ToString();

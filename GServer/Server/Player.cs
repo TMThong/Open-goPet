@@ -41,6 +41,7 @@ public class Player : IHandleMessage
     public bool isPetRecovery = false;
     public int skillId_learn = -1;
     public bool IsLogin2FAOK = false;
+    public bool AntiPK { get; set; } = false;
     /// <summary>
     /// Có bang hội
     /// </summary>
@@ -628,6 +629,7 @@ Thread.Sleep(1000);
         if (playerData != null)
         {
             controller.checkExpire();
+            UpdateAntiPK();
         }
         HistoryManager.addHistory(new History(this).setLogin());
     }
@@ -932,6 +934,29 @@ Thread.Sleep(1000);
         else
         {
             redDialog(Language.ErrorItem + where);
+        }
+    }
+
+    public void UpdateAntiPK()
+    {
+        this.AntiPK = false;
+        Item wing = playerData.wing;
+        if (wing != null)
+        {
+            UpdateAntiPK(wing.Template.itemOption, wing.Template.itemOptionValue);
+        }
+    }
+
+    void UpdateAntiPK(int[] optionId, int[] optionValues)
+    {
+        for (int i = 0; i < optionId.Length; i++)
+        {
+            switch (optionId[i])
+            {
+                case ItemInfo.OptionType.OPTION_ANTI_PK:
+                    this.AntiPK = optionValues[i] == 1;
+                    break;
+            }
         }
     }
 

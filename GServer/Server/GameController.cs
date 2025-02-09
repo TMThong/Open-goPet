@@ -2885,6 +2885,7 @@ public class GameController
 
     public void updateWing()
     {
+        this.player.UpdateAntiPK();
         GopetPlace place = (GopetPlace)player.getPlace();
         if (place != null)
         {

@@ -156,6 +156,7 @@ namespace Gopet.Data.GopetItem
             /// </summary>
             public const int OPTION_BATTLE_IS_FOR_ACTIVE = 16;
             public const int OPTION_HOURS_UP_COIN = 17;
+            public const int OPTION_ANTI_PK = 18;
         }
     }
 }
