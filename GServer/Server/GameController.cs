@@ -3642,6 +3642,11 @@ public class GameController
         ClanMember passiveClanMember = playerPassive.controller.getClan();
         if (playerPassive != player && playerPassive != null)
         {
+            if (playerPassive.AntiPK)
+            {
+                player.redDialog(player.Language.PlayerAntiPK);
+                return;
+            }
             if (!playerPassive.playerData.isAdmin)
             {
                 if (playerPassive != null)
