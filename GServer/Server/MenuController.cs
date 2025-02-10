@@ -1161,7 +1161,7 @@ public partial class MenuController
             case INPUT_TYPE_NAME_TO_BUFF_COIN:
                 return new sbyte[] { InputReader.FIELD_STRING, InputReader.FIELD_INT };
             case INPUT_TYPE_FAST_UP_ITEM:
-                return new sbyte[] { InputReader.FIELD_INT, InputReader.FIELD_INT, InputReader.FIELD_INT, InputReader.FIELD_INT, InputReader.FIELD_INT, InputReader.FIELD_INT };
+                return new sbyte[] { InputReader.FIELD_INT, InputReader.FIELD_INT, InputReader.FIELD_INT, InputReader.FIELD_INT, InputReader.FIELD_INT, InputReader.FIELD_INT, InputReader.FIELD_INT };
         }
         return null;
     }

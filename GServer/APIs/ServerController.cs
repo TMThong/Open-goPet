@@ -209,7 +209,7 @@ namespace Gopet.APIs
             return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
         }
 
-        public static void BuffItem(string name, int itemId, int LevelUpTier, int MaxTier, int count, bool MaxOption, int EndLevel, byte NumFusion = 0, byte EndNumFusion = 0)
+        public static void BuffItem(string name, int itemId, int LevelUpTier, int MaxTier, int count, bool MaxOption, int EndLevel, byte NumFusion = 0)
         {
             if (PlayerManager.player_name.TryGetValue(name, out var p))
             {
@@ -271,9 +271,9 @@ namespace Gopet.APIs
         }
 
         [HttpGet("/api/BuffItem/{name}/{itemId}/{LevelUpTier}/{MaxTier}/{count}/{MaxOption}/{EndLevel}/{NumFusion}/{EndFusion}")]
-        public IActionResult ApiBuffItem(string name, int itemId, int LevelUpTier, int MaxTier, int count, bool MaxOption, int EndLevel, byte NumFusion, byte EndFusion)
+        public IActionResult ApiBuffItem(string name, int itemId, int LevelUpTier, int MaxTier, int count, bool MaxOption, int EndLevel, byte NumFusion)
         {
-            BuffItem(name, itemId, LevelUpTier, MaxTier, count, MaxOption, EndLevel, NumFusion, EndFusion);
+            BuffItem(name, itemId, LevelUpTier, MaxTier, count, MaxOption, EndLevel, NumFusion);
             return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
         }
         [HttpGet("/api/ThreadCount")]

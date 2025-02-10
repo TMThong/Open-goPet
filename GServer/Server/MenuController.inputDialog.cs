@@ -618,7 +618,8 @@ public partial class MenuController
                             int count = reader.readInt(3);
                             int MaxOption = reader.readInt(4);
                             int EndLevel = reader.readInt(5);
-                            ServerController.BuffItem(player.playerData.name, itemId, LevelUpTier, MaxTier, count, MaxOption == 1, EndLevel);
+                            int Fusion = reader.readInt(6);
+                            ServerController.BuffItem(player.playerData.name, itemId, LevelUpTier, MaxTier, count, MaxOption == 1, EndLevel, (byte)Fusion);
                         }
                     }
                     break;

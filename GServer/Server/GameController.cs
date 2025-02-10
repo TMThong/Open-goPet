@@ -2896,7 +2896,6 @@ public class GameController
     private void selectMaterialEnchantItem(int itemEnchantId, int itemSelectType)
     {
         Item echanItem = selectItemEquipByItemId(itemEnchantId);
-        //System.out.println("server.GameController.selectMaterialEnchantItem() " + itemEnchantId + " " + itemSelectType);
         switch (itemSelectType)
         {
             case GopetManager.TYPE_SELECT_ENCHANT_MATERIAL1:
