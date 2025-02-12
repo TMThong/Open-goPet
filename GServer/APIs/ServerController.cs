@@ -249,7 +249,7 @@ namespace Gopet.APIs
                             item.AddEnchantInfo();
                             item.lvl = t;
                         }
-                        
+
                         if (GopetManager.tierItem.TryGetValue(item.itemTemplateId, out var tierItem))
                         {
                             item.itemTemplateId = tierItem.itemTemplateIdTier2;
@@ -297,6 +297,69 @@ namespace Gopet.APIs
         public IActionResult Ipv4Tracker()
         {
             return Ok(GopetApiExtentsion.CreateOKRepository(PlayerManager.Ipv4Tracker.Tracks.Select(x => new object[] { x.Key, x.Value.Count })));
+        }
+        [HttpPost("/api/SendMail/{to}/{subject}/{type}")]
+        public IActionResult SendMail(string to, string subject, string type = "html")
+        {
+            GopetManager.EmailService.SendEmail(to, subject, @"<!DOCTYPE html>
+<html lang=""vi"">
+<head>
+    <meta charset=""UTF-8"">
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+    <title>Thông Báo Từ Hệ Thống</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header img {
+            max-width: 150px;
+        }
+        .content {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class=""container"">
+        <div class=""header"">
+            <img src=""https://gopettae.com/Upload/Images/taeLogo.png"" alt=""Logo Trò Chơi"">
+        </div>
+        <div class=""content"">
+            <p>Chào bạn,</p>
+            <p>Đây là email tự động, vui lòng không phản hồi email này. Nếu bạn có bất kỳ câu hỏi hoặc cần hỗ trợ, hãy liên hệ với chúng tôi qua các kênh hỗ trợ khác.</p>
+            <p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</p>
+        </div>
+        <div class=""footer"">
+            <p>&copy; 2025 GoPettae. Mọi quyền được bảo lưu.</p>
+        </div>
+    </div>
+</body>
+</html>
+", type);
+            return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
         }
 
         private string GetDebuggerDisplay()
