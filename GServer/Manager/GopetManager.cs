@@ -816,6 +816,7 @@ public class GopetManager
     public static readonly int[] PERCENT_BUFF_MP_ITEM = new int[] { 0, 2, 2, 2, 5, 5, 5, 6, 6, 8, 10, 10 };
     public static readonly int[] PERCENT_BUFF_HP_ITEM = new int[] { 0, 10, 10, 10, 10, 10, 10, 15, 15, 20, 30, 30 };
     public static EmailService EmailService;
+    public static readonly string EmailContent = File.ReadAllText("assets/html/email.html");
     static GopetManager()
     {
         SqlMapper.AddTypeHandler(new JsonAdapter<int[]>());

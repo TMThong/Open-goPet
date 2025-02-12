@@ -55,6 +55,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="assets\html\email.html">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 		<None Update="backup_sql\readme.txt">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>

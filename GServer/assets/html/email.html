@@ -6,21 +6,20 @@
     <title>Thông Báo Từ Hệ Thống</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #333;
-            line-height: 1.6;
+            background: linear-gradient(135deg, #f4f4f4, #e9ecef);
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
         }
 
         .container {
             max-width: 600px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         }
 
         .header {
@@ -28,26 +27,40 @@
             margin-bottom: 20px;
         }
 
-        .header img {
-            max-width: 150px;
-        }
+            .header img {
+                max-width: 120px;
+                border-radius: 50%;
+            }
 
         .content {
-            font-size: 16px;
-            margin-bottom: 20px;
+            font-size: 15px;
+            color: #555;
+            line-height: 1.8;
+            text-align: justify;
         }
 
         .footer {
             text-align: center;
-            font-size: 14px;
-            color: #888;
+            font-size: 13px;
+            color: #aaa;
+            margin-top: 20px;
         }
+
+            .footer a {
+                color: #007BFF;
+                text-decoration: none;
+            }
+
+                .footer a:hover {
+                    text-decoration: underline;
+                }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <img src="https://gopettae.com/Upload/Images/taeLogo.png">
+            <img src="https://gopettae.com/Upload/Images/taeLogo.png" alt="Logo">
+            <h2>Thông Báo Từ Hệ Thống</h2>
         </div>
         <div class="content">
             <p>{0}</p>
@@ -55,7 +68,7 @@
             <p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</p>
         </div>
         <div class="footer">
-            <p>&copy; 2025 GoPettae. Mọi quyền được bảo lưu.</p>
+            <p>&copy; 2025 goPet Tae. Mọi quyền được bảo lưu. | <a href="https://gopettae.com/">Trang chủ</a> | <a href="https://zalo.me/g/ijkthx658">Hỗ trợ</a></p>
         </div>
     </div>
 </body>
