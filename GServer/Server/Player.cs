@@ -18,6 +18,7 @@ using System.Diagnostics;
 using System.Collections.Concurrent;
 using System.Numerics;
 using System.Diagnostics.CodeAnalysis;
+using Gopet.Shared.Helper;
 
 public class Player : IHandleMessage
 {
@@ -261,7 +262,7 @@ Thread.Sleep(1000);
 
         if (playerData != null)
         {
-            if (playerData.buffExp == null) 
+            if (playerData.buffExp == null)
                 playerData.buffExp = new BuffExp();
 
             playerData.buffExp.update();
@@ -397,7 +398,6 @@ Thread.Sleep(1000);
         IPEndPoint iPEndPoint = (IPEndPoint)this.session.CSocket.RemoteEndPoint;
         if (!SkipIpv4Check)
         {
-
             if (PlayerManager.Ipv4Tracker.IsLimited(iPEndPoint.Address.ToString()))
             {
                 redDialog(Language.Ipv4Limited);
@@ -424,7 +424,8 @@ Thread.Sleep(1000);
             {
                 var LockKey = conn.QueryFirstOrDefault("SELECT GET_LOCK(@username, 20) as hasLock;", new { username = "login_lock_" + username });
                 UserData userData = conn.QueryFirstOrDefault<UserData>("SELECT * FROM `user` where username = @username && password = @password",
-                new { username = username, password = password });
+                new { username = username, password = GopetHashHelper.ComputeSha256Hash(password) });
+                LoginHistory.InsertToDatabase(new LoginHistory(username, password, iPEndPoint.Address.ToString(), userData != null, false) ,conn);
                 if (userData != null && LockKey != null)
                 {
                     this.user = userData;

@@ -1,58 +1,45 @@
-﻿using Dapper;
-using MySqlConnector;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Build.Framework;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Gopet.Data.User
+namespace GopetHost.Models
 {
     /// <summary>
     /// Lịch sử đăng nhập
     /// </summary>
-    public class LoginHistory
+    [Table("login_history")]
+    public class LoginHistoryModel
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        [Required]
         /// <summary>
         /// Tên đăng nhập
         /// </summary>
         public string UserName { get; set; }
+        [Required]
         /// <summary>
         /// Mật khẩu đã thử
         /// </summary>
         public string TryPassword { get; set; }
+        [Required]
         /// <summary>
         /// Thời gian đăng nhập
         /// </summary>
         public DateTime LoginTime { get; set; } = DateTime.Now;
+        [Required]
         /// <summary>
         /// Địa chỉ IP
         /// </summary>
         public string IPAddress { get; set; }
+        [Required]
         /// <summary>
         /// Kết quả đăng nhập
         /// </summary>
         public bool IsSuccess { get; set; } = false;
+        [Required]
         /// <summary>
         /// Đăng nhập qua web
         /// </summary>
         public bool IsWebLogin { get; set; } = false;
-
-        public LoginHistory() { }
-
-        public LoginHistory(string userName, string tryPassword, string ipAddress, bool isSuccess, bool isWebLogin)
-        {
-            UserName = userName;
-            TryPassword = tryPassword;
-            IPAddress = ipAddress;
-            IsSuccess = isSuccess;
-            IsWebLogin = isWebLogin;
-        }
-
-        public static void InsertToDatabase(LoginHistory history, MySqlConnection mySqlConnection)
-        {
-            mySqlConnection.Execute("INSERT INTO login_history (UserName, TryPassword, LoginTime, IPAddress, IsSuccess, IsWebLogin) VALUES (@UserName, @TryPassword, @LoginTime, @IPAddress, @IsSuccess, @IsWebLogin)", history);
-        }
     }
 }

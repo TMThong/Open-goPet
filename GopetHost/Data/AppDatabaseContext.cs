@@ -28,6 +28,8 @@ namespace GopetHost.Data
 
         public DbSet<RedirectUrlModel> RedirectUrls { get; set; }
 
+        public DbSet<LoginHistoryModel> LoginHistories { get; set; }
+
 
         public T LoadWebConfig<T>(string Key, T defaultValue)
 		{

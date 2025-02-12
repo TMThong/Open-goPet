@@ -5,6 +5,7 @@ using Gopet.Data.item;
 using Gopet.Data.Mob;
 using Gopet.IO;
 using Gopet.Manager;
+using Gopet.Shared.Helper;
 using Gopet.Util;
 using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -303,6 +304,12 @@ namespace Gopet.APIs
         {
             GopetManager.EmailService.SendEmail(to, subject, GopetManager.EmailContent.Replace("{0}", body), type);
             return Ok(GopetApiExtentsion.CreateOKRepository($"Thành công"));
+        }
+
+        [HttpGet("/api/Hash/{text}")]
+        public IActionResult Hash(string text)
+        {
+            return Ok(GopetHashHelper.ComputeSha256Hash(text));
         }
 
         private string GetDebuggerDisplay()

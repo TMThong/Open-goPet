@@ -36,4 +36,6 @@
     <Folder Include="wwwroot\lib\jquery\dist\" />
   </ItemGroup>
 
+  <Import Project="..\Gopet.Shared\Gopet.Shared.projitems" Label="Shared" />
+
 </Project>

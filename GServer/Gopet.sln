@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDNgoPet", "..\CDNgoPet\CDN
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeFrameAnimation", "..\MakeFrameAnimation\MakeFrameAnimation.csproj", "{68F2778A-D199-47A6-AB54-4B9901972B8F}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Gopet.Shared", "..\Gopet.Shared\Gopet.Shared.shproj", "{9070BBED-98F5-4F0F-9337-6F937FEC7BC2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,5 +53,10 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {59E30715-7697-490C-AFB4-5AD80C44B4A6}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\Gopet.Shared\Gopet.Shared.projitems*{0f996af0-289b-4a3e-9bfa-b6b0ae056513}*SharedItemsImports = 5
+		..\Gopet.Shared\Gopet.Shared.projitems*{9070bbed-98f5-4f0f-9337-6f937fec7bc2}*SharedItemsImports = 13
+		..\Gopet.Shared\Gopet.Shared.projitems*{d3a54453-9d13-45d6-a498-2d69c577da08}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

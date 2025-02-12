@@ -68,4 +68,5 @@
 	<PropertyGroup>
 		<ServerGarbageCollection>true</ServerGarbageCollection>
 	</PropertyGroup>
+	<Import Project="..\Gopet.Shared\Gopet.Shared.projitems" Label="Shared" />
 </Project>
