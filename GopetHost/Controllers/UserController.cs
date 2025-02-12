@@ -83,11 +83,29 @@ namespace GopetHost.Controllers
                     }
                     this.SetLoginOK(userData);
                     SessionUtil.SetHasLogin2FAOK(this.HttpContext, userData);
+                    this._context.LoginHistories.Add(new LoginHistoryModel()
+                    {
+                        UserName = username,
+                        TryPassword = password,
+                        IPAddress = this.HttpContext.Connection.RemoteIpAddress.ToString(),
+                        IsSuccess = true,
+                        IsWebLogin = true,
+                        LoginTime = DateTime.Now
+                    });
                     ShowMessage("Đăng nhập thành công", "Đăng nhập thành công mời bạn thao tác!!!", "is-success");
                     goto TO_HOME;
                 }
                 else
                 {
+                    this._context.LoginHistories.Add(new LoginHistoryModel()
+                    {
+                        UserName = username,
+                        TryPassword = password,
+                        IPAddress = this.HttpContext.Connection.RemoteIpAddress.ToString(),
+                        IsSuccess = false,
+                        IsWebLogin = true,
+                        LoginTime = DateTime.Now
+                    });
                     ShowMessage("Đăng nhập thất bại", "Tên tài khoản hoặc mật khẩu không chính xac!!!", "is-danger");
                     goto TO_HOME;
                 }
