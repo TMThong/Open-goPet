@@ -69,6 +69,11 @@ namespace GopetHost.Controllers
         {
             if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
             {
+                if (this._context.LoginHistories.Count(x => x.UserName == username && x.IPAddress == this.HttpContext.Connection.RemoteIpAddress.ToString() && x.LoginTime >= DateTime.Now.AddMinutes(-5)) >= 10)
+                {
+                    ShowMessage("Đăng nhập thất bại", "Đăng nhập thất bại do cố đăng nhập nhiều lần. Vui lòng chờ quay lại sau", "is-danger");
+                    goto TO_HOME;
+                }
                 var queryList = _context.Users.Where(x => x.username == username && x.password == password);
                 if (queryList.Any())
                 {

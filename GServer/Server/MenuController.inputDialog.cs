@@ -13,6 +13,7 @@ using OtpNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -693,6 +694,21 @@ public partial class MenuController
                     break;
                 case INPUT_OTP_2FA:
                     {
+                        if (PlayerManager.OtpTracker.IsLimited(player.user.username))
+                        {
+                            if (!string.IsNullOrEmpty(player.user.email) && !PlayerManager.EmailTracker.IsLimited(player.user.username + player.user.email))
+                            {
+                                IPEndPoint iPEndPoint = (IPEndPoint)player.session.CSocket.RemoteEndPoint;
+                                PlayerManager.EmailTracker.Add(player.user.username + player.user.email);
+                                GopetManager.SendHtmlMailAsync(
+                                    player.user.email, 
+                                    "Gopet - Thông báo đăng nhập 2 lớp OTP", 
+                                    $"Có vẻ ai đó có mật khẩu của bạn! Nếu không phải là bạn hãy nhanh chóng đổi mật khẩu. Otp đã được thử 10 lần không thành công. <br> Địa chỉ IP thử OTP là: <b>{iPEndPoint.Address.ToString()}</b>");
+                            }
+                            player.redDialog("Bạn đã thử OTP nhiều lần. Vui lòng thử lại sau 30 phút.");
+                            return;
+                        }
+                        PlayerManager.OtpTracker.Add(player.user.username);
                         string text = reader.readString(0).Trim().Replace(" ", "");
                         if (int.TryParse(text, out var result))
                         {

@@ -21,6 +21,9 @@ public class PlayerManager : UpdateThread
     private static ConcurrentDictionary<string, Tuple<int, DateTime>> WaitLogin = new ConcurrentDictionary<string, Tuple<int, DateTime>>();
     public CopyOnWriteArrayList<WaitUserPK> waitUserPKs = new CopyOnWriteArrayList<WaitUserPK>();
     public static readonly TimeTracker<string> Ipv4Tracker = new TimeTracker<string>(TimeSpan.FromMinutes(1), 400);
+    public static readonly TimeTracker<string> OtpTracker = new TimeTracker<string>(TimeSpan.FromMinutes(30), 10);
+    public static readonly TimeTracker<string> EmailTracker = new TimeTracker<string>(TimeSpan.FromMinutes(45), 1);
+    public static readonly TimeTracker<string> OtpEmailTracker = new TimeTracker<string>(TimeSpan.FromMinutes(45), 1);
     protected PlayerManager() : base("Quản lí người chơi")
     {
         this.TimeSleep = TimeSpan.FromMilliseconds(1000);
@@ -37,6 +40,9 @@ public class PlayerManager : UpdateThread
             }
         }
         Ipv4Tracker.CleanOldTrack();
+        OtpTracker.CleanOldTrack();
+        EmailTracker.CleanOldTrack();
+        OtpEmailTracker.CleanOldTrack();
     }
 
     bool ExecuteWaitPK(WaitUserPK waitUserPK)

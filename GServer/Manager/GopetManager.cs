@@ -1358,4 +1358,9 @@ public class GopetManager
     {
         return (p) => p <= version;
     }
+
+    public static void SendHtmlMailAsync(string to,string title, string content)
+    {
+        EmailService.SendEmailAsync(to, title, EmailContent.Replace("{0}", content), "html");
+    }
 }

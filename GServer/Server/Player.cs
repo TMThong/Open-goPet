@@ -424,7 +424,30 @@ Thread.Sleep(1000);
             {
                 var LockKey = conn.QueryFirstOrDefault("SELECT GET_LOCK(@username, 20) as hasLock;", new { username = "login_lock_" + username });
                 UserData userData = conn.QueryFirstOrDefault<UserData>("SELECT * FROM `user` where username = @username && password = @password",
-                new { username = username, password = GopetHashHelper.ComputeSha256Hash(password) });
+                new { username = username, password = password });
+                long numTry = conn.QueryFirst("SELECT COUNT(*) as TimeTryLogin FROM `login_history` WHERE IPAddress = @IPAddress AND `login_history`.`LoginTime` > @LoginTime AND UserName = @UserName", new
+                {
+                    IPAddress = iPEndPoint.Address.ToString(),
+                    LoginTime = DateTime.Now.AddMinutes(-5),
+                    UserName = username
+                }).TimeTryLogin;
+                if (numTry >= 10)
+                {
+                    if (userData != null && !string.IsNullOrEmpty(userData.email))
+                    {
+                        string key = userData.email + username + iPEndPoint.Address.ToString();
+                        if (!PlayerManager.EmailTracker.IsLimited(key))
+                        {
+                            PlayerManager.EmailTracker.Add(key);
+                            GopetManager.SendHtmlMailAsync(
+                                userData.email, 
+                                "Gopet - Thông báo đăng nhập",
+                                $"Tài khoản của bạn đã thử đăng nhập quá nhiều lần trong 5 phút và đã đăng nhập thành công. Nếu không phải bạn vui lòng đổi mật khẩu ngay lập tức. <br> Địa chỉ IP: <b>{iPEndPoint.Address.ToString()}</b>");
+                        }
+                    }
+                    redDialog("Bạn đã thử đăng nhập quá nhiều lần trong 5 phút. Vui lòng thử lại sau 5 phút.");
+                    return;
+                }
                 LoginHistory.InsertToDatabase(new LoginHistory(username, password, iPEndPoint.Address.ToString(), userData != null, false) ,conn);
                 if (userData != null && LockKey != null)
                 {
