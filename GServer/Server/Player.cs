@@ -226,7 +226,7 @@ Thread.Sleep(1000);
 
     public virtual void requestChangePass(int id, string oldPass, string newPass)
     {
-        if (oldPass.Equals(user.password))
+        if (GopetHashHelper.VerifyHash(user.password, oldPass))
         {
             if (newPass.Length < 5)
             {
@@ -236,10 +236,10 @@ Thread.Sleep(1000);
                 session.sendMessage(mW);
                 return;
             }
-            user.password = newPass;
+            user.password = GopetHashHelper.ComputeHash(newPass);
             using (var conn = MYSQLManager.createWebMySqlConnection())
             {
-                conn.Execute("UPDATE `user` set password = @password where user_id = @user_id", new { password = newPass, user_id = user.user_id });
+                conn.Execute("UPDATE `user` set password = @password where user_id = @user_id", new { password = GopetHashHelper.ComputeHash(newPass), user_id = user.user_id });
             }
             okDialog(Language.ChangePasswordOK);
         }
@@ -389,12 +389,190 @@ Thread.Sleep(1000);
         controller.showInputDialog(MenuController.INPUT_OTP_2FA, Language.TwoFALoginTitle, " OTP: ");
     }
 
-    public virtual void login(String username, String password, String version, bool SkipIpv4Check = false)
+    public void ProcessingUser(MySqlConnection conn)
     {
-        if (this.user != null)
+        if (user.role == UserData.ROLE_NON_ACTIVE)
         {
+            redDialog(Language.AccountNonAcitve);
             return;
         }
+        switch (user.isBaned)
+        {
+            case UserData.BAN_INFINITE:
+                {
+                    this.redDialog(string.Format(Language.AccountBanInfinity, user.banReason));
+                    Thread.Sleep(100);
+                    this.session.Close();
+                    conn.Close();
+                    return;
+                }
+            case UserData.BAN_TIME:
+                {
+                    if (Utilities.CurrentTimeMillis < user.banTime)
+                    {
+                        long deltaTime = user.banTime - Utilities.CurrentTimeMillis;
+                        int hours = (int)(deltaTime / 1000 / 60 / 60);
+                        int min = (int)((deltaTime - (hours * 1000 * 60 * 60)) / 1000 / 60);
+                        this.redDialog(string.Format(Language.AccountBanTime, user.banReason, hours, min));
+                        Thread.Sleep(100);
+                        this.session.Close();
+                        conn.Close();
+                        return;
+                    }
+                    else
+                    {
+                        user.isBaned = UserData.BAN_NONE;
+                        conn.Execute("update user set isBaned = DEFAULT where user_id = @user_id", new { user_id = user.user_id });
+                    }
+                    break;
+                }
+        }
+        if (user.secretKey != null && !IsLogin2FAOK)
+        {
+            show2FADialog();
+            return;
+        }
+        Player player2 = PlayerManager.get(user.user_id);
+        if (player2 != null)
+        {
+            player2.redDialog(Language.AccountLogingDuplicate);
+            this.redDialog(Language.AccountLogingDuplicate);
+            player2.session.Close();
+            this.session.Close();
+            return;
+        }
+
+        long timeWait = PlayerManager.GetTimeMillisWaitLogin(user.user_id);
+        if (timeWait > 0)
+        {
+            this.redDialog(string.Format(Language.WaitLoging, timeWait / 1000));
+            Thread.Sleep(500);
+            this.session.Close();
+            return;
+        }
+        using (MySqlConnection gameconn = MYSQLManager.create())
+        {
+            playerData = gameconn.QueryFirstOrDefault<PlayerData>("SELECT * FROM `player` where user_id = " + user.user_id);
+            if (playerData != null)
+            {
+                if (playerData.FlowerGold == -1)
+                    playerData.FlowerGold = Math.Max(0, playerData.NumGiveFlowerGold);
+                if (playerData.FlowerCoin == -1)
+                    playerData.FlowerCoin = Math.Max(0, playerData.NumGiveFlowerGem);
+                PlayerManager.put(this);
+                var connList = gameconn.Query<FriendRequest>("SELECT * FROM `request_add_friend` WHERE `request_add_friend`.`targetId` = @userId;", new { userId = user.user_id });
+                if (connList.Any())
+                {
+                    foreach (var item in connList)
+                    {
+                        if (!playerData.BlockFriendLists.Contains(item.userId) && !playerData.RequestAddFriends.Contains(item.userId) && !playerData.ListFriends.Contains(item.userId))
+                        {
+                            playerData.RequestAddFriends.Add(item.userId);
+                        }
+
+                        gameconn.Execute("DELETE FROM `request_add_friend` WHERE `request_add_friend`.`userId` = @userId AND `request_add_friend`.`targetId` = @targetId;", item);
+                    }
+                }
+
+                var letterList = gameconn.Query<Letter>("SELECT * FROM `letter` WHERE targetId = @targetId;", new { targetId = playerData.user_id });
+                if (letterList.Any())
+                {
+                    foreach (var letter in letterList)
+                    {
+                        playerData.addLetter(letter);
+                    }
+                    gameconn.Execute("DELETE FROM `letter` WHERE `letter`.`targetId` = @targetId", new { targetId = playerData.user_id });
+                }
+
+                foreach (var item in playerData.TrashItemBackup.Where(t => t.Key.AddDays(3) < DateTime.Now))
+                {
+                    playerData.TrashItemBackup.Remove(item.Key);
+                }
+            }
+            var kioskList = gameconn.Query("SELECT * FROM `kiosk_recovery` where user_id = @user_id", new { user_id = this.user.user_id });
+            if (kioskList.Any())
+            {
+                foreach (var item in kioskList)
+                {
+                    SellItem sellItem = JsonConvert.DeserializeObject<SellItem>(item.item);
+                    if (sellItem.pet == null)
+                    {
+                        addItemToInventory(sellItem.ItemSell);
+                    }
+                    else
+                    {
+                        playerData.addPet(sellItem.pet, this);
+                    }
+                    if (sellItem.sumVal > 0)
+                    {
+                        addCoin(sellItem.sumVal);
+                    }
+                }
+            }
+            gameconn.Execute("DELETE FROM `kiosk_recovery` where user_id = @user_id", new { user_id = this.user.user_id });
+            loginOK();
+            controller.LoadMap();
+            controller.updateAvatar();
+            if (playerData != null)
+            {
+                controller.updateUserInfo();
+                showBanner(Language.WarningPlayerWhenLogin);
+                getPet()?.applyInfo(this);
+                if (ServerSetting.instance.isOnlyAdminLogin)
+                {
+                    if (!playerData.isAdmin)
+                    {
+                        redDialog(Language.ServerOnlyForAdmin);
+                        session.Close();
+                        return;
+                    }
+                }
+
+                foreach (var taskData in playerData.task)
+                {
+                    TaskTemplate taskTemp = GopetManager.taskTemplate[taskData.taskTemplateId];
+                    if (!playerData.wasTask.ContainsZ(taskTemp.taskNeed) && taskTemp.type == TaskCalculator.TASK_TYPE_MAIN)
+                    {
+                        playerData.task.remove(taskData);
+                        playerData.tasking.remove(taskData.taskTemplateId);
+                    }
+                }
+
+                int goldPlus = 0;
+                JArrayList<String> listIdRemove = new();
+                var exhangeGoldData = gameconn.Query("SELECT * FROM `exchange_gold` WHERE `user_id` = @user_id", new { user_id = this.user.user_id });
+                foreach (var item in exhangeGoldData)
+                {
+                    String id = item.id;
+                    int g = item.gold;
+                    addGold(g);
+                    listIdRemove.add(id);
+                    goldPlus += g;
+                }
+                if (!listIdRemove.isEmpty())
+                {
+                    foreach (String uuidString in listIdRemove)
+                    {
+                        gameconn.Execute("DELETE FROM `exchange_gold` WHERE `id`  = @id AND `user_id` = @user_id", new { id = uuidString, user_id = this.user.user_id });
+                    }
+                }
+                if (goldPlus > 0)
+                {
+                    okDialog(string.Format(Language.GetGoldByCard, Utilities.FormatNumber(goldPlus)));
+                }
+            }
+            else
+            {
+                controller.createChar();
+            }
+            controller.getTaskCalculator().update();
+        }
+    }
+
+    public virtual void login(String username, String password, String version, bool SkipIpv4Check = false, bool IsPassOtp = false)
+    {
+        if (this.user != null && !IsPassOtp)
+            return;
         IPEndPoint iPEndPoint = (IPEndPoint)this.session.CSocket.RemoteEndPoint;
         if (!SkipIpv4Check)
         {
@@ -423,8 +601,15 @@ Thread.Sleep(1000);
             try
             {
                 var LockKey = conn.QueryFirstOrDefault("SELECT GET_LOCK(@username, 20) as hasLock;", new { username = "login_lock_" + username });
-                UserData userData = conn.QueryFirstOrDefault<UserData>("SELECT * FROM `user` where username = @username && password = @password",
-                new { username = username, password = password });
+                UserData userData = conn.QueryFirstOrDefault<UserData>("SELECT * FROM `user` where username = @username",
+                new { username = username});
+                if (userData != null)
+                {
+                    if (!GopetHashHelper.VerifyHash(userData.password, password))
+                    {
+                        userData = null;
+                    }
+                }
                 long numTry = conn.QueryFirst("SELECT COUNT(*) as TimeTryLogin FROM `login_history` WHERE IPAddress = @IPAddress AND `login_history`.`LoginTime` > @LoginTime AND UserName = @UserName", new
                 {
                     IPAddress = iPEndPoint.Address.ToString(),
@@ -440,7 +625,7 @@ Thread.Sleep(1000);
                         {
                             PlayerManager.EmailTracker.Add(key);
                             GopetManager.SendHtmlMailAsync(
-                                userData.email, 
+                                userData.email,
                                 "Gopet - Thông báo đăng nhập",
                                 $"Tài khoản của bạn đã thử đăng nhập quá nhiều lần trong 5 phút và đã đăng nhập thành công. Nếu không phải bạn vui lòng đổi mật khẩu ngay lập tức. <br> Địa chỉ IP: <b>{iPEndPoint.Address.ToString()}</b>");
                         }
@@ -448,186 +633,11 @@ Thread.Sleep(1000);
                     redDialog("Bạn đã thử đăng nhập quá nhiều lần trong 5 phút. Vui lòng thử lại sau 5 phút.");
                     return;
                 }
-                LoginHistory.InsertToDatabase(new LoginHistory(username, password, iPEndPoint.Address.ToString(), userData != null, false) ,conn);
+                LoginHistory.InsertToDatabase(new LoginHistory(username, password, iPEndPoint.Address.ToString(), userData != null, false), conn);
                 if (userData != null && LockKey != null)
                 {
                     this.user = userData;
-                    if (user.role == UserData.ROLE_NON_ACTIVE)
-                    {
-                        redDialog(Language.AccountNonAcitve);
-                        return;
-                    }
-                    switch (user.isBaned)
-                    {
-                        case UserData.BAN_INFINITE:
-                            {
-                                this.redDialog(string.Format(Language.AccountBanInfinity, user.banReason));
-                                Thread.Sleep(100);
-                                this.session.Close();
-                                conn.Close();
-                                return;
-                            }
-                        case UserData.BAN_TIME:
-                            {
-                                if (Utilities.CurrentTimeMillis < user.banTime)
-                                {
-                                    long deltaTime = user.banTime - Utilities.CurrentTimeMillis;
-                                    int hours = (int)(deltaTime / 1000 / 60 / 60);
-                                    int min = (int)((deltaTime - (hours * 1000 * 60 * 60)) / 1000 / 60);
-                                    this.redDialog(string.Format(Language.AccountBanTime, user.banReason, hours, min));
-                                    Thread.Sleep(100);
-                                    this.session.Close();
-                                    conn.Close();
-                                    return;
-                                }
-                                else
-                                {
-                                    user.isBaned = UserData.BAN_NONE;
-                                    conn.Execute("update user set isBaned = DEFAULT where user_id = @user_id", new { user_id = user.user_id });
-                                }
-                                break;
-                            }
-                    }
-                    if (user.secretKey != null && !IsLogin2FAOK)
-                    {
-                        show2FADialog();
-                        return;
-                    }
-                    Player player2 = PlayerManager.get(user.user_id);
-                    if (player2 != null)
-                    {
-                        player2.redDialog(Language.AccountLogingDuplicate);
-                        this.redDialog(Language.AccountLogingDuplicate);
-                        player2.session.Close();
-                        this.session.Close();
-                        return;
-                    }
-
-                    long timeWait = PlayerManager.GetTimeMillisWaitLogin(user.user_id);
-                    if (timeWait > 0)
-                    {
-                        this.redDialog(string.Format(Language.WaitLoging, timeWait / 1000));
-                        Thread.Sleep(500);
-                        this.session.Close();
-                        return;
-                    }
-                    using (MySqlConnection gameconn = MYSQLManager.create())
-                    {
-                        playerData = gameconn.QueryFirstOrDefault<PlayerData>("SELECT * FROM `player` where user_id = " + user.user_id);
-                        if (playerData != null)
-                        {
-                            if (playerData.FlowerGold == -1)
-                                playerData.FlowerGold = Math.Max(0, playerData.NumGiveFlowerGold);
-                            if (playerData.FlowerCoin == -1)
-                                playerData.FlowerCoin = Math.Max(0, playerData.NumGiveFlowerGem);
-                            PlayerManager.put(this);
-                            var connList = gameconn.Query<FriendRequest>("SELECT * FROM `request_add_friend` WHERE `request_add_friend`.`targetId` = @userId;", new { userId = user.user_id });
-                            if (connList.Any())
-                            {
-                                foreach (var item in connList)
-                                {
-                                    if (!playerData.BlockFriendLists.Contains(item.userId) && !playerData.RequestAddFriends.Contains(item.userId) && !playerData.ListFriends.Contains(item.userId))
-                                    {
-                                        playerData.RequestAddFriends.Add(item.userId);
-                                    }
-
-                                    gameconn.Execute("DELETE FROM `request_add_friend` WHERE `request_add_friend`.`userId` = @userId AND `request_add_friend`.`targetId` = @targetId;", item);
-                                }
-                            }
-
-                            var letterList = gameconn.Query<Letter>("SELECT * FROM `letter` WHERE targetId = @targetId;", new { targetId = playerData.user_id });
-                            if (letterList.Any())
-                            {
-                                foreach (var letter in letterList)
-                                {
-                                    playerData.addLetter(letter);
-                                }
-                                gameconn.Execute("DELETE FROM `letter` WHERE `letter`.`targetId` = @targetId", new { targetId = playerData.user_id });
-                            }
-
-                            foreach (var item in playerData.TrashItemBackup.Where(t => t.Key.AddDays(3) < DateTime.Now))
-                            {
-                                playerData.TrashItemBackup.Remove(item.Key);
-                            }
-                        }
-                        var kioskList = gameconn.Query("SELECT * FROM `kiosk_recovery` where user_id = @user_id", new { user_id = this.user.user_id });
-                        if (kioskList.Any())
-                        {
-                            foreach (var item in kioskList)
-                            {
-                                SellItem sellItem = JsonConvert.DeserializeObject<SellItem>(item.item);
-                                if (sellItem.pet == null)
-                                {
-                                    addItemToInventory(sellItem.ItemSell);
-                                }
-                                else
-                                {
-                                    playerData.addPet(sellItem.pet, this);
-                                }
-                                if (sellItem.sumVal > 0)
-                                {
-                                    addCoin(sellItem.sumVal);
-                                }
-                            }
-                        }
-                        gameconn.Execute("DELETE FROM `kiosk_recovery` where user_id = @user_id", new { user_id = this.user.user_id });
-                        loginOK();
-                        controller.LoadMap();
-                        controller.updateAvatar();
-                        if (playerData != null)
-                        {
-                            controller.updateUserInfo();
-                            showBanner(Language.WarningPlayerWhenLogin);
-                            getPet()?.applyInfo(this);
-                            if (ServerSetting.instance.isOnlyAdminLogin)
-                            {
-                                if (!playerData.isAdmin)
-                                {
-                                    redDialog(Language.ServerOnlyForAdmin);
-                                    session.Close();
-                                    return;
-                                }
-                            }
-
-                            foreach (var taskData in playerData.task)
-                            {
-                                TaskTemplate taskTemp = GopetManager.taskTemplate[taskData.taskTemplateId];
-                                if (!playerData.wasTask.ContainsZ(taskTemp.taskNeed) && taskTemp.type == TaskCalculator.TASK_TYPE_MAIN)
-                                {
-                                    playerData.task.remove(taskData);
-                                    playerData.tasking.remove(taskData.taskTemplateId);
-                                }
-                            }
-
-                            int goldPlus = 0;
-                            JArrayList<String> listIdRemove = new();
-                            var exhangeGoldData = gameconn.Query("SELECT * FROM `exchange_gold` WHERE `user_id` = @user_id", new { user_id = this.user.user_id });
-                            foreach (var item in exhangeGoldData)
-                            {
-                                String id = item.id;
-                                int g = item.gold;
-                                addGold(g);
-                                listIdRemove.add(id);
-                                goldPlus += g;
-                            }
-                            if (!listIdRemove.isEmpty())
-                            {
-                                foreach (String uuidString in listIdRemove)
-                                {
-                                    gameconn.Execute("DELETE FROM `exchange_gold` WHERE `id`  = @id AND `user_id` = @user_id", new { id = uuidString, user_id = this.user.user_id });
-                                }
-                            }
-                            if (goldPlus > 0)
-                            {
-                                okDialog(string.Format(Language.GetGoldByCard, Utilities.FormatNumber(goldPlus)));
-                            }
-                        }
-                        else
-                        {
-                            controller.createChar();
-                        }
-                        controller.getTaskCalculator().update();
-                    }
+                    this.ProcessingUser(conn);
                 }
                 else
                 {

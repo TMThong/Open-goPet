@@ -10,6 +10,7 @@ using Gopet.Util;
 using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Crypto.Generators;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -309,8 +310,9 @@ namespace Gopet.APIs
         [HttpGet("/api/Hash/{text}")]
         public IActionResult Hash(string text)
         {
-            return Ok(GopetHashHelper.ComputeSha256Hash(text));
+            return Ok(GopetHashHelper.ComputeHash(text));
         }
+
 
         private string GetDebuggerDisplay()
         {

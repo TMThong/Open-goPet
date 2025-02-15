@@ -732,7 +732,7 @@ public class GameController
             PlayerData.create(player.user.user_id, name, gender);
             UserData user = player.user;
             player.user = null;
-            player.login(user.username, user.password, "", true);
+            player.session.Close();
         }
     }
 

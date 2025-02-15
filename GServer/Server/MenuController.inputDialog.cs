@@ -720,11 +720,11 @@ public partial class MenuController
                             Totp totp = new Totp(Base32Encoding.ToBytes(player.user.secretKey));
                             if (totp.VerifyTotp(text, out long timeStepMatched, new VerificationWindow(5, 5)))
                             {
-                                string username = player.user.username;
-                                string password = player.user.password;
-                                player.user = null;
                                 player.IsLogin2FAOK = true;
-                                player.login(username, password, string.Empty, true);
+                                using (var conn = MYSQLManager.createWebMySqlConnection())
+                                {
+                                    player.ProcessingUser(conn);
+                                }
                             }
                             else
                             {

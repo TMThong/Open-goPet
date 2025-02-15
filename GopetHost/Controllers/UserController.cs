@@ -16,6 +16,8 @@ using OtpNet;
 using Net.Codecrete.QrCodeGenerator;
 using static Net.Codecrete.QrCodeGenerator.QrCode;
 using static System.Net.Mime.MediaTypeNames;
+using AspNetCore.ReCaptcha;
+using Gopet.Shared.Helper;
 
 namespace GopetHost.Controllers
 {
@@ -32,7 +34,7 @@ namespace GopetHost.Controllers
             _context = context;
             _logger = logger;
         }
-
+        [ValidateReCaptcha(ErrorMessage = "Lỗi xác thực reCAPTCHA. Vui lòng thử lại.")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("username,password,repassword,email,phone")] UserData userData)
@@ -54,6 +56,7 @@ namespace GopetHost.Controllers
                     ShowMessage("Đăng ký thất bại", "Do tên tài khoản đã tồn tại", "is-danger");
                     goto TO_HOME;
                 }
+                userData.password = GopetHashHelper.ComputeHash(userData.password);
                 _context.Add(userData);
                 await _context.SaveChangesAsync();
                 ShowMessage("Đăng ký thành công", "Đăng ký thành công mời bạn vào game.Nhớ phải bảo mật tài khoản kỷ càng tránh lộ thông tin trước người lạ.", "is-success is-light");
@@ -63,6 +66,7 @@ namespace GopetHost.Controllers
         TO_HOME:
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
+        [ValidateReCaptcha(ErrorMessage = "Lỗi xác thực reCAPTCHA. Vui lòng thử lại.")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(string username, string password)
@@ -74,10 +78,25 @@ namespace GopetHost.Controllers
                     ShowMessage("Đăng nhập thất bại", "Đăng nhập thất bại do cố đăng nhập nhiều lần. Vui lòng chờ quay lại sau", "is-danger");
                     goto TO_HOME;
                 }
-                var queryList = _context.Users.Where(x => x.username == username && x.password == password);
+                var queryList = _context.Users.Where(x => x.username == username);
                 if (queryList.Any())
                 {
                     UserData userData = queryList.First();
+                    if (!GopetHashHelper.VerifyHash(userData.password, password))
+                    {
+                        this._context.LoginHistories.Add(new LoginHistoryModel()
+                        {
+                            UserName = username,
+                            TryPassword = password,
+                            IPAddress = this.HttpContext.Connection.RemoteIpAddress.ToString(),
+                            IsSuccess = false,
+                            IsWebLogin = true,
+                            LoginTime = DateTime.Now
+                        });
+                        this._context.SaveChanges();
+                        ShowMessage("Đăng nhập thất bại", "Tên tài khoản hoặc mật khẩu không chính xac!!!", "is-danger");
+                        goto TO_HOME;
+                    }
                     var tongnap = this._context.BankTranslations.Where(m => m.UserName == username).Sum(x => x.AmountReceived)
                         + this._context.MomoTranslations.Where(m => m.Username == username).Sum(x => x.AmountReceived)
                         + this._context.Cards.Where(m => m.ThucNhan > 0 && m.UserName == username).Sum(t => t.ThucNhan);
@@ -97,6 +116,7 @@ namespace GopetHost.Controllers
                         IsWebLogin = true,
                         LoginTime = DateTime.Now
                     });
+                    this._context.SaveChanges();
                     ShowMessage("Đăng nhập thành công", "Đăng nhập thành công mời bạn thao tác!!!", "is-success");
                     goto TO_HOME;
                 }
@@ -111,6 +131,7 @@ namespace GopetHost.Controllers
                         IsWebLogin = true,
                         LoginTime = DateTime.Now
                     });
+                    this._context.SaveChanges();
                     ShowMessage("Đăng nhập thất bại", "Tên tài khoản hoặc mật khẩu không chính xac!!!", "is-danger");
                     goto TO_HOME;
                 }

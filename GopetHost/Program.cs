@@ -1,4 +1,5 @@
-﻿using GopetHost.Data;
+﻿using AspNetCore.ReCaptcha;
+using GopetHost.Data;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -25,7 +26,7 @@ namespace GopetHost
             Log.Logger = new LoggerConfiguration().MinimumLevel.Error().WriteTo.File("logs/myapp.txt", rollingInterval: RollingInterval.Day).CreateLogger();
             builder.Host.UseSerilog();
 #endif
-
+            builder.Services.AddReCaptcha(builder.Configuration.GetSection("ReCaptcha"));
             builder.Services.AddDbContext<AppDatabaseContext>(options => options.UseMySql(AppConnectionStr, ServerVersion.AutoDetect(AppConnectionStr), mySqlOptions =>
             {
                 mySqlOptions.EnableRetryOnFailure();

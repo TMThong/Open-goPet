@@ -1,4 +1,5 @@
-﻿@using GopetHost.Controllers
+﻿@using AspNetCore.ReCaptcha
+@using GopetHost.Controllers
 @using GopetHost.Ulti
 <!DOCTYPE html>
 <html lang="vi">
@@ -118,6 +119,10 @@
                                 <input name="password" class="input is-warning" type="password" placeholder="Mật khẩu" value="">
                             </div>
                         </div>
+                        <div class="form-group field">
+                            @Html.ReCaptcha("vi")
+                        </div>
+
                         <div class="field is-grouped">
                             <div class="control">
                                 <button class="button is-white">Đăng nhập</button>
@@ -173,7 +178,9 @@
                                 <input name="phone" class="input is-focused" type="tel" placeholder="Số điện thoại" value="">
                             </div>
                         </div>
-
+                        <div class="form-group field">
+                            @Html.ReCaptcha("vi")
+                        </div>
                         <div class="field is-grouped">
                             <div class="control">
                                 <button class="button is-link">Đăng ký</button>

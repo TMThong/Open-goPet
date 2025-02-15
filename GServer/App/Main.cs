@@ -9,6 +9,7 @@ using Gopet.Manager;
 using Gopet.Runtime;
 using Gopet.Server;
 using Gopet.Server.IO;
+using Gopet.Shared.Helper;
 using Gopet.Util;
 using Newtonsoft.Json;
 namespace Gopet.App
@@ -54,7 +55,7 @@ namespace Gopet.App
             APIServer = new HttpServer(HTTP_PORT);
             APIServer.Start();
             server = new Gopet.MServer.Server(PORT_SERVER);
-            void ScanData()
+            async void ScanData()
             {
                 int[] keys = new int[] {
                     132,
@@ -73,6 +74,7 @@ namespace Gopet.App
                    843
                 };
                 var tattoIds = GopetManager.tattos.Where(x => keys.Any(t => GopetManager.itemTemplate[t].itemOptionValue[0] == x.Key)).Select(m => m.Key);
+                 
                 using (var conn = MYSQLManager.create())
                 {
                     var players = conn.Query<PlayerData>("SELECT * FROM `player`").Where(x => !x.isAdmin);

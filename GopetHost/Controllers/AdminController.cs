@@ -1,4 +1,5 @@
-﻿using GopetHost.Data;
+﻿using Gopet.Shared.Helper;
+using GopetHost.Data;
 using GopetHost.Models;
 using GopetHost.Ulti;
 using Microsoft.AspNetCore.Mvc;
@@ -260,7 +261,7 @@ namespace GopetHost.Controllers
             UserData userData = _context.Users.Where(x => x.user_id == user_id).FirstOrDefault();
             if (userData != null)
             {
-                userData.password = password;
+                userData.password = GopetHashHelper.ComputeHash(password);
                 userData.coin = coin;
                 userData.phone = phone;
                 userData.email = email;
