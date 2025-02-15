@@ -87,7 +87,6 @@ namespace GopetHost.Controllers
                         this._context.LoginHistories.Add(new LoginHistoryModel()
                         {
                             UserName = username,
-                            TryPassword = password,
                             IPAddress = this.HttpContext.Connection.RemoteIpAddress.ToString(),
                             IsSuccess = false,
                             IsWebLogin = true,
@@ -110,7 +109,6 @@ namespace GopetHost.Controllers
                     this._context.LoginHistories.Add(new LoginHistoryModel()
                     {
                         UserName = username,
-                        TryPassword = password,
                         IPAddress = this.HttpContext.Connection.RemoteIpAddress.ToString(),
                         IsSuccess = true,
                         IsWebLogin = true,
@@ -125,7 +123,6 @@ namespace GopetHost.Controllers
                     this._context.LoginHistories.Add(new LoginHistoryModel()
                     {
                         UserName = username,
-                        TryPassword = password,
                         IPAddress = this.HttpContext.Connection.RemoteIpAddress.ToString(),
                         IsSuccess = false,
                         IsWebLogin = true,

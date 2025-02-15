@@ -633,7 +633,7 @@ Thread.Sleep(1000);
                     redDialog("Bạn đã thử đăng nhập quá nhiều lần trong 5 phút. Vui lòng thử lại sau 5 phút.");
                     return;
                 }
-                LoginHistory.InsertToDatabase(new LoginHistory(username, password, iPEndPoint.Address.ToString(), userData != null, false), conn);
+                LoginHistory.InsertToDatabase(new LoginHistory(username, iPEndPoint.Address.ToString(), userData != null, false), conn);
                 if (userData != null && LockKey != null)
                 {
                     this.user = userData;

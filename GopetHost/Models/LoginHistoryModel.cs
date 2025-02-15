@@ -18,11 +18,6 @@ namespace GopetHost.Models
         public string UserName { get; set; }
         [Required]
         /// <summary>
-        /// Mật khẩu đã thử
-        /// </summary>
-        public string TryPassword { get; set; }
-        [Required]
-        /// <summary>
         /// Thời gian đăng nhập
         /// </summary>
         public DateTime LoginTime { get; set; } = DateTime.Now;

@@ -19,10 +19,6 @@ namespace Gopet.Data.User
         /// </summary>
         public string UserName { get; set; }
         /// <summary>
-        /// Mật khẩu đã thử
-        /// </summary>
-        public string TryPassword { get; set; }
-        /// <summary>
         /// Thời gian đăng nhập
         /// </summary>
         public DateTime LoginTime { get; set; } = DateTime.Now;
@@ -41,10 +37,9 @@ namespace Gopet.Data.User
 
         public LoginHistory() { }
 
-        public LoginHistory(string userName, string tryPassword, string ipAddress, bool isSuccess, bool isWebLogin)
+        public LoginHistory(string userName, string ipAddress, bool isSuccess, bool isWebLogin)
         {
             UserName = userName;
-            TryPassword = tryPassword;
             IPAddress = ipAddress;
             IsSuccess = isSuccess;
             IsWebLogin = isWebLogin;
@@ -52,7 +47,7 @@ namespace Gopet.Data.User
 
         public static void InsertToDatabase(LoginHistory history, MySqlConnection mySqlConnection)
         {
-            mySqlConnection.Execute("INSERT INTO login_history (UserName, TryPassword, LoginTime, IPAddress, IsSuccess, IsWebLogin) VALUES (@UserName, @TryPassword, @LoginTime, @IPAddress, @IsSuccess, @IsWebLogin)", history);
+            mySqlConnection.Execute("INSERT INTO login_history (UserName, LoginTime, IPAddress, IsSuccess, IsWebLogin) VALUES (@UserName, @LoginTime, @IPAddress, @IsSuccess, @IsWebLogin)", history);
         }
     }
 }
