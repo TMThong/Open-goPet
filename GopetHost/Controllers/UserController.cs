@@ -608,5 +608,47 @@ namespace GopetHost.Controllers
             ShowMessage("Lỗi", "Mã xác thực không chính xác hoặc quá hạn", "is-danger");
             return RedirectToAction(nameof(TwoFALogin));
         }
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public IActionResult PostChangePassword(string OldPassword, string NewPassword, string NewRePassword)
+        {
+            if (IfLoginIsNotOK(out IActionResult result, out bool IsNeed2FA))
+            {
+                if (!IsNeed2FA)
+                {
+                    return result;
+                }
+            }
+            UserData userData = GetUser(_context);
+            if (userData == null) RedirectToHome();
+            if(NewPassword != NewRePassword)
+            {
+                ShowMessage("Lỗi", "Mật khẩu xác nhận không chính xác", "is-danger");
+                return RedirectToAction(nameof(ChangePassword));
+            }
+            if (string.IsNullOrEmpty(OldPassword) || string.IsNullOrEmpty(NewPassword))
+            {
+                ShowMessage("Lỗi", "Mật khẩu không được để trống", "is-danger");
+                return RedirectToAction(nameof(ChangePassword));
+            }
+            if (!GopetHashHelper.VerifyHash(userData.password, OldPassword))
+            {
+                ShowMessage("Lỗi", "Mật khẩu cũ không chính xác", "is-danger");
+                return RedirectToAction(nameof(ChangePassword));
+            }
+            if (!Ulti.Ulti.UserPassRegex.IsMatch(NewPassword))
+            {
+                ShowMessage("Lỗi", "Mật khẩu mới không hợp lệ", "is-danger");
+                return RedirectToAction(nameof(ChangePassword));
+            }
+            userData.password = GopetHashHelper.ComputeHash(NewPassword);
+            _context.SaveChanges();
+            ShowMessage("Thành công", "Đổi mật khẩu thành công", "is-success");
+            return RedirectToAction(nameof(UserDetails));
+        }
     }
 }
