@@ -22,7 +22,8 @@ namespace Gopet.IO
         public int currentPort;
         public bool clientOK = false;
         public long msgCount = 0;
-
+        private Thread sendThread;
+        private Thread readThread;
         public Session(Socket socket)
         {
             sc = socket;
@@ -55,11 +56,11 @@ namespace Gopet.IO
                 readKey();
                 setSender(new MsgSender(this));
                 setReader(new MsgReader(this));
-                Thread sendThread = new Thread(this.sender.run);
+                sendThread = new Thread(this.sender.run);
                 sendThread.IsBackground = true;
                 sendThread.Name = "SEND THREAD " + sc.RemoteEndPoint.ToString();
                 sendThread.Start();
-                Thread readThread = new Thread(this.reader.run);
+                readThread = new Thread(this.reader.run);
                 readThread.IsBackground = true;
                 readThread.Name = "READ THREAD " + sc.RemoteEndPoint.ToString();
                 readThread.Start();
@@ -134,7 +135,11 @@ namespace Gopet.IO
 
         public void Close()
         {
+            this.sendThread?.Interrupt();
+            this.sendThread = null;
+            this.readThread = null;
             ThreadPool.QueueUserWorkItem(Exit);
+            GC.Collect();
         }
 
         public void Exit(object state)

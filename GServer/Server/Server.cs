@@ -8,6 +8,7 @@ using Gopet.Server.IO;
 using System.Net;
 using System.Diagnostics;
 using System;
+using System.Collections.Concurrent;
 namespace Gopet.MServer
 {
     public class Server : IServerBase
@@ -18,6 +19,9 @@ namespace Gopet.MServer
         public bool IsRunning { get; set; } = false;
 
         private SocketAsyncEventArgs _event = new SocketAsyncEventArgs();
+
+        private ConcurrentDictionary<string, DateTime> ConnectionWait = new();
+
 
         public Server(int port)
         {
@@ -49,6 +53,14 @@ namespace Gopet.MServer
                 try
                 {
                     TcpClient client = _listener.AcceptTcpClient();
+                    string clientIP = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
+                    if (ConnectionWait.TryGetValue(clientIP, out var dateTime) && dateTime > DateTime.Now)
+                    {
+                        client.Close();
+                        continue;
+                    }
+                    else ConnectionWait[clientIP] = DateTime.Now.AddSeconds(2);
+                    this.CleanupConnectionWait();
                     ThreadPool.QueueUserWorkItem(setupClient, client);
                 }
                 catch (Exception e)
@@ -66,6 +78,18 @@ namespace Gopet.MServer
             sessions.Add(session);
             Session.socketCount++;
         }
+
+        private void CleanupConnectionWait()
+        {
+            foreach (var key in ConnectionWait.Keys)
+            {
+                if (ConnectionWait[key] <= DateTime.Now)
+                {
+                    ConnectionWait.TryRemove(key, out _);
+                }
+            }
+        }
+
         public void StopServer()
         {
             IsRunning = false;

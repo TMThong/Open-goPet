@@ -313,6 +313,12 @@ namespace Gopet.APIs
             return Ok(GopetHashHelper.ComputeHash(text));
         }
 
+        [HttpGet("/api/NumPlayerOnline")]
+        public IActionResult NumPlayerOnline()
+        {
+            return Ok(PlayerManager.players.Count);
+        }
+
 
         private string GetDebuggerDisplay()
         {
