@@ -564,7 +564,7 @@ public class GopetManager
     public static readonly int[] ID_BOSS_CHALLENGE = new int[] { 11, 12, 13, 14, 15 };
     public static readonly int[] ID_BOSS_TASK = new int[] { 16 };
     public static readonly int[] LVL_REQUIRE_PET_TATTO = new int[] { 3, 5, 10, 15, 20, 25, 30, 35 };
-    public static readonly int[] SPECIAL_PET_TO_LEARN_ALL_SKILL = new int[] { 3091 };
+    public static readonly int[] SPECIAL_PET_TO_LEARN_ALL_SKILL = new int[] { 3091, 10011 };
     public const int MOB_NEED_CAPTCHA = 125;
     public const long TIME_BOSS_DISPOINTED = 1000 * 60 * 10;
     public static readonly float[] PERCENT_OF_ENCHANT_GEM = new float[] { 70f, 65f, 60f, 55f, 50f, 40f, 30f, 20f, 10f, 2f };

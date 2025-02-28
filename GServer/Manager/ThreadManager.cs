@@ -48,6 +48,10 @@ namespace Gopet.Manager
 
         public static void AddThread(Thread thread)
         {
+            if (thread == null)
+            {
+                return;
+            }
             THREADS.Add(thread);
         }
 
