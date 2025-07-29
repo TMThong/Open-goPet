@@ -1,5 +1,4 @@
-
-using Gopet.IO;
+﻿using Gopet.IO;
 using SixLabors.ImageSharp;
 using SixLaborsCaptcha.Core;
 using System.Security.Cryptography;

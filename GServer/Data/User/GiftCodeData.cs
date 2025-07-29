@@ -1,5 +1,4 @@
-
-using Gopet.Data.Collections;
+﻿using Gopet.Data.Collections;
 using Gopet.Data.User;
 using Newtonsoft.Json;
 
@@ -10,7 +9,7 @@ public class GiftCodeData
     public int id { get; private set; }
     public string code { get; private set; }
 
-    public int currentUser { get;  set; }
+    public int currentUser { get; set; }
     public int maxUser { get; private set; }
 
     public int[][] gift_data { get; private set; }

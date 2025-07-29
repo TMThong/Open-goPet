@@ -1120,11 +1120,11 @@ public class GopetManager
                 Reincarnations[reincarnation.PetId] = reincarnation;
             }
             ServerMonitor.LogInfo("Tải dữ liệu trùng sinh thú cưng từ cơ sở dữ liệu OK");
-            var petEffectTemplates = conn.Query<PetEffectTemplate>("SELECT * FROM `pet_eff`");
+            /*var petEffectTemplates = conn.Query<PetEffectTemplate>("SELECT * FROM `pet_eff`");
             foreach (var item in petEffectTemplates)
             {
                 PET_EFF_TEMP[item.IdTemplate] = item;
-            }
+            }*/
             ServerMonitor.LogInfo("Tải dữ liệu hiệu ứng thú cưng từ cơ sở dữ liệu OK");
         }
         using (var connWeb = MYSQLManager.createWebMySqlConnection())
@@ -1361,6 +1361,6 @@ public class GopetManager
 
     public static void SendHtmlMailAsync(string to,string title, string content)
     {
-        EmailService.SendEmailAsync(to, title, EmailContent.Replace("{0}", content), "html");
+        //EmailService.SendEmailAsync(to, title, EmailContent.Replace("{0}", content), "html");
     }
 }

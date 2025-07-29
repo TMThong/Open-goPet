@@ -529,14 +529,14 @@ public class Pet : GameObject, IBinaryObject<Pet>
         {
             return new List<PetEffectTemplate>()
             {
-            new PetEffectTemplate ()
+            /*new PetEffectTemplate ()
             {
                 FramePath = "peteff/output2.png",
                 FrameNum = 6,
                 IsDrawBefore = true,
                 FrameTime = 80,
                 vY = -100
-            }
+            }*/
             };
         }
     }

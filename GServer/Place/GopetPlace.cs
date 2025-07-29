@@ -232,7 +232,7 @@ public class GopetPlace : Place
                 message.putInt(petSelected.lvl);
                 message[1].putsbyte(petSelected.getPetTemplate().frameNum);
                 message[1].putShort(petSelected.getPetTemplate().vY);
-                GameController.WritePetEffect(message[1], petSelected.EffectTemplates);
+                //GameController.WritePetEffect(message[1], petSelected.EffectTemplates);
             }
             message.cleanup();
             messagesDict[message[0]] = GopetManager.LessThanAndEquals(GopetManager.VERSION_133);

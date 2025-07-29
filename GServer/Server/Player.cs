@@ -175,11 +175,11 @@ Thread.Sleep(1000);
             okDialog(ServerSetting.instance.messageWhenLogin);
             return;
         }
-        if (true)
+        /*if (true)
         {
             redDialog("Chức năng này bị khóa. Để đăng ký tài khoản vui lòng vào trang web\n gopettae.com vào mục diễn đàn.");
             return;
-        }
+        }*/
         if (CheckString(username, "^[a-z0-9]+$"))
         {
             if (username.Length >= 6 && password.Length >= 6 && username.Length < 25 && password.Length < 60)
@@ -205,7 +205,7 @@ Thread.Sleep(1000);
                             new
                             {
                                 username = username,
-                                password = password,
+                                password = GopetHashHelper.ComputeHash(password),
                                 ipv4Create = ((IPEndPoint)session.CSocket.RemoteEndPoint).Address.ToString(),
                                 dayCreate = Utilities.CurrentTimeMillis
                             });

@@ -3,6 +3,7 @@ using Gopet.App;
 using Gopet.Language;
 using Gopet.Util;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 public class Maintenance : IRuntime
 {
@@ -55,7 +56,14 @@ public class Maintenance : IRuntime
             Thread.Sleep(2000);
             Main.shutdown();
             ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.FileName = "Gopet.exe"; // Đặt tên của tệp thực thi cần chạy
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                startInfo.FileName = "Gopet.exe";
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                startInfo.FileName = "Gopet";
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                startInfo.FileName = "Gopet";
+            else
+                startInfo.FileName = "Gopet";
             startInfo.UseShellExecute = true; // Đặt thành false để có thể sử dụng cửa sổ dòng lệnh
             startInfo.CreateNoWindow = true; // Đặt thành false để hiển thị cửa sổ dòng lệnh
             startInfo.RedirectStandardInput = false; // Không đọc dữ liệu từ đầu vào tiêu chuẩn
