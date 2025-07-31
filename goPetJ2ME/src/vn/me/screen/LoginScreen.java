@@ -365,7 +365,7 @@ public final class LoginScreen extends Screen implements IActionListener {
         if (Method488 == null) {
             /*Server class15 = new Server("Pet City", GlobalService.Field1004, GlobalService.Field1003, 3500, 0);
             class15.Field55 = false;*/
-            Server class152 = new Server("Đại thời đại", "game1.gopetmoi.com", 19189, 3500, 0);
+            Server class152 = new Server("Đại thời đại", "127.0.0.1", 19189, 3500, 0);
             class152.Field55 = true;
             Server class153 = new Server("LocalHost", "127.0.0.1", 19180, 3500, 0);
             //GlobalService.Field1012.addElement(class15);
